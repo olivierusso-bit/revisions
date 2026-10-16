@@ -73,6 +73,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .pair-de{font-weight:700;color:var(--court)}
 .astuce{margin:12px 0 0;padding:10px 12px;border-radius:6px;background:var(--court-wash);font-size:14px}
 .astuce b{display:block;color:var(--court);margin-bottom:2px}
+.src-date{font-weight:400;color:var(--soft);font-size:13px}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.photos figure{margin:0}.photos img{width:100%;height:auto;border-radius:6px;border:1px solid var(--rule);display:block}
+.photos .missing span{display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;border:1px dashed var(--rule);border-radius:6px;color:var(--soft);font-size:13px;text-align:center;padding:8px}
+.photos figcaption{font-size:12.5px;color:var(--soft);margin-top:4px}
+.version{margin:4px 0 0;text-align:center;font-size:12.5px;color:var(--soft)}
 .tip{margin:0;padding:8px 0 8px 12px;border-left:3px solid var(--score);font-size:15px}
 
 /* paquets */
@@ -208,12 +214,29 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "Unit 2 — Fit und sportlich!";
+const VERSION = { n:2, date:"16.10.2026" };   /* v1 : 16.10.2026, première publication · v2 : sources visibles, photos dans Claude */
+
+/* ---------- SOURCES : d'où vient le contenu ----------
+   Photo 1 — livre p. 11 « Fit und sportlich! / Sportarten » (reçue le 15.10.2026) : paquets schon, sportarten, einrad + 4 phrases.
+   Photo 2 — livre p. 12 « Wo machst du Sport? / Was brauchst du? » (reçue le 15.10.2026) : paquets wo, brauchen + 5 phrases.
+   Tous les blocs des deux pages sont repris (demande du parent : « tout »). Rien d'écarté, rien d'illisible.
+   Les pluriels sont ceux de la notation du livre (¨-e, -n, -s, -). */
+const SOURCES = [
+  { titre:"Photo 1 — livre p. 11", recue:"15.10.2026", contenu:"Sportarten : bloc gris « Das kennst du schon », Tischtennis, trainieren, Mein Lieblingssport ist …, bloc segeln / boxen / Judo / Bowling, bloc Einrad / Ballett / ausprobieren / Turnier et leurs phrases d'exemple." },
+  { titre:"Photo 2 — livre p. 12", recue:"15.10.2026", contenu:"Wo machst du Sport? (Sportplatz, draussen ≠ drinnen, Halle, Verein, Skipiste, Sand) et Was brauchst du? (Ball, Turnschuhe, T-Shirt, Zum … braucht man, Schläger, Netz, Fussballschuhe, Trikot, Helm, Stoppuhr, Kleidung), avec leurs phrases d'exemple." },
+];
+const SOURCES_NOTE = "Tous les blocs des deux pages sont repris. Rien n'a été ajouté : les pluriels viennent de la notation du livre (¨-e, -n, -s, -). La correction de chaque question indique la page et le bloc d'où elle vient.";
+/* Photos : seulement dans la version Claude (privée), jamais sur le site public. url = adresse dans l'espace privé de l'outil. */
+const PHOTOS = [
+  { titre:"Livre p. 11", url:null },
+  { titre:"Livre p. 12", url:"/_blob/40a59b9c724593dac4a1d73368e3066e" },
+];
 
 /* ---------- CONTENU : paquets (texte exact du livre, p. 11-12) ----------
    de, alt (autres écritures acceptées), fr (1re = affichée), art, pl, note (Pl./Sg.),
    pp (participe avec auxiliaire), pres, obj + verb (sport + verbe), gap (mot à compléter) */
 const DECKS = [
-  { key:"schon", title:"Das kennst du schon", emoji:"🛹", items:[
+  { key:"schon", title:"Das kennst du schon", emoji:"🛹", src:"p. 11, bloc gris « Das kennst du schon »", items:[
     { de:"Snowboard fahren", obj:"Snowboard", verb:"fahren", fr:["faire du snowboard"] },
     { de:"Ski fahren", obj:"Ski", verb:"fahren", fr:["faire du ski"] },
     { de:"Fahrrad fahren", alt:["Velo fahren","Fahrrad / Velo fahren","Fahrrad/Velo fahren"], obj:"Fahrrad / Velo", verb:"fahren", fr:["faire du vélo"] },
@@ -228,7 +251,7 @@ const DECKS = [
     { de:"laufen", pres:"er läuft", pp:"ist gelaufen", fr:["courir"] },
     { de:"klettern", pres:"er klettert", pp:"ist geklettert", fr:["faire de l'escalade"] },
   ]},
-  { key:"sportarten", title:"Nouvelles disciplines", emoji:"🥊", items:[
+  { key:"sportarten", title:"Nouvelles disciplines", emoji:"🥊", src:"p. 11, Tischtennis … Lieblingssport + bloc segeln / boxen / Judo / Bowling", items:[
     { de:"Tischtennis (spielen)", alt:["Tischtennis","Tischtennis spielen"], obj:"Tischtennis", verb:"spielen", fr:["(jouer au) ping-pong","ping-pong","jouer au ping-pong"] },
     { de:"trainieren", pres:"er trainiert", pp:"hat trainiert", fr:["s'entraîner","s'entrainer"] },
     { de:"Mein Lieblingssport ist …", fr:["Mon sport préféré est…"] },
@@ -237,13 +260,13 @@ const DECKS = [
     { de:"Judo (machen)", alt:["Judo","Judo machen"], obj:"Judo", verb:"machen", fr:["(faire du) judo","judo","faire du judo"] },
     { de:"Bowling (spielen)", alt:["Bowling","Bowling spielen"], obj:"Bowling", verb:"spielen", fr:["(jouer au) bowling","bowling","jouer au bowling"] },
   ]},
-  { key:"einrad", title:"Einrad, Ballett & Co", emoji:"🏆", items:[
+  { key:"einrad", title:"Einrad, Ballett & Co", emoji:"🏆", src:"p. 11, dernier bloc (Einrad, Ballett, ausprobieren, Turnier)", items:[
     { de:"das Einrad", art:"das", pl:"die Einräder", fr:["le monocycle"] },
     { de:"das Ballett", art:"das", pl:"die Ballette", fr:["le ballet","la danse"] },
     { de:"ausprobieren", pres:"er probiert … aus", pp:"hat ausprobiert", fr:["tester","essayer"] },
     { de:"das Turnier", art:"das", pl:"die Turniere", fr:["le tournoi"] },
   ]},
-  { key:"wo", title:"Wo machst du Sport?", emoji:"🏟️", items:[
+  { key:"wo", title:"Wo machst du Sport?", emoji:"🏟️", src:"p. 12, « Wo machst du Sport? »", items:[
     { de:"der Sportplatz", art:"der", pl:"die Sportplätze", fr:["le terrain de sport"] },
     { de:"draussen", fr:["dehors"] },
     { de:"drinnen", fr:["dedans"] },
@@ -252,7 +275,7 @@ const DECKS = [
     { de:"die Skipiste", art:"die", pl:"die Skipisten", fr:["la piste de ski"] },
     { de:"der Sand", art:"der", note:"Sg.", fr:["le sable"] },
   ]},
-  { key:"brauchen", title:"Was brauchst du?", emoji:"⚽", items:[
+  { key:"brauchen", title:"Was brauchst du?", emoji:"⚽", src:"p. 12, « Was brauchst du? »", items:[
     { de:"der Ball", art:"der", pl:"die Bälle", fr:["le ballon","la balle"] },
     { de:"die Turnschuhe", art:"die", note:"Pl.", fr:["les chaussures de sport"] },
     { de:"das T-Shirt", alt:["das Shirt"], art:"das", pl:"die T-Shirts", fr:["le t-shirt"] },
@@ -264,16 +287,16 @@ const DECKS = [
     { de:"die Stoppuhr", art:"die", pl:"die Stoppuhren", fr:["le chronomètre"] },
     { de:"die Kleidung", art:"die", note:"Sg.", fr:["les habits, les vêtements","les habits","les vêtements"] },
   ]},
-  { key:"saetze", title:"Phrases du livre", emoji:"💬", items:[
-    { de:"Einrad fahren ist cool.", gap:"Einrad", fr:["Faire du monocycle c'est cool."] },
-    { de:"Sie macht jeden Montag Ballett.", gap:"Ballett", fr:["Elle fait de la danse chaque lundi."] },
-    { de:"Sie probiert viele Sportarten aus.", gap:"aus", fr:["Elle teste beaucoup de sports."] },
-    { de:"Sie haben das Volleyballturnier gewonnen.", gap:"Volleyballturnier", fr:["Ils ont gagné le tournoi de volley."] },
-    { de:"Im Sommer trainieren wir draussen, im Winter drinnen.", gap:"draussen", fr:["En été, nous nous entraînons dehors, en hiver dedans."] },
-    { de:"Wir trainieren in der Halle.", gap:"Halle", fr:["Nous nous entraînons en salle."] },
-    { de:"Sie spielt Tennis im Verein.", gap:"Verein", fr:["Elle fait du tennis dans un club."] },
-    { de:"Beachvolleyball spielt man auf Sand.", gap:"Sand", fr:["On joue au beach-volley sur le sable."] },
-    { de:"Zum Fussballspielen braucht man einen Ball.", gap:"braucht", fr:["Pour jouer au football, il faut un ballon."] },
+  { key:"saetze", title:"Phrases du livre", emoji:"💬", src:"p. 11 et 12, phrases d'exemple", items:[
+    { de:"Einrad fahren ist cool.", gap:"Einrad", src:"p. 11, phrase d'exemple de das Einrad", fr:["Faire du monocycle c'est cool."] },
+    { de:"Sie macht jeden Montag Ballett.", gap:"Ballett", src:"p. 11, phrase d'exemple de das Ballett", fr:["Elle fait de la danse chaque lundi."] },
+    { de:"Sie probiert viele Sportarten aus.", gap:"aus", src:"p. 11, phrase d'exemple de ausprobieren", fr:["Elle teste beaucoup de sports."] },
+    { de:"Sie haben das Volleyballturnier gewonnen.", gap:"Volleyballturnier", src:"p. 11, phrase d'exemple de das Turnier", fr:["Ils ont gagné le tournoi de volley."] },
+    { de:"Im Sommer trainieren wir draussen, im Winter drinnen.", gap:"draussen", src:"p. 12, phrase d'exemple de draussen ≠ drinnen", fr:["En été, nous nous entraînons dehors, en hiver dedans."] },
+    { de:"Wir trainieren in der Halle.", gap:"Halle", src:"p. 12, phrase d'exemple de die Halle", fr:["Nous nous entraînons en salle."] },
+    { de:"Sie spielt Tennis im Verein.", gap:"Verein", src:"p. 12, phrase d'exemple de der Verein", fr:["Elle fait du tennis dans un club."] },
+    { de:"Beachvolleyball spielt man auf Sand.", gap:"Sand", src:"p. 12, phrase d'exemple de der Sand", fr:["On joue au beach-volley sur le sable."] },
+    { de:"Zum Fussballspielen braucht man einen Ball.", gap:"braucht", src:"p. 12, phrase d'exemple de Zum … braucht man", fr:["Pour jouer au football, il faut un ballon."] },
   ]},
 ];
 const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
@@ -395,13 +418,13 @@ function pickOptions(good, pool, wide, valueFn){
 const noteFrom = r => Math.round((1 + 5*r)*2)/2;
 const fmtNote = n => Number(n).toFixed(1).replace(".", ",");
 function dateLabel(ts){ const d = new Date(ts), p = x => String(x).padStart(2,"0"); return `${p(d.getDate())}.${p(d.getMonth()+1)}.${d.getFullYear()} · ${p(d.getHours())}h${p(d.getMinutes())}`; }
-function explain(it){
+function explain(it, deck){
   let t = it.de;
   if (it.note) t += " (" + it.note + ")";
   if (it.pl) t += " (pluriel : " + it.pl + ")";
   if (it.pres) t += ", " + it.pres;
   if (it.pp) t += ", " + it.pp;
-  return t + " = " + it.fr[0];
+  return t + " = " + it.fr[0] + " — livre " + (it.src || deck.src) + ".";
 }
 
 /* ---------- choix du type de question pour un item ---------- */
@@ -447,7 +470,7 @@ function buildTest(deckKeys, difficulty){
       ex++; const K = KINDS[kind];
       groups[kind].forEach(it => {
         num++;
-        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:K.tag, lang:K.lang, consigne:K.consigne, keep:true, expl:explain(it), hint:"" };
+        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:K.tag, lang:K.lang, consigne:K.consigne, keep:true, expl:explain(it, d), hint:"" };
         const ppRest = it.pp ? it.pp.split(" ").slice(1).join(" ") : "";
         switch(kind){
           case "mcq_sens": q.word = it.de; q.options = pickOptions(it.fr[0], d.items, wide, x => x.fr[0]); q.answer = it.fr[0]; break;
@@ -562,7 +585,19 @@ function viewFiche(){
     }
     h += `</section>`;
   });
-  return h + `<button class="cta" data-act="nav" data-v="home">Je passe à l'entraînement</button>`;
+  const openS = S.ficheOpen === FICHE.length;
+  h += `<section class="entry${openS?" open":""}"><button class="entry-head" data-act="fiche" data-v="${FICHE.length}" aria-expanded="${openS}"><span class="entry-icon">🔎</span><span class="entry-title">D'où viennent les questions</span></button>`;
+  if (openS){
+    h += `<div class="entry-body">` + SOURCES.map(x => `<div class="pair"><span class="pair-de">${esc(x.titre)} <span class="src-date">reçue le ${esc(x.recue)}</span></span><span>${esc(x.contenu)}</span></div>`).join("") + `<p class="astuce"><b>Contrôle</b>${esc(SOURCES_NOTE)}</p>`;
+    if (HAS_CLAUDE){
+      h += `<div class="photos">` + PHOTOS.map(ph => ph.url
+        ? `<figure><a href="${esc(ph.url)}" target="_blank" rel="noopener"><img src="${esc(ph.url)}" alt="${esc(ph.titre)}" loading="lazy"></a><figcaption>${esc(ph.titre)}</figcaption></figure>`
+        : `<figure class="missing"><span>Photo à renvoyer dans le chat</span><figcaption>${esc(ph.titre)}</figcaption></figure>`).join("") + `</div>`;
+    }
+    h += `</div>`;
+  }
+  h += `</section>`;
+  return h + `<button class="cta" data-act="nav" data-v="home">Je passe à l'entraînement</button><p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
 }
 
 function viewHome(){

@@ -40,6 +40,7 @@ a.card:hover{border-color:var(--cobalt)}
 .wait{display:inline-block;margin-top:8px;color:var(--soft);font-size:13px;border:1px dashed var(--rule);padding:2px 9px;border-radius:20px}
 .day.past{opacity:.45}
 .empty{color:var(--soft)}
+.maj{margin:28px 0 0;padding-top:12px;border-top:1px solid var(--rule);color:var(--soft);font-size:13px}
 @media (prefers-reduced-motion: reduce){.chev{transition:none}}
 </style>
 </head>
@@ -49,6 +50,7 @@ a.card:hover{border-color:var(--cobalt)}
 <p class="sub">Les devoirs et les tests, au jour où ils sont attendus. Touche le titre d'une semaine pour la replier.</p>
 <div class="tools"><button type="button" id="toggle-all">Tout replier</button></div>
 <div id="weeks"><p class="empty">Chargement…</p></div>
+<p class="maj" id="maj"></p>
 </main>
 
 <!--
@@ -60,6 +62,12 @@ a.card:hover{border-color:var(--cobalt)}
   detail : une courte précision
   lien   : (facultatif) fichier de révision, nommé AAAA-MM-JJ-branche.html avec la même date
 -->
+<!--
+  VERSION — à changer à chaque mise à jour de la page :
+  version = numéro suivant (un de plus que la fois précédente), maj = date et heure de Suisse (AAAA-MM-JJTHH:MM)
+-->
+<script id="version" type="application/json">{ "version": 11, "maj": "2026-10-16T22:47" }</script>
+
 <script id="devoirs" type="application/json">
 [
   { "date": "2026-10-20", "type": "Test",   "titre": "Allemand · Kontrolle Seite 11 + 12", "detail": "Test noté, avec le vocabulaire Seite 12 — Unit 2 Fit und sportlich : fiche, cartes, tests", "lien": "2026-10-20_Livio_Allemand_Unit-2-Fit-und-sportlich.html" },
@@ -121,7 +129,16 @@ document.getElementById("toggle-all").addEventListener("click", () => {
   all.forEach(d => d.open = open); updateToggle();
 });
 document.addEventListener("toggle", updateToggle, true);
+function renderVersion(){
+  try {
+    const v = JSON.parse(document.getElementById("version").textContent);
+    const [d, t] = v.maj.split("T"), dt = parse(d), [h, m] = t.split(":");
+    const JOURS_LONGS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+    document.getElementById("maj").textContent = `Version ${v.version} · mise à jour le ${JOURS_LONGS[dt.getDay()]} ${dt.getDate()} ${MOIS[dt.getMonth()]} ${dt.getFullYear()} à ${h}h${m}`;
+  } catch(e){}
+}
 render();
+renderVersion();
 </script>
 </body>
 </html>
