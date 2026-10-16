@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Learning Languages · Livio</title>
+<title>Anglais · pour le 22.10</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700;7..72,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
@@ -191,11 +191,11 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:10px;p
 <script>
 /* ============================================================
    ANGLAIS — Unit 1 « Learning languages » (Active wordlist)
-   Outil de révision de Livio — 10e HarmoS
+   Révision LVO — à savoir pour le 22.10
    Contenu : uniquement les parties encadrées des deux photos.
    ============================================================ */
 
-const QUIZ_ID = "livio-quiz-anglais-unit1-languages";
+const QUIZ_ID = "lvo-quiz-anglais-unit1-languages";
 /* Dans Claude, window.claude existe ; sur un site web normal (GitHub Pages), non. */
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
@@ -440,7 +440,7 @@ function render(){
   if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); }
 }
 function header(){
-  return `<header class="head"><div class="head-tab"><span>Unit</span><b>1</b></div><div><h1>Learning languages</h1><p>English · Active wordlist — les parties encadrées</p></div></header>`;
+  return `<header class="head"><div class="head-tab"><span>Unit</span><b>1</b></div><div><h1>Learning languages</h1><p>English · Active wordlist — à savoir pour le jeudi 22 octobre</p></div></header>`;
 }
 function renderTabs(){
   const bar = document.getElementById("tabbar");
@@ -707,9 +707,9 @@ function paperHtml(qs, part){
     ? `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
     : `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<div class="line"></div></div>`).join("")}</section>`).join("");
   const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b></div>`).join("")}</section>`).join("");
-  const head = `<h1>Anglais — Unit 1 « Learning languages »</h1><p class="meta">Prénom : Livio · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
+  const head = `<h1>Anglais — Unit 1 « Learning languages »</h1><p class="meta">À savoir pour le jeudi 22 octobre · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
-  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Anglais Unit 1 — Livio</title><style>
+  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Anglais Unit 1 — 22.10</title><style>
 @page{size:A4 portrait;margin:12mm}body{font-family:Georgia,'Times New Roman',serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
 .ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.line{border-bottom:1px solid #444;height:22px;margin:0 0 0 18px}
@@ -719,7 +719,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bott
 async function savePaper(part){
   const qs = S.frozen; S.paperMsg = ""; S.paperCopy = "";
   const names = { ex:"exercices", both:"exercices-et-corrige", key:"corrige" };
-  const filename = `anglais-unit1-livio-${names[part]}.html`;
+  const filename = `anglais-unit1-22-10-${names[part]}.html`;
   try {
     if (!HAS_CLAUDE){
       /* site web normal : téléchargement classique */
