@@ -1,4 +1,4 @@
-# Révision LVO
+# Révision Livio
 
 Révisions de la semaine, publiées avec GitHub Pages.
 

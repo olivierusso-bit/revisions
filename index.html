@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Révision LVO</title>
+<title>Révision Livio</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,700;7..72,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
 :root{--paper:#F2F4F7;--sheet:#fff;--ink:#18202E;--soft:#5A6577;--rule:#D5DBE4;--cobalt:#2546B5;--marker:#F6D94A;--marker-ink:#3A2F00;color-scheme:light}
@@ -24,28 +24,34 @@ a.card:hover,a.card:focus-visible{border-color:var(--cobalt);outline:none}
 .go{display:inline-block;margin-top:8px;background:var(--marker);color:var(--marker-ink);font-weight:700;font-size:13.5px;padding:3px 10px;border-radius:20px}
 .wait{display:inline-block;margin-top:8px;color:var(--soft);font-size:13px;border:1px dashed var(--rule);padding:2px 9px;border-radius:20px}
 .past{opacity:.45}
+.stack{display:flex;flex-direction:column;gap:8px;min-width:0}
+.kind{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:1px 8px;border-radius:5px;margin-bottom:4px}
+.kind.test{background:var(--ink);color:var(--paper)}
+.kind.devoir{border:1px solid var(--soft);color:var(--soft)}
 </style>
 </head>
 <body>
 <main>
-<h1>Révision LVO</h1>
-<p class="sub">Les révisions de la semaine, dans l'ordre des dates.</p>
+<h1>Révision Livio</h1>
+<p class="sub">Les devoirs et les tests de la semaine, au jour où ils sont attendus.</p>
 <h2>Semaine du 19 au 23 octobre</h2>
 
 <div class="day" data-due="2026-10-20">
   <div class="date"><span>mar.</span><b>20.10</b></div>
-  <div class="card"><b>Allemand · Kontrolle Seite 11 + 12</b><small>Test</small><span class="wait">Outil pas encore en ligne</span></div>
+  <div class="stack"><div class="card"><span class="kind test">Test</span><b>Allemand · Kontrolle Seite 11 + 12</b><small>Test noté</small><span class="wait">Outil de révision pas encore en ligne</span></div><div class="card"><span class="kind devoir">Devoir</span><b>Allemand · Wortschatz Seite 12</b><small>Vocabulaire à apprendre</small><span class="wait">Outil de révision pas encore en ligne</span></div><div class="card"><span class="kind devoir">Devoir</span><b>Français · verbe rire (sourire)</b><small>Conjugaison</small><span class="wait">Outil de révision pas encore en ligne</span></div></div>
 </div>
 
 <div class="day" data-due="2026-10-21">
   <div class="date"><span>mer.</span><b>21.10</b></div>
-  <div class="card"><b>Maths · TE NO2</b><small>Test</small><span class="wait">Outil pas encore en ligne</span></div>
+  <div class="stack"><div class="card"><span class="kind test">Test</span><b>Maths · TE NO2</b><small>Test noté</small><span class="wait">Outil de révision pas encore en ligne</span></div></div>
 </div>
 
 <div class="day" data-due="2026-10-22">
   <div class="date"><span>jeu.</span><b>22.10</b></div>
-  <a class="card" href="anglais-unit1.html"><b>Anglais · Unit 1 Learning languages</b><small>Vocabulaire p. 10-11 : fiche, cartes, tests</small><span class="go">Réviser →</span></a>
+  <div class="stack"><a class="card" href="anglais-unit1.html"><span class="kind devoir">Devoir</span><b>Anglais · vocabulaire p. 10-11</b><small>Unit 1 Learning languages : fiche, cartes, tests</small><span class="go">Réviser →</span></a></div>
 </div>
+
+<p class="sub">Vendredi 23.10 : rien de noté dans l'agenda.</p>
 </main>
 <script>
 /* grise ce qui est passé */
