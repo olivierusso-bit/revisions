@@ -72,6 +72,7 @@ mark{background:var(--marker);color:var(--marker-ink);padding:0 3px;border-radiu
 .pair-en{font-family:var(--display);font-weight:700}
 .astuce{margin:12px 0 0;padding:10px 12px;border-radius:8px;background:var(--cobalt-wash);font-size:14px}
 .astuce b{display:block;color:var(--cobalt);margin-bottom:2px}
+.version{margin:4px 0 0;text-align:center;font-size:12.5px;color:var(--soft)}
 .tip{margin:0;padding:8px 0 8px 12px;border-left:3px solid var(--marker);font-size:15px}
 
 /* paquets */
@@ -180,6 +181,17 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:10px;p
 .tab-e{font-size:18px} .tab-l{font-size:11px;font-weight:700}
 .tab.on{color:var(--cobalt)} .tab.on .tab-l{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 
+/* voir mes erreurs : lisible sans les couleurs (barré + fond foncé = faux ; souligné + fond clair = ce qu'il fallait) */
+.dx-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0;font-size:13px;color:var(--soft)}
+.dx-line{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;align-items:baseline;margin:2px 0!important}
+.dx-lab{font-size:12.5px!important;font-weight:700;color:var(--soft)}
+.dx-ans{font-size:17px;font-weight:700;overflow-wrap:anywhere;letter-spacing:.3px;line-height:1.7}
+.dx-bad{background:#A3241B;color:#fff;text-decoration:line-through;text-decoration-thickness:2px;border-radius:3px;padding:1px 2px}
+.dx-good{background:#D4F0E1;color:#08402A;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px;border-radius:3px;padding:1px 2px;font-weight:800}
+.dx-miss{display:inline-block;background:#A3241B;color:#fff;border-radius:3px;padding:0 4px;margin:0 1px;font-weight:800;font-size:14px;line-height:1.35;vertical-align:1px;text-decoration:none}
+.dx-none{font-style:italic;font-weight:400;color:var(--soft)}
+.dx-note{font-size:13.5px!important;font-weight:700}
+
 @media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
 </style>
 
@@ -198,6 +210,7 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:10px;p
 const QUIZ_ID = "lvo-quiz-anglais-unit1-languages";
 /* Dans Claude, window.claude existe ; sur un site web normal (GitHub Pages), non. */
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
+const VERSION = { n:2, date:"17.10.2026" };   /* v1 : 16.10.2026, première publication · v2 : « Voir mes erreurs », fautes barrées et corrections soulignées */
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 
@@ -467,7 +480,7 @@ function viewFiche(){
   const openR = S.ficheOpen === DECKS.length;
   h += `<section class="entry${openR?" open":""}"><button class="entry-head" data-act="fiche" data-v="${DECKS.length}" aria-expanded="${openR}"><span class="entry-letter">✓</span><span class="entry-title">Trois réflexes pour l'épreuve</span></button>`;
   if (openR) h += `<div class="entry-body" style="display:flex;flex-direction:column;gap:6px">` + FICHE_REFLEXES.map(t => `<p class="tip">${esc(t)}</p>`).join("") + `</div>`;
-  h += `</section><button class="cta" data-act="nav" data-v="home">Je passe à l'entraînement</button>`;
+  h += `</section><button class="cta" data-act="nav" data-v="home">Je passe à l'entraînement</button><p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
   return h;
 }
 
@@ -596,7 +609,9 @@ function bilanBlock(att){
     if (a.a_travailler.length) h += `<p class="bilan-lab">À travailler</p><ul class="work">${a.a_travailler.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
     if (a.conseil) h += `<p class="bilan-tip">${esc(a.conseil)}</p>`;
   }
-  h += `<div class="${canRetry?"row":""}">${canRetry ? `<button class="cta" data-act="retryWrong" data-v="${att.id}">Refaire mes erreurs (${wrong.length})</button>` : ""}<button class="ghost" data-act="copy" data-v="${att.id}">${b.copied ? "Copié — colle-le dans le chat" : "Copier pour le chat"}</button></div>`;
+  if (canRetry) h += `<button class="cta" data-act="retryWrong" data-v="${att.id}">Refaire mes erreurs (${wrong.length})</button>`;
+  const ev = errView(att.id);
+  h += `<div class="${wrong.length?"row":""}">${wrong.length ? `<button class="ghost" data-act="showErr" data-v="${att.id}" aria-pressed="${ev}">${ev ? "Voir toutes les questions" : `Voir mes erreurs (${wrong.length})`}</button>` : ""}<button class="ghost" data-act="copy" data-v="${att.id}">${b.copied ? "Copié — colle-le dans le chat" : "Copier pour le chat"}</button></div>`;
   if (b.fallback) h += `<p class="fine">La copie automatique est bloquée ici. Le texte est sélectionné : copie-le à la main.</p><textarea class="exportarea" readonly rows="8" id="fb-${att.id}">${esc(b.fallback)}</textarea>`;
   return h + `</div>`;
 }
@@ -659,19 +674,84 @@ function retryWrong(id){
   startQuiz(shuffle(qs), true);
 }
 
+/* ---------- voir mes erreurs : comparaison mot par mot, puis lettre par lettre ----------
+   Ce que la correction tolère (majuscules, accents, ß/ss) n'est jamais marqué comme faux. */
+function dxN(c){ return String(c).toLowerCase().replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,""); }
+function dxW(w){ return dxN(w).replace(/[.,!?;:«»"()…]/g,""); }
+function lev(a, b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,j)=>j); for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
+function lcsOps(A, B, eq){
+  const m=A.length, n=B.length, L=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=m-1;i>=0;i--) for(let j=n-1;j>=0;j--) L[i][j]=eq(A[i],B[j])?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  const ops=[]; let i=0,j=0;
+  while(i<m&&j<n){ if(eq(A[i],B[j])){ ops.push({t:"=",a:A[i],b:B[j]}); i++; j++; } else if(L[i+1][j]>=L[i][j+1]) ops.push({t:"-",a:A[i++]}); else ops.push({t:"+",b:B[j++]}); }
+  while(i<m) ops.push({t:"-",a:A[i++]}); while(j<n) ops.push({t:"+",b:B[j++]});
+  return ops;
+}
+/* découpe en blocs : égalités, ou bloc de différences {del:[], ins:[]} */
+function dxBlocks(ops){ const out=[]; let cur=null; ops.forEach(o=>{ if(o.t==="="){ cur=null; out.push(o); } else { if(!cur){ cur={t:"x",del:[],ins:[]}; out.push(cur); } (o.t==="-"?cur.del:cur.ins).push(o.t==="-"?o.a:o.b); } }); return out; }
+const dxBad = t => `<del class="dx-bad">${esc(t)}</del>`;
+const dxGood = t => `<ins class="dx-good">${esc(t)}</ins>`;
+const dxMiss = `<span class="dx-miss" aria-label="il manque quelque chose ici">?</span>`;
+function dxChars(u, r){
+  let U="", R="";
+  dxBlocks(lcsOps([...u],[...r],(x,y)=>dxN(x)===dxN(y))).forEach(b=>{
+    if(b.t==="="){ U+=esc(b.a); R+=esc(b.b); return; }
+    U += b.del.length ? dxBad(b.del.join("")) : dxMiss;
+    if(b.ins.length) R += dxGood(b.ins.join(""));
+  });
+  return { U, R };
+}
+function dxDiff(user, right){
+  const A=user.trim().split(/\s+/).filter(Boolean), B=right.trim().split(/\s+/).filter(Boolean);
+  const U=[], R=[]; let common=0;
+  dxBlocks(lcsOps(A,B,(x,y)=>dxW(x)===dxW(y))).forEach(b=>{
+    if(b.t==="="){ common++; U.push(esc(b.a)); R.push(esc(b.b)); return; }
+    const k=Math.min(b.del.length,b.ins.length);
+    for(let i=0;i<k;i++){
+      const x=b.del[i], y=b.ins[i], lim=Math.max(1, Math.floor(Math.max(dxW(x).length,dxW(y).length)*0.4));
+      if(lev(dxW(x),dxW(y))<=lim){ const c=dxChars(x,y); U.push(c.U); R.push(c.R); common++; }
+      else { U.push(dxBad(x)); R.push(dxGood(y)); }
+    }
+    b.del.slice(k).forEach(x=>U.push(dxBad(x)));
+    if(b.ins.length>k){ U.push(dxMiss); b.ins.slice(k).forEach(y=>R.push(dxGood(y))); }
+  });
+  return { U:U.join(" "), R:R.join(" "), other: common===0 };
+}
+function dxLegend(){ return `<p class="dx-legend"><span>${dxBad("barré")} = ce qui était faux</span><span>${dxGood("souligné")} = ce qu'il fallait écrire</span><span>${dxMiss} = il manque quelque chose</span></p>`; }
+function errCard(q){
+  const Q = q.question || {}, isMcq = Q.type === "mcq", user = (q.user || "").trim();
+  let right = q.answer, U, R, note = "";
+  if (!user){ U = `<span class="dx-none">rien</span>`; R = dxGood(right); }
+  else if (isMcq){ U = dxBad(user); R = dxGood(right); }
+  else {
+    const cands = (Q.accept && Q.accept.length ? Q.accept : [q.answer]).filter(Boolean);
+    right = cands.reduce((best, c) => lev(dxN(user), dxN(c)) < lev(dxN(user), dxN(best)) ? c : best, cands[0]);
+    const d = dxDiff(user, right); U = d.U; R = d.R;
+    if (d.other) note = "Ce n'est pas le même mot : apprends-le en entier.";
+  }
+  return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
+    <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : "Tu as écrit"}</span><span class="dx-ans">${U}</span></p>
+    <p class="dx-line"><span class="dx-lab">✓ Il fallait</span><span class="dx-ans">${R}</span></p>
+    ${note ? `<p class="dx-note">${note}</p>` : ""}${right !== q.answer ? `<p class="fine">Réponse complète : ${esc(q.answer)}</p>` : ""}
+    <p class="rev-x">${esc(q.expl)}</p></div>`;
+}
+function errView(id){ const b = bilanState(id); return b.errOnly != null ? b.errOnly : S.screen === "results"; }
+function questionList(att){
+  const only = errView(att.id), wrong = att.questions.filter(q => !q.correct), list = only ? wrong : att.questions;
+  return (wrong.length ? dxLegend() : "") + list.map(q => q.correct ? revCard(q, !only) : errCard(q)).join("");
+}
+
 function revCard(q, showGoodAlways){
   return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(q.user) : "—"}</p>${(!q.correct || showGoodAlways) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(q.answer)}</b></p>` : ""}<p class="rev-x">${esc(q.expl)}</p></div>`;
 }
 function viewResults(){
   const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
   const msg = pct === 100 ? "Sans faute. Ce vocabulaire est à toi." : pct >= 80 ? "Solide. Repasse juste sur les quelques ratés." : pct >= 60 ? "La base est là. Refais tes erreurs, tu vas vite grimper." : pct >= 40 ? "Bon début. Relis la fiche, puis refais un tour en Échauffement." : "C'est le moment de relire la fiche tranquillement, mot par mot. Ça viendra.";
-  const shown = S.results.all ? att.questions : wrong;
   return `<div class="scorebox"><div class="score-n">${att.score}<small>/${att.total}</small></div><span class="score-note">note ${fmtNote(att.note)}</span>${att.rattrapage ? `<span class="rattr">Rattrapage — ${att.total} question${att.total>1?"s":""} ratée${att.total>1?"s":""} rejouée${att.total>1?"s":""}</span>` : ""}</div>
   <p class="intro">${msg}</p>${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
   ${bilanBlock(att)}
-  <p class="lab">${wrong.length ? `À revoir (${wrong.length})` : "Aucune erreur"}</p>
-  <div class="rev">${shown.map(q => revCard(q, false)).join("")}</div>
-  <button class="ghost" data-act="toggleAll">${S.results.all ? "Ne montrer que mes erreurs" : "Montrer toutes les questions"}</button>
+  <p class="lab">${!wrong.length ? "Aucune erreur" : errView(att.id) ? `Mes erreurs (${wrong.length})` : `Toutes les questions (${att.total})`}</p>
+  <div class="rev">${questionList(att)}</div>
   <div class="row"><button class="ghost" data-act="start">Refaire le test</button><button class="ghost" data-act="nav" data-v="home">Paquets</button></div>`;
 }
 
@@ -688,7 +768,7 @@ function viewScores(){
   list.forEach(a => {
     const open = S.scores.open === a.id;
     h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${esc(a.deck)}</b><span>${a.rattrapage ? "Rattrapage · " : ""}${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
-    if (open) h += `<div class="attempt-body">${bilanBlock(a)}${a.questions.map(q => revCard(q, true)).join("")}</div>`;
+    if (open) h += `<div class="attempt-body">${bilanBlock(a)}${questionList(a)}</div>`;
     h += `</div>`;
   });
   h += `</div><button class="ghost" data-act="exportToggle">${S.scores.exportOpen ? "Cacher la sauvegarde" : "💾 Exporter mes scores"}</button>`;
@@ -786,6 +866,7 @@ document.addEventListener("click", e => {
     case "typo": record(Q.typed, true); break;
     case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
     case "toggleAll": S.results.all = !S.results.all; render(); break;
+    case "showErr": { const b = bilanState(v); b.errOnly = !errView(v); render(); break; }
     case "analyse": analyse(v); break;
     case "copy": copyFor(v); break;
     case "retryWrong": retryWrong(v); break;
