@@ -203,6 +203,14 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:6px;pa
 .dx-none{font-style:italic;font-weight:400;color:var(--soft)}
 .dx-note{font-size:13.5px!important;font-weight:700}
 
+/* correction en direct : lettre fausse = fond foncé + trait ondulé (lisible sans les couleurs) */
+.live{display:flex;flex-direction:column;gap:4px}
+.live-lab{margin:0;font-size:12.5px;font-weight:700;color:var(--soft)}
+.live-box{min-height:46px;padding:8px 12px;border:1px dashed var(--rule);border-radius:6px;background:var(--sheet);font-size:22px;font-weight:700;letter-spacing:1px;line-height:1.7;overflow-wrap:anywhere}
+.lv-bad{background:#A3241B;color:#fff;border-radius:3px;padding:0 2px;text-decoration:underline wavy;text-decoration-thickness:1px;text-underline-offset:5px}
+.lv-empty{font-size:14px;font-weight:400;color:var(--soft);letter-spacing:0}
+.live-state{margin:0;font-size:13.5px;font-weight:700}
+
 @media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
 </style>
 
@@ -225,7 +233,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "Unit 2 — Fit und sportlich!";
-const VERSION = { n:3, date:"17.10.2026" };   /* v1 : 16.10.2026, première publication · v2 : sources visibles, photos dans Claude · v3 : « Voir mes erreurs », fautes barrées et corrections soulignées */
+const VERSION = { n:4, date:"18.10.2026" };   /* v1 : 16.10.2026, première publication · v2 : sources visibles, photos dans Claude · v3 : « Voir mes erreurs », fautes barrées et corrections soulignées · v4 : mode « Correction en direct » */
 
 /* ---------- SOURCES : d'où vient le contenu ----------
    Photo 1 — livre p. 11 « Fit und sportlich! / Sportarten » (reçue le 15.10.2026) : paquets schon, sportarten, einrad + 4 phrases.
@@ -384,6 +392,7 @@ const DIFFICULTIES = {
 };
 const MODES = {
   train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
+  live:{ label:"Correction en direct", sub:"Chaque lettre fausse est marquée pendant que tu écris", emoji:"✍️" },
   exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
 };
 const KINDS = {
@@ -566,7 +575,7 @@ function render(){
   const v = { fiche:viewFiche, home:viewHome, cards:viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
   app.innerHTML = header() + `<div class="screen">${v()}</div>`;
   renderTabs();
-  if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); }
+  if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
 }
 function header(){
   return `<header class="head"><div class="jersey" aria-hidden="true"><b>2</b></div><div><h1>Fit und sportlich!</h1><p>Unit 2 · Seite 11 + 12 — à savoir pour le ${DUE.long}</p></div></header>`;
@@ -655,8 +664,73 @@ function viewSetup(){
   } else {
     h += `<button class="ghost" data-act="freeze">🖨️ Version papier de ce test</button><button class="cta" data-act="start">Commencer</button>`;
   }
-  h += `<p class="fine">En épreuve blanche, tu ne vois aucune réponse avant la fin : c'est ce qui ressemble le plus au test de mardi.</p>`;
+  h += `<p class="fine">${S.mode === "live" ? "En correction en direct, une lettre fausse est marquée dès que tu la tapes. Un mot que tu as dû corriger ne compte pas dans la note : il revient dans « Refaire mes erreurs »." : "En épreuve blanche, tu ne vois aucune réponse avant la fin : c'est ce qui ressemble le plus au test de mardi."}</p>`;
   return h;
+}
+
+/* ---------- correction en direct : chaque lettre tapée comparée aux réponses acceptées ----------
+   Seules les lettres et les chiffres comptent ; espaces et ponctuation ne sont jamais marqués.
+   Majuscules, accents et ß/ss sont tolérés, comme dans la correction. Une lettre n'est fausse que si
+   AUCUNE réponse acceptée ne peut continuer ainsi ; les lettres qui manquent encore à la fin ne comptent pas. */
+function lvUnit(c){ return /[\p{L}\p{N}]/u.test(c) ? dxN(c) : ""; }
+function lvCands(q){
+  const out = new Set();
+  (q.accept || [q.answer]).forEach(a => {
+    [a, a.replace(/\s*\([^)]*\)\s*/g, " "), a.replace(/[()]/g, "")].forEach(v => {
+      out.add(v);
+      if (q.lang === "fr" && !q.keep) out.add(v.trim().replace(/^(le |la |les |l'|l’|un |une |des |du |de la |d'|d’)/i, ""));
+    });
+  });
+  return [...out].map(v => [...v].map(lvUnit).join("")).filter(Boolean);
+}
+function lvCheck(typed, cands){
+  const chars = [...typed], T = [];
+  chars.forEach((c, i) => { for (const u of lvUnit(c)) T.push({ ch:u, i }); });
+  const t = T.map(x => x.ch), m = t.length;
+  let best = null;
+  cands.forEach(cs => {
+    const c = [...cs], n = c.length;
+    const D = Array.from({ length:m+1 }, () => new Array(n+1).fill(0));
+    for (let i = 0; i <= m; i++) D[i][0] = i;
+    for (let j = 0; j <= n; j++) D[0][j] = j;
+    for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) D[i][j] = Math.min(D[i-1][j] + 1, D[i][j-1] + 1, D[i-1][j-1] + (t[i-1] === c[j-1] ? 0 : 1));
+    let bj = 0; for (let j = 0; j <= n; j++) if (D[m][j] < D[m][bj]) bj = j;   /* la fin du mot peut manquer encore */
+    if (!best || D[m][bj] < best.cost) best = { cost:D[m][bj], D, c, bj };
+  });
+  const bad = new Set(), miss = new Set();
+  if (best && best.cost > 0){
+    const { D, c } = best; let i = m, j = best.bj;
+    while (i > 0 && j > 0){
+      if (D[i][j] === D[i-1][j-1] + (t[i-1] === c[j-1] ? 0 : 1)){ if (t[i-1] !== c[j-1]) bad.add(T[i-1].i); i--; j--; }
+      else if (D[i][j] === D[i-1][j] + 1){ bad.add(T[i-1].i); i--; }
+      else { miss.add(i < m ? T[i].i : -1); j--; }
+    }
+    while (i > 0){ bad.add(T[i-1].i); i--; }
+    while (j > 0){ miss.add(m ? T[0].i : -1); j--; }
+  }
+  return { bad, miss, n: bad.size + miss.size };
+}
+function lvHtml(typed, r){
+  let h = "";
+  [...typed].forEach((c, i) => {
+    if (r.miss.has(i)) h += dxMiss;
+    const t = c === " " ? " " : c;
+    h += r.bad.has(i) ? `<span class="lv-bad">${esc(t)}</span>` : esc(t);
+  });
+  if (r.miss.has(-1)) h += dxMiss;
+  return h || `<span class="lv-empty">Tes lettres s'affichent ici</span>`;
+}
+function updateLive(){
+  const Q = S.quiz; if (!Q || S.mode !== "live") return;
+  const q = Q.questions[Q.i]; if (!q || q.type !== "type" || Q.checked) return;
+  Q.lvcache = Q.lvcache || {};
+  const cands = Q.lvcache[Q.i] || (Q.lvcache[Q.i] = lvCands(q));
+  const r = lvCheck(Q.typed, cands);
+  if (r.n > 0){ Q.hadErr = true; Q.errSnap = Q.typed; }
+  const box = document.getElementById("live-box"); if (box) box.innerHTML = lvHtml(Q.typed, r);
+  const st = document.getElementById("live-state");
+  if (st) st.textContent = r.n ? `✗ ${r.n} ${r.n > 1 ? "lettres à corriger" : "lettre à corriger"}`
+    : Q.hadErr ? "✓ Corrigé — ce mot ne comptera pas dans la note" : Q.typed.trim() ? "✓ Pour l'instant, c'est juste" : "";
 }
 
 /* ---------- quiz ---------- */
@@ -666,7 +740,7 @@ function startQuiz(questions, rattrapage){
   render(); window.scrollTo(0,0);
 }
 function viewQuiz(){
-  const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode === "train";
+  const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>
   <div class="badges"><span class="num">N° ${q.num}</span><span class="chip ${q.tag}">${TAG_LABEL[q.tag]}</span><span class="ref">Exercice ${q.ex} · ${esc(q.exTitle)}</span></div>
   <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.hint ? `<p class="qhint">petit indice : ${esc(q.hint)}</p>` : ""}`;
@@ -678,6 +752,7 @@ function viewQuiz(){
     }).join("") + `</div>`;
   } else {
     h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    if (S.mode === "live" && !Q.checked) h += `<div class="live"><p class="live-lab">Ta réponse, lettre par lettre</p><div class="live-box" id="live-box"></div><p class="live-state" id="live-state" aria-live="polite"></p></div>`;
   }
   if (Q.finishing) h += `<p class="fine">J'enregistre ton résultat…</p>`;
   if (!Q.checked && !Q.finishing){
@@ -687,9 +762,10 @@ function viewQuiz(){
     h += `<button class="ghost small" data-act="dontknow">Je ne sais pas</button>`;
   }
   if (Q.checked){
-    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? ["Juste !","Bien vu.","Nickel.","Exact.","Tu l'as."][Q.i % 5] : "Presque. Regarde bien :"}</p>
+    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? ["Juste !","Bien vu.","Nickel.","Exact.","Tu l'as."][Q.i % 5] : Q.liveFixed ? "✓ Juste à la fin, avec de l'aide." : "Presque. Regarde bien :"}</p>
+      ${Q.liveFixed ? `<p>Tu as corrigé des lettres en direct : ce mot ne compte pas dans la note. Il reviendra dans « Refaire mes erreurs ».</p>` : ""}
       ${Q.ok ? "" : `<p>Réponse : <b>${esc(q.answer)}</b></p>`}<p class="fb-x">${esc(q.expl)}</p>
-      ${q.type === "type" && !Q.ok ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
+      ${q.type === "type" && !Q.ok && S.mode === "train" ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
       <button class="cta" data-act="next">${Q.i+1 >= total ? "Voir mon résultat" : "Suivante"}</button></div>`;
   }
   return h;
@@ -697,18 +773,21 @@ function viewQuiz(){
 function isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnswer(val, q.accept, q.lang, q.keep); }
 function validate(val){
   const Q = S.quiz; if (Q.done) return;
-  const q = Q.questions[Q.i], correct = isRight(q, val);
-  if (S.mode === "train"){ Q.ok = correct; Q.checked = true; render(); }
+  const q = Q.questions[Q.i], right = isRight(q, val);
+  const liveFixed = S.mode === "live" && q.type === "type" && right && !!Q.hadErr;   /* juste, mais avec de l'aide : 0 point */
+  const correct = right && !liveFixed;
+  if (S.mode !== "exam"){ Q.ok = correct; Q.liveFixed = liveFixed; Q.checked = true; render(); }
   else record(val, correct);
 }
 function record(val, correct){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i];
-  Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q });
+  const liveFixed = !!(S.mode === "live" && Q.liveFixed);
+  Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" });
   if (Q.i + 1 >= Q.questions.length){
     Q.done = true; Q.finishing = true; render();   /* verrou de fin : une seule fois */
     finishQuiz();
-  } else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; render(); }
+  } else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; Q.hadErr = false; Q.errSnap = ""; Q.liveFixed = false; render(); }
 }
 async function finishQuiz(){
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
@@ -748,7 +827,7 @@ async function analyse(id){
   try {
     const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
     if (!sample) throw new Error("no sample");
-    const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? "JUSTE" : "FAUX"}`).join("\n");
+    const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? "JUSTE" : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
     const prompt = `Tu es un professeur d'allemand suisse, bienveillant, qui analyse le test d'un élève de 13 ans (10e HarmoS, canton de Neuchâtel). Il révise l'Unit 2 « Fit und sportlich! » (vocabulaire du sport : disciplines, lieux, matériel, pages 11 et 12) pour un test le ${DUE.long}.
 
 Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
@@ -783,7 +862,7 @@ function copyText(att){
   const wrong = att.questions.filter(q => !q.correct);
   l.push(`ERREURS (${wrong.length}/${att.total})`);
   if (!wrong.length) l.push("Aucune erreur.");
-  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → j'ai répondu « ${q.user || "rien"} », attendu : ${q.answer}`));
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → ${q.liveFixed ? `corrigé en direct (j'avais écrit « ${q.liveSnap} », puis « ${q.user} »)` : `j'ai répondu « ${q.user || "rien"} »`}, attendu : ${q.answer}`));
   return l.join("\n");
 }
 function copyFor(id){
@@ -846,7 +925,7 @@ function dxDiff(user, right){
 }
 function dxLegend(){ return `<p class="dx-legend"><span>${dxBad("barré")} = ce qui était faux</span><span>${dxGood("souligné")} = ce qu'il fallait écrire</span><span>${dxMiss} = il manque quelque chose</span></p>`; }
 function errCard(q){
-  const Q = q.question || {}, isMcq = Q.type === "mcq", user = (q.user || "").trim();
+  const Q = q.question || {}, isMcq = Q.type === "mcq", user = ((q.liveFixed && q.liveSnap) ? q.liveSnap : (q.user || "")).trim();
   let right = q.answer, U, R, note = "";
   if (!user){ U = `<span class="dx-none">rien</span>`; R = dxGood(right); }
   else if (isMcq){ U = dxBad(user); R = dxGood(right); }
@@ -856,8 +935,9 @@ function errCard(q){
     const d = dxDiff(user, right); U = d.U; R = d.R;
     if (d.other) note = "Ce n'est pas le même mot : apprends-le en entier.";
   }
+  if (q.liveFixed) note = "Corrigé en direct : juste à la fin, mais avec de l'aide. Ce mot ne compte pas dans la note.";
   return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
-    <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : "Tu as écrit"}</span><span class="dx-ans">${U}</span></p>
+    <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : q.liveFixed ? "Tu avais écrit" : "Tu as écrit"}</span><span class="dx-ans">${U}</span></p>
     <p class="dx-line"><span class="dx-lab">✓ Il fallait</span><span class="dx-ans">${R}</span></p>
     ${note ? `<p class="dx-note">${note}</p>` : ""}${right !== q.answer ? `<p class="fine">Réponse complète : ${esc(q.answer)}</p>` : ""}
     <p class="rev-x">${esc(q.expl)}</p></div>`;
@@ -875,7 +955,7 @@ function viewResults(){
   const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
   const msg = pct === 100 ? "Sans faute. Tu es prêt pour mardi." : pct >= 80 ? "Solide. Repasse juste sur les quelques ratés." : pct >= 60 ? "La base est là. Refais tes erreurs, tu vas vite grimper." : pct >= 40 ? "Bon début. Relis la fiche, puis refais un tour en Échauffement." : "C'est le moment de relire la fiche tranquillement, mot par mot. Ça viendra.";
   return `<div class="scorebox${att.rattrapage ? " rattr-box" : ""}"><div class="score-n">${att.score}<small>/${att.total}</small></div><span class="score-note">note ${fmtNote(att.note)}</span>${att.rattrapage ? `<span class="rattr">Rattrapage — ${att.total} question${att.total>1?"s":""} ratée${att.total>1?"s":""} rejouée${att.total>1?"s":""}</span>` : ""}</div>
-  <p class="intro">${msg}</p>${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
+  <p class="intro">${msg}</p>${(() => { const lf = att.questions.filter(q => q.liveFixed).length; return lf ? `<p class="fine">Dont ${lf} mot${lf>1?"s":""} juste${lf>1?"s":""} après correction en direct : ${lf>1?"ils ne comptent":"il ne compte"} pas dans la note.</p>` : ""; })()}${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
   ${bilanBlock(att)}
   <p class="lab">${!wrong.length ? "Aucune erreur" : errView(att.id) ? `Mes erreurs (${wrong.length})` : `Toutes les questions (${att.total})`}</p>
   <div class="rev">${questionList(att)}</div>
@@ -989,7 +1069,7 @@ document.addEventListener("click", e => {
     case "quit": S.screen = "home"; S.quiz = null; render(); break;
     case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train") validate(Q.picked); else render(); break; }
     case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
-    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode === "train"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; render(); } else record("", false); break; }
+    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; render(); } else record("", false); break; }
     case "typo": record(Q.typed, true); break;
     case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
     case "toggleAll": S.results.all = !S.results.all; render(); break;
@@ -1009,7 +1089,7 @@ document.addEventListener("click", e => {
   }
 });
 document.addEventListener("input", e => {
-  if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); }
+  if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); }
 });
 document.addEventListener("keydown", e => {
   if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
