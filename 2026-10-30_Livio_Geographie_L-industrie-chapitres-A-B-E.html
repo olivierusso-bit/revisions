@@ -337,7 +337,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:12, date:"22.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand */
+const VERSION = { n:13, date:"22.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -771,11 +771,11 @@ const PAGES = [
 ];
 
 const LEXIQUE = [
-  ...DEFS.map(d => ({ t:d.term, h:d.short || d.h, ref:d.ch, book:d.p })),
+  ...DEFS.map(d => ({ t:d.term, h:d.short || d.h, ref:d.ch, book:d.p, s:"Livre " + d.p + (GLOSS.includes(d.k) ? ", glossaire en bas de page" : ", bulle jaune « " + d.term + " »") })),
   { t:"Filière", h:"Chaîne des étapes : matières premières → stockage → produits semi-finis → stockage → assemblage → stockage → transport vers les marchés (doc. 12).", ref:"A3", mine:true, s:"Livre p. 69, doc. 12 « Filière de production industrielle »" },
   { t:"Révolution industrielle", h:"Grand changement dans la façon de produire : 1.0 (1765), 2.0 (1870), 3.0 (1969), 4.0 (aujourd'hui).", ref:"B1", gen:true, s:"Livre p. 70, doc. 13 (définition exacte : lexique en fin de livre, pas encore photographié)" },
   { t:"Paradis fiscal", h:"Pays où les impôts sont très bas ; des entreprises y délocalisent leur siège social, souvent une simple boîte aux lettres (doc. 29).", ref:"B4", mine:true, s:"Livre p. 75, doc. 29 « Paradis fiscaux »" },
-  { t:"Passage stratégique", h:"Lieu par lequel il faut obligatoirement passer, afin d'éviter un immense détour ; son contrôle est source de pouvoir politique et économique.", ref:"E2", book:"p. 89" },
+  { t:"Passage stratégique", h:"Lieu par lequel il faut obligatoirement passer, afin d'éviter un immense détour ; son contrôle est source de pouvoir politique et économique.", ref:"E2", book:"p. 89", s:"Livre p. 89, texte « Un enjeu important : le contrôle des passages stratégiques »" },
 ];
 
 /* ============================================================
@@ -794,8 +794,8 @@ const REV = ["1.0","2.0","3.0","4.0"], REVACC = n => [n, n.charAt(0), n.charAt(0
 function defItems(keys){
   const out = [];
   keys.forEach(k => { const d = DEF[k];
-    out.push({ front:"Quel mot du livre correspond à cette définition : « " + (d.short || d.h) + " » ?", back:[d.term, ...d.acc], grp:"mot", expl:d.term + " : " + d.h, src:"livre " + d.p + ", bulle jaune" });
-    out.push({ front:"Quelle est la définition de « " + d.term + " » dans ton livre ?", back:[d.short || d.h], grp:"def", mcqOnly:true, expl:d.term + " : " + d.h, src:"livre " + d.p + ", bulle jaune" });
+    out.push({ front:"Quel mot du livre correspond à cette définition : « " + (d.short || d.h) + " » ?", back:[d.term, ...d.acc], grp:"mot", expl:d.term + " : " + d.h, src:"livre " + d.p + (GLOSS.includes(k) ? ", glossaire en bas de page" : ", bulle jaune « " + d.term + " »") });
+    out.push({ front:"Quelle est la définition de « " + d.term + " » dans ton livre ?", back:[d.short || d.h], grp:"def", mcqOnly:true, expl:d.term + " : " + d.h, src:"livre " + d.p + (GLOSS.includes(k) ? ", glossaire en bas de page" : ", bulle jaune « " + d.term + " »") });
   });
   return out;
 }
@@ -1032,7 +1032,7 @@ function buildTest(deckKeys, difficulty){
       ex++; const K = KINDS[kind];
       groups[kind].forEach(it => {
         num++;
-        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:d.key, consigne:K.consigne, word:it.front, answer:it.back[0], expl:explain(it, d), hint:"" };
+        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:d.key, consigne:K.consigne, word:it.front, answer:it.back[0], expl:explain(it, d), src:it.src || d.src, hint:"" };
         if (kind === "mcq") q.options = optionsFor(it, d); else q.accept = it.back;
         q.prompt = `${K.consigne} « ${q.word} »`;
         qs.push(q);
@@ -1307,7 +1307,7 @@ function viewQuiz(){
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>
   <div class="badges"><span class="num">N° ${q.num}</span><span class="chip">${esc(TAG_LABEL[q.tag] || q.tag)}</span><span class="ref">Exercice ${q.ex}</span></div>
-  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>`;
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.src ? `<p class="bsrc" style="margin:-4px 0 0">📖 Où vérifier : ${esc(q.src)}</p>` : ""}`;
   if (q.type === "mcq"){
     h += `<div class="opts">` + q.options.map((o, k) => {
       let c = "choice";
@@ -1421,7 +1421,7 @@ function copyText(att){
   const wrong = att.questions.filter(q => !q.correct);
   l.push(`ERREURS (${wrong.length}/${att.total})`);
   if (!wrong.length) l.push("Aucune erreur.");
-  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → j'ai répondu « ${q.user || "rien"} », attendu : ${q.answer}`));
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → j'ai répondu « ${q.user || "rien"} », attendu : ${q.answer}${(q.question && q.question.src) ? " (source : " + q.question.src + ")" : ""}`));
   return l.join("\n");
 }
 function copyFor(id){
@@ -1544,16 +1544,16 @@ function paperHtml(qs, part){
   const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
   const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
   const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
-    ? `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
-    : `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<div class="line"></div></div>`).join("")}</section>`).join("");
-  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b></div>`).join("")}</section>`).join("");
+    ? `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<span class="sr">Où vérifier : ${esc(q.src || "")}</span><div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
+    : `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<span class="sr">Où vérifier : ${esc(q.src || "")}</span><div class="line"></div></div>`).join("")}</section>`).join("");
+  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b><span class="sr">Source : ${esc(q.src || "")}</span></div>`).join("")}</section>`).join("");
   const head = `<h1>Géographie — L'industrie (chapitres A, B, E)</h1><p class="meta">Prénom : Livio · contrôle : ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Géographie L'industrie</title><style>
 @page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
 .ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.opts{display:flex;flex-direction:column;gap:3px;margin:4px 0 0 18px}.line{border-bottom:1px solid #444;height:22px;margin:0 0 0 18px}
-.k{font-size:13.5px;margin:3px 0}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
+.k{font-size:13.5px;margin:3px 0}.sr{display:block;font-size:11.5px;color:#555;margin:1px 0 0 18px}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
 </style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
 }
 async function savePaper(part){
@@ -1575,7 +1575,7 @@ async function savePaper(part){
     if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
     else {
       S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
-      S.paperCopy = "#PDF-GEO-INDUSTRIE\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
+      S.paperCopy = "#PDF-GEO-INDUSTRIE\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer} (source : ${q.src || ""})`).join("\n");
     }
   }
   render();
