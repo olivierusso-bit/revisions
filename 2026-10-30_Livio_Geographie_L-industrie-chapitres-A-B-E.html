@@ -139,6 +139,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .pbar-t .code{flex:none;font-size:13px;min-width:0;padding:2px 6px}
 .pbar-x{min-width:0;font-weight:700;font-size:14.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--dock)}
+.vid{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:4px;background:var(--board);color:#E9EEF2;text-decoration:none;margin:0}
+.vid b{display:block;font-size:15.5px;color:#fff}.vid small{display:block;font-size:12.5px;color:#C9D3E0}
+.vid-i{flex:none;width:38px;height:38px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:15px;padding-left:2px}
+.vid.off{background:var(--gen-wash);color:var(--gen);border:1px dashed var(--gen)}.vid.off b{color:var(--gen)}.vid.off small{color:var(--gen)}.vid.off .vid-i{background:var(--rule);color:var(--soft)}
+.toc-v{display:inline-block;font-size:11.5px;font-weight:700;background:var(--crane);color:var(--crane-ink);padding:0 6px;border-radius:3px;vertical-align:2px;white-space:nowrap}
 .pm{margin:0 0 6px;font-size:14.5px}
 .pm b{display:inline-block;width:16px}
 .bsrc{margin:-8px 0 0;font-size:12.5px;color:var(--soft);line-height:1.35}
@@ -337,7 +342,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:13, date:"22.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) */
+const VERSION = { n:14, date:"23.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -398,6 +403,20 @@ const PHOTOS = [
    p (texte), h3, def (term, h ; book = page du livre, gen = définition générale à vérifier), mine (ce que tu as écrit),
    html (schéma/tableau), tip (pour l'épreuve), todo (pièce manquante), see (renvois), src
    ============================================================ */
+/* Capsules vidéo (YouTube, non répertoriées) : une par page du Dossier. null = pas encore en ligne. */
+const VIDEOS = {
+  LIENS:"SUGl8ahdTFQ",
+  A1:"9_GnFXlz7H0", A2:"xmrMGbobsyo", A3:"Zsmymfj5Fx8",
+  B1:"rWIqHRNhZTc", B2:"vG6VEEZrmS8", B3:null, B4:null,
+  E1:"zRVQQnqfMIA", E2:"kF5NSVM7WLY", E3:"C0wmzrMzj9w", E4:"0bQG-5zcLp0",
+};
+const videoUrl = id => VIDEOS[id] ? "https://www.youtube.com/watch?v=" + VIDEOS[id] : null;
+function videoBtn(id){
+  if (!(id in VIDEOS)) return "";
+  const u = videoUrl(id);
+  return u ? `<a class="vid" href="${u}" target="_blank" rel="noopener"><span class="vid-i" aria-hidden="true">▶</span><span><b>Voir la vidéo du chapitre</b><small>Capsule ${esc(id === "LIENS" ? "d'introduction" : id)} · s'ouvre dans YouTube</small></span></a>`
+           : `<p class="vid off"><span class="vid-i" aria-hidden="true">▶</span><span><b>Vidéo bientôt disponible</b><small>La capsule ${esc(id)} n'est pas encore en ligne</small></span></p>`;
+}
 const CHAPTERS = [
   { key:"A", titre:"Chapitre A", sous:"D'où proviennent les objets que je possède ?" },
   { key:"B", titre:"Chapitre B", sous:"Où localiser la production industrielle ?" },
@@ -1167,10 +1186,10 @@ function viewDossier(){ return S.page ? viewPage(S.page) : viewToc(); }
 function viewToc(){
   let h = `<p class="intro">Ton cours complet, rangé comme ta feuille d'objectifs : un chapitre par « Je suis capable de ». Lis un chapitre, puis teste-toi avec les cartes ou le test.</p>
   <div class="legend"><p><span class="tag book">Livre p. 66</span> définition de ton livre (bulle jaune), mot pour mot : à savoir par cœur.</p><p><span class="tag mine">Ton dossier</span> ce qui vient de tes fiches et de tes réponses.</p><p><span class="tag gen">À vérifier</span> explication générale, pas encore dans tes pages : jamais interrogée.</p></div>`;
-  h += `<section class="toc-ch"><h2>Avant de commencer <span>Les liens entre les chapitres et les schémas à connaître</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">Le fil rouge du contrôle<span class="toc-s">Un objet fabriqué en morceaux dans le monde, puis transporté : comment A, B et E se tiennent</span></span></button></section>`;
+  h += `<section class="toc-ch"><h2>Avant de commencer <span>Les liens entre les chapitres et les schémas à connaître</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">Le fil rouge du contrôle${VIDEOS.LIENS ? ` <span class="toc-v">▶ vidéo</span>` : ""}<span class="toc-s">Un objet fabriqué en morceaux dans le monde, puis transporté : comment A, B et E se tiennent</span></span></button></section>`;
   CHAPTERS.forEach(c => {
     h += `<section class="toc-ch"><h2>${c.titre} <span>${esc(c.sous)}</span></h2>` + PAGES.filter(p => p.ch === c.key).map(p =>
-      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
+      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? ` <span class="toc-v">▶ vidéo</span>` : ""}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
   });
   h += `<section class="toc-ch"><h2>Pour finir</h2>
     <button class="toc-item" data-act="page" data-v="lex"><span class="code">ABC</span><span class="toc-t">Lexique<span class="toc-s">Les ${LEXIQUE.length} mots à connaître, en une ligne chacun</span></span></button>
@@ -1217,7 +1236,7 @@ function viewPage(id){
     h += `</article>`;
   } else {
     const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
-    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>
+    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${videoBtn(p.id)}
       ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + `</article>`;
   }
   return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
