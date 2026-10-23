@@ -143,6 +143,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .vid b{display:block;font-size:15.5px;color:#fff}.vid small{display:block;font-size:12.5px;color:#C9D3E0}
 .vid-i{flex:none;width:38px;height:38px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:15px;padding-left:2px}
 .vid.off{background:var(--gen-wash);color:var(--gen);border:1px dashed var(--gen)}.vid.off b{color:var(--gen)}.vid.off small{color:var(--gen)}.vid.off .vid-i{background:var(--rule);color:var(--soft)}
+.vthumb{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:4px;overflow:hidden;background:var(--board);cursor:pointer;color:#fff;text-align:left}
+.vthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.vthumb-play{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:24px;padding-left:4px;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.vthumb-t{position:absolute;left:0;right:0;bottom:0;padding:10px 12px;background:linear-gradient(transparent,rgba(10,17,23,.9))}
+.vthumb-t b{display:block;font-size:15.5px}.vthumb-t small{display:block;font-size:12.5px;color:#D5DEE6}
+.vplay{display:flex;flex-direction:column;gap:8px}
+.vframe{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:4px;overflow:hidden}
+.vframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vbar{display:grid;grid-template-columns:1fr auto;gap:8px}
+.vfb{margin:0}.vfb a{color:var(--soft)}
+.vdone{background:var(--good-wash);border:1px solid var(--good);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.vdone-t{margin:0;font-family:var(--display);font-weight:800;font-size:22px;color:var(--good)}
+.toc-v.seen{background:var(--good-wash);color:var(--good);border:1px solid var(--good)}
 .toc-v{display:inline-block;font-size:11.5px;font-weight:700;background:var(--crane);color:var(--crane-ink);padding:0 6px;border-radius:3px;vertical-align:2px;white-space:nowrap}
 .pm{margin:0 0 6px;font-size:14.5px}
 .pm b{display:inline-block;width:16px}
@@ -342,7 +355,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:14, date:"23.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) */
+const VERSION = { n:15, date:"23.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -411,12 +424,49 @@ const VIDEOS = {
   E1:"zRVQQnqfMIA", E2:"kF5NSVM7WLY", E3:"C0wmzrMzj9w", E4:"0bQG-5zcLp0",
 };
 const videoUrl = id => VIDEOS[id] ? "https://www.youtube.com/watch?v=" + VIDEOS[id] : null;
+const VIDS_ID = QUIZ_ID + "-videos-vues";
+function nextAfter(id){ const i = PAGES.findIndex(p => p.id === id); return PAGES[i+1] ? PAGES[i+1].id : null; }
 function videoBtn(id){
   if (!(id in VIDEOS)) return "";
-  const u = videoUrl(id);
-  return u ? `<a class="vid" href="${u}" target="_blank" rel="noopener"><span class="vid-i" aria-hidden="true">▶</span><span><b>Voir la vidéo du chapitre</b><small>Capsule ${esc(id === "LIENS" ? "d'introduction" : id)} · s'ouvre dans YouTube</small></span></a>`
-           : `<p class="vid off"><span class="vid-i" aria-hidden="true">▶</span><span><b>Vidéo bientôt disponible</b><small>La capsule ${esc(id)} n'est pas encore en ligne</small></span></p>`;
+  const v = VIDEOS[id], u = videoUrl(id), seen = !!S.vidSeen[id];
+  if (!v) return `<p class="vid off"><span class="vid-i" aria-hidden="true">▶</span><span><b>Vidéo bientôt disponible</b><small>La capsule ${esc(id)} n'est pas encore en ligne</small></span></p>`;
+  if (S.vidDone === id){
+    const decks = DECKS.filter(d => d.code === id), nxt = nextAfter(id);
+    return `<div class="vdone"><p class="vdone-t">✓ Capsule vue</p>
+      ${decks.length ? `<button class="cta" data-act="vidCards" data-v="${id}">Teste-toi maintenant : cartes ${esc(id)}</button>` : nxt ? `<button class="cta" data-act="page" data-v="${nxt}">Commencer le chapitre ${esc(nxt)}</button>` : ""}
+      <div class="row"><button class="ghost small" data-act="vidReplay" data-v="${id}">Revoir la capsule</button><button class="ghost small" data-act="vidHide">Lire le chapitre</button></div></div>`;
+  }
+  if (S.vidOpen === id){
+    const src = `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin && location.origin !== "null" ? location.origin : "")}`;
+    return `<div class="vplay"><div class="vframe"><iframe id="vid-frame" src="${src}" title="Capsule vidéo ${esc(id)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>
+      <p class="fine vfb">La vidéo ne s'affiche pas ? <a href="${u}" target="_blank" rel="noopener">L'ouvrir dans YouTube</a></p></div>`;
+  }
+  return `<button class="vthumb" data-act="vidPlay" data-v="${id}" aria-label="Lire la capsule vidéo ${esc(id)}">
+    <img src="https://i.ytimg.com/vi/${v}/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">
+    <span class="vthumb-play" aria-hidden="true">▶</span>
+    <span class="vthumb-t"><b>Regarder la capsule ${esc(id === "LIENS" ? "d'introduction" : id)}</b><small>${seen ? "✓ déjà vue · " : ""}lue ici, sans quitter le Dossier</small></span></button>`;
 }
+function vidPost(cmd){ const f = document.getElementById("vid-frame"); if (f && f.contentWindow) try { f.contentWindow.postMessage(JSON.stringify(cmd), "*"); } catch(e){} }
+function vidListen(){
+  const f = document.getElementById("vid-frame"); if (!f) return;
+  const hello = () => { vidPost({ event:"listening", id:"vid", channel:"widget" }); vidPost({ event:"command", func:"addEventListener", args:["onStateChange"], id:"vid", channel:"widget" }); };
+  f.addEventListener("load", () => { hello(); setTimeout(hello, 800); });
+}
+function vidEnded(id){
+  if (S.vidOpen !== id) return;
+  S.vidOpen = null; S.vidDone = id; S.vidSeen[id] = Date.now(); saveVids(); render();
+  const el = document.querySelector(".vdone"); if (el) el.scrollIntoView({ block:"center" });
+}
+async function saveVids(){ try { await store.setDoc(VIDS_ID, S.vidSeen); } catch(e){} }
+document.addEventListener("error", e => { const t = e.target; if (t && t.tagName === "IMG" && t.closest && t.closest(".vthumb")) t.remove(); }, true);
+window.addEventListener("message", e => {
+  if (!/youtube(-nocookie)?\.com$/.test(String(e.origin).replace(/^https?:\/\/(www\.)?/, "").split(":")[0])) return;
+  let d = e.data; if (typeof d === "string"){ try { d = JSON.parse(d); } catch(err){ return; } }
+  if (!d || !S.vidOpen) return;
+  const st = d.event === "onStateChange" ? d.info : (d.event === "infoDelivery" && d.info && "playerState" in d.info ? d.info.playerState : null);
+  if (st === 0) vidEnded(S.vidOpen);
+});
 const CHAPTERS = [
   { key:"A", titre:"Chapitre A", sous:"D'où proviennent les objets que je possède ?" },
   { key:"B", titre:"Chapitre B", sous:"Où localiser la production industrielle ?" },
@@ -1124,6 +1174,7 @@ const S = {
   bilan:{},
 };
 const REVIEW_ID = QUIZ_ID + "-revue-cartes";
+S.vidSeen = {}; S.vidOpen = null; S.vidDone = null;
 S.review = {}; S.rvMsg = ""; S.rvCopy = ""; S.rvCopied = false; S.rvConfirm = false;
 try { S.revMode = localStorage.getItem(QUIZ_ID + "-revmode") === "1"; } catch(e){ S.revMode = false; }
 function cardId(d, it){ let h = 5381; for (const c of it.front) h = ((h << 5) + h + c.charCodeAt(0)) | 0; return d.key + "-" + (h >>> 0).toString(36); }
@@ -1186,10 +1237,10 @@ function viewDossier(){ return S.page ? viewPage(S.page) : viewToc(); }
 function viewToc(){
   let h = `<p class="intro">Ton cours complet, rangé comme ta feuille d'objectifs : un chapitre par « Je suis capable de ». Lis un chapitre, puis teste-toi avec les cartes ou le test.</p>
   <div class="legend"><p><span class="tag book">Livre p. 66</span> définition de ton livre (bulle jaune), mot pour mot : à savoir par cœur.</p><p><span class="tag mine">Ton dossier</span> ce qui vient de tes fiches et de tes réponses.</p><p><span class="tag gen">À vérifier</span> explication générale, pas encore dans tes pages : jamais interrogée.</p></div>`;
-  h += `<section class="toc-ch"><h2>Avant de commencer <span>Les liens entre les chapitres et les schémas à connaître</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">Le fil rouge du contrôle${VIDEOS.LIENS ? ` <span class="toc-v">▶ vidéo</span>` : ""}<span class="toc-s">Un objet fabriqué en morceaux dans le monde, puis transporté : comment A, B et E se tiennent</span></span></button></section>`;
+  h += `<section class="toc-ch"><h2>Avant de commencer <span>Les liens entre les chapitres et les schémas à connaître</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">Le fil rouge du contrôle${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">Un objet fabriqué en morceaux dans le monde, puis transporté : comment A, B et E se tiennent</span></span></button></section>`;
   CHAPTERS.forEach(c => {
     h += `<section class="toc-ch"><h2>${c.titre} <span>${esc(c.sous)}</span></h2>` + PAGES.filter(p => p.ch === c.key).map(p =>
-      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? ` <span class="toc-v">▶ vidéo</span>` : ""}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
+      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? (S.vidSeen[p.id] ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
   });
   h += `<section class="toc-ch"><h2>Pour finir</h2>
     <button class="toc-item" data-act="page" data-v="lex"><span class="code">ABC</span><span class="toc-t">Lexique<span class="toc-s">Les ${LEXIQUE.length} mots à connaître, en une ligne chacun</span></span></button>
@@ -1605,6 +1656,8 @@ async function loadHistory(){
   try {
     await store.init();
     try { S.review = (await store.getDoc(REVIEW_ID)) || {}; } catch(e){ S.review = {}; }
+    try { S.vidSeen = (await store.getDoc(VIDS_ID)) || {}; } catch(e){ S.vidSeen = {}; }
+    if (S.screen === "dossier") render();
     if (S.screen === "cards") render();
     let raw = await store.list();
     raw.sort((a,b) => b.date - a.date);
@@ -1625,8 +1678,13 @@ document.addEventListener("click", e => {
   const act = el.dataset.act, v = el.dataset.v;
   const Q = S.quiz;
   switch(act){
-    case "nav": S.screen = v; S.scores.confirm = false; render(); window.scrollTo(0,0); break;
-    case "page": S.screen = "dossier"; S.page = v || null; render(); window.scrollTo(0,0); break;
+    case "nav": S.screen = v; S.scores.confirm = false; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
+    case "page": S.screen = "dossier"; S.page = v || null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
+    case "vidPlay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
+    case "vidReplay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
+    case "vidFinish": S.vidOpen = v; vidEnded(v); break;
+    case "vidHide": S.vidOpen = null; S.vidDone = null; render(); break;
+    case "vidCards": S.selected = DECKS.filter(d => d.code === v).map(d => d.key); S.cards.order = []; S.cards.only = false; S.frozen = null; S.vidOpen = null; S.vidDone = null; S.screen = "cards"; render(); window.scrollTo(0,0); break;
     case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : DECKS.map(d => d.key).filter(k => k === v || S.selected.includes(k)); S.frozen = null; S.cards.order = []; render(); break;
     case "allDecks": S.selected = S.selected.length === DECKS.length ? [] : DECKS.map(d => d.key); S.frozen = null; S.cards.order = []; render(); break;
     case "toCards": S.screen = "cards"; render(); break;
