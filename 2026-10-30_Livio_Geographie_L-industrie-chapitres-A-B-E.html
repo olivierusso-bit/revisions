@@ -161,6 +161,22 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ctest-t{margin:0;font-weight:700;font-size:15px;color:var(--box)}.ctest-t small{display:block;font-weight:400;font-size:12.5px;color:var(--soft)}
 .ctest-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);cursor:pointer;min-width:0}
 .ctest-b span{font-size:17px}.ctest-b b{font-size:13px;line-height:1.2;text-align:center}
+.prebox{border:2px dashed var(--crane);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--sheet)}
+.prebox-t,.blank-t{margin:0;font-weight:700;font-size:15.5px}.prebox-t small,.blank-t small{display:block;font-weight:400;font-size:13px;color:var(--soft)}
+.prebox ol{margin:0;padding-left:20px;font-size:15px}.prebox li{margin:3px 0}.prebox details li{font-size:14.5px}.prebox .bsrc{display:block;margin:2px 0 0}
+.pause{border-left:5px solid var(--crane);background:var(--book-wash);border-radius:0 4px 4px 0;padding:9px 12px;display:flex;flex-direction:column;gap:5px}
+.pause-t{margin:0;font-family:var(--display);font-weight:800;font-size:17px;color:var(--book-ink)}
+.pause-q{margin:0;font-weight:700;font-size:15.5px}
+.pause details p{margin:6px 0 0;font-size:15px}
+details summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--box);padding:4px 0}
+.blank{border:2px solid var(--board);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--dock)}
+.blank-c{margin:0;font-size:15.5px}
+.blank-l{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.blank-l label{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;cursor:pointer}.blank-l input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--box)}
+.svgfig{margin:0;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:8px}
+.svgfig svg{display:block;width:100%;height:auto}
+.blank .bsrc{margin:6px 0 0}
+.svgfig figcaption{font-size:13px;color:var(--soft);margin-top:4px;font-weight:700}
 .caps-cta{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;border:0;border-radius:4px;background:var(--board);color:#E9EEF2;cursor:pointer}
 .caps-cta b{display:block;font-family:var(--display);font-size:20px;color:#fff;line-height:1.1}.caps-cta small{display:block;font-size:13px;color:#C9D3E0}
 .caps-cta-i,.caps-play{flex:none;width:42px;height:42px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:16px;padding-left:3px;border:0;cursor:pointer}
@@ -375,7 +391,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:18, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question · v18 : page « Capsules » (les 12 vidéos dans l'ordre, lues dans la page, enchaînement capsule suivante, suivi « vue » commun) */
+const VERSION = { n:20, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question · v18 : questions « avant la capsule », pauses « ⏸ Mets sur pause et réponds », feuille blanche en fin de chapitre, trois schémas dessinés en SVG (filière du jean, passages stratégiques, ruptures de charge) · v19 : page « Capsules » (les 12 vidéos dans l'ordre, lues dans la page, enchaînement capsule suivante, suivi « vue » commun) · v20 : « Teste-toi sur ce chapitre » juste sous le lecteur, pendant la capsule (chapitres et page Capsules) */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -501,7 +517,7 @@ function vidPlayer(id){
   {
     const src = `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin && location.origin !== "null" ? location.origin : "")}`;
     return `<div class="vplay"><div class="vframe"><iframe id="vid-frame" src="${src}" title="Capsule vidéo ${esc(id)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
-      <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>
+      <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>${chapTest(id, "play")}
       <p class="fine vfb">La vidéo ne s'affiche pas ? <a href="${u}" target="_blank" rel="noopener">L'ouvrir dans YouTube</a></p></div>`;
   }
 }
@@ -599,8 +615,141 @@ const DEF = Object.fromEntries(DEFS.map(d => [d.k, d]));
 const GLOSS = ["sf","sto","cm","ind","prod","tkm","tir","ferr","detr","isth","evp"];
 const bookDef = k => ({ t:"def", book:DEF[k].p, term:DEF[k].term, h:DEF[k].h, s:"Livre " + DEF[k].p + (GLOSS.includes(k) ? ", glossaire en bas de page" : ", bulle jaune « " + DEF[k].term + " »") });
 
+/* ---------- SCHÉMAS SVG (dessinés pour le Dossier, jamais tirés du livre) ----------
+   Chaque fonction reçoit une palette : P_PAGE (couleurs du thème, clair ou sombre) pour l'affichage,
+   P_FIXE (couleurs fixes) pour l'export JSON, afin que le SVG reste lisible seul dans l'outil vidéo. */
+const P_PAGE = { ink:"var(--ink)", soft:"var(--soft)", rule:"var(--rule)", sheet:"var(--sheet)", box:"var(--box)", wash:"var(--box-wash)",
+  crane:"var(--crane)", craneInk:"var(--crane-ink)", mp:"var(--mp)", sf:"var(--sf)", as:"var(--as)", ve:"var(--ve)", land:"var(--gen-wash)", coast:"var(--st)", sea:"var(--box-wash)",
+  font:"Barlow, system-ui, sans-serif" };
+const P_FIXE = { ink:"#16232E", soft:"#55656F", rule:"#C3CED6", sheet:"#FFFFFF", box:"#1F5F8B", wash:"#E1ECF4",
+  crane:"#F2B705", craneInk:"#4A3800", mp:"#2E7D4F", sf:"#2D5BA8", as:"#B23A2B", ve:"#8A5A2B", land:"#DCE3E8", coast:"#8D9AA4", sea:"#E1ECF4",
+  font:"Arial, Helvetica, sans-serif" };
+const svgEsc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function svgText(P, x, y, lines, o = {}){
+  const size = o.size || 11, lh = o.lh || size * 1.25, anchor = o.anchor || "middle";
+  return `<text x="${x}" y="${y}" text-anchor="${anchor}" style="font-family:${P.font};font-size:${size}px">` +
+    lines.map((t, i) => `<tspan x="${x}" dy="${i ? lh : 0}" style="fill:${i === 0 && !o.flat ? (o.c1 || P.ink) : (o.c2 || P.soft)};font-weight:${i === 0 && !o.flat ? 700 : 400}">${svgEsc(t)}</tspan>`).join("") + `</text>`;
+}
+function svgArrow(P, x1, y1, x2, y2, c){
+  const a = Math.atan2(y2 - y1, x2 - x1), h = 6;
+  const p1 = [x2 - h*Math.cos(a - 0.45), y2 - h*Math.sin(a - 0.45)], p2 = [x2 - h*Math.cos(a + 0.45), y2 - h*Math.sin(a + 0.45)];
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${c || P.soft};stroke-width:1.4"/>` +
+    `<polygon points="${x2},${y2} ${p1[0].toFixed(1)},${p1[1].toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}" style="fill:${c || P.soft}"/>`;
+}
+function svgBox(P, x, y, w, h, c, lines, size){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" style="fill:${P.sheet};stroke:${c};stroke-width:1.5"/>` +
+    `<rect x="${x}" y="${y}" width="5" height="${h}" rx="2" style="fill:${c}"/>` +
+    svgText(P, x + 2.5 + w/2, y + (h - (lines.length - 1) * (size || 10.5) * 1.25) / 2 + (size || 10.5) * 0.36, lines, { size: size || 10.5 });
+}
+
+/* 1. La filière du jean (A3) — d'après le livre pp. 68-69 (doc. 5 à 12) et la fiche A, activité 3 */
+function svgJean(P){
+  const lab = (y, t, c) => `<text x="4" y="${y}" style="font-family:${P.font};font-size:12px;font-weight:700;fill:${c}">${svgEsc(t)}</text>`;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 372" role="img" aria-label="La filière du jean : matières premières, produits semi-finis, assemblage, vente">`;
+  s += lab(14, "1 · Matières premières", P.mp);
+  s += svgBox(P, 4, 22, 110, 44, P.mp, ["Coton", "Bénin"]) + svgBox(P, 125, 22, 110, 44, P.mp, ["Pétrole", "Arabie saoudite"]) + svgBox(P, 246, 22, 110, 44, P.mp, ["Cuivre et zinc", "Australie, Namibie"]);
+  s += svgArrow(P, 59, 66, 46, 110) + svgArrow(P, 180, 66, 314, 110) + svgArrow(P, 301, 66, 320, 110);
+  s += lab(102, "2 · Produits semi-finis", P.sf).replace('x="4"', 'x="4"');
+  const sf = [["Toile denim","Italie"],["Indigo","Allemagne"],["Fil à coudre","Turquie, Hongrie","et Royaume-Uni"],["Polyester","et laiton","Japon"]];
+  sf.forEach((t, i) => { s += svgBox(P, 4 + i*88, 112, 86, 52, P.sf, t, 9.5); });
+  [48, 136, 224, 312].forEach(x => { s += svgArrow(P, x, 164, 180 + (x - 180) * 0.3, 214); });
+  s += svgBox(P, 50, 216, 260, 44, P.as, ["3 · Assemblage du produit fini", "Ras Jebel (Tunisie) · 500 ouvrières"], 11).replace(/fill:var\(--ink\)|fill:#16232E/, m => m);
+  s += svgArrow(P, 180, 260, 180, 302);
+  s += `<text x="188" y="285" style="font-family:${P.font};font-size:10px;fill:${P.soft}">train, bateau, camion, camionnette</text>`;
+  s += svgBox(P, 50, 304, 260, 44, P.ve, ["4 · Distribution et vente", "Le jean est vendu à Ipswich (Royaume-Uni)"], 11);
+  s += `<text x="180" y="364" text-anchor="middle" style="font-family:${P.font};font-size:10.5px;fill:${P.soft}">Chaque flèche est un transport · 11 pays en tout</text>`;
+  return s + `</svg>`;
+}
+
+/* 2. Les passages stratégiques (E2) — schéma simplifié, pas à l'échelle.
+   Numéros 1 à 7 : ta carte (fiche E) ; 8 et 9 : la carte du livre (doc. 74) et la route du Marco Polo (doc. 81). */
+const GEO = {
+  lon0:-95, lat0:70, k:1.47,
+  land:[
+    [[-168,66],[-140,70],[-95,72],[-80,63],[-65,60],[-55,52],[-66,44],[-75,35],[-81,25],[-97,26],[-97,19],[-87,21],[-83,10],[-79.5,9.3],[-78,7.8],[-80,7.4],[-85,10],[-92,15],[-105,20],[-112,30],[-117,33],[-124,40],[-124,48],[-135,58],[-150,60],[-165,60]],
+    [[-77.5,8],[-75,11],[-62,10.5],[-50,0],[-35,-5],[-39,-14],[-48,-26],[-58,-38],[-65,-42],[-68,-54],[-72,-50],[-74,-40],[-71,-18],[-81,-5],[-79,1]],
+    [[-60,75],[-20,75],[-22,70],[-42,60],[-50,64],[-55,70]],
+    [[-5.6,36],[-9,37],[-8.9,43],[-2,43.5],[-4.5,48],[1.6,50.9],[4.4,52],[8,54],[8,57],[12,56],[10,59],[5,62],[15,69],[28,71],[40,67],[60,70],[80,73],[100,75],[140,73],[170,70],[180,66],[180,62],[160,60],[155,57],[140,54],[135,43],[129,35],[126,35],[122,40],[121.5,31],[118,24],[110,21],[108,16],[105,9],[100,13],[101,3],[103.6,1.3],[100,7],[98,8],[97,16],[91,22],[86,20],[80,15],[77,8],[73,20],[67,25],[57,25.6],[56.3,27],[52,27.8],[48.5,30],[48,29],[50,26.5],[51.5,24.5],[54,24.2],[56,26.2],[56.5,24],[59.5,22.5],[55,17],[52,16],[45,13],[43.4,12.8],[42.5,15],[39,21],[35,28],[34.5,29.5],[34,31.3],[35.5,36],[36,36.8],[30,36.2],[27,37],[26,40],[29,41],[22,37],[19.5,40],[13,45.5],[12.3,44],[16,40],[15.6,38],[12.5,41.8],[8.5,44.4],[3,43.3],[3.2,42],[0,39],[-0.5,37.5]],
+    [[-5.9,35.8],[10,37],[11,33],[20,31],[25,31.5],[32.3,31.3],[32.5,29.9],[35,24],[37.5,18],[39.5,15.5],[43.2,12.4],[43.3,11.6],[51,11.8],[51,10],[45,2],[40,-3],[39,-7],[40.5,-15],[35,-24],[32.5,-28],[27,-34],[18.5,-34.4],[17,-29],[12,-18],[13.5,-11],[9,-1],[9,4],[5,6],[-8,4.5],[-13,8.5],[-17,14.7],[-16,22],[-13,27.5],[-9.5,30.5]],
+    [[114,-22],[122,-17],[130,-12],[137,-12],[142,-11],[146,-19],[153,-26],[150,-37],[141,-38],[135,-35],[130,-32],[115,-34],[113,-26]],
+    [[95.5,5.5],[98,3],[104,-1],[106,-6],[102,-4],[95,3]],
+    [[109,1.5],[117,7],[119,1],[116,-4],[110,-3]],
+    [[130,31],[135,34],[141,38],[142,44],[140,41],[133,35]],
+    [[-5,50],[1.4,51.2],[0,53],[-2,56],[-3,58.6],[-6,57],[-5,54],[-3,53.5],[-5,51.5]],
+  ],
+  route:[[121.5,31.2],[122,25],[114,12],[105,4],[103.8,1.5],[99,5.5],[95,6.5],[80,5],[60,12],[48,12.4],[43.3,12.6],[40,17],[36,24],[33,28.5],[32.4,30.5],[32.3,31.6],[25,33.5],[15,36.5],[5,37.5],[-5.6,36],[-10,38],[-10,43.5],[-6,48],[-2,50],[1.5,51],[4.2,51.9]],
+  passages:[
+    { n:1, nom:"Détroit de Gibraltar", lon:-5.6, lat:36, dx:-14, dy:8, src:"fiche E" },
+    { n:2, nom:"Canal de Panama", lon:-79.7, lat:9, dx:11, dy:9, src:"fiche E" },
+    { n:3, nom:"Détroit de Malacca", lon:101.5, lat:2.5, dx:-13, dy:11, src:"fiche E" },
+    { n:4, nom:"Cap de Bonne-Espérance", lon:18.5, lat:-34.4, dx:0, dy:13, src:"fiche E" },
+    { n:5, nom:"Cap Horn", lon:-67.3, lat:-56, dx:15, dy:-8, src:"fiche E" },
+    { n:6, nom:"Pas de Calais", lon:1.5, lat:51, dx:-15, dy:-9, src:"fiche E" },
+    { n:7, nom:"Détroit d'Ormuz", lon:56.3, lat:26.6, dx:11, dy:-10, src:"fiche E" },
+    { n:8, nom:"Canal de Suez", lon:32.3, lat:30.5, dx:-5, dy:-14, src:"livre doc. 74" },
+    { n:9, nom:"Détroit de Bab-el-Mandeb", lon:43.3, lat:12.6, dx:-7, dy:12, src:"livre doc. 74" },
+  ],
+  ports:[ { nom:"Shanghai", lon:121.5, lat:31.2, dx:-6, dy:-6 }, { nom:"Rotterdam", lon:4.3, lat:51.9, dx:6, dy:-6 } ],
+};
+const gx = lon => +((lon - GEO.lon0) * GEO.k).toFixed(1), gy = lat => +((GEO.lat0 - lat) * GEO.k).toFixed(1);
+function svgPassages(P){
+  const W = 360, H = 191, path = pts => "M" + pts.map(([lo, la]) => gx(lo) + "," + gy(la)).join("L");
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 318" role="img" aria-label="Carte simplifiée des neuf passages stratégiques et de la route maritime entre Shanghai et Rotterdam">`;
+  s += `<defs><clipPath id="geo-clip"><rect x="0" y="0" width="${W}" height="${H}" rx="4"/></clipPath></defs>`;
+  s += `<g clip-path="url(#geo-clip)"><rect x="0" y="0" width="${W}" height="${H}" style="fill:${P.sea}"/>`;
+  GEO.land.forEach(p => { s += `<path d="${path(p)}Z" style="fill:${P.land};stroke:${P.coast};stroke-width:0.6;stroke-linejoin:round"/>`; });
+  s += `<path d="${path(GEO.route)}" style="fill:none;stroke:${P.box};stroke-width:1.8;stroke-dasharray:4 3;stroke-linecap:round"/>`;
+  GEO.ports.forEach(p => { s += `<rect x="${gx(p.lon) - 2.5}" y="${gy(p.lat) - 2.5}" width="5" height="5" style="fill:${P.box}"/>` +
+    `<text x="${gx(p.lon) + p.dx}" y="${gy(p.lat) + p.dy}" ${p.dx < 0 ? 'text-anchor="end"' : ""} style="font-family:${P.font};font-size:9.5px;font-weight:700;fill:${P.box}">${p.nom}</text>`; });
+  GEO.passages.forEach(p => {
+    const x = gx(p.lon), y = gy(p.lat), cx = x + p.dx, cy = y + p.dy;
+    s += `<line x1="${x}" y1="${y}" x2="${cx}" y2="${cy}" style="stroke:${P.ink};stroke-width:0.8"/><circle cx="${x}" cy="${y}" r="1.8" style="fill:${P.ink}"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="6.5" style="fill:${p.n > 7 ? P.sheet : P.crane};stroke:${P.ink};stroke-width:1"/>`;
+    s += `<text x="${cx}" y="${cy + 3.4}" text-anchor="middle" style="font-family:${P.font};font-size:9.5px;font-weight:700;fill:${p.n > 7 ? P.ink : P.craneInk}">${p.n}</text>`;
+  });
+  s += `</g>`;
+  GEO.passages.forEach((p, i) => {
+    const col = i < 5 ? 0 : 1, row = i < 5 ? i : i - 5, x = 4 + col * 182, y = 210 + row * 17;
+    s += `<circle cx="${x + 6}" cy="${y - 3.5}" r="6" style="fill:${p.n > 7 ? P.sheet : P.crane};stroke:${P.ink};stroke-width:1"/>` +
+      `<text x="${x + 6}" y="${y}" text-anchor="middle" style="font-family:${P.font};font-size:9px;font-weight:700;fill:${p.n > 7 ? P.ink : P.craneInk}">${p.n}</text>` +
+      `<text x="${x + 16}" y="${y}" style="font-family:${P.font};font-size:10.5px;fill:${P.ink}">${svgEsc(p.nom)}</text>`;
+  });
+  s += `<line x1="186" y1="278" x2="204" y2="278" style="stroke:${P.box};stroke-width:1.8;stroke-dasharray:4 3"/>` +
+    `<text x="208" y="281.5" style="font-family:${P.font};font-size:10.5px;fill:${P.ink}">Route Shanghai – Rotterdam</text>`;
+  s += `<text x="4" y="300" style="font-family:${P.font};font-size:10px;fill:${P.soft}">Jaune : les 7 passages de ta carte · blanc : 2 en plus sur la carte du livre.</text>` +
+    `<text x="4" y="313" style="font-family:${P.font};font-size:10px;fill:${P.soft}">Schéma simplifié, pas à l'échelle.</text>`;
+  return s + `</svg>`;
+}
+
+/* 3. Les ruptures de charge du jean (E2) — d'après le livre p. 68, doc. 5 */
+function svgRuptures(P){
+  const X = 34;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 330" role="img" aria-label="Le voyage du jean de la Tunisie au Royaume-Uni : quatre modes de transport et trois ruptures de charge">`;
+  const node = (y, l1, l2) => `<rect x="4" y="${y}" width="352" height="38" rx="3" style="fill:${P.wash};stroke:${P.box};stroke-width:1.4"/>` + svgText(P, 14, y + 15, [l1, l2], { anchor:"start", size:11 });
+  const seg = (y1, y2, mode, ticks) => {
+    let g = `<line x1="${X}" y1="${y1}" x2="${X}" y2="${y2}" style="stroke:${P.box};stroke-width:4;stroke-linecap:round"/>`;
+    if (ticks) for (let y = y1 + 5; y < y2 - 2; y += 6) g += `<line x1="${X - 6}" y1="${y}" x2="${X + 6}" y2="${y}" style="stroke:${P.box};stroke-width:1.2"/>`;
+    return g + `<text x="${X + 18}" y="${(y1 + y2) / 2 + 4}" style="font-family:${P.font};font-size:12px;font-weight:700;fill:${P.box}">${svgEsc(mode)}</text>`;
+  };
+  const rup = (y, n, t) => `<polygon points="${X},${y - 9} ${X + 9},${y} ${X},${y + 9} ${X - 9},${y}" style="fill:${P.crane};stroke:${P.ink};stroke-width:1"/>` +
+    `<text x="${X}" y="${y + 3.5}" text-anchor="middle" style="font-family:${P.font};font-size:10px;font-weight:700;fill:${P.craneInk}">${n}</text>` +
+    `<text x="${X + 18}" y="${y + 4}" style="font-family:${P.font};font-size:11px;fill:${P.ink}"><tspan style="font-weight:700">Rupture de charge ${n}</tspan> : ${svgEsc(t)}</text>`;
+  s += node(4, "Départ : usine d'assemblage", "Ras Jebel (Tunisie)");
+  s += seg(44, 80, "Train", true) + rup(92, 1, "du train au bateau");
+  s += seg(104, 140, "Bateau") + rup(152, 2, "du bateau au camion");
+  s += seg(164, 200, "Camion, par le tunnel sous la Manche") + rup(212, 3, "du camion à la camionnette");
+  s += seg(224, 254, "Camionnette");
+  s += node(258, "Arrivée : le magasin", "Ipswich (Royaume-Uni)");
+  s += `<text x="4" y="312" style="font-family:${P.font};font-size:10.5px;fill:${P.soft}">4 modes de transport à la suite = un transport intermodal.</text>` +
+    `<text x="4" y="326" style="font-family:${P.font};font-size:10.5px;fill:${P.soft}">Chaque losange = une rupture de charge.</text>`;
+  return s + `</svg>`;
+}
+const SVGS = { jean:svgJean, passages:svgPassages, ruptures:svgRuptures };
+
 const PAGES = [
 { id:"LIENS", ch:"", titre:"Le fil rouge du contrôle", court:"",
+  pre:[{ q:"D'après toi, un jean est-il fabriqué dans un seul pays ?", a:"Non : le jean de ton livre passe par 11 pays, des matières premières jusqu'au magasin.", s:"Livre p. 68, doc. 5 · fiche A, act. 3a" }, { q:"Quelles sont les trois questions de ton contrôle, une par chapitre ?", a:"A : comment fabrique-t-on un produit ? B : où le fabrique-t-on, et pourquoi là ? E : comment les morceaux voyagent-ils ?", s:"Feuille d'objectifs (chapitres A, B, E)" }],
+  blank:{ consigne:"Sur une feuille blanche, raconte l'histoire du contrôle en trois étapes, avec un mot clé par chapitre.", points:["A : un objet est fabriqué en morceaux, étape par étape (la filière)", "B : chaque morceau est fabriqué là où c'est le plus avantageux (mondialisation, délocalisation)", "E : les morceaux voyagent par plusieurs transports (conteneur, ruptures de charge)"], s:"Feuille d'objectifs · liens entre les chapitres" },
   blocks:[
   { t:"p", s:"Feuille d'objectifs « Je suis capable de » (chapitres A, B, E)", h:"Tout ton contrôle raconte une seule histoire : un objet de tous les jours (un jean, un ballon, un natel) est fabriqué en morceaux dans plusieurs pays, puis transporté jusqu'au magasin. Chaque chapitre répond à une question de cette histoire." },
   { t:"html", s:"Feuille d'objectifs (chapitres A, B, E)", h:`<div class="trio">
@@ -617,6 +766,7 @@ const PAGES = [
     [["A3","E1"], "Dans le schéma de la filière, chaque flèche est un transport. Plus il y a de pays, plus il y a de transports et de ruptures de charge. Le jean du livre voyage en train, en bateau, en camion puis en camionnette."],
     [["E2","E4"], "Pour que tous ces transports coûtent moins cher et aillent vite, on utilise partout le même conteneur, et les navires empruntent les passages stratégiques."],
     [["E1","B2"], "Le livre fait le lien (p. 88) : autrefois, le transport coûtait cher et décidait où placer les entreprises, c'est le critère de proximité de la révolution 1.0. Aujourd'hui, la part du transport dans le prix d'un produit fini est très souvent insignifiante : on peut produire loin des clients."]] },
+  { t:"pause", q:"Pourquoi l'étiquette « Made in… » ne dit-elle pas tout ? Quel mot du chapitre B l'explique ?", a:"Les étapes de fabrication sont dispersées dans plusieurs pays : c'est la mondialisation, souvent par délocalisation.", s:"Liens A2 et B1 · livre p. 66 et p. 70" },
   { t:"h3", h:"Les schémas à savoir lire et redessiner" },
   { t:"html", s:"Livre p. 69 (doc. 12), p. 70 (doc. 13), p. 73 (doc. 22), p. 75 (doc. 27), p. 89 (doc. 74), pp. 90-91 (doc. 76 à 80), p. 92 (doc. 82 et 83) · fiche E, carte des passages stratégiques", h:`<div class="tbl"><table><thead><tr><th>Schéma du livre</th><th>Où dans le Dossier</th></tr></thead><tbody>
     <tr><td><b>Doc. 12</b> · la filière de production industrielle</td><td><button class="back" data-act="page" data-v="A3">A3</button></td></tr>
@@ -626,23 +776,29 @@ const PAGES = [
     <tr><td><b>Doc. 76 à 80</b> · les cinq modes de transport, avantages et inconvénients</td><td><button class="back" data-act="page" data-v="E1">E1</button></td></tr>
     <tr><td><b>Doc. 74</b> · flux et passages stratégiques (et ta carte des sept passages)</td><td><button class="back" data-act="page" data-v="E2">E2</button></td></tr>
     <tr><td><b>Doc. 82 et 83</b> · les grands ports à conteneurs et les porte-conteneurs</td><td><button class="back" data-act="page" data-v="E4">E4</button></td></tr></tbody></table></div>` },
+  { t:"pause", q:"Cite trois schémas du livre que tu dois savoir redessiner.", a:"Par exemple : la filière (doc. 12), la frise des quatre révolutions (doc. 13) et le réseau d'Apple (doc. 27). Il y a aussi les critères du doc. 22, les modes de transport, la carte des passages et les ports.", s:"Livre p. 69, p. 70, p. 73, p. 75, pp. 89-92" },
   { t:"tip", h:"Les bulles jaunes et ces schémas sont le cœur du contrôle. Les exercices de ton dossier t'ont servi à les comprendre : à chaque chapitre, un encadré bleu te rappelle ce que chacun t'a montré." },
 ]},
 /* ---------------- A1 ---------------- */
 { id:"A1", ch:"A", titre:"Quatre définitions", court:"Produit industriel, produit fini, siège social, matières premières",
   obj:"Expliquer les définitions suivantes : produit industriel, produit fini, siège social et matières premières.",
+  pre:[{ q:"Un jean, c'est un produit fini ou un produit semi-fini ?", a:"Un produit fini : il est prêt à être vendu. La toile ou les boutons, eux, sont des produits semi-finis.", s:"Livre p. 66 et p. 68, bulles jaunes" }, { q:"Pour fabriquer un produit industriel, il faut quatre choses. Lesquelles ?", a:"Des matières premières, de l'énergie, du travail humain et des machines.", s:"Livre p. 66, bulle « Produit industriel »" }],
+  blank:{ consigne:"Écris les quatre définitions de l'objectif, chacune avec un exemple.", points:["Produit industriel : fabriqué en série avec des matières premières, de l'énergie, du travail humain et des machines (le jean, le ballon)", "Produit fini : prêt à être distribué dans le commerce (le jean vendu au Royaume-Uni)", "Siège social : adresse officielle, qui donne la nationalité ; finances, ressources humaines, R&D (Adidas en Allemagne)", "Matière première : ressource naturelle minérale, végétale ou animale (le coton du Bénin)"], s:"Livre pp. 66-68, bulles jaunes" },
   blocks:[
   { t:"p", s:"Livre p. 66 (doc. 1 : le jean et le ballon) et p. 67 (doc. 2 et 3 : le ballon Brazuca)", h:"Ton livre ouvre le chapitre A avec deux objets : un jean et un ballon de foot, le <i>Brazuca</i> de la Coupe du Monde 2014. Les quatre mots de l'objectif sont dans les bulles jaunes des pages 66 à 68. Apprends-les tels quels, puis accroche un exemple à chacun." },
   bookDef("pi"),
   { t:"p", s:"Livre p. 66, bulle « Produit industriel »", h:"Les quatre ingrédients à retenir : <b>matières premières</b>, <b>énergie</b>, <b>travail humain</b>, <b>machines</b>. Et « en série » veut dire : beaucoup de pièces identiques. Exemples du livre : le jean, le ballon." },
   bookDef("mp"),
   { t:"p", s:"Livre p. 69, « Les matières premières entrant dans la fabrication du jean » (doc. 9 et 11) · fiche A, act. 3a", h:"Dans le jean : le coton du Bénin est d'origine végétale ; le cuivre et le zinc de Namibie et d'Australie sont d'origine minérale. Le pétrole d'Arabie saoudite sert à fabriquer la fibre polyester du fil à coudre." },
+  { t:"pause", q:"Le coton du Bénin et le cuivre de Namibie : de quelle origine est chacun ?", a:"Le coton est d'origine végétale, le cuivre d'origine minérale. Ce sont deux matières premières.", s:"Livre p. 69, doc. 9 et 11" },
   bookDef("sf"),
   { t:"p", s:"Livre p. 68, doc. 5, « La fabrication des éléments du jean »", h:"Exemples du livre (doc. 5) : la toile de jean, les boutons, la fermeture Éclair. Ce ne sont pas encore des jeans, mais des morceaux qui entrent dans le jean." },
   bookDef("pf"),
   { t:"p", s:"Livre p. 68, doc. 5 et 7 · fiche A, act. 3a", h:"Dans ton dossier, c'est le jean qui sort de l'usine d'assemblage de Ras Jebel, en Tunisie, et qui est vendu au Royaume-Uni." },
+  { t:"pause", q:"La toile de jean fabriquée en Italie : produit semi-fini ou produit fini ? Pourquoi ?", a:"Produit semi-fini : elle entre dans la fabrication du jean, mais ce n'est pas encore un jean.", s:"Livre p. 68, doc. 5" },
   bookDef("ss"),
   { t:"p", s:"Livre p. 67, doc. 2 et 4 · fiche B, act. 5a", h:"Exemple du livre (doc. 4) : le siège social d'Adidas est en Allemagne, mais une grande partie de la production est réalisée dans différents pays. Le ballon <i>Brazuca</i>, par exemple, a été fabriqué au Pakistan, dans un village du nord-ouest du pays, en grande partie à la main (doc. 2). Autre exemple, dans ton dossier : Apple a son siège social dans la Silicon Valley, en Californie." },
+  { t:"pause", q:"Le siège social d'Adidas est en Allemagne. Ses ballons sont-ils donc fabriqués en Allemagne ?", a:"Non. Le siège social est l'adresse officielle de l'entreprise. Le ballon Brazuca a été fabriqué au Pakistan.", s:"Livre p. 67, doc. 2 et 4" },
   { t:"tip", h:"Ce sont les définitions que ton maître attend. Récite chacune une fois à voix haute, puis redis-la avec tes mots et ajoute un exemple : « Le siège social, c'est l'adresse officielle de l'entreprise… Par exemple, celui d'Adidas est en Allemagne. »" },
   { t:"see", ids:["A3","B4"] },
   { t:"src", h:"Livre pp. 66-68 (bulles jaunes, doc. 2, 4, 5) · dossier A, activité 3" },
@@ -650,13 +806,17 @@ const PAGES = [
 /* ---------------- A2 ---------------- */
 { id:"A2", ch:"A", titre:"Lire une étiquette avec un œil critique", court:"L'étiquette dit-elle tout ?",
   obj:"Avoir un regard critique sur des informations données (ex : l'étiquette d'un produit donne-t-elle toutes les informations ?).",
+  pre:[{ q:"Un jean marqué « Made in Tunisia » a-t-il été entièrement fabriqué en Tunisie ?", a:"Pas forcément. Le jean de ton livre est assemblé en Tunisie, mais ses matières et ses morceaux viennent de 10 autres pays.", s:"Livre p. 68, doc. 5 · fiche A, act. 3a" }, { q:"Jusqu'à quand pouvait-on associer un pays à la fabrication d'un produit ?", a:"Jusqu'à la fin du XXe siècle : presque toutes les étapes se faisaient alors au même endroit.", s:"Livre p. 66, texte d'introduction du chapitre A" }],
+  blank:{ consigne:"Réponds en trois phrases : « L'étiquette donne-t-elle toutes les informations ? »", points:["Non", "Raison 1 : les étapes sont dispersées dans plusieurs pays, l'étiquette en donne au mieux un seul", "Raison 2 : parfois, elle ne dit rien de l'origine (le jean Lee Cooper)", "Un exemple : deux ou trois pays du jean (Bénin, Italie, Tunisie…)"], s:"Livre p. 66 et p. 68, doc. 5" },
   blocks:[
   { t:"p", s:"Livre p. 66, texte d'introduction du chapitre A", h:"Le livre pose la question : d'où viennent les objets que je possède ? On pourrait croire qu'il suffit de lire l'étiquette « <i>Made in…</i> ». Mais en creusant, on voit que la plupart des produits n'ont pas un seul lieu de fabrication : ils en ont plusieurs." },
   { t:"h3", h:"Avant et aujourd'hui" },
   { t:"p", s:"Livre p. 66, texte d'introduction du chapitre A", h:"Jusqu'à la fin du XX<sup>e</sup> siècle, on pouvait souvent associer une ville, une région ou un pays à la fabrication d'un produit industriel : presque toutes les étapes se faisaient au même endroit. Aujourd'hui, les étapes sont dispersées sur toute la planète. C'est pourquoi, selon le livre, les indications <i>Made in China</i> ou <i>Swiss made</i> n'ont plus grande signification : le produit fini a voyagé à travers le monde et passé entre les mains de nombreux travailleurs et travailleuses." },
+  { t:"pause", q:"Selon le livre, pourquoi « Swiss made » ou « Made in China » n'ont-ils plus grande signification ?", a:"Parce que les étapes de fabrication sont dispersées sur toute la planète : le produit a voyagé et passé entre de nombreuses mains.", s:"Livre p. 66, texte d'introduction" },
   { t:"h3", h:"L'exemple du jean Lee Cooper (doc. 5)" },
   { t:"p", s:"Livre p. 68, doc. 5, « Commençons par la fin »", h:"Dans un magasin d'Ipswich, au Royaume-Uni, le livre choisit un jean Lee Cooper, modèle LC10, 100 % coton. Sur ce jean : <b>aucune mention de l'origine</b>. Pourtant, les étapes de son voyage, mises bout à bout, feraient <b>une fois et demie le tour du monde</b>." },
   { t:"ex", s:"Fiche A, act. 3a (livre pp. 68-69)", items:[["A · 3a","Tu as noté le pays de chacune des 10 étapes du jean : 11 pays en tout.","C'est la preuve qu'une seule étiquette « Made in… » ne peut pas tout dire."]] },
+  { t:"pause", q:"Que dit le jean Lee Cooper sur son origine ? Et quelle distance représente son voyage ?", a:"Rien : aucune mention de l'origine. Mis bout à bout, son voyage ferait une fois et demie le tour du monde.", s:"Livre p. 68, doc. 5" },
   { t:"tip", h:"« L'étiquette donne-t-elle toutes les informations ? » Réponds non, avec deux raisons : 1) les étapes de fabrication sont dispersées dans plusieurs pays, et une étiquette en donne au mieux un seul ; 2) parfois, elle ne dit même rien de l'origine, comme le jean Lee Cooper. Puis cite deux ou trois pays du jean." },
   { t:"see", ids:["A3","E2"] },
   { t:"src", h:"Livre p. 66 (introduction) et p. 68 (doc. 5) · dossier A, activité 3a" },
@@ -664,23 +824,28 @@ const PAGES = [
 /* ---------------- A3 ---------------- */
 { id:"A3", ch:"A", titre:"La filière de production", court:"Le schéma du doc. 12 et le voyage du jean",
   obj:"Comprendre / expliquer le schéma de la filière d'une production industrielle.",
+  pre:[{ q:"Entre le champ de coton et le magasin, par quelles grandes étapes passe un jean ?", a:"Matières premières, produits semi-finis, assemblage, puis transport vers les marchés, avec du stockage et du transport entre chaque étape.", s:"Livre p. 69, doc. 12" }, { q:"Dans quel pays le jean de ton livre est-il assemblé ?", a:"En Tunisie, à Ras Jebel, par 500 ouvrières.", s:"Livre p. 68, doc. 5 · fiche A, act. 3a" }],
+  blank:{ consigne:"Redessine de mémoire le schéma de la filière (doc. 12), puis place un exemple du jean dans chaque étape.", points:["Matières premières (le coton du Bénin)", "Stockage", "Produits semi-finis (la toile denim d'Italie)", "Stockage", "Assemblage (Ras Jebel, en Tunisie)", "Stockage", "Transport vers les marchés (le magasin au Royaume-Uni)", "Une flèche « transport » entre chaque étape"], s:"Livre p. 69, doc. 12 · livre p. 68, doc. 5" },
   blocks:[
   { t:"p", s:"Livre p. 69, doc. 12, « Filière de production industrielle »", h:"Une filière, c'est la chaîne de toutes les étapes d'un produit, des matières premières jusqu'aux lieux de consommation. Voici le schéma de ton livre (doc. 12), étape par étape :" },
   { t:"html", s:"Livre p. 69, doc. 12", h:`<div class="chain">${CHAIN12.map(([k,b,s]) => `<div class="step${k==="st"?" st":""}"><span class="step-bar" style="background:var(--${k})" aria-hidden="true"></span><div class="step-body"><b>${b}</b><span>${s}</span></div></div>`).join("")}</div>
     <p class="fine">Entre chaque étape, une flèche « Transport ». Les couleurs sont celles de ton tableau : vert, bleu, rouge, brun ; le gris marque le stockage.</p>` },
   bookDef("sto"),
   { t:"p", s:"Livre p. 69, doc. 12", h:"On oublie souvent deux choses dans une filière : le <b>stockage</b> (les entrepôts du schéma) et le <b>transport</b> (les flèches). Ils reviennent entre chaque étape." },
+  { t:"pause", q:"Qu'est-ce qu'on oublie souvent entre deux étapes d'une filière ?", a:"Le stockage (les entrepôts du schéma) et le transport (les flèches).", s:"Livre p. 69, doc. 12" },
   { t:"h3", h:"Le schéma appliqué au jean" },
   { t:"html", s:"Livre pp. 68-69, doc. 5 à 11 · fiche A, act. 3a et 3b", h:`<div class="tbl"><table><thead><tr><th>Étape du doc. 12</th><th>Dans le jean (livre doc. 5 et ton tableau)</th></tr></thead><tbody>
     <tr><td><span class="sw" style="background:var(--mp)" aria-hidden="true"></span><b>Matières premières</b></td><td>coton (Bénin), pétrole (Arabie saoudite), cuivre et zinc (Namibie, Australie)</td></tr>
     <tr><td><span class="sw" style="background:var(--sf)" aria-hidden="true"></span><b>Produits semi-finis</b></td><td>toile denim (Italie), indigo (Allemagne), fil à coudre (Royaume-Uni, Hongrie, Turquie), polyester et laiton (Japon)</td></tr>
     <tr><td><span class="sw" style="background:var(--as)" aria-hidden="true"></span><b>Assemblage du produit fini</b></td><td>Ras Jebel, en Tunisie : 500 ouvrières, chacune avec sa spécialité</td></tr>
     <tr><td><span class="sw" style="background:var(--ve)" aria-hidden="true"></span><b>Transport vers les marchés</b></td><td>train, bateau, camion, camionnette, jusqu'à un magasin du Royaume-Uni</td></tr></tbody></table></div>` },
+  { t:"svg", k:"jean", titre:"La filière du jean, de la matière première au magasin", alt:"Le schéma montre la filière du jean en quatre étages. En haut, les matières premières : le coton du Bénin, le pétrole d'Arabie saoudite, le cuivre et le zinc d'Australie et de Namibie. Ensuite, les produits semi-finis : la toile denim d'Italie, l'indigo d'Allemagne, le fil à coudre de Turquie, de Hongrie et du Royaume-Uni, le polyester et le laiton du Japon. Toutes les flèches mènent à l'assemblage, à Ras Jebel en Tunisie. Enfin, le jean est vendu à Ipswich, au Royaume-Uni. Chaque flèche est un transport : 11 pays en tout.", s:"Livre pp. 68-69, doc. 5 à 12 · fiche A, act. 3a et 3b" },
   { t:"ex", s:"Fiche A, act. 3 et 4 (livre pp. 68-69)", items:[
     ["A · 3a","Tu as retrouvé le pays de chaque étape du jean.","Chaque étape de la filière peut se faire dans un pays différent."],
     ["A · 3b","Tu as colorié chaque étape en vert, bleu, rouge ou brun d'après le doc. 12.","Ce sont les grandes étapes du schéma : matières premières, semi-finis, assemblage, distribution et vente."],
     ["A · 4","Tu as tracé l'itinéraire du jean sur une carte.","Entre chaque étape, il y a un transport : c'est le lien avec le chapitre E."],
     ["A · 4d","Pourquoi Lee Cooper, entreprise anglaise, ne fabrique-t-il pas au Royaume-Uni ?","La réponse est au chapitre B : délocalisation (B1) et salaires (doc. 24, en B4)."]] },
+  { t:"pause", q:"La toile denim d'Italie et le fil à coudre de Turquie : à quelle étape de la filière appartiennent-ils ?", a:"Aux produits semi-finis : ce sont des composants qui entrent dans la fabrication du jean.", s:"Livre pp. 68-69 · fiche A, act. 3b" },
   { t:"tip", h:"Si on te donne un schéma de filière, nomme les étapes dans l'ordre : matières premières, produits semi-finis, assemblage, transport vers les marchés, sans oublier le stockage et le transport entre chaque étape. Puis place un exemple du jean dans chaque étape." },
   { t:"see", ids:["A1","B3","E1"] },
   { t:"src", h:"Livre pp. 68-69 (doc. 5 à 12) · dossier A, activités 3 et 4" },
@@ -688,20 +853,25 @@ const PAGES = [
 /* ---------------- B1 ---------------- */
 { id:"B1", ch:"B", titre:"Quatre notions clés", court:"Révolution industrielle, délocalisation, multinationale, R&D",
   obj:"Définir les notions clés suivantes : révolution industrielle, délocalisation, multinationale, R&D.",
+  pre:[{ q:"Que veut dire « délocaliser » une usine ?", a:"Transférer une activité dans une région ou un pays plus attractif pour l'entreprise : salaires, impôts, compétences, technologies.", s:"Livre p. 72, bulle « Délocalisation »" }, { q:"Que veulent dire les lettres R&D ?", a:"Recherche et développement : créer de nouveaux produits ou améliorer ceux qui existent, avec des personnes hautement qualifiées.", s:"Livre p. 73, bulle « Recherche et développement »" }],
+  blank:{ consigne:"Écris les définitions de délocalisation, multinationale et R&D, chacune avec un exemple. Puis cite les quatre révolutions avec leur date.", points:["Délocalisation : transfert d'activités vers un pays plus attractif (salaires, fiscalité) — des voitures américaines produites au Mexique", "Multinationale : secteurs d'activité dans plusieurs pays — Apple, Nike, Adidas", "R&D : créer ou améliorer des produits, avec des personnes hautement qualifiées — les centres d'Apple au Japon, en Suède…", "Révolutions : 1.0 (1765), 2.0 (1870), 3.0 (1969), 4.0 (aujourd'hui)"], s:"Livre pp. 70-74, bulles jaunes et doc. 13" },
   blocks:[
   { t:"def", s:"Pas dans tes photos : à vérifier dans le livre (le mot « révolution » est dans le lexique en fin de livre)", gen:true, term:"Révolution industrielle", h:"Grand changement dans la façon de produire, provoqué par de nouvelles sources d'énergie et de nouvelles techniques. Après chaque révolution, on produit plus, plus vite, et autrement." },
   { t:"p", s:"Livre p. 70, doc. 13", h:"Ce que donne le livre (doc. 13) : quatre révolutions, <b>1.0</b> (1765), <b>2.0</b> (1870), <b>3.0</b> (1969) et <b>4.0</b> (aujourd'hui), chacune avec ses énergies et ses techniques. Le détail est au chapitre B2." },
   { t:"todo", h:"Le livre n'a pas de bulle jaune pour ce mot. « Révolution » porte une étoile (*) : sa définition est dans le lexique à la fin du livre. Une photo de cette ligne remplacera l'encadré gris." },
   bookDef("del"),
   { t:"p", s:"Livre p. 72, doc. 19 et « Des critères de compétitivité » · fiche B, act. 3a", h:"Exemples : une production automobile américaine délocalisée au Mexique en 2015 (doc. 19) ; l'usine textile du Bangladesh de ton dossier. Le livre dit aussi que, depuis la révolution 3.0, « l'expansion des entreprises s'accentue grâce à la délocalisation de la production »." },
+  { t:"pause", q:"Cite deux motifs de délocalisation donnés par le livre.", a:"Le niveau des salaires et une fiscalité avantageuse. Le livre cite aussi les compétences humaines et les ressources technologiques.", s:"Livre p. 72, bulle « Délocalisation »" },
   bookDef("mn"),
   { t:"p", s:"Livre p. 67 (doc. 4), p. 73 (doc. 23), p. 75 (doc. 27) · fiche B, act. 5a", h:"Exemples : Apple (doc. 27), Nike (doc. 23), Adidas (doc. 4). Chez Apple : siège social aux États-Unis, R&D dans plusieurs pays, assemblage en Chine, distribution sur plusieurs continents." },
   bookDef("rd"),
   { t:"p", s:"Fiche B, act. 5a (livre p. 75, doc. 27)", h:"Chez Apple, tu as trouvé des centres de R&D au Japon, en Chine, en Suède, en Israël et aux États-Unis : on y cherche des gens très compétents, formés à l'université et dans les hautes écoles. C'est exactement les « personnes hautement qualifiées » du livre." },
+  { t:"pause", q:"Apple, Nike, Adidas : quel mot du livre désigne ce type d'entreprise, et pourquoi ?", a:"Des multinationales : leurs secteurs d'activité (siège social, R&D, production) s'étendent dans plusieurs pays.", s:"Livre p. 74, bulle « Multinationale »" },
   { t:"h3", h:"Deux autres bulles jaunes du chapitre B" },
   bookDef("mon"),
   bookDef("mo"),
   { t:"ex", s:"Fiche B, act. 5b (livre p. 75, doc. 27)", items:[["B · 5b","Les cinq mots-clés à cocher pour la carte d'Apple : mondialisation, délocalisation, main-d'œuvre, R&D, multinationale.","Ce sont cinq bulles jaunes : entraîne-toi à dire en une phrase comment chacun se voit sur le doc. 27."]] },
+  { t:"pause", q:"De quoi les centres de R&D ont-ils besoin ?", a:"De personnes hautement qualifiées, formées à l'université et dans les hautes écoles.", s:"Livre p. 73, bulle « Recherche et développement » · fiche B, act. 5a" },
   { t:"tip", h:"Une définition complète = la phrase du livre + un exemple. « Une multinationale est une entreprise dont les différents secteurs d'activité s'étendent dans plusieurs pays, par exemple Apple. » Pour la délocalisation, ajoute au moins deux motifs : les salaires, la fiscalité." },
   { t:"see", ids:["B2","B4"] },
   { t:"src", h:"Livre pp. 70-74 (bulles jaunes, doc. 13, 19) · dossier B, activités 3 et 5" },
@@ -709,6 +879,8 @@ const PAGES = [
 /* ---------------- B2 ---------------- */
 { id:"B2", ch:"B", titre:"De la révolution 1.0 à aujourd'hui", court:"Innovations, énergies et critères de localisation",
   obj:"Expliquer comment la production industrielle a évolué de la révolution industrielle 1.0 à aujourd'hui (grandes innovations ; critères de localisation des entreprises).",
+  pre:[{ q:"Pourquoi les premières usines se construisaient-elles près des mines de charbon ?", a:"Parce que le charbon faisait tourner les machines à vapeur : c'est le critère de proximité de la révolution 1.0.", s:"Livre p. 71, « Des critères de proximité »" }, { q:"Quel symbole représente la révolution 4.0 ?", a:"Le signal wifi : le numérique et les objets connectés.", s:"Livre p. 70, doc. 13" }],
+  blank:{ consigne:"Redessine la frise du doc. 13 : pour chaque révolution, la date, l'énergie, l'innovation et le critère de localisation.", points:["1.0 — 1765 — charbon, machine à vapeur, mécanisation — proximité", "2.0 — 1870 — électricité et pétrole, travail à la chaîne — productivité", "3.0 — 1969 — nucléaire, électronique et informatique, automatisation — compétitivité", "4.0 — aujourd'hui — numérique, objets connectés, robots, intelligence artificielle — innovation et savoir-faire"], s:"Livre p. 70, doc. 13 · pp. 71-72" },
   blocks:[
   { t:"p", s:"Livre p. 70, texte d'introduction du chapitre B", h:"Jusqu'à la fin du XIX<sup>e</sup> siècle, on plaçait une usine près des sources d'énergie, des matières premières et des moyens de transport : souvent au bord d'une voie navigable, au cœur même des villes. Au XX<sup>e</sup> siècle, les transports, les télécommunications, la classe moyenne et un commerce plus libre ont permis aux entreprises de travailler à l'échelle de la planète : c'est la mondialisation. Aujourd'hui, la production est très spécialisée et dispersée dans le monde, souvent loin des marchés (p. 70)." },
   { t:"h3", h:"Les quatre révolutions (doc. 13)" },
@@ -718,18 +890,21 @@ const PAGES = [
     <div class="rv"><svg class="rv-s" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="5" height="4" fill="currentColor"/><rect x="9.5" y="6" width="5" height="4" fill="currentColor"/><rect x="16" y="6" width="5" height="4" fill="currentColor"/><rect x="2" y="11.5" width="20" height="2.5" rx="1.2" fill="currentColor"/><path d="M5 14v6M19 14v6M3 20h4M17 20h4" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span class="rv-n">2.0</span><span class="rv-d">1870</span><span class="rv-i">Électricité et pétrole, production de masse (travail à la chaîne), usines</span><span class="rv-c">Critères de productivité</span></div>
     <div class="rv"><svg class="rv-s" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="9.5" y="9.5" width="5" height="5" fill="currentColor"/><path d="M9 2v3M12 2v3M15 2v3M9 19v3M12 19v3M15 19v3M2 9h3M2 12h3M2 15h3M19 9h3M19 12h3M19 15h3" stroke="currentColor" stroke-width="1.6"/></svg><span class="rv-n">3.0</span><span class="rv-d">1969</span><span class="rv-i">Énergie nucléaire, électronique et informatique, automatisation de la production</span><span class="rv-c">Critères de compétitivité</span></div>
     <div class="rv"><svg class="rv-s" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5a14 14 0 0 1 19 0M5.5 12.8a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="19.2" r="1.8" fill="currentColor"/></svg><span class="rv-n">4.0</span><span class="rv-d">aujourd'hui</span><span class="rv-i">Numérique : big data, objets connectés, robotisation, intelligence artificielle</span><span class="rv-c">Critères liés à l'innovation et aux savoir-faire</span></div></div>` },
+  { t:"pause", q:"Donne la date et le symbole de chaque révolution.", a:"1.0 : 1765, des engrenages. 2.0 : 1870, le tapis roulant de la chaîne. 3.0 : 1969, une puce électronique. 4.0 : aujourd'hui, le signal wifi.", s:"Livre p. 70, doc. 13" },
   { t:"h3", h:"Les critères de localisation évoluent (pp. 71-72)" },
   { t:"html", s:"Livre p. 71 (1.0 et 2.0, doc. 14 à 17) et p. 72 (3.0 et 4.0, doc. 18 à 21)", h:`<div class="tbl"><table><thead><tr><th>Révolution</th><th>Ce que dit le livre</th></tr></thead><tbody>
     <tr><td><b>1.0</b><br>proximité</td><td>L'industrialisation se fait autour des ressources minières (charbon, houille, fer) : Angleterre, nord de la France, Ruhr (Allemagne), Grands Lacs (États-Unis), Donbass (Russie). Le charbon fait tourner les machines à vapeur ; il voyage par bateau et par rail. La mécanisation augmente la production.</td></tr>
     <tr><td><b>2.0</b><br>productivité</td><td>Le travail à la chaîne diminue les coûts et permet de produire en très grandes quantités : c'est la production de masse (Ford, Détroit, 1913). Il faut des ouvriers spécialisés dans une seule tâche. La classe moyenne peut acheter voitures, télévisions, réfrigérateurs. Nouvelles énergies : pétrole et électricité. De meilleurs transports élargissent le marché.</td></tr>
     <tr><td><b>3.0</b><br>compétitivité</td><td>Les marchés s'ouvrent à l'échelle mondiale ; pays et régions se spécialisent. L'électronique et l'informatique permettent la mise en réseau (transports, communication) et l'automatisation. Les entreprises grandissent grâce à la délocalisation (voitures américaines produites au Mexique, 2015).</td></tr>
     <tr><td><b>4.0</b><br>innovation et savoir-faire</td><td>La production est reliée aux technologies de l'information et de la communication. L'industrie produit des objets capables d'interagir avec leur environnement : voiture autonome, domotique, robots (production robotisée de Peugeot en Chine, 2016). Près de chez toi : la programmation d'une unité de production dans une entreprise de décolletage à Boudry (NE), en 2000 (doc. 21).</td></tr></tbody></table></div>` },
+  { t:"pause", q:"Dans l'ordre des révolutions, quels sont les quatre critères de localisation ?", a:"Proximité, productivité, compétitivité, puis innovation et savoir-faire.", s:"Livre pp. 71-72" },
   bookDef("ind"),
   bookDef("prod"),
   bookDef("cm"),
   { t:"def", s:"Livre p. 72, glossaire en bas de page", book:"p. 72", term:"Domotique", h:"Ensemble de techniques permettant l'automatisation de la maison (confort, sécurité, énergie)." },
   { t:"h3", h:"Au XX<sup>e</sup> siècle (p. 73)" },
   { t:"p", s:"Livre p. 73, « L'évolution de l'industrie au cours du XXe siècle »", h:"Au début du siècle, toute la filière, de la production à la consommation, se trouve dans les pays industrialisés. Dans la deuxième moitié, la production se délocalise dans des pays émergents, alors que la R&D et les marchés restent en grande partie dans les pays industrialisés." },
+  { t:"pause", q:"Au XXe siècle, qu'est-ce qui part vers les pays émergents, et qu'est-ce qui reste dans les pays industrialisés ?", a:"La production part vers les pays émergents. La R&D et les marchés restent surtout dans les pays industrialisés.", s:"Livre p. 73, « L'évolution de l'industrie au cours du XXe siècle »" },
   { t:"h3", h:"Les machines remplacent la main-d'œuvre" },
   { t:"p", s:"Livre p. 71 (doc. 17) et p. 72 (doc. 19 et 20) · fiche B, act. 2d et 3b", h:"D'une révolution à l'autre, les machines font une part de plus en plus grande du travail. Le livre le montre avec l'automobile : la première chaîne de montage Ford (Détroit, 1913 : 2.0), des voitures américaines produites au Mexique (2015 : 3.0, délocalisation), puis une usine Peugeot robotisée en Chine (2016 : 4.0), où il n'y a plus d'ouvriers dans cette partie de l'usine." },
   { t:"ex", s:"Fiche B, act. 1, 2d et 3a à 3d (livre pp. 70-72)", items:[
@@ -737,6 +912,7 @@ const PAGES = [
     ["B · 3a","Tu as rattaché quatre images à une révolution : Pittsburgh 1857, Chaplin 1936, usine du Bangladesh, robots.","Pour reconnaître une révolution, regarde l'énergie utilisée et qui travaille : des humains ou des machines."],
     ["B · 2d, 3b","Docs 17, 19 et 20 : les employés sont remplacés par des robots.","C'est l'évolution de 2.0 à 4.0."],
     ["B · 3c, 3d","Tes exemples : caisses automatiques, aspirateur-robot ; des emplois menacés sur les chaînes de production.","La même évolution, dans ta vie de tous les jours."]] },
+  { t:"pause", q:"Ford à Détroit en 1913, des voitures au Mexique en 2015, des robots Peugeot en Chine en 2016 : à quelles révolutions correspondent-ils ?", a:"2.0 (la chaîne de montage), 3.0 (la délocalisation), 4.0 (la production robotisée).", s:"Livre p. 71, doc. 17 · p. 72, doc. 19 et 20" },
   { t:"tip", h:"Pour chaque révolution, sache quatre choses : la date, l'énergie, l'innovation, le critère de localisation. Pour les critères, retiens la suite : proximité → productivité → compétitivité → innovation et savoir-faire." },
   { t:"see", ids:["B1","B4"] },
   { t:"src", h:"Livre pp. 70-73 (doc. 13 à 21) · dossier B, activités 1 et 3" },
@@ -744,6 +920,8 @@ const PAGES = [
 /* ---------------- B3 ---------------- */
 { id:"B3", ch:"B", titre:"Ce qu'il faut pour produire", court:"Les critères qui comptent pour une entreprise (doc. 22)",
   obj:"Énumérer et expliquer ce dont a besoin une entreprise pour produire un bien.",
+  pre:[{ q:"Pour fabriquer une voiture, de quoi une entreprise a-t-elle besoin ? Essaie d'en citer quatre.", a:"Le doc. 22 en donne six : des ressources naturelles, humaines, financières, techniques, un marché et un contexte politique et économique favorable.", s:"Livre p. 73, doc. 22" }, { q:"Une entreprise peut-elle produire s'il n'y a personne pour acheter ?", a:"Non : il lui faut un marché, c'est-à-dire des consommateurs qui achètent le produit fini.", s:"Livre p. 73, doc. 22" }],
+  blank:{ consigne:"Énumère les six éléments du doc. 22, dans l'ordre, avec une phrase d'explication pour chacun.", points:["Des ressources naturelles : matières premières et énergie", "Des ressources humaines : main-d'œuvre et savoir-faire", "Des ressources financières : le capital", "Des ressources techniques : usines, machines, outils", "Un marché pour écouler le produit fini : des consommateurs", "Un contexte politique et économique favorable : stabilité, circulation des biens et des personnes"], s:"Livre p. 73, doc. 22" },
   blocks:[
   { t:"p", s:"Livre p. 73, doc. 22, « Les critères qui comptent pour une entreprise »", h:"Le doc. 22 de ton livre donne la liste. La fabrication d'un produit industriel nécessite six choses :" },
   { t:"html", s:"Livre p. 73, doc. 22 · exemples : livre p. 68 (doc. 5) et p. 75 (doc. 28)", h:`<div class="tbl"><table><thead><tr><th>Le livre (doc. 22)</th><th>Ce que ça veut dire, avec un exemple</th></tr></thead><tbody>
@@ -753,7 +931,9 @@ const PAGES = [
     <tr><td><b>Des ressources techniques</b><br>(usines, machines, outils)</td><td>Les bâtiments et les appareils qui fabriquent et assemblent.</td></tr>
     <tr><td><b>Un marché pour écouler le produit fini</b><br>(consommateurs)</td><td>Des clients qui achètent : sans eux, on ne produit pas.</td></tr>
     <tr><td><b>Un contexte politique et économique favorable</b><br>(stabilité, circulation des biens et des personnes)</td><td>Un pays calme, où les marchandises et les gens peuvent circuler. L'OMC (doc. 28) fixe des règles pour le commerce entre plus de 160 pays et sert de cadre pour négocier des accords qui favorisent la liberté des échanges.</td></tr></tbody></table></div>` },
+  { t:"pause", q:"Dans quelle catégorie du doc. 22 ranges-tu le capital ? Et la main-d'œuvre ?", a:"Le capital : les ressources financières. La main-d'œuvre : les ressources humaines, avec le savoir-faire.", s:"Livre p. 73, doc. 22" },
   { t:"ex", s:"Fiche B, act. 2a à 2c (livre p. 73, doc. 22)", items:[["B · 2","Tu as listé ce qu'il faut pour fabriquer une voiture, puis complété ta liste avec le doc. 22.","Tu avais presque tout trouvé ; il manquait le contexte politique et économique favorable."]] },
+  { t:"pause", q:"Quel élément manquait dans ta liste pour la voiture ? Et à quoi sert l'OMC ?", a:"Le contexte politique et économique favorable. L'OMC sert de cadre pour négocier des accords qui favorisent la liberté des échanges.", s:"Fiche B, act. 2 · livre p. 75, doc. 28" },
   { t:"tip", h:"« Énumérer et expliquer » : la liste ET une phrase pour chaque élément. Apprends les six dans l'ordre du livre : naturelles, humaines, financières, techniques, un marché, un contexte favorable." },
   { t:"see", ids:["A1","B4"] },
   { t:"src", h:"Livre p. 73 (doc. 22) et p. 75 (doc. 28) · dossier B, activité 2" },
@@ -761,6 +941,8 @@ const PAGES = [
 /* ---------------- B4 ---------------- */
 { id:"B4", ch:"B", titre:"Une multinationale au XXIe siècle", court:"Apple, Nike : où et pourquoi chaque activité",
   obj:"Expliquer l'organisation d'une grande entreprise au XXIe siècle et les critères de localisation de ses secteurs d'activité (siège social, R&D, extraction des matières premières, usines de fabrication de composants, usines d'assemblage du produit fini, centres de distribution…).",
+  pre:[{ q:"Pourquoi Apple fait-il assembler ses téléphones en Chine ?", a:"Parce que la main-d'œuvre y est flexible et coûte peu, et que l'assemblage est assez simple.", s:"Fiche B, act. 5a (livre p. 75, doc. 27)" }, { q:"Où une multinationale place-t-elle le plus souvent son siège social et sa R&D ?", a:"Dans des pays du Nord, près des hautes écoles et des universités.", s:"Livre p. 74, « L'organisation de l'industrie au XXIe siècle »" }],
+  blank:{ consigne:"Dessine les six secteurs d'une multinationale. Pour chacun, écris le critère de localisation et le lieu chez Apple.", points:["Siège social — un pays du Nord — Silicon Valley (Californie)", "R&D — personnes hautement qualifiées, universités — Japon, Chine, Suède, Israël, États-Unis", "Matières premières — là où sont les ressources — Amérique du Sud, Afrique, Australie, Asie", "Composants — compétences (pièces complexes) ou salaires bas (pièces simples) — Est de l'Asie, États-Unis, Allemagne, Italie", "Assemblage — salaires bas — Chine", "Distribution — clients qui peuvent payer — États-Unis, Europe, Asie, Australie"], s:"Livre pp. 74-75, doc. 27 · fiche B, act. 5a" },
   blocks:[
   { t:"p", s:"Livre p. 74, « L'organisation de l'industrie au XXIe siècle »", h:"Le livre résume (p. 74) : les grandes entreprises sont souvent des multinationales. Leur <b>siège social</b> (gestion et décisions) et leur <b>R&D</b> se trouvent la plupart du temps dans des pays du Nord, à proximité de hautes écoles et d'universités. Leur <b>production</b> se place souvent dans des pays ou régions où les salaires sont bas." },
   { t:"h3", h:"Le schéma à retenir : les six secteurs (légende du doc. 27)" },
@@ -773,6 +955,7 @@ const PAGES = [
     <div class="sx"><b>Assemblage du produit fini</b><span>Là où les salaires sont bas.</span></div>
     <div class="sx"><b>Centres de distribution</b><span>Près des consommateurs qui peuvent payer.</span></div></div>
     <p class="fine">Critères tirés du livre (p. 74, doc. 22) et de tes réponses à l'activité 5a.</p>` },
+  { t:"pause", q:"Pour chacun des six secteurs, quel critère décide où on le place ?", a:"Siège social : un pays du Nord. R&D : près des universités. Matières premières : là où sont les ressources. Composants : des personnes compétentes ou des salaires bas. Assemblage : des salaires bas. Distribution : près des clients qui peuvent payer.", s:"Livre p. 74 et p. 75, doc. 27 · fiche B, act. 5a" },
   { t:"h3", h:"Exemple : Apple (doc. 27, 2017)" },
   { t:"html", s:"Livre p. 75, doc. 27 · fiche B, act. 5a", h:`<div class="tbl"><table><thead><tr><th>Secteur et lieu</th><th>Pourquoi (critère)</th></tr></thead><tbody><tr><td><b>Siège social</b><br>Silicon Valley (Californie)</td><td>Beaucoup d'entreprises des nouvelles technologies ; lieu de création de la marque.</td></tr><tr><td><b>R&D</b><br>Japon, Chine, Suède, Israël, USA</td><td>Des gens très compétents, formés à l'université et dans les hautes écoles.</td></tr><tr><td><b>Extraction et transformation des matières premières</b><br>Amérique du Sud, Afrique, Australie, Asie</td><td>Là où se trouvent les ressources naturelles.</td></tr><tr><td><b>Composants</b><br>Est de l'Asie (Chine, Japon, Taïwan, Singapour), USA, Allemagne, Italie</td><td>Pièces complexes : pays avec des personnes compétentes. Pièces simples : pays où le salaire est bas.</td></tr><tr><td><b>Assemblage</b><br>Chine</td><td>Des personnes flexibles qui ne coûtent pas cher (bas salaires) ; l'assemblage est assez simple.</td></tr><tr><td><b>Distribution</b><br>USA, Europe, Asie, Australie</td><td>Un natel neuf coûte cher : on le vend là où les salaires sont élevés.</td></tr></tbody></table></div>
     <p class="fine">Lieux lus sur la carte du doc. 27 ; critères tirés de tes réponses et du livre.</p>` },
@@ -781,10 +964,12 @@ const PAGES = [
     <p class="fine">Barres bleues : employés · barres jaunes : ventes. Nike comptait plus de 900 000 employés en 2015.</p>` },
   { t:"p", s:"Livre p. 73, doc. 23 et 24", h:"Presque tous les employés de Nike travaillent dans les marchés émergents, en Chine et en Corée du Sud. Mais près de la moitié des ventes se fait en Amérique du Nord. On produit là où la main-d'œuvre coûte peu, on vend là où les gens peuvent payer." },
   { t:"p", s:"Livre p. 73, doc. 24", h:"Le doc. 24 compare les salaires mensuels moyens dans l'industrie en 2016 : quelques centaines de francs en Indonésie, en Namibie ou en Thaïlande, moins de 1000 francs en Chine, et de loin le plus élevé en Suisse, plus de 7000 francs." },
+  { t:"pause", q:"Chez Nike, où travaillent la plupart des employés, et où se font la plupart des ventes ?", a:"72 % des employés travaillent dans les marchés émergents ; 47 % des ventes se font en Amérique du Nord. On produit là où la main-d'œuvre coûte peu, on vend là où les gens peuvent payer.", s:"Livre p. 73, doc. 23" },
   { t:"h3", h:"Où sont les sièges sociaux ? (doc. 25, 2018)" },
   { t:"p", s:"Livre p. 74, doc. 25 et 26", h:"Sur les 250 plus grandes entreprises du monde : 84 ont leur siège aux États-Unis, 71 en Europe, 32 en Chine, 21 au Japon. Presque tous dans des pays du Nord. Le doc. 26 montre aussi que la Silicon Valley attire des spécialistes de l'intelligence artificielle venus du monde entier." },
   { t:"h3", h:"Les paradis fiscaux (doc. 29)" },
   { t:"p", s:"Livre p. 75, doc. 29", h:"Certaines entreprises veulent payer le moins d'impôts possible pour augmenter leur bénéfice. Elles délocalisent leur siège social, souvent une simple boîte aux lettres, dans un pays où la fiscalité est avantageuse (impôts très bas) : un <b>paradis fiscal</b>, comme les îles Caïmans." },
+  { t:"pause", q:"Pourquoi une entreprise installe-t-elle parfois son siège social aux îles Caïmans ?", a:"Pour payer le moins d'impôts possible : c'est un paradis fiscal, et le siège n'y est souvent qu'une boîte aux lettres.", s:"Livre p. 75, doc. 29" },
   { t:"ex", s:"Fiche B, act. 5a (livre pp. 74-75)", items:[["B · 5a","Pour Apple, tu as trouvé le lieu et le critère de chaque secteur.","C'est l'objectif mot pour mot : sois capable de le refaire pour une autre multinationale (Nike, Adidas)."]] },
   { t:"tip", h:"Pour chaque secteur, donne le lieu ET le critère. « Chine » seul ne suffit pas : « l'assemblage se fait en Chine, parce que les salaires sont bas et que l'assemblage est assez simple. »" },
   { t:"see", ids:["A3","B1","B3"] },
@@ -793,16 +978,20 @@ const PAGES = [
 /* ---------------- E1 ---------------- */
 { id:"E1", ch:"E", titre:"Les modes de transport", court:"Cargo, péniche, train, camion, avion : avantages et inconvénients",
   obj:"Décrire les différents types de moyen de transport (avantage, inconvénient).",
+  pre:[{ q:"Quel moyen de transport emporte le plus de marchandises d'un coup ?", a:"Le cargo : plus de 1000 conteneurs, des dizaines de milliers de tonnes dans un seul navire.", s:"Livre p. 90, doc. 76 · fiche E, act. 3c" }, { q:"Pour livrer des médicaments en urgence sur un autre continent, que choisirais-tu ?", a:"L'avion-cargo : très cher, mais réservé aux livraisons urgentes ou de grande valeur.", s:"Livre p. 91, doc. 80" }],
+  blank:{ consigne:"Fais un tableau des cinq modes de transport : un avantage, un inconvénient et une utilisation pour chacun.", points:["Cargo — énorme capacité, sans douane ni péage en mer — pour traverser les océans", "Péniche — grandes quantités, coûts très faibles / lente, seulement le long des canaux", "Train — peu coûteux, assez rapide / frontières, écartement des voies, moins flexible", "Camion — va partout, très flexible / charge limitée, nuisances", "Avion-cargo — pour l'urgent et le précieux / très cher"], s:"Livre pp. 90-91, doc. 76 à 80" },
   blocks:[
   { t:"p", s:"Livre p. 88, introduction du chapitre E", h:"Depuis les années 70, la quantité de marchandises transportées dans le monde double tous les dix ans. Avec la mondialisation, la production et la consommation sont dispersées : il faut acheminer les matières premières, les produits semi-finis et les produits finis d'un lieu à l'autre. Les biens que nous consommons viennent souvent de très loin, après un long voyage qui alterne plusieurs <b>modes de transport</b>." },
   bookDef("mode"),
   { t:"h3", h:"Les cinq modes de transport (doc. 76 à 80)" },
   { t:"html", s:"Livre p. 90 (doc. 76 et 77) et p. 91 (doc. 78 à 80)", h:`<div class="tbl"><table><thead><tr><th>Mode</th><th>✓ Avantages · ✗ Inconvénients</th></tr></thead><tbody><tr><td><b>Maritime</b><br>le cargo<br><span class="fine">doc. 76</span></td><td><p class="pm"><b>✓</b> Taille énorme : des dizaines de milliers de tonnes dans un seul navire. Le droit de la mer : traverser les océans sans douane ni péage. Plus de 90 % des tonnes-kilomètres de marchandises.</p><p class="pm"><b>✗</b> Le livre n'en cite pas. Ta fiche montre qu'à l'arrivée au port, il faut changer de mode (rupture de charge).</p></td></tr><tr><td><b>Fluvial</b><br>la péniche, la barge<br><span class="fine">doc. 77</span></td><td><p class="pm"><b>✓</b> De très grandes quantités pour des coûts très faibles.</p><p class="pm"><b>✗</b> Lente ; n'atteint que les lieux reliés au réseau de canaux. Surtout dans le Centre-Nord de l'Europe, jusqu'au port suisse de Bâle.</p></td></tr><tr><td><b>Ferroviaire</b><br>le train<br><span class="fine">doc. 78</span></td><td><p class="pm"><b>✓</b> Peu coûteux et relativement rapide.</p><p class="pm"><b>✗</b> Difficultés administratives (frontières, droits de douane), écartement des voies différent d'un pays à l'autre, moins flexible que la route (des régions reculées ne sont pas desservies).</p></td></tr><tr><td><b>Routier</b><br>le camion<br><span class="fine">doc. 79</span></td><td><p class="pm"><b>✓</b> Circule partout ou presque, sans horaire, plus de 1000 km par jour : très flexible. Principal mode sur les distances courtes et moyennes.</p><p class="pm"><b>✗</b> Charge très limitée : beaucoup de poids lourds et des nuisances (bruit, pollution, risques d'accident, dégâts aux routes, embouteillages).</p></td></tr><tr><td><b>Aérien</b><br>l'avion-cargo<br><span class="fine">doc. 80</span></td><td><p class="pm"><b>✓</b> Pour livrer en urgence : produits de luxe, courrier, aide en cas de catastrophe. Le plus gros avion du monde, l'AN-225, est un avion-cargo.</p><p class="pm"><b>✗</b> Très cher : réservé aux marchandises urgentes ou de grande valeur par rapport à leur poids.</p></td></tr></tbody></table></div>` },
   { t:"p", s:"Livre p. 90 (doc. 76 et 77) et p. 91 (doc. 78)", h:"Quelques détails du livre : en 2015, environ 90 000 navires commerciaux sillonnaient les mers. Le transport fluvial existe aussi en Russie, en Chine, aux États-Unis et en Amérique du Sud. Les premières voies ferrées datent du XIX<sup>e</sup> siècle, en pleine révolution industrielle ; aujourd'hui, la Suisse encourage le ferroutage, et la Chine a ouvert une ligne de trains-cargos vers l'Europe continentale en 14 jours." },
+  { t:"pause", q:"Cite un avantage et un inconvénient du camion.", a:"Avantage : il va presque partout, sans horaire, plus de 1000 km par jour. Inconvénient : sa charge est très limitée, d'où beaucoup de poids lourds et de nuisances.", s:"Livre p. 91, doc. 79" },
   { t:"h3", h:"Trois mots en bas de page" },
   bookDef("tkm"),
   bookDef("tir"),
   bookDef("ferr"),
+  { t:"pause", q:"Qu'est-ce que le ferroutage ?", a:"Charger le camion entier sur un train. On l'appelle aussi transport rail-route.", s:"Livre p. 91, glossaire en bas de page" },
   { t:"h3", h:"Ce que montre ta fiche : capacité et coût" },
   { t:"html", s:"Fiche E, act. 3c (livre pp. 90-91, doc. 76 à 79)", h:`<div class="bars">
     <div class="bar-row"><span>Cargo</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span></div>
@@ -818,6 +1007,7 @@ const PAGES = [
     <tr><td>Train</td><td class="num">6 CHF/t</td><td class="num">25 CHF/t</td></tr></tbody></table></div>` },
   { t:"p", s:"Fiche E, act. 4, tableau des coûts", h:"Lis le tableau dans les deux sens. Sans rupture de charge, le bateau est le moins cher et le camion le plus cher. Porte à porte, le camion ne passe que de 13 à 24 : il augmente beaucoup moins que les autres." },
   { t:"mine", s:"Fiche E, act. 4a à 4c", titre:"Ce que tu as compris (activité 4)", items:["Colonne bleue plus chère : on change de moyen de transport → rupture de charge. Cela coûte de l'argent et du temps.","Le camion augmente moins : il est plus facile et plus rapide de charger et décharger un camion.","Embouteillages et accidents : vu la densité du trafic, les prix vont augmenter."] },
+  { t:"pause", q:"Sans rupture de charge, quel moyen est le moins cher par tonne ? Et porte à porte, lequel augmente le moins ?", a:"Sans rupture : le bateau (3,5 CHF par tonne). Porte à porte : le camion, qui passe seulement de 13 à 24 CHF par tonne.", s:"Fiche E, act. 4, tableau des coûts" },
   { t:"tip", h:"Pour chaque mode, sache un avantage, un inconvénient et une utilisation. Le cargo pour les océans, la péniche le long des canaux, le train sur les rails, le camion jusqu'à la porte, l'avion pour l'urgent et le précieux." },
   { t:"see", ids:["E2","E3"] },
   { t:"src", h:"Livre pp. 88, 90-91 (doc. 72, 76 à 80) · fiche E, act. 3 et 4" },
@@ -825,13 +1015,17 @@ const PAGES = [
 /* ---------------- E2 ---------------- */
 { id:"E2", ch:"E", titre:"Quatre termes du transport", court:"Passage stratégique, transport intermodal, rupture de charge, plateforme intermodale",
   obj:"Connaître les termes « passage stratégique, transport intermodal, rupture de charge et plateforme intermodale ».",
+  pre:[{ q:"Pourquoi les bateaux passent-ils par le canal de Suez plutôt que de faire le tour de l'Afrique ?", a:"Pour éviter un immense détour par le cap de Bonne-Espérance : le canal de Suez est un passage stratégique.", s:"Livre p. 89, doc. 73" }, { q:"Que se passe-t-il quand une marchandise passe du bateau au train ?", a:"C'est une rupture de charge : un transfert d'un mode de transport à un autre. Cela coûte de l'argent et du temps.", s:"Livre p. 92, bulle « Rupture de charge » · fiche E, act. 4a" }],
+  blank:{ consigne:"Écris les quatre termes de l'objectif avec leur définition, puis relie-les dans une seule phrase.", points:["Passage stratégique : lieu où il faut obligatoirement passer pour éviter un immense détour", "Transport intermodal : plusieurs modes de transport à la suite", "Rupture de charge : transfert d'un mode de transport à un autre", "Plateforme intermodale : lieu de ce transfert (port, gare, aéroport), avec des grues", "La phrase : un transport intermodal fait des ruptures de charge sur des plateformes intermodales"], s:"Livre pp. 89-93" },
   blocks:[
   { t:"h3", h:"Passage stratégique (p. 89)" },
   { t:"def", book:"p. 89", s:"Livre p. 89, texte « Un enjeu important : le contrôle des passages stratégiques » (pas de bulle jaune pour ce mot)", term:"Passage stratégique", h:"Lieu par lequel il faut obligatoirement passer, afin d'éviter un immense détour. Le contrôle de ces passages stratégiques est source de pouvoir politique et économique." },
   { t:"p", s:"Livre p. 89, doc. 73 « Les passages stratégiques »", h:"Pour les bateaux, ce sont d'abord les extrémités des continents qu'il fallait contourner : le <b>cap Horn</b> et le <b>cap de Bonne-Espérance</b>. Aujourd'hui, des canaux creusés par l'homme relient des océans et des mers : le <b>canal de Suez</b> (1869) et le <b>canal de Panama</b> (1914). Sur terre, les isthmes, les cols, les fonds de vallée et les détroits sont des obstacles qu'on franchit avec des tunnels, des ponts ou des ferries." },
   bookDef("detr"),
   bookDef("isth"),
+  { t:"pause", q:"Quelle est la différence entre un détroit et un isthme ?", a:"Un détroit est un passage maritime étroit entre deux mers ; un isthme est une étroite bande de terre entre deux mers.", s:"Livre p. 89, glossaire en bas de page" },
   { t:"h3", h:"La carte des passages (doc. 74) et ta carte" },
+  { t:"svg", k:"passages", titre:"Carte simplifiée des passages stratégiques", alt:"Sur la carte, les sept passages stratégiques de ta fiche sont en jaune : 1, le détroit de Gibraltar ; 2, le canal de Panama ; 3, le détroit de Malacca ; 4, le cap de Bonne-Espérance ; 5, le cap Horn ; 6, le Pas de Calais ; 7, le détroit d'Ormuz. En blanc, deux passages de la carte du livre : 8, le canal de Suez ; 9, le détroit de Bab-el-Mandeb. La ligne pointillée suit la route maritime entre Shanghai et Rotterdam : détroit de Malacca, Bab-el-Mandeb, canal de Suez, puis Gibraltar.", s:"Fiche E, carte « Passages stratégiques » · livre p. 89, doc. 74 · p. 92, doc. 81" },
   { t:"html", s:"Fiche E, carte « Passages stratégiques » (n° 1 à 7) · livre p. 89, doc. 74 (Suez et Bab-el-Mandeb en plus) et doc. 75", h:`<div class="tbl"><table><thead><tr><th>N° de ta carte</th><th>Passage</th><th>Où</th></tr></thead><tbody>
     <tr><td class="num">1</td><td>Détroit de Gibraltar</td><td>Entrée de la Méditerranée, entre l'Espagne et le Maroc</td></tr>
     <tr><td class="num">2</td><td>Canal de Panama (1914)</td><td>Amérique centrale</td></tr>
@@ -844,16 +1038,20 @@ const PAGES = [
     <tr><td class="num">livre</td><td>Détroit de Bab-el-Mandeb</td><td>Sur la même route, entre le canal de Suez et l'océan Indien</td></tr></tbody></table></div>
     <p class="fine">Les deux dernières lignes ne sont pas sur ta carte, mais sur celle du livre (doc. 74) et sur la route du Marco Polo (doc. 81).</p>` },
   { t:"p", s:"Livre p. 89, doc. 74 « Flux et passages » (légende)", h:"La carte du livre montre aussi les grands ports (plus de 200 millions de tonnes : New York, Houston, Rotterdam, Shanghai, Ningbo, Singapour), les canaux en travaux d'agrandissement (Panama, Suez), les zones de conflits (piraterie, frontières maritimes), les routes maritimes principales, et les passages du Nord-Est et du Nord-Ouest." },
+  { t:"pause", q:"Cite quatre passages stratégiques de ta carte.", a:"Par exemple : le détroit de Gibraltar, le canal de Panama, le détroit de Malacca et le cap de Bonne-Espérance. Il y a aussi le cap Horn, le Pas de Calais et le détroit d'Ormuz.", s:"Fiche E, carte des passages stratégiques" },
   { t:"h3", h:"Transport intermodal (p. 90)" },
   bookDef("inter"),
   { t:"p", s:"Livre p. 68, doc. 5 · p. 91, doc. 78", h:"Un exemple de ton livre (doc. 5) : le jean Lee Cooper quitte la Tunisie en <b>train</b>, puis en <b>bateau</b> ; il traverse la Manche par le tunnel en <b>camion</b>, puis arrive au magasin en <b>camionnette</b>. En Suisse, on encourage le transport intermodal par le ferroutage : le camion entier est chargé sur un train." },
+  { t:"svg", k:"ruptures", titre:"Le voyage du jean, de l'usine au magasin", alt:"Le schéma suit le jean de l'usine de Ras Jebel, en Tunisie, jusqu'au magasin d'Ipswich, au Royaume-Uni. Il voyage d'abord en train, puis en bateau, puis en camion par le tunnel sous la Manche, et enfin en camionnette. Quatre modes à la suite : c'est un transport intermodal. À chaque changement, il y a une rupture de charge : du train au bateau, du bateau au camion, du camion à la camionnette. Trois ruptures de charge en tout.", s:"Livre p. 68, doc. 5" },
   { t:"h3", h:"Rupture de charge (p. 92)" },
   bookDef("rupt"),
   { t:"mine", s:"Fiche E, act. 4a", titre:"Ta réponse (activité 4a)", items:["On change de moyen de transport → rupture de charge. Cela coûte de l'argent et du temps. C'est exactement ce que dit la bulle du livre."] },
+  { t:"pause", q:"Le jean voyage en train, en bateau, en camion puis en camionnette. Combien de ruptures de charge ?", a:"Trois : du train au bateau, du bateau au camion, du camion à la camionnette.", s:"Livre p. 68, doc. 5" },
   { t:"h3", h:"Plateforme intermodale (p. 93)" },
   bookDef("plat"),
   { t:"p", s:"Livre p. 93, texte et doc. 84", h:"Les lieux de ruptures de charge sont appelés plateformes intermodales. Les <b>ports</b> sont des plateformes intermodales stratégiques : ils attirent de nombreuses activités industrielles et des emplois. Exemple : l'intermodalité au port de Rouen, en France, avec ses grues, ses conteneurs et ses camions (doc. 84)." },
   { t:"ex", s:"Fiche E, carte et act. 4a", items:[["E · carte","Tu as placé et nommé 7 passages stratégiques.","Le livre en montre deux de plus : le canal de Suez et le détroit de Bab-el-Mandeb."],["E · 4a","Tu as expliqué pourquoi le transport « porte à porte » coûte plus cher.","C'est la rupture de charge : le mot de la bulle jaune p. 92."]] },
+  { t:"pause", q:"Où se font les ruptures de charge ? Et pourquoi les ports sont-ils stratégiques ?", a:"Sur des plateformes intermodales (port, gare, aéroport), avec des grues. Les ports attirent de nombreuses activités industrielles et des emplois.", s:"Livre p. 93" },
   { t:"tip", h:"Relie les trois mots : le transport intermodal utilise plusieurs modes à la suite ; chaque changement est une rupture de charge ; elle se fait sur une plateforme intermodale (port, gare, aéroport), avec des grues. Le passage stratégique, lui, est un endroit où tous les navires doivent passer." },
   { t:"see", ids:["E1","E4","A2"] },
   { t:"src", h:"Livre pp. 89-93 (doc. 73 à 75, 84 · bulles jaunes p. 90, 92, 93) · fiche E, carte et act. 4a" },
@@ -861,6 +1059,8 @@ const PAGES = [
 /* ---------------- E3 ---------------- */
 { id:"E3", ch:"E", titre:"Choisir un transport", court:"Les facteurs du livre et la méthode pour faire un choix logique",
   obj:"Faire un choix logique pour transporter un produit.",
+  pre:[{ q:"Tu dois envoyer environ 30 conteneurs de Rotterdam à Bâle, au plus bas prix. Quel transport choisis-tu ?", a:"La péniche : elle emporte environ 30 conteneurs pour des coûts très faibles, et elle va jusqu'au port suisse de Bâle.", s:"Livre p. 90, doc. 77 · fiche E, act. 3c et 4" }, { q:"De quoi dépend le choix d'un transport ? Cite trois facteurs.", a:"Par exemple : le type de produit, la distance et le temps de parcours. Le livre ajoute les infrastructures, le terrain et la situation géopolitique.", s:"Livre p. 90" }],
+  blank:{ consigne:"Choisis un transport pour livrer 1 conteneur à 200 km, jusqu'à la porte d'un magasin. Écris ton choix et deux raisons.", points:["Le camion", "Raison : il va partout, porte à porte, sans horaire", "Raison : c'est le principal mode sur les distances courtes et moyennes", "En plus : 1 conteneur, c'est sa capacité (1 ou 2)"], s:"Livre p. 91, doc. 79 · fiche E, act. 3c" },
   blocks:[
   { t:"p", s:"Livre p. 90, « Différents modes de transport pour les marchandises »", h:"Le livre le dit : le choix du mode de transport dépend de nombreux facteurs." },
   { t:"html", s:"Livre p. 90", h:`<div class="sect6">
@@ -871,6 +1071,7 @@ const PAGES = [
     <div class="sx"><b>La configuration du terrain</b><span>océan, montagne, relief plat</span></div>
     <div class="sx"><b>La situation géopolitique</b><span>frontières, conflits, piraterie</span></div></div>
     <p class="fine">Les six facteurs sont du livre ; les exemples en gris t'aident à les comprendre.</p>` },
+  { t:"pause", q:"Quels sont les six facteurs du livre pour choisir un transport ?", a:"Le type de produit, la distance, le temps de parcours, les infrastructures, la configuration du terrain et la situation géopolitique.", s:"Livre p. 90" },
   { t:"h3", h:"La méthode" },
   { t:"html", s:"Méthode construite avec le livre pp. 90-91 (doc. 76 à 80) et les chiffres de la fiche E, act. 3c et 4", h:`<div class="tbl"><table><tbody>
     <tr><td class="num">1</td><td><b>Quel produit ?</b> Urgent ou précieux → avion-cargo. Lourd, en grande quantité, pas pressé → bateau ou péniche.</td></tr>
@@ -879,8 +1080,10 @@ const PAGES = [
     <tr><td class="num">4</td><td><b>Combien de ruptures de charge ?</b> Chaque changement coûte de l'argent et du temps.</td></tr>
     <tr><td class="num">5</td><td><b>Combien ça coûte ?</b> Sans rupture, le bateau est le moins cher ; porte à porte, le camion augmente le moins.</td></tr>
     <tr><td class="num">6</td><td><b>Quels risques ?</b> Embouteillages et accidents sur la route, frontières pour le train, zones de conflits sur les routes maritimes (doc. 74).</td></tr></tbody></table></div>` },
+  { t:"pause", q:"Pourquoi éviter de changer trop souvent de mode de transport ?", a:"Parce que chaque rupture de charge coûte de l'argent et du temps.", s:"Livre p. 92, bulle « Rupture de charge » · fiche E, act. 4a" },
   { t:"h3", h:"Un exemple du livre : le rail entre la Chine et l'Europe (p. 93)" },
   { t:"p", s:"Livre p. 93, doc. 85, 86 et 87 · p. 92, doc. 81", h:"En 2017, le premier train de marchandises entre le Royaume-Uni et la Chine a relié le port de Londres-Gateway à Yiwu : <b>12 000 km en 18 jours</b>, avec 32 conteneurs (whisky, boissons, médicaments) sur un train de 600 m (doc. 86). Le nombre de voyages en train entre la Chine et l'Europe est passé de quelques dizaines en 2011 à environ 4000 en 2017 (doc. 87). À comparer : le porte-conteneurs Marco Polo met presque trois mois pour sa rotation complète entre l'Europe et l'Asie (doc. 81). Le livre pose la question (p. 88) : le rail pourra-t-il bientôt concurrencer le cargo entre la Chine et l'Europe ?" },
+  { t:"pause", q:"Le premier train Londres–Yiwu : combien de kilomètres, en combien de jours ? Et le Marco Polo ?", a:"12 000 km en 18 jours, avec 32 conteneurs. Le Marco Polo met presque trois mois pour sa rotation entre l'Europe et l'Asie.", s:"Livre p. 93, doc. 86 · p. 92, doc. 81" },
   { t:"tip", h:"Une réponse logique = un choix + au moins deux raisons tirées du livre ou des chiffres. « Je choisis le train : il transporte 20 à 30 conteneurs et ne coûte que 6 CHF par tonne sans rupture de charge. »" },
   { t:"see", ids:["E1","E2"] },
   { t:"src", h:"Livre pp. 88, 90-93 (doc. 74, 76 à 81, 85 à 87) · fiche E, act. 3c et 4" },
@@ -888,13 +1091,17 @@ const PAGES = [
 /* ---------------- E4 ---------------- */
 { id:"E4", ch:"E", titre:"Le même conteneur partout", court:"Pourquoi une taille standard",
   obj:"Expliquer pourquoi on utilise le même container sur toute la planète.",
+  pre:[{ q:"Pourquoi tous les conteneurs du monde ont-ils la même taille ?", a:"Pour passer facilement d'un mode de transport à l'autre : les ruptures de charge coûtent moins cher et prennent moins de temps.", s:"Livre p. 92, « Conteneurs et intermodalité »" }, { q:"Que veut dire EVP ?", a:"Équivalent vingt pieds : le volume d'un conteneur de 6 × 2,4 × 2,6 mètres.", s:"Livre p. 92, glossaire en bas de page" }],
+  blank:{ consigne:"Explique en trois idées enchaînées pourquoi on utilise le même conteneur partout.", points:["Mêmes dimensions partout (6 ou 12 m × 2,4 m × 2,6 m)", "Il passe facilement d'un mode de transport à l'autre", "Les ruptures de charge coûtent moins cher et prennent moins de temps"], s:"Livre p. 92" },
   blocks:[
   { t:"p", s:"Livre p. 92, « Conteneurs et intermodalité »", h:"Le conteneur est une boîte métallique qui sert à transporter des marchandises. Il a été imaginé en <b>1956 aux États-Unis</b>, et son usage s'est généralisé à partir de <b>1966</b>." },
   { t:"html", s:"Livre p. 92, « Conteneurs et intermodalité »", h:`<div class="box3d">6 ou 12 m × 2,4 m × 2,6 m<small>dimensions standardisées : les mêmes partout dans le monde</small></div>` },
   { t:"p", s:"Livre p. 92, « Conteneurs et intermodalité »", h:"Pourquoi le même partout ? Parce qu'il peut être <b>facilement transbordé d'un mode de transport à l'autre</b>. Il a été créé pour faire face à la très forte augmentation du transport de marchandises et pour <b>simplifier les ruptures de charge</b>." },
   { t:"p", s:"Livre p. 92, bulle « Rupture de charge »", h:"La bulle jaune le confirme : l'utilisation d'un conteneur standardisé facilite les transferts et <b>diminue le coût et le temps de transport</b>. Sur les plateformes intermodales, les grues sont prévues pour ces boîtes (p. 93)." },
+  { t:"pause", q:"Quand et où le conteneur a-t-il été imaginé ?", a:"En 1956, aux États-Unis. Son usage s'est généralisé à partir de 1966.", s:"Livre p. 92, « Conteneurs et intermodalité »" },
   bookDef("evp"),
   { t:"p", s:"Fiche E, act. 3a · livre p. 92, glossaire", h:"Ton calcul de l'activité 3a : 12 m × 2,4 m × 2,6 m = 74,88 m³. Ce conteneur de 12 m a la longueur de deux conteneurs de 6 m : il vaut donc <b>2 EVP</b>. Ta salle de classe (150 m³) ≈ 2 conteneurs de 12 m." },
+  { t:"pause", q:"Combien d'EVP vaut un conteneur de 12 m, et pourquoi ?", a:"2 EVP : il a la longueur de deux conteneurs de 6 m.", s:"Livre p. 92, glossaire · fiche E, act. 3a" },
   { t:"h3", h:"Les ports et les navires (doc. 81 à 83)" },
   { t:"html", s:"Livre p. 92, doc. 82 (source : Lloyd's List Intelligence)", h:`<div class="tbl"><table><thead><tr><th>Les 12 plus grands ports à conteneurs, 2016</th><th>Pays</th><th>Milliers d'EVP</th></tr></thead><tbody>
     <tr><td>Shanghai</td><td>Chine</td><td class="num">37 133</td></tr><tr><td>Singapour</td><td>Singapour</td><td class="num">30 903</td></tr><tr><td>Shenzhen</td><td>Chine</td><td class="num">23 979</td></tr><tr><td>Ningbo-Zhoustan</td><td>Chine</td><td class="num">21 560</td></tr><tr><td>Busan</td><td>Corée du Sud</td><td class="num">19 850</td></tr><tr><td>Hong Kong</td><td>Chine</td><td class="num">19 813</td></tr><tr><td>Guangzhou</td><td>Chine</td><td class="num">18 857</td></tr><tr><td>Qingdao</td><td>Chine</td><td class="num">18 010</td></tr><tr><td>Dubaï</td><td>Émirats arabes unis</td><td class="num">14 772</td></tr><tr><td>Tianjin</td><td>Chine</td><td class="num">14 190</td></tr><tr><td>Port Klang</td><td>Malaisie</td><td class="num">13 169</td></tr><tr><td>Rotterdam</td><td>Pays-Bas</td><td class="num">12 385</td></tr></tbody></table></div>
@@ -903,6 +1110,7 @@ const PAGES = [
     <tr><td>Fully cellular</td><td class="num">1970</td><td class="num">215 × 20 × 10 m</td></tr><tr><td>Panamax</td><td class="num">1980</td><td class="num">250 × 32 × 12,5 m</td></tr><tr><td>Post Panamax</td><td class="num">1988</td><td class="num">285 × 40 × 13 m</td></tr><tr><td>Post Panamax Plus</td><td class="num">2000</td><td class="num">300 × 43 × 14,5 m</td></tr><tr><td>Triple E</td><td class="num">2013</td><td class="num">300 × 59 × 15,5 m</td></tr></tbody></table></div>
     <p class="fine">Les navires sont de plus en plus grands. La longueur du Triple E équivaut à 2 terrains de football, 2 patinoires et 2 terrains de basket.</p>` },
   { t:"p", s:"Livre p. 88, doc. 72 · p. 92, doc. 81", h:"Le porte-conteneurs est le principal moyen de transport des produits industriels sur les océans et les mers (doc. 72). Le Marco Polo a fait sa rotation complète entre l'Europe et l'Asie du 3 janvier au 27 mars 2016, par le canal de Suez, le détroit de Bab-el-Mandeb et le détroit de Malacca (doc. 81)." },
+  { t:"pause", q:"Quel est le plus grand port à conteneurs du monde en 2016 ? Et le seul port européen du classement ?", a:"Shanghai. Rotterdam est le seul port européen parmi les 12 premiers.", s:"Livre p. 92, doc. 82" },
   { t:"ex", s:"Fiche E, act. 3a à 3c", items:[["E · 3a","Tu as calculé le volume d'un conteneur : 74,88 m³.","Ses mesures sont celles du livre (12 × 2,4 × 2,6 m) : elles sont standardisées."],["E · 3c","Tu as compté combien de conteneurs portent un cargo, une péniche, un train, un camion.","On peut compter en conteneurs parce que tous ont la même taille."]] },
   { t:"tip", h:"Trois idées à enchaîner : mêmes dimensions partout → il passe facilement d'un mode de transport à l'autre → les ruptures de charge coûtent moins cher et prennent moins de temps." },
   { t:"see", ids:["E2","E1"] },
@@ -1320,11 +1528,24 @@ function viewToc(){
   return h + `<button class="cta" data-act="page" data-v="LIENS">Commencer la lecture</button><p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
 }
 function bsrc(b){
-  if (!["p","def","html","mine","ex","links","tip"].includes(b.t)) return "";
+  if (!["p","def","html","mine","ex","links","tip","pause","svg"].includes(b.t)) return "";
   const t = b.s || (b.t === "def" && b.gen ? "Pas dans tes photos : à vérifier dans le livre" : b.t === "tip" ? "Conseil de méthode (pas une page du livre)" : b.t === "def" ? "Fiches d'exercices" : "");
   return t ? `<p class="bsrc">📖 ${esc(t)}</p>` : "";
 }
 function block(b){ return blockBody(b) + bsrc(b); }
+function preBlock(p){
+  if (!p.pre) return "";
+  return `<div class="prebox"><p class="prebox-t">🤔 Avant la capsule : essaie de répondre<small>Même si tu ne sais pas encore. Chercher la réponse t'aide à la retenir quand elle arrive.</small></p>
+    <ol>${p.pre.map(x => `<li>${esc(x.q)}</li>`).join("")}</ol>
+    <details><summary>Voir les réponses (après la capsule)</summary><ol>${p.pre.map(x => `<li>${esc(x.a)}<span class="bsrc">📖 ${esc(x.s)}</span></li>`).join("")}</ol></details></div>`;
+}
+function blankBlock(p){
+  if (!p.blank) return "";
+  const b = p.blank;
+  return `<div class="blank"><p class="blank-t">📝 Feuille blanche<small>Ferme le Dossier, écris tout ce dont tu te souviens, puis vérifie.</small></p>
+    <p class="blank-c">${esc(b.consigne)}</p>
+    <details><summary>Vérifier : les points clés</summary><ul class="blank-l">${b.points.map((x,i) => `<li><label><input type="checkbox"> <span>${esc(x)}</span></label></li>`).join("")}</ul><p class="bsrc">📖 ${esc(b.s)}</p></details></div>`;
+}
 function blockBody(b){
   switch(b.t){
     case "p": return `<p class="read">${b.h}</p>`;
@@ -1339,6 +1560,8 @@ function blockBody(b){
     case "links": return `<div class="links">${b.items.map(([ids,t]) => `<div class="lk"><span class="lk-ids">${ids.map((id,i) => (i?`<i>↓</i>`:"") + `<button data-act="page" data-v="${id}">${id}</button>`).join("")}</span><p>${t}</p></div>`).join("")}</div>`;
     case "see": return `<div class="see"><span>Voir aussi :</span>${b.ids.map(id => `<button data-act="page" data-v="${id}">${id} · ${esc(pageById(id).titre)}</button>`).join("")}</div>`;
     case "src": return `<p class="src">Toutes les sources de ce chapitre : ${esc(b.h)}</p>`;
+    case "pause": return `<div class="pause"><p class="pause-t">⏸ Mets sur pause et réponds</p><p class="pause-q">${esc(b.q)}</p><details><summary>Voir la réponse</summary><p>${esc(b.a)}</p></details></div>`;
+    case "svg": return `<figure class="svgfig">${SVGS[b.k](P_PAGE)}<figcaption>${esc(b.titre)}</figcaption></figure>`;
   }
   return "";
 }
@@ -1373,8 +1596,8 @@ function viewPage(id){
     h += `</article>`;
   } else {
     const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
-    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${videoBtn(p.id)}${chapTest(p.id)}
-      ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + chapTest(p.id, "end") + `</article>`;
+    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${videoBtn(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
+      ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + blankBlock(p) + chapTest(p.id, "end") + `</article>`;
   }
   return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
 }
@@ -1833,6 +2056,8 @@ document.addEventListener("focusin", e => { if (e.target.classList && e.target.c
 render();
 loadHistory();
 </script>
+
+
 
 </body>
 </html>
