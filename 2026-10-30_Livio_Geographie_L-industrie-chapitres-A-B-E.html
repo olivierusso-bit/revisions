@@ -156,6 +156,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .vdone{background:var(--good-wash);border:1px solid var(--good);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:10px}
 .vdone-t{margin:0;font-family:var(--display);font-weight:800;font-size:22px;color:var(--good)}
 .toc-v.seen{background:var(--good-wash);color:var(--good);border:1px solid var(--good)}
+.ctest{border:1px solid var(--box);background:var(--box-wash);border-radius:4px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.ctest.end{margin-top:4px}
+.ctest-t{margin:0;font-weight:700;font-size:15px;color:var(--box)}.ctest-t small{display:block;font-weight:400;font-size:12.5px;color:var(--soft)}
+.ctest-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);cursor:pointer;min-width:0}
+.ctest-b span{font-size:17px}.ctest-b b{font-size:13px;line-height:1.2;text-align:center}
 .toc-v{display:inline-block;font-size:11.5px;font-weight:700;background:var(--crane);color:var(--crane-ink);padding:0 6px;border-radius:3px;vertical-align:2px;white-space:nowrap}
 .pm{margin:0 0 6px;font-size:14.5px}
 .pm b{display:inline-block;width:16px}
@@ -355,7 +360,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:16, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) */
+const VERSION = { n:17, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -446,6 +451,12 @@ function videoBtn(id){
     <img src="https://i.ytimg.com/vi/${v}/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">
     <span class="vthumb-play" aria-hidden="true">▶</span>
     <span class="vthumb-t"><b>Regarder la capsule ${esc(id === "LIENS" ? "d'introduction" : id)}</b><small>${seen ? "✓ déjà vue · " : ""}lue ici, sans quitter le Dossier</small></span></button>`;
+}
+function chapTest(id, where){
+  const decks = DECKS.filter(d => d.code === id); if (!decks.length) return "";
+  const n = decks.reduce((k,d) => k + d.items.filter(it => !rvOf(d, it).exclu).length, 0);
+  return `<div class="ctest${where === "end" ? " end" : ""}"><p class="ctest-t">🎯 Teste-toi sur ce chapitre <small>${n} questions · correction après chaque question</small></p>
+    <div class="row3">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="ctest-b" data-act="chapTest" data-v="${id}|${k}"><span>${d.emoji}</span><b>${d.label}</b></button>`).join("")}</div></div>`;
 }
 function vidPost(cmd){ const f = document.getElementById("vid-frame"); if (f && f.contentWindow) try { f.contentWindow.postMessage(JSON.stringify(cmd), "*"); } catch(e){} }
 function vidListen(){
@@ -1287,8 +1298,8 @@ function viewPage(id){
     h += `</article>`;
   } else {
     const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
-    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${videoBtn(p.id)}
-      ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + `</article>`;
+    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${videoBtn(p.id)}${chapTest(p.id)}
+      ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + chapTest(p.id, "end") + `</article>`;
   }
   return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
 }
@@ -1683,6 +1694,7 @@ document.addEventListener("click", e => {
     case "vidPlay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
     case "vidReplay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
     case "vidFinish": S.vidOpen = v; vidEnded(v); break;
+    case "chapTest": { const [cid, lev] = v.split("|"); S.selected = DECKS.filter(d => d.code === cid).map(d => d.key); S.difficulty = lev; S.mode = "train"; S.frozen = null; S.vidOpen = null; S.vidDone = null; startQuiz(buildTest(S.selected, S.difficulty), false); break; }
     case "vidHide": S.vidOpen = null; S.vidDone = null; render(); break;
     case "vidCards": S.selected = DECKS.filter(d => d.code === v).map(d => d.key); S.cards.order = []; S.cards.only = false; S.frozen = null; S.vidOpen = null; S.vidDone = null; S.screen = "cards"; render(); window.scrollTo(0,0); break;
     case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : DECKS.map(d => d.key).filter(k => k === v || S.selected.includes(k)); S.frozen = null; S.cards.order = []; render(); break;
