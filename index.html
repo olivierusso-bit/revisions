@@ -66,7 +66,7 @@ a.card:hover{border-color:var(--cobalt)}
   VERSION — à changer à chaque mise à jour de la page :
   version = numéro suivant (un de plus que la fois précédente), maj = date et heure de Suisse (AAAA-MM-JJTHH:MM)
 -->
-<script id="version" type="application/json">{ "version": 14, "maj": "2026-10-22T20:32" }</script>
+<script id="version" type="application/json">{ "version": 15, "maj": "2026-10-24T10:31" }</script>
 
 <script id="devoirs" type="application/json">
 [
@@ -113,7 +113,7 @@ function render(){
   const thisMon = monday(today);
   const weeks = {};
   items.forEach(it => { const k = iso(monday(parse(it.date))); (weeks[k] = weeks[k] || []).push(it); });
-  box.innerHTML = Object.keys(weeks).sort().map(k => {
+  box.innerHTML = Object.keys(weeks).sort().reverse().map(k => {  /* semaine la plus récente en haut, les anciennes en dessous */
     const mon = parse(k), list = weeks[k].sort((a,b) => a.date.localeCompare(b.date));
     const lastDay = parse(list[list.length-1].date);
     const past = mon < thisMon;
