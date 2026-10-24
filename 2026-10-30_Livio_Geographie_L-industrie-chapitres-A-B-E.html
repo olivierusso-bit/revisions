@@ -161,6 +161,21 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ctest-t{margin:0;font-weight:700;font-size:15px;color:var(--box)}.ctest-t small{display:block;font-weight:400;font-size:12.5px;color:var(--soft)}
 .ctest-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);cursor:pointer;min-width:0}
 .ctest-b span{font-size:17px}.ctest-b b{font-size:13px;line-height:1.2;text-align:center}
+.caps-cta{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;border:0;border-radius:4px;background:var(--board);color:#E9EEF2;cursor:pointer}
+.caps-cta b{display:block;font-family:var(--display);font-size:20px;color:#fff;line-height:1.1}.caps-cta small{display:block;font-size:13px;color:#C9D3E0}
+.caps-cta-i,.caps-play{flex:none;width:42px;height:42px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:16px;padding-left:3px;border:0;cursor:pointer}
+.caps-meta{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.caps-date{font-weight:700;font-size:14px;background:var(--box-wash);color:var(--box);padding:5px 10px;border-radius:4px}
+.caps-prog{font-weight:700;color:var(--soft)}.caps-prog b{color:var(--good)}
+.caps-ch{display:flex;flex-direction:column;gap:8px}
+.caps-ch h3{margin:8px 0 0;border-bottom:2px solid var(--board);padding-bottom:5px}.caps-ch h3 small{display:block;font-family:var(--ui);font-weight:400;font-size:13.5px;color:var(--soft)}
+.caps-row{border:1px solid var(--rule);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;scroll-margin-top:64px}
+.caps-row.seen{background:var(--good-wash);border-color:var(--good)}.caps-row.on{border-color:var(--box)}
+.caps-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center}
+.caps-line .code{font-size:14px;min-width:46px;padding:3px 6px}
+.caps-txt b{display:block;font-size:15.5px;line-height:1.25}.caps-txt small{display:block;font-size:13px;color:var(--soft);line-height:1.35;margin-top:2px}
+.caps-st{margin:0;font-size:12.5px;color:var(--soft)}.caps-st .back{font-size:12.5px;display:inline}
+.caps-row.seen .caps-st{color:var(--good);font-weight:700}
 .toc-v{display:inline-block;font-size:11.5px;font-weight:700;background:var(--crane);color:var(--crane-ink);padding:0 6px;border-radius:3px;vertical-align:2px;white-space:nowrap}
 .pm{margin:0 0 6px;font-size:14.5px}
 .pm b{display:inline-block;width:16px}
@@ -360,7 +375,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:17, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question */
+const VERSION = { n:18, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question · v18 : page « Capsules » (les 12 vidéos dans l'ordre, lues dans la page, enchaînement capsule suivante, suivi « vue » commun) */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -428,6 +443,32 @@ const VIDEOS = {
   B1:"rWIqHRNhZTc", B2:"vG6VEEZrmS8", B3:"2bNjStdmVdw", B4:"M9cLSxcudpk",
   E1:"zRVQQnqfMIA", E2:"kF5NSVM7WLY", E3:"C0wmzrMzj9w", E4:"0bQG-5zcLp0",
 };
+/* Sommaire des capsules (JSON fourni par le parent le 24.10.2026). code "Intro" = page LIENS. */
+const CAPSULES = {
+  titre:"L'industrie, chapitres A, B et E", controle:"vendredi 30 octobre",
+  consigne:"Commence par le fil rouge, puis suis les chapitres dans l'ordre. Dans chaque vidéo, mets sur pause quand la voix te le demande et récite avant de regarder la réponse.",
+  diffusion:"YouTube non répertorié ; voix de synthèse et animations réalisées avec l'IA, à partir du livre et des fiches du cours.",
+  chapitres:[
+    { chapitre:"Pour commencer", question:"Le lien entre les trois chapitres", capsules:[
+      { id:"LIENS", code:"Intro", titre:"Le fil rouge du contrôle", objectif:"Les liens et les schémas à savoir pour l'épreuve." } ] },
+    { chapitre:"Chapitre A", question:"D'où proviennent les objets que je possède ?", capsules:[
+      { id:"A1", code:"A1", titre:"Quatre définitions", objectif:"Expliquer les définitions suivantes : produit industriel, produit fini, siège social et matières premières." },
+      { id:"A2", code:"A2", titre:"Lire une étiquette", objectif:"Avoir un regard critique sur des informations données (ex. : l'étiquette d'un produit donne-t-elle toutes les informations ?)." },
+      { id:"A3", code:"A3", titre:"La filière de production", objectif:"Comprendre et expliquer le schéma de la filière d'une production industrielle." } ] },
+    { chapitre:"Chapitre B", question:"Où localiser la production industrielle ?", capsules:[
+      { id:"B1", code:"B1", titre:"Quatre notions clés", objectif:"Définir les notions clés suivantes : révolution industrielle, délocalisation, multinationale, R&D." },
+      { id:"B2", code:"B2", titre:"De la révolution 1.0 à aujourd'hui", objectif:"Expliquer comment la production industrielle a évolué de la révolution industrielle 1.0 à aujourd'hui (grandes innovations ; critères de localisation des entreprises)." },
+      { id:"B3", code:"B3", titre:"Ce qu'il faut pour produire", objectif:"Énumérer et expliquer ce dont a besoin une entreprise pour produire un bien." },
+      { id:"B4", code:"B4", titre:"Une multinationale au XXIe siècle", objectif:"Expliquer l'organisation d'une grande entreprise au XXIe siècle et les critères de localisation de ses secteurs d'activité (siège social, R&D, extraction des matières premières, composants, assemblage, distribution)." } ] },
+    { chapitre:"Chapitre E", question:"Les transports", capsules:[
+      { id:"E1", code:"E1", titre:"Les modes de transport", objectif:"Décrire les différents types de moyens de transport, avec leurs avantages et leurs inconvénients." },
+      { id:"E2", code:"E2", titre:"Quatre termes du transport", objectif:"Connaître les termes passage stratégique, transport intermodal, rupture de charge et plateforme intermodale." },
+      { id:"E3", code:"E3", titre:"Choisir un transport", objectif:"Faire un choix logique pour transporter un produit." },
+      { id:"E4", code:"E4", titre:"Le même conteneur partout", objectif:"Expliquer pourquoi on utilise le même conteneur sur toute la planète." } ] },
+  ],
+};
+const CAPS_ORDER = CAPSULES.chapitres.flatMap(c => c.capsules.map(x => x.id));
+const capsSeen = () => CAPS_ORDER.filter(id => S.vidSeen[id]).length;
 const videoUrl = id => VIDEOS[id] ? "https://www.youtube.com/watch?v=" + VIDEOS[id] : null;
 const VIDS_ID = QUIZ_ID + "-videos-vues";
 function nextAfter(id){ const i = PAGES.findIndex(p => p.id === id); return PAGES[i+1] ? PAGES[i+1].id : null; }
@@ -435,18 +476,37 @@ function videoBtn(id){
   if (!(id in VIDEOS)) return "";
   const v = VIDEOS[id], u = videoUrl(id), seen = !!S.vidSeen[id];
   if (!v) return `<p class="vid off"><span class="vid-i" aria-hidden="true">▶</span><span><b>Vidéo bientôt disponible</b><small>La capsule ${esc(id)} n'est pas encore en ligne</small></span></p>`;
-  if (S.vidDone === id){
-    const decks = DECKS.filter(d => d.code === id), nxt = nextAfter(id);
+  if (S.vidDone === id) return vidDonePanel(id, "page");
+  if (S.vidOpen === id) return vidPlayer(id);
+  return vidThumb(id, seen);
+}
+function vidDonePanel(id, where){
+  const decks = DECKS.filter(d => d.code === id);
+  if (where === "caps"){
+    const i = CAPS_ORDER.indexOf(id), nx = CAPS_ORDER[i+1];
+    const nxTxt = nx ? (nx === "LIENS" ? "le fil rouge" : nx) : null;
+    return `<div class="vdone"><p class="vdone-t">✓ Capsule vue</p>
+      ${nx && VIDEOS[nx] ? `<button class="cta" data-act="vidPlay" data-v="${nx}">▶ Capsule suivante : ${esc(nxTxt)}</button>` : `<p class="fine">Tu as fini la série 👏 Passe aux tests du chapitre ou à l'épreuve blanche.</p>`}
+      <div class="row">${decks.length ? `<button class="ghost small" data-act="vidCards" data-v="${id}">Teste-toi : cartes ${esc(id)}</button>` : ""}<button class="ghost small" data-act="page" data-v="${id}">Lire ${id === "LIENS" ? "le fil rouge" : "le chapitre " + esc(id)}</button></div></div>`;
+  }
+  {
+    const nxt = nextAfter(id);
     return `<div class="vdone"><p class="vdone-t">✓ Capsule vue</p>
       ${decks.length ? `<button class="cta" data-act="vidCards" data-v="${id}">Teste-toi maintenant : cartes ${esc(id)}</button>` : nxt ? `<button class="cta" data-act="page" data-v="${nxt}">Commencer le chapitre ${esc(nxt)}</button>` : ""}
       <div class="row"><button class="ghost small" data-act="vidReplay" data-v="${id}">Revoir la capsule</button><button class="ghost small" data-act="vidHide">Lire le chapitre</button></div></div>`;
   }
-  if (S.vidOpen === id){
+}
+function vidPlayer(id){
+  const v = VIDEOS[id], u = videoUrl(id);
+  {
     const src = `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin && location.origin !== "null" ? location.origin : "")}`;
     return `<div class="vplay"><div class="vframe"><iframe id="vid-frame" src="${src}" title="Capsule vidéo ${esc(id)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
       <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>
       <p class="fine vfb">La vidéo ne s'affiche pas ? <a href="${u}" target="_blank" rel="noopener">L'ouvrir dans YouTube</a></p></div>`;
   }
+}
+function vidThumb(id, seen){
+  const v = VIDEOS[id];
   return `<button class="vthumb" data-act="vidPlay" data-v="${id}" aria-label="Lire la capsule vidéo ${esc(id)}">
     <img src="https://i.ytimg.com/vi/${v}/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">
     <span class="vthumb-play" aria-hidden="true">▶</span>
@@ -1217,7 +1277,7 @@ function reviewText(){
   return l.join("\n");
 }
 const deckLabel = keys => keys.length === DECKS.length ? "Tout le chapitre" : keys.map(k => DECK[k].title).join(" + ");
-const BOOK = [...PAGES.map(p => p.id), "lex", "src"];
+const BOOK = ["caps", ...PAGES.map(p => p.id), "lex", "src"];
 
 /* ---------- rendu ---------- */
 const app = document.getElementById("app");
@@ -1243,11 +1303,12 @@ function renderTabs(){
 
 /* ---------- DOSSIER ---------- */
 const pageById = id => PAGES.find(p => p.id === id);
-function pageTitle(id){ return id === "lex" ? "Lexique" : id === "src" ? "D'où viennent les questions" : pageById(id).titre; }
+function pageTitle(id){ return id === "caps" ? "Les 12 capsules dans l'ordre" : id === "lex" ? "Lexique" : id === "src" ? "D'où viennent les questions" : pageById(id).titre; }
 function viewDossier(){ return S.page ? viewPage(S.page) : viewToc(); }
 function viewToc(){
   let h = `<p class="intro">Ton cours complet, rangé comme ta feuille d'objectifs : un chapitre par « Je suis capable de ». Lis un chapitre, puis teste-toi avec les cartes ou le test.</p>
   <div class="legend"><p><span class="tag book">Livre p. 66</span> définition de ton livre (bulle jaune), mot pour mot : à savoir par cœur.</p><p><span class="tag mine">Ton dossier</span> ce qui vient de tes fiches et de tes réponses.</p><p><span class="tag gen">À vérifier</span> explication générale, pas encore dans tes pages : jamais interrogée.</p></div>`;
+  h += `<button class="caps-cta" data-act="page" data-v="caps"><span class="caps-cta-i" aria-hidden="true">▶</span><span><b>Les ${CAPS_ORDER.length} capsules dans l'ordre</b><small>${capsSeen()} / ${CAPS_ORDER.length} vues · regarde-les à la suite, sans quitter l'outil</small></span></button>`;
   h += `<section class="toc-ch"><h2>Avant de commencer <span>Les liens entre les chapitres et les schémas à connaître</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">Le fil rouge du contrôle${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">Un objet fabriqué en morceaux dans le monde, puis transporté : comment A, B et E se tiennent</span></span></button></section>`;
   CHAPTERS.forEach(c => {
     h += `<section class="toc-ch"><h2>${c.titre} <span>${esc(c.sous)}</span></h2>` + PAGES.filter(p => p.ch === c.key).map(p =>
@@ -1286,9 +1347,23 @@ function pager(id){
   return `<div class="pager">${prev ? `<button data-act="page" data-v="${prev}"><small>← Précédent</small><b>${esc(pageTitle(prev))}</b></button>` : `<button data-act="page" data-v=""><small>← Retour</small><b>Sommaire</b></button>`}${next ? `<button data-act="page" data-v="${next}"><small>Suivant →</small><b>${esc(pageTitle(next))}</b></button>` : `<button data-act="nav" data-v="home"><small>Et maintenant →</small><b>M'entraîner</b></button>`}</div>`;
 }
 function viewPage(id){
-  const code = id === "lex" ? "ABC" : id === "src" ? "SRC" : id;
+  const code = id === "caps" ? "▶" : id === "lex" ? "ABC" : id === "src" ? "SRC" : id;
   let h = `<div class="pbar"><button class="pbar-back" data-act="page" data-v="">← Sommaire</button><span class="pbar-t"><span class="code">${code}</span><span class="pbar-x">${esc(pageTitle(id))}</span></span></div>`;
-  if (id === "lex"){
+  if (id === "caps"){
+    const n = capsSeen(), tot = CAPS_ORDER.length;
+    h += `<article class="page"><h2>Les ${tot} capsules dans l'ordre</h2>
+      <div class="caps-meta"><span class="caps-date">Contrôle : ${esc(CAPSULES.controle)}</span><span class="caps-prog"><b>${n}</b> / ${tot} vues</span></div>
+      <p class="read">${esc(CAPSULES.consigne)}</p>` +
+      CAPSULES.chapitres.map(c => `<section class="caps-ch"><h3>${esc(c.chapitre)}<small>${esc(c.question)}</small></h3>` + c.capsules.map(x => {
+        const seen = !!S.vidSeen[x.id];
+        const body = S.vidDone === x.id ? vidDonePanel(x.id, "caps") : S.vidOpen === x.id ? vidPlayer(x.id) : "";
+        return `<div class="caps-row${seen ? " seen" : ""}${body ? " on" : ""}" id="cap-${x.id}">
+          <div class="caps-line"><span class="code">${esc(x.code)}</span><span class="caps-txt"><b>${esc(x.titre)}</b><small>${esc(x.objectif)}</small></span>
+          ${body ? "" : `<button class="caps-play" data-act="vidPlay" data-v="${x.id}" aria-label="Lire la capsule ${esc(x.code)}">▶</button>`}</div>
+          <p class="caps-st">${seen ? "✓ vue" : "pas encore vue"} · <button class="back" data-act="page" data-v="${x.id}">lire le chapitre</button></p>${body}</div>`;
+      }).join("") + `</section>`).join("") +
+      `<p class="fine">${esc(CAPSULES.diffusion)} La marque « vue » est enregistrée ${HAS_CLAUDE ? "dans tes données Claude" : "sur cet appareil"}.</p></article>`;
+  } else if (id === "lex"){
     h += `<article class="page"><h2>Lexique</h2>` + LEXIQUE.map(x => `<div class="def${x.book?" book":x.gen?" gen":""}"><span class="def-term">${esc(x.t)} <span class="tag ${x.book?"book":x.gen?"gen":"mine"}">${x.book?"Livre "+esc(x.book):x.gen?"À vérifier":"Ton dossier"}</span></span><p class="read">${esc(x.h)} <button class="back" data-act="page" data-v="${x.ref}" style="display:inline;font-size:14px">${x.ref}</button></p>${x.s ? `<p class="bsrc" style="margin:0">📖 ${esc(x.s)}</p>` : ""}</div>`).join("") + `</article>`;
   } else if (id === "src"){
     h += `<article class="page"><h2>D'où viennent les questions</h2>` + SOURCES.map(x => `<div class="srcrow"><b>${esc(x.titre)}</b><span class="fine">reçue le ${esc(x.recue)}</span><span>${esc(x.contenu)}</span></div>`).join("") + `<p class="note">${esc(SOURCES_NOTE)}</p>`;
@@ -1691,7 +1766,7 @@ document.addEventListener("click", e => {
   switch(act){
     case "nav": S.screen = v; S.scores.confirm = false; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
     case "page": S.screen = "dossier"; S.page = v || null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
-    case "vidPlay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
+    case "vidPlay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); if (S.page === "caps"){ const r = document.getElementById("cap-" + v); if (r) r.scrollIntoView({ block:"start" }); } break;
     case "vidReplay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
     case "vidFinish": S.vidOpen = v; vidEnded(v); break;
     case "chapTest": { const [cid, lev] = v.split("|"); S.selected = DECKS.filter(d => d.code === cid).map(d => d.key); S.difficulty = lev; S.mode = "train"; S.frozen = null; S.vidOpen = null; S.vidDone = null; startQuiz(buildTest(S.selected, S.difficulty), false); break; }
