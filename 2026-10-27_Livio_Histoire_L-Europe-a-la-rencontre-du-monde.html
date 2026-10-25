@@ -427,6 +427,11 @@ a.aud-ext,.aud-links a.ghost{text-align:center;text-decoration:none;color:var(--
 .heat table{font-size:13px}.heat th,.heat td{text-align:center;padding:5px 4px}.heat td.k{text-align:left;font-weight:700}
 .hc{font-variant-numeric:tabular-nums;font-weight:700}.hc-ok{background:color-mix(in srgb,var(--p-ok) 18%,transparent)}.hc-mid{background:color-mix(in srgb,var(--p-mid) 18%,transparent)}.hc-low{background:color-mix(in srgb,var(--p-low) 18%,transparent)}.hc-0{color:var(--st)}
 .resist p{margin:4px 0;font-size:14.5px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.resist .code{font-size:12px;min-width:0;padding:1px 6px}.resist small{color:var(--soft)}
+
+.draft{border:2px solid var(--box);background:var(--box-wash);border-radius:14px;padding:12px 14px;margin:0 0 16px;display:grid;gap:10px}
+.draft p{margin:0}.draft p b{display:block;font-size:18px}.draft p span{display:block;color:var(--soft);margin-top:2px}
+.draft-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.draft-row .cta{flex:1 1 180px;margin:0}
+.quitbox{margin-top:8px}.quitbox .cta,.quitbox .ghost{width:100%;margin:0}
 .vframe video{position:absolute;inset:0;width:100%;height:100%;background:#000}
 
 </style>
@@ -454,7 +459,7 @@ const BRANCHE = "Histoire";
 const HEAD = { code:"HIST", num:"10", titre:"L'Europe à la rencontre du monde", sous:"Chapitre 3 · épreuve : " };
 const SUBJECT_LONG = "Histoire, L'Europe à la rencontre du monde (chapitre 3)";
 const FILE_SLUG = "histoire-europe-monde-livio";
-const VERSION = { n:8, date:"25.10.2026" };   /* v8 : 25.10.2026, durée de chaque capsule dans le sommaire (« ▶ vidéo (8:52) ») · v7 : 25.10.2026, baisse de niveau signalée (« avant : réussi ») avec les cartes perdues à refaire · v6 : 25.10.2026, pastilles selon le dernier test et les niveaux de note (rouge sous 4, orange 4 à 4,5, vert « réussi » dès 5, vert foncé « OK » confirmé un autre jour) · v5 : 25.10.2026, les 18 capsules vidéo (S6 à S9, C1 à C5, T, P, D ajoutées) · v4 : 25.10.2026, suivi graphique : pastille de maîtrise par chapitre et générale, courbe des notes sans aide avec la remontée après rattrapage, carte des chapitres, cartes qui résistent · v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
+const VERSION = { n:9, date:"25.10.2026" };   /* v9 : 25.10.2026, test en cours gardé après chaque réponse : on le reprend où on s'était arrêté, le ✕ propose « Garder pour plus tard » ou « Abandonner » ; seul un test terminé compte · v8 : 25.10.2026, durée de chaque capsule dans le sommaire (« ▶ vidéo (8:52) ») · v7 : 25.10.2026, baisse de niveau signalée (« avant : réussi ») avec les cartes perdues à refaire · v6 : 25.10.2026, pastilles selon le dernier test et les niveaux de note (rouge sous 4, orange 4 à 4,5, vert « réussi » dès 5, vert foncé « OK » confirmé un autre jour) · v5 : 25.10.2026, les 18 capsules vidéo (S6 à S9, C1 à C5, T, P, D ajoutées) · v4 : 25.10.2026, suivi graphique : pastille de maîtrise par chapitre et générale, courbe des notes sans aide avec la remontée après rattrapage, carte des chapitres, cartes qui résistent · v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
 
 /* ---------- SOURCES ----------
    Feuille d'objectifs « Histoire 10FR — L'Europe à la rencontre du monde ».
@@ -1856,6 +1861,46 @@ function chainTxt(a){
 document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ sv().ch = e.target.value; sv().pt = null; render(); } });
 document.addEventListener("keydown", e => { const t = e.target; if ((e.key === "Enter" || e.key === " ") && t && t.classList && t.classList.contains("ch-pt")){ e.preventDefault(); sv().pt = t.dataset.v; render(); } });
 
+/* ===== Test en cours (gardé après chaque réponse, compté seulement une fois terminé) ===== */
+const DRAFT_ID = QUIZ_ID + "-test-en-cours";
+let draftChain = Promise.resolve();
+function draftWrite(obj){ draftChain = draftChain.then(() => store.setDoc(DRAFT_ID, obj)).catch(() => {}); }
+function draftSave(){
+  const Q = S.quiz; if (!Q || Q.done) return;
+  const d = { questions:Q.questions, i:Q.i, detail:Q.detail, picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok,
+    label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrParent:S.rattrParent || null, rattrLabel:S.rattrLabel || "",
+    selected:S.selected, difficulty:S.difficulty, mode:S.mode };
+  S.draft = d; draftWrite(d);
+}
+function draftClear(){ S.draft = null; S.draftAsk = false; draftWrite({ vide:true }); }
+function draftResume(){
+  const d = S.draft; if (!d) return;
+  S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = d.mode;
+  S.rattrParent = d.rattrParent; S.rattrLabel = d.rattrLabel; S.frozen = null; S.vidOpen = null; S.vidDone = null; S.audOpen = null;
+  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, detail:d.detail, finishing:false, done:false, start:d.start, label:d.label };
+  S.rattrapage = d.rattrapage; S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.screen = "quiz";
+  render(); window.scrollTo(0,0);
+}
+function draftWhat(d){ return d.rattrapage ? "Rattrapage" : DIFFICULTIES[d.difficulty].label + " · " + MODES[d.mode].label; }
+function draftBanner(){
+  const d = S.draft; if (!d) return "";
+  const n = d.detail.length, tot = d.questions.length;
+  if (S.draftAsk) return `<div class="draft"><p><b>Abandonner ce test ?</b><span>Tes ${n} réponse${n > 1 ? "s" : ""} ser${n > 1 ? "ont effacées" : "a effacée"} et ne compter${n > 1 ? "ont" : "a"} nulle part.</span></p>
+    <div class="draft-row"><button class="ghost small" data-act="draftDrop">Oui, abandonner</button><button class="cta" data-act="draftNo">Non, je le garde</button></div></div>`;
+  return `<div class="draft"><p><b>⏸ Tu as un test en cours</b><span>${esc(d.label)} · ${esc(draftWhat(d))} · ${n} sur ${tot} répondue${n > 1 ? "s" : ""} · ${dateLabel(d.saved)}</span></p>
+    <div class="draft-row"><button class="cta" data-act="draftResume">Reprendre mon test</button><button class="ghost small" data-act="draftAsk">Abandonner</button></div>
+    <p class="fine">Il compte dans tes scores seulement quand tu l'as terminé. Si tu commences un autre test, celui-ci est abandonné.</p></div>`;
+}
+function quitView(){
+  const Q = S.quiz, n = Q.detail.length, tot = Q.questions.length;
+  return `<div class="draft quitbox"><p><b>Tu veux arrêter ce test ?</b><span>Tu as répondu à ${n} question${n > 1 ? "s" : ""} sur ${tot}.</span></p>
+  <button class="cta" data-act="quitKeep">Garder pour plus tard</button>
+  <p class="fine">Ton test est gardé tel quel : tu le reprends depuis le Dossier, les Paquets ou le Test, à la question où tu t'es arrêté. Il compte dans tes scores seulement quand il est terminé.</p>
+  <button class="ghost" data-act="quitDrop">Abandonner ce test</button>
+  <p class="fine">Tes réponses sont effacées et ne comptent nulle part.</p>
+  <button class="ghost small" data-act="quitNo">← Continuer le test</button></div>`;
+}
+
 const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
 const TAG_LABEL = Object.fromEntries(DECKS.map(d => [d.key, d.title]));
 
@@ -1993,6 +2038,7 @@ const S = {
   bilan:{},
 };
 const REVIEW_ID = QUIZ_ID + "-revue-cartes";
+S.draft = null; S.draftAsk = false; S.quitAsk = false;
 S.vidSeen = {}; S.vidOpen = null; S.vidDone = null; S.audOpen = null; S.audPart = 0;
 S.review = {}; S.rvMsg = ""; S.rvCopy = ""; S.rvCopied = false; S.rvConfirm = false;
 try { S.revMode = localStorage.getItem(QUIZ_ID + "-revmode") === "1"; } catch(e){ S.revMode = false; }
@@ -2054,7 +2100,7 @@ const pageById = id => PAGES.find(p => p.id === id);
 function pageTitle(id){ return id === "caps" ? "Les " + CAPS_ORDER.length + " capsules dans l'ordre" : id === "lex" ? "Lexique" : id === "src" ? "D'où viennent les questions" : pageById(id).titre; }
 function viewDossier(){ return S.page ? viewPage(S.page) : viewToc(); }
 function viewToc(){
-  let h = `<p class="intro">Ton cours complet, rangé exactement comme ta feuille d'objectifs : ce que tu dois savoir, ce que tu dois être capable de faire, puis les termes, les personnages et les dates. Lis un chapitre, puis teste-toi avec ses cartes.</p>${globalPastille()}
+  let h = draftBanner() + `<p class="intro">Ton cours complet, rangé exactement comme ta feuille d'objectifs : ce que tu dois savoir, ce que tu dois être capable de faire, puis les termes, les personnages et les dates. Lis un chapitre, puis teste-toi avec ses cartes.</p>${globalPastille()}
   <div class="legend"><p><span class="tag book">Livre p. 48</span> définition de ton livre (bulle jaune, glossaire ou lexique), mot pour mot : à savoir par cœur.</p><p><span class="tag dico">Dictionnaire</span> le mot n'est pas dans ton livre : définition du dictionnaire Larousse.</p><p><span class="tag mine">Ton dossier</span> ce qui vient de tes fiches et de tes réponses.</p><p><span class="tag gen">À vérifier</span> explication générale, pas encore dans tes pages : jamais interrogée.</p></div>`;
   if (CAPS_ORDER.length) h += `<button class="caps-cta" data-act="page" data-v="caps"><span class="caps-cta-i" aria-hidden="true">▶</span><span><b>Les ${CAPS_ORDER.length} capsules dans l'ordre</b><small>${capsSeen()} / ${CAPS_ORDER.length} vues · regarde-les à la suite, sans quitter l'outil</small></span></button>`;
   h += `<section class="toc-ch"><h2>Avant de commencer <span>Le fil rouge et la frise de l'épreuve</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">${esc(pageById("LIENS").titre)}${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue${capDur("LIENS")}</span>` : ` <span class="toc-v">▶ vidéo${capDur("LIENS")}</span>`) : ""}${audParts("LIENS").length ? ` <span class="toc-v toc-aud">🎧 audio</span>` : ""}<span class="toc-s">${esc(pageById("LIENS").court)}</span></span></button></section>`;
@@ -2146,7 +2192,7 @@ function viewPage(id){
 function viewHome(){
   const allOn = S.selected.length === DECKS.length;
   const count = S.selected.reduce((n,k) => n + DECK[k].items.length, 0);
-  return `<p class="intro">Choisis ce que tu veux travailler. Chaque paquet renvoie à un chapitre du Dossier.</p>
+  return draftBanner() + `<p class="intro">Choisis ce que tu veux travailler. Chaque paquet renvoie à un chapitre du Dossier.</p>
   <div class="decks">${DECKS.map(d => { const on = S.selected.includes(d.key); return `<button class="deck${on?" on":""}" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-c">${d.code}</span><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} questions</span>${on?`<span class="deck-tick">✓</span>`:""}</button>`; }).join("")}</div>
   <button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
   <p class="fine">${count} questions sélectionnées</p>
@@ -2193,7 +2239,8 @@ function viewCards(){
   <button class="back rv-toggle" data-act="rvMode">${S.revMode ? "Fermer la revue des cartes" : "✎ Revue des cartes (pour les parents)"}</button>`;
   return h;
 }
-function viewSetup(){
+function viewSetup(){ return draftBanner() + viewSetup0(); }
+function viewSetup0(){
   if (!S.selected.length) return `<p class="intro">Coche au moins un paquet avant de lancer un test.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
   const out = S.selected.reduce((n,k) => n + DECK[k].items.filter(it => rvOf(DECK[k], it).exclu).length, 0);
   const total = S.selected.reduce((n,k) => n + DECK[k].items.length, 0) - out;
@@ -2218,11 +2265,12 @@ function viewSetup(){
 
 /* ---------- quiz ---------- */
 function startQuiz(questions, rattrapage){
-  S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, label: rattrapage ? S.rattrLabel : deckLabel(S.selected) };
-  S.rattrapage = rattrapage; S.lastResult = null; S.storeMsg = ""; S.screen = "quiz";
-  render(); window.scrollTo(0,0);
+  S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, start:Date.now(), label: rattrapage ? S.rattrLabel : deckLabel(S.selected) };
+  S.rattrapage = rattrapage; S.lastResult = null; S.storeMsg = ""; S.screen = "quiz"; S.quitAsk = false; S.draftAsk = false;
+  draftSave(); render(); window.scrollTo(0,0);
 }
 function viewQuiz(){
+  if (S.quitAsk) return quitView();
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>
   <div class="badges"><span class="num">N° ${q.num}</span><span class="chip">${esc(TAG_LABEL[q.tag] || q.tag)}</span><span class="ref">Exercice ${q.ex}</span></div>
@@ -2255,7 +2303,7 @@ function isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnsw
 function validate(val){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i], right = isRight(q, val);
-  if (S.mode !== "exam"){ Q.ok = right; Q.checked = true; render(); }
+  if (S.mode !== "exam"){ Q.ok = right; Q.checked = true; draftSave(); render(); }
   else record(val, right);
 }
 function record(val, correct, typo){
@@ -2263,7 +2311,7 @@ function record(val, correct, typo){
   const q = Q.questions[Q.i];
   Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, ...(typo ? { typo:true } : {}), expl:q.expl, tag:q.tag, question:q });
   if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
-  else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; render(); }
+  else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; draftSave(); render(); }
 }
 async function finishQuiz(){
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
@@ -2272,7 +2320,7 @@ async function finishQuiz(){
   S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
   try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Note ta note ou copie-la pour le chat." : ""; }
   catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
-  S.lastResult = att; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; S.screen = "results"; render(); window.scrollTo(0,0);
+  draftClear(); S.lastResult = att; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; S.screen = "results"; render(); window.scrollTo(0,0);
 }
 
 /* ---------- bilan ---------- */
@@ -2508,6 +2556,8 @@ async function loadHistory(){
     await store.init();
     try { S.review = (await store.getDoc(REVIEW_ID)) || {}; } catch(e){ S.review = {}; }
     try { S.vidSeen = (await store.getDoc(VIDS_ID)) || {}; } catch(e){ S.vidSeen = {}; }
+    try { const d = await store.getDoc(DRAFT_ID); if (!S.quiz && d && d.questions && d.detail) S.draft = d; } catch(e){}
+    if (S.screen === "home" || S.screen === "setup") render();
     if (S.screen === "dossier") render();
     if (S.screen === "cards") render();
     let raw = await store.list();
@@ -2558,10 +2608,17 @@ document.addEventListener("click", e => {
     case "unfreeze": S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
     case "paper": savePaper(v); break;
     case "start": startQuiz(S.frozen || buildTest(S.selected, S.difficulty), false); break;
-    case "quit": S.screen = "home"; S.quiz = null; render(); break;
+    case "quit": S.quitAsk = true; render(); window.scrollTo(0,0); break;
+    case "quitNo": S.quitAsk = false; render(); break;
+    case "quitKeep": draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "quitDrop": draftClear(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "draftResume": draftResume(); break;
+    case "draftAsk": S.draftAsk = true; render(); break;
+    case "draftNo": S.draftAsk = false; render(); break;
+    case "draftDrop": draftClear(); render(); break;
     case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train") validate(Q.picked); else render(); break; }
     case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
-    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; render(); } else record("", false); break; }
+    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; draftSave(); render(); } else record("", false); break; }
     case "typo": record(Q.typed, true, true); break;
     case "suiviF": sv().f = v; sv().pt = null; render(); break;
     case "suiviPt": sv().pt = sv().pt === v ? null : v; render(); break;
