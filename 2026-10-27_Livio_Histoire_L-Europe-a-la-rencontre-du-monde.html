@@ -378,6 +378,18 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:4px;pa
 .score-n,.stat b{font-family:var(--display)}
 .read sup{font-size:.7em}
 a.cta.vlink{display:block;text-align:center;text-decoration:none}
+
+.aud-btn{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--box);border-radius:4px;background:var(--box-wash);color:var(--ink);cursor:pointer}
+.aud-btn b{display:block;font-size:15.5px;color:var(--box)}.aud-btn small{display:block;font-size:12.5px;color:var(--soft)}
+.aud-i{flex:none;width:38px;height:38px;border-radius:50%;background:var(--box);color:var(--on-box);display:flex;align-items:center;justify-content:center;font-size:17px}
+.aud{border:1px solid var(--box);background:var(--box-wash);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.aud-t{margin:0;font-weight:700;font-size:15px;color:var(--box)}
+.aud audio{width:100%;max-width:100%}
+.aud-links{display:flex;flex-wrap:wrap;gap:8px}.aud-links .ghost{width:auto;flex:1 1 auto;text-align:center;text-decoration:none}
+.aud-links .ghost.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box)}
+a.aud-ext,.aud-links a.ghost{text-align:center;text-decoration:none;color:var(--ink)}
+.caps-btns{display:flex;gap:6px}
+.caps-play.aud{background:var(--box);color:var(--on-box);padding-left:0;font-size:17px;border-radius:50%}
 .vframe video{position:absolute;inset:0;width:100%;height:100%;background:#000}
 
 </style>
@@ -405,7 +417,7 @@ const BRANCHE = "Histoire";
 const HEAD = { code:"HIST", num:"10", titre:"L'Europe à la rencontre du monde", sous:"Chapitre 3 · épreuve : " };
 const SUBJECT_LONG = "Histoire, L'Europe à la rencontre du monde (chapitre 3)";
 const FILE_SLUG = "histoire-europe-monde-livio";
-const VERSION = { n:2, date:"25.10.2026" };   /* v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
+const VERSION = { n:3, date:"25.10.2026" };   /* v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
 
 /* ---------- SOURCES ----------
    Feuille d'objectifs « Histoire 10FR — L'Europe à la rencontre du monde ».
@@ -454,6 +466,28 @@ const VIDEOS = {
   T:null,
   P:null,
   D:null
+};
+/* Pistes audio (liste envoyée par le papa le 25.10.2026, ElevenLabs, narration brute en MP3, sans les silences des pauses) :
+   une ou deux parties par chapitre, lues à la suite. Sur le site, lecture dans la page ; dans Claude, nouvel onglet. */
+const AUDIOS = {
+  LIENS:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143305_75d74c66-7c9e-492d-9ea7-5c0904bd1a64.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143305_22321a8e-aa8a-4303-8ce3-672c4dbfe6f9.mp3"],
+  S1:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143305_3f7485a5-1b8d-4348-af91-42cb7c89b3a2.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143305_4d08bece-a295-4cbb-9ee2-a0bd800ed5b7.mp3"],
+  S2:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143538_d1c54a97-06af-474e-8ba5-a4eec38b65bd.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143305_a54823f9-2012-49c1-95d2-388298050c8b.mp3"],
+  S3:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143305_81269cb2-23ef-406d-bd6b-fef231ad38b5.mp3"],
+  S4:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261024_143304_0cbd1f4b-6791-4066-b5e7-bf52de6f6053.mp3"],
+  S5:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065154_825a9cdc-a09d-4202-8bf9-e1bd9d4c7384.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065154_753abd62-536a-4eee-ad5f-fcf472decfe2.mp3"],
+  S6:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065155_eac4ba96-3286-4640-9408-e46ec456670c.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065155_e9fe5bff-c8b0-47c5-a6f5-e5b82cc85bd9.mp3"],
+  S7:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065341_a79978e5-a677-4e01-b68b-2453b81a2bbe.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065341_6a6284cc-706b-4a18-9ad0-0583b4dbe8b8.mp3"],
+  S8:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065341_1299c6ef-e222-41cd-9c31-7db406d7f6ba.mp3"],
+  S9:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065341_d584239b-1ed4-41fc-ace4-ef839255da8a.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_065341_c471f497-60eb-4ed4-b64c-9e0e2a279bb3.mp3"],
+  C1:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070820_faf6cf7d-74dc-45ac-8f43-57a3564e1e58.mp3"],
+  C2:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070820_d176379e-d0cc-4595-8cb5-0c65df718098.mp3"],
+  C3:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070820_30454379-11e7-4556-8a4f-152e7098b0ac.mp3"],
+  C4:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_071049_b7484916-fd28-4019-a85e-9f0e5a77b094.mp3"],
+  C5:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_071049_c7f86711-249b-43df-a87a-8cf5a2c30e7d.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_071049_75e32efa-5cc2-428b-8ceb-0391b9b8dcec.mp3"],
+  T:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070351_5cf184a1-217a-45b9-b312-61f3c76c65b9.mp3", "https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070351_f35331f1-c58e-4ff6-8767-a8e7caa2ecd8.mp3"],
+  P:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070351_f338a288-8593-42e1-8f11-8a85d8d7107a.mp3"],
+  D:["https://d8j0ntlcm91z4.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/hf_20261025_070351_548cfe71-d4c1-4c98-a313-bb63f3d96304.mp3"]
 };
 const CAPSULES = { titre:THEME, controle:DUE.long,
   consigne:"Commence par le fil rouge, puis suis les chapitres dans l'ordre. Dans chaque vidéo, mets sur pause quand la voix te le demande et récite avant de regarder la réponse.",
@@ -1521,6 +1555,35 @@ window.addEventListener("message", e => {
   const st = d.event === "onStateChange" ? d.info : (d.event === "infoDelivery" && d.info && "playerState" in d.info ? d.info.playerState : null);
   if (st === 0) vidEnded(S.vidOpen);
 });
+const audParts = id => (AUDIOS[id] || []);
+function audioBtn(id){
+  const parts = audParts(id); if (!parts.length) return "";
+  if (S.audOpen === id) return audPlayer(id);
+  return `<button class="aud-btn" data-act="audPlay" data-v="${id}"><span class="aud-i" aria-hidden="true">🎧</span><span><b>Écouter la piste audio</b><small>${parts.length > 1 ? parts.length + " parties · " : ""}${HAS_CLAUDE ? "s'ouvre dans un nouvel onglet" : "le chapitre lu à voix haute, sans l'image"}</small></span></button>`;
+}
+function audHead(id, i, n){ return `🎧 Piste audio ${id === "LIENS" ? "du fil rouge" : esc(id)}${n > 1 ? ` · partie ${i+1} / ${n}` : ""}`; }
+function audPlayer(id){
+  const parts = audParts(id), n = parts.length, i = Math.min(S.audPart || 0, n - 1);
+  const note = `<p class="fine">La piste n'a pas de silence aux pauses : quand la voix te dit de mettre sur pause, arrête-la toi-même et réponds avant de continuer.</p>`;
+  if (HAS_CLAUDE) return `<div class="aud"><p class="aud-t">${audHead(id, 0, 1)}</p><div class="aud-links">${parts.map((u, k) => `<a class="ghost small" href="${esc(u)}" target="_blank" rel="noopener">▶ ${n > 1 ? "Partie " + (k+1) : "Écouter"}</a>`).join("")}</div>
+    <p class="fine">Dans Claude, la piste s'ouvre dans un nouvel onglet.${n > 1 ? " Écoute les parties dans l'ordre." : ""}</p>${note}<button class="ghost small" data-act="audHide">Fermer</button></div>`;
+  return `<div class="aud"><p class="aud-t" id="aud-t">${audHead(id, i, n)}</p><audio id="aud-el" src="${esc(parts[i])}" controls autoplay preload="metadata"></audio>
+    ${n > 1 ? `<div class="aud-links">${parts.map((u, k) => `<button class="ghost small${k === i ? " on" : ""}" data-act="audPart" data-v="${id}|${k}">Partie ${k+1}</button>`).join("")}</div><p class="fine">Les parties s'enchaînent toutes seules.</p>` : ""}
+    ${note}<div class="row"><button class="ghost small" data-act="audHide">Fermer</button><a class="ghost small aud-ext" id="aud-ext" href="${esc(parts[i])}" target="_blank" rel="noopener">Ouvrir dans un onglet</a></div></div>`;
+}
+function audListen(){
+  const a = document.getElementById("aud-el"); if (!a) return;
+  a.addEventListener("ended", () => {
+    const id = S.audOpen, parts = audParts(id), k = (S.audPart || 0) + 1;
+    if (k >= parts.length) return;
+    S.audPart = k; a.src = parts[k]; a.play && a.play().catch(() => {});
+    const t = document.getElementById("aud-t"); if (t) t.textContent = audHead(id, k, parts.length);
+    const x = document.getElementById("aud-ext"); if (x) x.href = parts[k];
+    document.querySelectorAll('[data-act="audPart"]').forEach(b => b.classList.toggle("on", b.dataset.v === id + "|" + k));
+  });
+  a.play && a.play().catch(() => {});
+}
+
 const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
 const TAG_LABEL = Object.fromEntries(DECKS.map(d => [d.key, d.title]));
 
@@ -1658,7 +1721,7 @@ const S = {
   bilan:{},
 };
 const REVIEW_ID = QUIZ_ID + "-revue-cartes";
-S.vidSeen = {}; S.vidOpen = null; S.vidDone = null;
+S.vidSeen = {}; S.vidOpen = null; S.vidDone = null; S.audOpen = null; S.audPart = 0;
 S.review = {}; S.rvMsg = ""; S.rvCopy = ""; S.rvCopied = false; S.rvConfirm = false;
 try { S.revMode = localStorage.getItem(QUIZ_ID + "-revmode") === "1"; } catch(e){ S.revMode = false; }
 function cardId(d, it){ let h = 5381; for (const c of it.front) h = ((h << 5) + h + c.charCodeAt(0)) | 0; return d.key + "-" + (h >>> 0).toString(36); }
@@ -1784,10 +1847,10 @@ function viewPage(id){
       <p class="read">${esc(CAPSULES.consigne)}</p>` +
       CAPSULES.chapitres.map(c => `<section class="caps-ch"><h3>${esc(c.chapitre)}<small>${esc(c.question)}</small></h3>` + c.capsules.map(x => {
         const seen = !!S.vidSeen[x.id];
-        const body = S.vidDone === x.id ? vidDonePanel(x.id, "caps") : S.vidOpen === x.id ? vidPlayer(x.id) : "";
+        const body = S.vidDone === x.id ? vidDonePanel(x.id, "caps") : S.vidOpen === x.id ? vidPlayer(x.id) : S.audOpen === x.id ? audPlayer(x.id) : "";
         return `<div class="caps-row${seen ? " seen" : ""}${body ? " on" : ""}" id="cap-${x.id}">
           <div class="caps-line"><span class="code">${esc(x.code)}</span><span class="caps-txt"><b>${esc(x.titre)}</b><small>${esc(x.objectif)}</small></span>
-          ${body ? "" : `<button class="caps-play" data-act="vidPlay" data-v="${x.id}" aria-label="Lire la capsule ${esc(x.code)}">▶</button>`}</div>
+          ${body ? "" : `<span class="caps-btns"><button class="caps-play" data-act="vidPlay" data-v="${x.id}" aria-label="Lire la capsule ${esc(x.code)}">▶</button>${audParts(x.id).length ? `<button class="caps-play aud" data-act="audPlay" data-v="${x.id}" aria-label="Écouter la piste audio ${esc(x.code)}">🎧</button>` : ""}</span>`}</div>
           <p class="caps-st">${seen ? "✓ vue" : "pas encore vue"} · <button class="back" data-act="page" data-v="${x.id}">lire le chapitre</button></p>${body}</div>`;
       }).join("") + `</section>`).join("") +
       `<p class="fine">${esc(CAPSULES.diffusion)} La marque « vue » est enregistrée ${HAS_CLAUDE ? "dans tes données Claude" : "sur cet appareil"}.</p></article>`;
@@ -1801,7 +1864,7 @@ function viewPage(id){
     h += `</article>`;
   } else {
     const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
-    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${videoBtn(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
+    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${videoBtn(p.id)}${audioBtn(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
       ${p.obj ? `<p class="objective"><b>${esc(c.objLabel || "Objectif")}</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + blankBlock(p) + chapTest(p.id, "end") + `</article>`;
   }
   return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
@@ -2192,9 +2255,12 @@ document.addEventListener("click", e => {
   const act = el.dataset.act, v = el.dataset.v;
   const Q = S.quiz;
   switch(act){
-    case "nav": S.screen = v; S.scores.confirm = false; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
-    case "page": S.screen = "dossier"; S.page = v || null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
-    case "vidPlay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); if (S.page === "caps"){ const r = document.getElementById("cap-" + v); if (r) r.scrollIntoView({ block:"start" }); } break;
+    case "nav": S.screen = v; S.scores.confirm = false; S.audOpen = null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
+    case "page": S.screen = "dossier"; S.page = v || null; S.audOpen = null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
+    case "audPlay": S.audOpen = v; S.audPart = 0; S.vidOpen = null; S.vidDone = null; render(); audListen(); if (S.page === "caps"){ const r = document.getElementById("cap-" + v); if (r) r.scrollIntoView({ block:"start" }); } break;
+    case "audPart": { const [aid, k] = v.split("|"); S.audOpen = aid; S.audPart = +k; render(); audListen(); break; }
+    case "audHide": S.audOpen = null; render(); break;
+    case "vidPlay": S.audOpen = null; S.vidOpen = v; S.vidDone = null; render(); vidListen(); if (S.page === "caps"){ const r = document.getElementById("cap-" + v); if (r) r.scrollIntoView({ block:"start" }); } break;
     case "vidReplay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
     case "vidFinish": S.vidOpen = v; vidEnded(v); break;
     case "chapTest": { const [cid, lev] = v.split("|"); S.selected = DECKS.filter(d => d.code === cid).map(d => d.key); S.difficulty = lev; S.mode = "train"; S.frozen = null; S.vidOpen = null; S.vidDone = null; startQuiz(buildTest(S.selected, S.difficulty), false); break; }
