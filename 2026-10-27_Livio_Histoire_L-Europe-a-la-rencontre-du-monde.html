@@ -377,6 +377,8 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:4px;pa
 .def-term{font-family:var(--display)}
 .score-n,.stat b{font-family:var(--display)}
 .read sup{font-size:.7em}
+a.cta.vlink{display:block;text-align:center;text-decoration:none}
+.vframe video{position:absolute;inset:0;width:100%;height:100%;background:#000}
 
 </style>
 
@@ -403,7 +405,7 @@ const BRANCHE = "Histoire";
 const HEAD = { code:"HIST", num:"10", titre:"L'Europe à la rencontre du monde", sous:"Chapitre 3 · épreuve : " };
 const SUBJECT_LONG = "Histoire, L'Europe à la rencontre du monde (chapitre 3)";
 const FILE_SLUG = "histoire-europe-monde-livio";
-const VERSION = { n:1, date:"24.10.2026" };   /* v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
+const VERSION = { n:2, date:"25.10.2026" };   /* v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
 
 /* ---------- SOURCES ----------
    Feuille d'objectifs « Histoire 10FR — L'Europe à la rencontre du monde ».
@@ -430,8 +432,41 @@ const SOURCES_NOTE = "Les définitions marquées « Livre » sont les bulles jau
 const PHOTOS = [];
 
 /* Capsules vidéo : aucune pour l'instant (le papa les réalisera à partir de l'export JSON). */
-const VIDEOS = {};
-const CAPSULES = { titre:THEME, controle:DUE.long, consigne:"", diffusion:"", chapitres:[] };
+/* Capsules vidéo (liste envoyée par le papa le 25.10.2026, « non publié ») : fichiers MP4.
+   Sur le site, la vidéo se lit dans la page ; dans Claude, elle s'ouvre dans un nouvel onglet.
+   null = capsule pas encore prête (« Vidéo bientôt disponible »). */
+const VIDEOS = {
+  LIENS:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/7b642777-5e91-4ce7-a0e2-8c5d1d9676d9.mp4",
+  S1:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/66ef4f3c-9ee2-4be7-8f0b-156eaedc04f5.mp4",
+  S2:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/fd090eea-cf01-462d-96b0-81ef359bc6d9.mp4",
+  S3:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/5fd67c74-178a-412d-9f4e-c54332ed93fd.mp4",
+  S4:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/cc81e198-c13b-4578-9e08-dce4c5450603.mp4",
+  S5:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/37c6a385-4d62-4756-ab16-46e5a59908b2.mp4",
+  S6:null,
+  S7:null,
+  S8:null,
+  S9:null,
+  C1:null,
+  C2:null,
+  C3:null,
+  C4:null,
+  C5:null,
+  T:null,
+  P:null,
+  D:null
+};
+const CAPSULES = { titre:THEME, controle:DUE.long,
+  consigne:"Commence par le fil rouge, puis suis les chapitres dans l'ordre. Dans chaque vidéo, mets sur pause quand la voix te le demande et récite avant de regarder la réponse.",
+  diffusion:"Voix de synthèse et animations réalisées avec l'IA, à partir du livre et des fiches du cours.",
+  chapitres:[
+    { chapitre:"Pour commencer", question:"Le fil rouge et la frise de l'épreuve", capsules:[ { id:"LIENS", code:"Intro", titre:"Le fil rouge de l'épreuve", duree:"7:43", objectif:null } ] },
+    { chapitre:"Tu dois principalement savoir", question:"Les 9 points de ta feuille d'objectifs", capsules:[
+      { id:"S1", code:"S1", titre:"Les grandes civilisations avant 1492", duree:"8:52", objectif:null },
+      { id:"S2", code:"S2", titre:"Ce qui a permis les grandes expéditions", duree:"7:11", objectif:null },
+      { id:"S3", code:"S3", titre:"La rencontre entre Européens et indigènes", duree:"6:37", objectif:null },
+      { id:"S4", code:"S4", titre:"Aztèques et Incas, des civilisations développées", duree:"6:15", objectif:null },
+      { id:"S5", code:"S5", titre:"La conquête des empires amérindiens", duree:"8:08", objectif:null } ] },
+  ] };
 
 /* Chapitres du Dossier = les rubriques de la feuille d'objectifs, dans son ordre. */
 const CHAPTERS = [
@@ -1405,10 +1440,14 @@ const DECKS = [
   ]},
 ];
 
+/* objectif des capsules = la phrase de la feuille d'objectifs du chapitre */
+CAPSULES.chapitres.forEach(c => c.capsules.forEach(x => { if (!x.objectif){ const p = PAGES.find(p => p.id === x.id); x.objectif = p ? (p.obj || p.court) : ""; } }));
 
+
+const capOf = id => CAPSULES.chapitres.flatMap(c => c.capsules).find(x => x.id === id);
 const CAPS_ORDER = CAPSULES.chapitres.flatMap(c => c.capsules.map(x => x.id));
 const capsSeen = () => CAPS_ORDER.filter(id => S.vidSeen[id]).length;
-const videoUrl = id => VIDEOS[id] ? "https://www.youtube.com/watch?v=" + VIDEOS[id] : null;
+const videoUrl = id => VIDEOS[id] || null;
 const VIDS_ID = QUIZ_ID + "-videos-vues";
 function nextAfter(id){ const i = PAGES.findIndex(p => p.id === id); return PAGES[i+1] ? PAGES[i+1].id : null; }
 function videoBtn(id){
@@ -1436,20 +1475,23 @@ function vidDonePanel(id, where){
   }
 }
 function vidPlayer(id){
-  const v = VIDEOS[id], u = videoUrl(id);
+  const v = VIDEOS[id], u = videoUrl(id), cap = capOf(id);
+  if (HAS_CLAUDE){
+    return `<div class="vplay"><a class="cta vlink" href="${esc(u)}" target="_blank" rel="noopener">▶ Ouvrir la capsule${cap && cap.duree ? " (" + esc(cap.duree) + ")" : ""}</a>
+      <p class="fine">Dans Claude, la vidéo s'ouvre dans un nouvel onglet. Quand tu as fini, reviens ici.</p>
+      <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>${chapTest(id, "play")}</div>`;
+  }
   {
-    const src = `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin && location.origin !== "null" ? location.origin : "")}`;
-    return `<div class="vplay"><div class="vframe"><iframe id="vid-frame" src="${src}" title="Capsule vidéo ${esc(id)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    return `<div class="vplay"><div class="vframe"><video id="vid-el" src="${esc(u)}" controls playsinline autoplay preload="metadata" title="Capsule vidéo ${esc(id)}"></video></div>
       <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>${chapTest(id, "play")}
-      <p class="fine vfb">La vidéo ne s'affiche pas ? <a href="${u}" target="_blank" rel="noopener">L'ouvrir dans YouTube</a></p></div>`;
+      <p class="fine vfb">La vidéo ne démarre pas ? <a href="${esc(u)}" target="_blank" rel="noopener">L'ouvrir dans un nouvel onglet</a></p></div>`;
   }
 }
 function vidThumb(id, seen){
   const v = VIDEOS[id];
   return `<button class="vthumb" data-act="vidPlay" data-v="${id}" aria-label="Lire la capsule vidéo ${esc(id)}">
-    <img src="https://i.ytimg.com/vi/${v}/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">
     <span class="vthumb-play" aria-hidden="true">▶</span>
-    <span class="vthumb-t"><b>Regarder la capsule ${esc(id === "LIENS" ? "d'introduction" : id)}</b><small>${seen ? "✓ déjà vue · " : ""}lue ici, sans quitter le Dossier</small></span></button>`;
+    <span class="vthumb-t"><b>Regarder la capsule ${esc(id === "LIENS" ? "d'introduction" : id)}</b><small>${seen ? "✓ déjà vue · " : ""}${capOf(id) && capOf(id).duree ? esc(capOf(id).duree) + " · " : ""}${HAS_CLAUDE ? "s'ouvre dans un nouvel onglet" : "lue ici, sans quitter le Dossier"}</small></span></button>`;
 }
 function chapTest(id, where){
   const decks = DECKS.filter(d => d.code === id); if (!decks.length) return "";
@@ -1459,6 +1501,8 @@ function chapTest(id, where){
 }
 function vidPost(cmd){ const f = document.getElementById("vid-frame"); if (f && f.contentWindow) try { f.contentWindow.postMessage(JSON.stringify(cmd), "*"); } catch(e){} }
 function vidListen(){
+  const ve = document.getElementById("vid-el");
+  if (ve){ ve.addEventListener("ended", () => vidEnded(S.vidOpen)); ve.play && ve.play().catch(() => {}); return; }
   const f = document.getElementById("vid-frame"); if (!f) return;
   const hello = () => { vidPost({ event:"listening", id:"vid", channel:"widget" }); vidPost({ event:"command", func:"addEventListener", args:["onStateChange"], id:"vid", channel:"widget" }); };
   f.addEventListener("load", () => { hello(); setTimeout(hello, 800); });
