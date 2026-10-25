@@ -453,7 +453,7 @@ const BRANCHE = "Histoire";
 const HEAD = { code:"HIST", num:"10", titre:"L'Europe à la rencontre du monde", sous:"Chapitre 3 · épreuve : " };
 const SUBJECT_LONG = "Histoire, L'Europe à la rencontre du monde (chapitre 3)";
 const FILE_SLUG = "histoire-europe-monde-livio";
-const VERSION = { n:4, date:"25.10.2026" };   /* v4 : 25.10.2026, suivi graphique : pastille de maîtrise par chapitre et générale, courbe des notes sans aide avec la remontée après rattrapage, carte des chapitres, cartes qui résistent · v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
+const VERSION = { n:5, date:"25.10.2026" };   /* v5 : 25.10.2026, les 18 capsules vidéo (S6 à S9, C1 à C5, T, P, D ajoutées) · v4 : 25.10.2026, suivi graphique : pastille de maîtrise par chapitre et générale, courbe des notes sans aide avec la remontée après rattrapage, carte des chapitres, cartes qui résistent · v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
 
 /* ---------- SOURCES ----------
    Feuille d'objectifs « Histoire 10FR — L'Europe à la rencontre du monde ».
@@ -480,7 +480,7 @@ const SOURCES_NOTE = "Les définitions marquées « Livre » sont les bulles jau
 const PHOTOS = [];
 
 /* Capsules vidéo : aucune pour l'instant (le papa les réalisera à partir de l'export JSON). */
-/* Capsules vidéo (liste envoyée par le papa le 25.10.2026, « non publié ») : fichiers MP4.
+/* Capsules vidéo (listes envoyées par le papa le 25.10.2026 : 6 le matin, les 18 ensuite) : fichiers MP4.
    Sur le site, la vidéo se lit dans la page ; dans Claude, elle s'ouvre dans un nouvel onglet.
    null = capsule pas encore prête (« Vidéo bientôt disponible »). */
 const VIDEOS = {
@@ -490,18 +490,18 @@ const VIDEOS = {
   S3:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/5fd67c74-178a-412d-9f4e-c54332ed93fd.mp4",
   S4:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/cc81e198-c13b-4578-9e08-dce4c5450603.mp4",
   S5:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/37c6a385-4d62-4756-ab16-46e5a59908b2.mp4",
-  S6:null,
-  S7:null,
-  S8:null,
-  S9:null,
-  C1:null,
-  C2:null,
-  C3:null,
-  C4:null,
-  C5:null,
-  T:null,
-  P:null,
-  D:null
+  S6:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/62c02bea-851f-416f-9cdc-211ae7415090.mp4",
+  S7:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/74b9f27c-68c0-47b3-b5f9-8c601c8603db.mp4",
+  S8:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/6f830816-e228-4fad-8a7d-9db079a9d3b2.mp4",
+  S9:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/47133101-96cd-4a97-a76d-0b07b9b2f67f.mp4",
+  C1:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/da4de0fd-fcc6-4d78-99c8-da284c352271.mp4",
+  C2:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/d0a355f9-3d49-42ce-8faf-dc61f4c18654.mp4",
+  C3:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/d88bf032-b76f-4ece-83f1-ba61b5a92439.mp4",
+  C4:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/610387e4-b4bf-4b72-a8d3-82c8406c27dc.mp4",
+  C5:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/656434a0-1036-42ba-8124-fd2414a232bc.mp4",
+  T:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/bf2c43a7-9eb1-449c-9064-398827321ca9.mp4",
+  P:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/88001834-caa3-4a01-8b6d-f5fae131a3e2.mp4",
+  D:"https://d2ol7oe51mr4n9.cloudfront.net/user_3ErL9fkr5EvA7vleIhv8zir63Yn/d7db231d-e22a-4997-b0c3-04f71ac4e786.mp4"
 };
 /* Pistes audio (liste envoyée par le papa le 25.10.2026, ElevenLabs, narration brute en MP3, sans les silences des pauses) :
    une ou deux parties par chapitre, lues à la suite. Sur le site, lecture dans la page ; dans Claude, nouvel onglet. */
@@ -529,13 +529,30 @@ const CAPSULES = { titre:THEME, controle:DUE.long,
   consigne:"Commence par le fil rouge, puis suis les chapitres dans l'ordre. Dans chaque vidéo, mets sur pause quand la voix te le demande et récite avant de regarder la réponse.",
   diffusion:"Voix de synthèse et animations réalisées avec l'IA, à partir du livre et des fiches du cours.",
   chapitres:[
-    { chapitre:"Pour commencer", question:"Le fil rouge et la frise de l'épreuve", capsules:[ { id:"LIENS", code:"Intro", titre:"Le fil rouge de l'épreuve", duree:"7:43", objectif:null } ] },
+    { chapitre:"Pour commencer", question:"Le fil rouge et la frise de l'épreuve", capsules:[
+      { id:"LIENS", code:"Intro", titre:"Le fil rouge de l'épreuve", duree:"7:43", objectif:null } ] },
     { chapitre:"Tu dois principalement savoir", question:"Les 9 points de ta feuille d'objectifs", capsules:[
       { id:"S1", code:"S1", titre:"Les grandes civilisations avant 1492", duree:"8:52", objectif:null },
       { id:"S2", code:"S2", titre:"Ce qui a permis les grandes expéditions", duree:"7:11", objectif:null },
       { id:"S3", code:"S3", titre:"La rencontre entre Européens et indigènes", duree:"6:37", objectif:null },
       { id:"S4", code:"S4", titre:"Aztèques et Incas, des civilisations développées", duree:"6:15", objectif:null },
-      { id:"S5", code:"S5", titre:"La conquête des empires amérindiens", duree:"8:08", objectif:null } ] },
+      { id:"S5", code:"S5", titre:"La conquête des empires amérindiens", duree:"8:08", objectif:null },
+      { id:"S6", code:"S6", titre:"Les conséquences de la découverte de l'Amérique", duree:"9:07", objectif:null },
+      { id:"S7", code:"S7", titre:"Les échanges avant et après les découvertes", duree:"9:49", objectif:null },
+      { id:"S8", code:"S8", titre:"Les Européens face aux Chinois et aux Japonais", duree:"5:13", objectif:null },
+      { id:"S9", code:"S9", titre:"Les différents avis : Las Casas et Sepúlveda", duree:"7:29", objectif:null } ] },
+    { chapitre:"Tu dois principalement être capable", question:"Les 5 savoir-faire de ta feuille d'objectifs", capsules:[
+      { id:"C1", code:"C1", titre:"Présenter les différentes interprétations", duree:"6:08", objectif:null },
+      { id:"C2", code:"C2", titre:"Comprendre comment les peuples se perçoivent", duree:"6:44", objectif:null },
+      { id:"C3", code:"C3", titre:"Comparer la représentation du monde", duree:"6:55", objectif:null },
+      { id:"C4", code:"C4", titre:"Les conséquences à court et à long terme", duree:"6:33", objectif:null },
+      { id:"C5", code:"C5", titre:"Représenter les expéditions sur une carte", duree:"7:59", objectif:null } ] },
+    { chapitre:"Termes importants à connaître", question:"Les 9 mots de ta feuille", capsules:[
+      { id:"T", code:"T", titre:"Les 9 termes de ta feuille", duree:"8:10", objectif:null } ] },
+    { chapitre:"Personnages à connaître", question:"Les 9 personnages de ta feuille", capsules:[
+      { id:"P", code:"P", titre:"Les 9 personnages de ta feuille", duree:"7:25", objectif:null } ] },
+    { chapitre:"Dates importantes à connaître", question:"Les 4 dates de ta feuille et celles de l'exercice 1", capsules:[
+      { id:"D", code:"D", titre:"Les dates à connaître", duree:"9:07", objectif:null } ] },
   ] };
 
 /* Chapitres du Dossier = les rubriques de la feuille d'objectifs, dans son ordre. */
