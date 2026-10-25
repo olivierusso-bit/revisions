@@ -399,14 +399,15 @@ a.aud-ext,.aud-links a.ghost{text-align:center;text-decoration:none;color:var(--
 .toc-v.toc-aud{background:var(--box);color:var(--on-box)}
 .caps-play.aud{background:var(--box);color:var(--on-box);padding-left:0;font-size:17px;border-radius:50%}
 
-:root{--p-ok:#2E7D32;--p-mid:#C26A00;--p-midsoft:#E8B35C;--p-low:#B3261E}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--p-ok:#6CCB75;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80}}
-:root[data-theme="dark"]{--p-ok:#6CCB75;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80}
+:root{--p-ok:#3C9A44;--p-okdark:#1B5E20;--p-mid:#D07A00;--p-midsoft:#E8B35C;--p-low:#C62828;--p-lowsoft:#F1A9A0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--p-ok:#7BD486;--p-okdark:#3FA34D;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80;--p-lowsoft:#7A3A35}}
+:root[data-theme="dark"]{--p-ok:#7BD486;--p-okdark:#3FA34D;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80;--p-lowsoft:#7A3A35}
 .toc-item{grid-template-columns:auto minmax(0,1fr) auto}
 .pst{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px}
 .pring-t{font-family:var(--ui);font-size:11px;font-weight:700;fill:var(--ink)}
 .pst-l{font-size:11px;font-weight:700;color:var(--soft);white-space:nowrap}
-.pst-ok{color:var(--p-ok)}.pst-low{color:var(--p-low)}.pst-mid,.pst-almost{color:var(--p-mid)}
+.pst-was{font-size:10.5px;color:var(--soft);white-space:nowrap}.pdrop{margin:2px 0 0;font-size:13.5px;border-left:3px solid var(--p-mid);padding:2px 0 2px 8px;border-radius:0}
+.pst-ok{color:var(--p-okdark)}.pst-win{color:var(--p-ok)}.pst-low{color:var(--p-low)}.pst-mid{color:var(--p-mid)}
 .pglob{display:flex;gap:14px;align-items:center;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px 14px}
 .pglob .pring-t{font-size:13px}.pglob-x{display:flex;flex-direction:column;gap:2px;min-width:0}.pglob-x b{font-family:var(--display);font-size:19px;line-height:1.15}.pglob-x span{font-size:13px;color:var(--soft)}
 .plegend{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:6px 12px;font-size:14px}.plegend p{margin:6px 0}
@@ -453,7 +454,7 @@ const BRANCHE = "Histoire";
 const HEAD = { code:"HIST", num:"10", titre:"L'Europe à la rencontre du monde", sous:"Chapitre 3 · épreuve : " };
 const SUBJECT_LONG = "Histoire, L'Europe à la rencontre du monde (chapitre 3)";
 const FILE_SLUG = "histoire-europe-monde-livio";
-const VERSION = { n:5, date:"25.10.2026" };   /* v5 : 25.10.2026, les 18 capsules vidéo (S6 à S9, C1 à C5, T, P, D ajoutées) · v4 : 25.10.2026, suivi graphique : pastille de maîtrise par chapitre et générale, courbe des notes sans aide avec la remontée après rattrapage, carte des chapitres, cartes qui résistent · v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
+const VERSION = { n:7, date:"25.10.2026" };   /* v7 : 25.10.2026, baisse de niveau signalée (« avant : réussi ») avec les cartes perdues à refaire · v6 : 25.10.2026, pastilles selon le dernier test et les niveaux de note (rouge sous 4, orange 4 à 4,5, vert « réussi » dès 5, vert foncé « OK » confirmé un autre jour) · v5 : 25.10.2026, les 18 capsules vidéo (S6 à S9, C1 à C5, T, P, D ajoutées) · v4 : 25.10.2026, suivi graphique : pastille de maîtrise par chapitre et générale, courbe des notes sans aide avec la remontée après rattrapage, carte des chapitres, cartes qui résistent · v3 : 25.10.2026, pistes audio (MP3) pour les 18 chapitres, à côté du bouton vidéo · v2 : 25.10.2026, 6 capsules vidéo (LIENS, S1 à S5), lues dans la page sur le site, ouvertes dans un nouvel onglet dans Claude · v1 : 24.10.2026, première version : Dossier rangé comme la feuille d'objectifs (9 « savoir », 5 « être capable », termes, personnages, dates), 17 paquets de cartes, schémas dessinés (frise, carte des expéditions, échange colombien, population, traite atlantique) */
 
 /* ---------- SOURCES ----------
    Feuille d'objectifs « Histoire 10FR — L'Europe à la rencontre du monde ».
@@ -1701,51 +1702,68 @@ function chapCards(ch){ return DECKS.filter(d => ch === "all" || d.code === ch).
 function chapSummary(ch, st){
   const cards = chapCards(ch); if (!cards.length) return null;
   const c = { ok:0, mid:0, bad:0, new:0 }; cards.forEach(x => c[st[x.k] || "new"]++);
-  const total = cards.length, pct = Math.round(c.ok / total * 100);
-  const state = c.new === total ? "start" : pct >= 80 && !c.bad ? "ok" : pct >= 80 ? "almost" : pct >= 50 ? "mid" : "low";
-  return { ...c, total, pct, state };
+  const total = cards.length, right = c.ok + c.mid, pct = Math.round(right / total * 100);
+  const note = noteFrom(right / total), noteAcq = noteFrom(c.ok / total);
+  /* niveaux du papa : note sous 4 rouge, de 4 à 4,5 orange, 5 et plus vert « réussi », confirmé un autre jour = OK (vert foncé) */
+  const state = c.new === total ? "start" : noteAcq >= 5 ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
+  return { ...c, total, right, pct, note, state };
 }
-const P_LABEL = { start:"à commencer", low:"à revoir", mid:"en route", almost:"presque", ok:"OK ✓" };
-function pColor(state){ return state === "ok" ? "var(--p-ok)" : state === "low" ? "var(--p-low)" : "var(--p-mid)"; }
+const P_LABEL = { start:"à commencer", low:"à revoir", mid:"en route", win:"réussi", ok:"OK ✓" };
+function pColor(state){ return state === "ok" ? "var(--p-okdark)" : state === "win" ? "var(--p-ok)" : state === "mid" ? "var(--p-mid)" : "var(--p-low)"; }
 function ringSvg(sum, size, inner){
   const r = size / 2 - (size > 50 ? 6 : 5), w = size > 50 ? 8 : 6, C = 2 * Math.PI * r, h = size / 2;
   if (sum.state === "start") return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" stroke-dasharray="3 3" style="stroke:var(--st)"/><text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
   const seg = (n, off, color) => n ? `<circle r="${r}" fill="none" stroke-width="${w}" stroke="${color}" stroke-dasharray="${(C * n / sum.total).toFixed(2)} 999" stroke-dashoffset="${(-C * off / sum.total).toFixed(2)}" transform="rotate(-90)"/>` : "";
-  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" style="stroke:var(--rule)"/>${seg(sum.ok, 0, pColor(sum.state))}${seg(sum.mid, sum.ok, "var(--p-midsoft)")}${seg(sum.bad, sum.ok + sum.mid, "var(--p-low)")}<text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
+  const midColor = sum.state === "ok" ? "var(--p-ok)" : pColor(sum.state);
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" style="stroke:var(--rule)"/>${seg(sum.ok, 0, "var(--p-okdark)")}${seg(sum.mid, sum.ok, midColor)}${seg(sum.bad, sum.ok + sum.mid, "var(--p-lowsoft)")}<text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
+}
+function lvlOf(sum){ return !sum || sum.state === "start" ? -1 : sum.note >= 5 ? 2 : sum.note >= 4 ? 1 : 0; }
+const LVL_LABEL = ["à revoir", "en route", "réussi"];
+/* baisse de niveau (note sous 4 / 4 à 4,5 / 5 et plus) depuis le test précédent du chapitre : seulement dans ce cas on montre les cartes perdues */
+function dropOf(ch, st, sum){
+  const tests = rootTests().filter(a => a.questions.some(inChap(ch))); if (tests.length < 2) return null;
+  const last = tests[tests.length - 1], prevSt = cardStates(last.id), prev = chapSummary(ch, prevSt);
+  if (lvlOf(sum) < 0 || lvlOf(prev) <= lvlOf(sum)) return null;
+  const lost = chapCards(ch).filter(x => (prevSt[x.k] === "ok" || prevSt[x.k] === "mid") && st[x.k] === "bad");
+  return { prev, lost, date:tests[tests.length - 2].date };
 }
 function trendOf(ch, sum){
   const last = rootTests().filter(a => a.questions.some(inChap(ch))).pop(); if (!last) return "";
   const before = chapSummary(ch, cardStates(last.id));
-  return sum.ok > before.ok ? " ↗" : sum.ok < before.ok ? " ↘" : "";
+  return sum.right > before.right ? " ↗" : sum.right < before.right ? " ↘" : "";
 }
 function pastille(ch){
   if (!S.loaded) return "";
   const sum = chapSummary(ch, cardStates()); if (!sum) return "";
-  return `<span class="pst" aria-label="${sum.ok} cartes acquises sur ${sum.total}, ${P_LABEL[sum.state]}">${ringSvg(sum, 46, sum.ok + "/" + sum.total)}<span class="pst-l pst-${sum.state}">${P_LABEL[sum.state]}${trendOf(ch, sum)}</span></span>`;
+  const dr = dropOf(ch, cardStates(), sum);
+  return `<span class="pst" aria-label="${sum.right} cartes justes au dernier test sur ${sum.total}, dont ${sum.ok} acquises : ${P_LABEL[sum.state]}${dr ? ", avant : " + LVL_LABEL[lvlOf(dr.prev)] : ""}">${ringSvg(sum, 46, sum.right + "/" + sum.total)}<span class="pst-l pst-${sum.state}">${P_LABEL[sum.state]}${trendOf(ch, sum)}</span>${dr ? `<span class="pst-was">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</span>`;
 }
 function globalPastille(){
   if (!S.loaded) return "";
   const st = cardStates(), sum = chapSummary("all", st); if (!sum) return "";
   const chs = PAGES.filter(p => chapCards(p.id).length).map(p => ({ id:p.id, s:chapSummary(p.id, st) }));
-  const nOk = chs.filter(x => x.s.state === "ok").length;
-  return `<div class="pglob">${ringSvg(sum, 66, sum.pct + " %")}<div class="pglob-x"><b>Avancement général · ${P_LABEL[sum.state]}</b><span>${sum.ok} cartes acquises sur ${sum.total} · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} chapitre${nOk > 1 ? "s" : ""} OK sur ${chs.length}</span></div></div>
+  const nOk = chs.filter(x => x.s.state === "ok").length, nWin = chs.filter(x => x.s.state === "win").length;
+  return `<div class="pglob">${ringSvg(sum, 66, sum.pct + " %")}<div class="pglob-x"><b>Avancement général · ${P_LABEL[sum.state]}</b><span>${sum.right} cartes justes au dernier test sur ${sum.total}, dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} chapitre${nOk > 1 ? "s" : ""} OK · ${nWin} réussi${nWin > 1 ? "s" : ""}, à confirmer · sur ${chs.length}</span></div></div>
   <details class="plegend"><summary>Comment se lit la pastille ?</summary>
-  <p><b>Acquise</b> : juste à deux tests, dont un un autre jour, et la dernière fois à écrire quand la carte le permet.</p>
-  <p><b>En route</b> : juste au dernier test, mais pas encore acquise.</p>
-  <p><b>À revoir</b> : fausse ou « Je ne sais pas » au dernier test.</p>
-  <p><b>Pas encore posée</b> : jamais tombée dans un test.</p>
-  <p>Seul le premier passage d'un test compte : refaire ses erreurs aide à apprendre, mais ne remplit pas la pastille. Le chapitre est <b>OK ✓</b> à partir de 80 % de cartes acquises, sans carte à revoir. Rouge : moins de 50 %, orange : 50 à 79 %, vert : 80 % et plus.</p></details>`;
+  <p>Le chiffre au centre : les cartes <b>justes au dernier test</b> où elles sont tombées, sur le total du chapitre. La couleur suit la note que ça donnerait :</p>
+  <p><b>Rouge · à revoir</b> : note sous 4. <b>Orange · en route</b> : note de 4 à 4,5. <b>Vert · réussi</b> : note de 5 ou plus. <b>Vert foncé · OK ✓</b> : réussi et confirmé un autre jour.</p>
+  <p>Dans l'anneau : <b>vert foncé</b> = cartes acquises (justes à deux tests, dont un un autre jour, la dernière fois à écrire quand c'est possible) ; couleur du niveau = justes au dernier test, pas encore confirmées ; <b>rouge pâle</b> = fausses au dernier test ; gris = pas encore posées.</p>
+  <p>Seul le premier passage d'un test compte : refaire ses erreurs aide à apprendre, mais ne change pas la pastille.</p></details>`;
 }
 function chapStatus(ch){
   if (!S.loaded) return "";
   const st = cardStates(), sum = chapSummary(ch, st); if (!sum) return "";
   const bad = chapCards(ch).filter(x => st[x.k] === "bad");
-  return `<div class="pchap">${ringSvg(sum, 46, sum.ok + "/" + sum.total)}<div class="pchap-x"><b>Ce chapitre : ${P_LABEL[sum.state]}${trendOf(ch, sum)}</b><span>${sum.ok} acquises · ${sum.mid} en route · ${sum.bad} à revoir · ${sum.new} pas encore posées</span>
-  ${bad.length ? `<button class="ghost small" data-act="redoCards" data-v="${ch}">Refaire mes ${bad.length} carte${bad.length > 1 ? "s" : ""} à revoir</button>` : ""}</div></div>`;
+  const conf = sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : "";
+  const dr = dropOf(ch, st, sum);
+  const drop = dr ? `<p class="pdrop">↘ Le ${dateLabel(dr.date).replace(/ ·.*$/, "")}, ce chapitre était à « ${LVL_LABEL[lvlOf(dr.prev)]} » (note ${fmtNote(dr.prev.note)}).${dr.lost.length ? ` ${dr.lost.length} carte${dr.lost.length > 1 ? "s" : ""} réussie${dr.lost.length > 1 ? "s" : ""} avant ${dr.lost.length > 1 ? "sont ratées" : "est ratée"} au dernier test : ce sont elles à reprendre.` : ""}</p>${dr.lost.length ? `<button class="ghost small" data-act="redoCards" data-v="lost:${ch}">Refaire ces ${dr.lost.length} carte${dr.lost.length > 1 ? "s" : ""}</button>` : ""}` : "";
+  return `<div class="pchap">${ringSvg(sum, 46, sum.right + "/" + sum.total)}<div class="pchap-x"><b>Ce chapitre : ${P_LABEL[sum.state]}${trendOf(ch, sum)}</b><span>${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées${conf}</span>${drop}
+  ${!dr && bad.length ? `<button class="ghost small" data-act="redoCards" data-v="${ch}">Refaire mes ${bad.length} carte${bad.length > 1 ? "s" : ""} à revoir</button>` : ""}</div></div>`;
 }
 function redoCards(v){
   let keys;
   if (v === "resist") keys = new Set(resistant().map(x => x.k));
+  else if (v.startsWith("lost:")) { const ch = v.slice(5), st = cardStates(), dr = dropOf(ch, st, chapSummary(ch, st)); keys = new Set(dr ? dr.lost.map(x => x.k) : []); }
   else { const st = cardStates(); keys = new Set(chapCards(v).filter(x => st[x.k] === "bad").map(x => x.k)); }
   const decks = [...new Set([...keys].map(k => k.split("|")[0]))];
   const qs = buildTest(decks, "hard").filter(q => keys.has(cardKey(q.deckKey, q.word)));
@@ -1811,9 +1829,9 @@ function suiviHeat(){
       const qs = tests.filter(a => dayOf(a.date) === d).flatMap(a => a.questions.filter(inChap(p.id)));
       if (!qs.length) return `<td class="hc-0">·</td>`;
       const pc = Math.round(qs.filter(x => x.correct).length / qs.length * 100);
-      return `<td class="hc ${pc >= 80 ? "hc-ok" : pc >= 50 ? "hc-mid" : "hc-low"}">${pc}${pc >= 80 ? " ✓" : ""}</td>`; }).join("") + `</tr>`;
+      const n = noteFrom(pc / 100); return `<td class="hc ${n >= 5 ? "hc-ok" : n >= 4 ? "hc-mid" : "hc-low"}">${pc}${n >= 5 ? " ✓" : ""}</td>`; }).join("") + `</tr>`;
   });
-  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(p => p.id).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par chapitre et par jour (6 derniers jours de révision). « · » : chapitre pas testé ce jour-là.</p>`;
+  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(p => p.id).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par chapitre et par jour (6 derniers jours de révision). Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4. « · » : chapitre pas testé ce jour-là.</p>`;
 }
 function suiviBlock(){
   const s = sv();
