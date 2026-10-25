@@ -1,13 +1,4 @@
-<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Géographie · pour le 30.10</title>
-</head>
-<body>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>Géographie · pour le 30.10</title></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&family=Barlow:wght@400;600;700&display=swap">
@@ -345,6 +336,7 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:4px;pa
 .attempt-left{flex:1;min-width:0}
 .attempt-left b{display:block;font-size:14.5px}
 .attempt-left span{display:block;font-size:12px;color:var(--soft)}
+.attempt-left b .rattr-tag{display:inline-block;color:#fff;font-size:11px}
 .rattr-tag{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:3px;margin-right:6px}
 .attempt-note{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:18px;color:var(--on-box)}
 .attempt-note.good{background:var(--good)} .attempt-note.low{background:var(--bad)}
@@ -371,6 +363,34 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:4px;pa
 .dx-none{font-style:italic;font-weight:400;color:var(--soft)}
 .dx-note{font-size:13.5px!important;font-weight:700}
 
+/* suivi graphique : pastilles de maîtrise, courbe des notes, carte des chapitres (fiche construction § 6 quater) */
+:root{--p-ok:#2E7D32;--p-mid:#C26A00;--p-midsoft:#E8B35C;--p-low:#B3261E}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--p-ok:#6CCB75;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80}}
+:root[data-theme="dark"]{--p-ok:#6CCB75;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80}
+.toc-item{grid-template-columns:auto minmax(0,1fr) auto}
+.pst{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px}
+.pring-t{font-family:var(--ui);font-size:11px;font-weight:700;fill:var(--ink)}
+.pst-l{font-size:11px;font-weight:700;color:var(--soft);white-space:nowrap}
+.pst-ok{color:var(--p-ok)}.pst-low{color:var(--p-low)}.pst-mid,.pst-almost{color:var(--p-mid)}
+.pglob{display:flex;gap:14px;align-items:center;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px 14px}
+.pglob .pring-t{font-size:13px}.pglob-x{display:flex;flex-direction:column;gap:2px;min-width:0}.pglob-x b{font-family:var(--display);font-size:19px;line-height:1.15}.pglob-x span{font-size:13px;color:var(--soft)}
+.plegend{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:6px 12px;font-size:14px}.plegend p{margin:6px 0}
+.pchap .pring,.pglob .pring,.pst .pring{flex:none}
+.pchap{display:flex;gap:12px;align-items:center;border:1px solid var(--rule);border-radius:4px;padding:10px 12px;background:var(--dock)}
+.pchap-x{display:flex;flex-direction:column;gap:4px;min-width:0}.pchap-x b{font-size:15px}.pchap-x span{font-size:13px;color:var(--soft)}.pchap-x .ghost{width:auto;align-self:flex-start}
+.suivi{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.suivi h3{font-family:var(--display);font-size:20px;margin:4px 0 0}
+.suivi-ctl{display:flex;flex-direction:column;gap:6px}.suivi-sel{font:inherit;font-size:15px;padding:8px;border:1px solid var(--rule);border-radius:4px;background:var(--dock);color:var(--ink);max-width:100%}
+.suivi .ghost.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box);background:var(--box-wash)}
+.ch-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--soft)}.ch-legend span{display:flex;align-items:center;gap:5px}
+.lg-line{display:inline-block;width:20px;height:2px;background:var(--box)}.lg-ring{display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid var(--good)}
+.ch-wrap{overflow-x:auto;max-width:100%}.ch-svg{display:block}
+.ch-t{font-family:var(--ui);font-size:11px;fill:var(--soft)}.ch-b{fill:var(--ink);font-weight:700;font-size:12px}.ch-g{fill:var(--good);font-weight:700}
+.ch-pt{cursor:pointer}.ch-pt:focus{outline:none}.ch-pt:focus-visible circle,.ch-pt:focus-visible polygon,.ch-pt:focus-visible rect{stroke:var(--crane)}
+.ch-detail{display:flex;flex-direction:column;gap:3px;border-left:3px solid var(--crane);padding:6px 10px;font-size:14px;border-radius:0}.ch-detail .ghost{width:auto;align-self:flex-start;margin-top:4px}
+.heat table{font-size:13px}.heat th,.heat td{text-align:center;padding:5px 4px}.heat td.k{text-align:left;font-weight:700}
+.hc{font-variant-numeric:tabular-nums;font-weight:700}.hc-ok{background:color-mix(in srgb,var(--p-ok) 18%,transparent)}.hc-mid{background:color-mix(in srgb,var(--p-mid) 18%,transparent)}.hc-low{background:color-mix(in srgb,var(--p-low) 18%,transparent)}.hc-0{color:var(--st)}
+.resist p{margin:4px 0;font-size:14.5px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.resist .code{font-size:12px;min-width:0;padding:1px 6px}.resist small{color:var(--soft)}
 @media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
 </style>
 
@@ -391,7 +411,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "L'industrie — chapitres A, B, E";
-const VERSION = { n:20, date:"24.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question · v18 : questions « avant la capsule », pauses « ⏸ Mets sur pause et réponds », feuille blanche en fin de chapitre, trois schémas dessinés en SVG (filière du jean, passages stratégiques, ruptures de charge) · v19 : page « Capsules » (les 12 vidéos dans l'ordre, lues dans la page, enchaînement capsule suivante, suivi « vue » commun) · v20 : « Teste-toi sur ce chapitre » juste sous le lecteur, pendant la capsule (chapitres et page Capsules) */
+const VERSION = { n:21, date:"25.10.2026" };   /* v1 : 22.10.2026, première version, onglet Dossier (cours par objectif) · v2 : définitions et théorie du livre pp. 66-75, nouveaux paquets (mots, définitions, étiquette, critères, besoins doc. 22, Nike) · v3 : recentré sur les objectifs, page « Les liens », schémas du livre (doc. 12, 13, 22, 27), exercices résumés en une ligne, quiz sans recopie des exercices · v4 : un paquet par objectif (B1, E3, E4 ajoutés), barre « Sommaire » fixe en haut des chapitres · v5 : OMC complétée dans le Dossier (B3) · v6 : cartes B2 réécrites (vraies questions, réponse expliquée), source au recto et au verso de chaque carte, revue des cartes avec cases à cocher (à revoir, hors test, remarque) · v7 : toutes les cartes posent une vraie question, avec une réponse expliquée au verso · v8 : source (page, n° de document, fiche et activité) sous chaque section du Dossier · v9 : chapitre E refait avec le livre pp. 88-93 (bulles, glossaires, doc. 72 à 87), doc. 21 en B2, nouvelles cartes E · v10 : source sous chaque mot du lexique · v11 : date du contrôle (vendredi 30.10, agenda), nom de fichier à la date du contrôle, première publication sur le site · v12 : texte des cartes plus grand · v13 : source affichée partout où il y a des données de révision (question du test, version papier, copie pour le chat, tout le lexique) · v14 : lien vers la capsule vidéo de chaque chapitre (YouTube) · v15 : capsule lue dans la page (lecteur intégré sans cookies), fermeture automatique à la fin avec renvoi vers les cartes du chapitre, marque « ✓ vue » · v16 : capsules B3 et B4 ajoutées (12 capsules sur 12) · v17 : « Teste-toi sur ce chapitre » sous la vidéo et en fin de chapitre, trois niveaux, correction après chaque question · v18 : questions « avant la capsule », pauses « ⏸ Mets sur pause et réponds », feuille blanche en fin de chapitre, trois schémas dessinés en SVG (filière du jean, passages stratégiques, ruptures de charge) · v19 : page « Capsules » (les 12 vidéos dans l'ordre, lues dans la page, enchaînement capsule suivante, suivi « vue » commun) · v20 : « Teste-toi sur ce chapitre » juste sous le lecteur, pendant la capsule (chapitres et page Capsules) · v21 : suivi graphique (fiche construction § 6 quater) : pastille de maîtrise par chapitre et générale dans le sommaire, état du chapitre et « Refaire mes cartes à revoir » en fin de chapitre, onglet Scores avec la courbe des notes sans aide et la remontée après rattrapage, les chapitres jour après jour et les cartes qui résistent ; rattrapage rattaché à son test, faute de frappe signalée */
 
 /* ---------- SOURCES ----------
    Photo 1 — feuille d'objectifs « Contrôle de géographie, L'industrie : chapitres A/B/E » (deux exemplaires reçus, identiques).
@@ -1316,6 +1336,194 @@ const DECKS = [
   ]},
 ];
 
+/* ===== Suivi graphique ===== */
+function sv(){ return S.suivi || (S.suivi = { ch:"all", f:"all", pt:null }); }
+function cardKey(dk, w){ return dk + "|" + w; }
+function qKey(x){ const q = x.question; return q ? cardKey(q.deckKey, q.word) : "p|" + x.prompt; }
+function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
+function chapOfDeck(dk){ const d = DECK[dk]; return d ? d.code : null; }
+function chapOfQ(x){ return x.question ? chapOfDeck(x.question.deckKey) : null; }
+function rootTests(){ return S.attempts.filter(a => !a.rattrapage).sort((a, b) => a.date - b.date); }
+function parentOf(a){
+  if (a.parent) return a.parent;
+  const prev = S.attempts.filter(x => !x.rattrapage && x.date < a.date && dayOf(x.date) === dayOf(a.date)).sort((x, y) => y.date - x.date)[0];
+  return prev ? prev.id : null;
+}
+function isExam(a){ return a.mode === MODES.exam.label; }
+function inChap(ch){ return x => ch === "all" || chapOfQ(x) === ch; }
+/* note sans aide d'un test (éventuellement limitée à un chapitre) et remontée après chaque rattrapage */
+function testScore(root, ch){
+  const qs = root.questions.filter(inChap(ch)), score = qs.filter(x => x.correct).length, total = qs.length;
+  if (!total) return null;
+  const wrong = new Set(qs.filter(x => !x.correct).map(qKey)), fixed = new Set(), steps = [];
+  S.attempts.filter(a => a.rattrapage && parentOf(a) === root.id).sort((a, b) => a.date - b.date).forEach(r => {
+    const rq = r.questions.filter(inChap(ch)); if (!rq.length) return;
+    rq.forEach(x => { if (x.correct && wrong.has(qKey(x))) fixed.add(qKey(x)); });
+    const sc = score + fixed.size;
+    steps.push({ score:sc, note:noteFrom(sc / total), asked:rq.length, ok:rq.filter(x => x.correct).length });
+  });
+  return { score, total, note:noteFrom(score / total), typos:qs.filter(x => x.typo).length, steps };
+}
+/* état de chaque carte : réponses du premier passage des tests seulement (jamais les rattrapages) */
+function cardStates(exceptId){
+  const hist = {};
+  rootTests().filter(a => a.id !== exceptId).forEach(a => a.questions.forEach(x => {
+    if (!x.question) return; (hist[qKey(x)] = hist[qKey(x)] || []).push({ ok:x.correct, typed:x.question.kind === "type", day:dayOf(a.date) });
+  }));
+  const st = {};
+  DECKS.forEach(d => d.items.forEach(it => {
+    if (rvOf(d, it).exclu) return;
+    const k = cardKey(d.key, it.front), h = hist[k];
+    if (!h) { st[k] = "new"; return; }
+    const last = h[h.length - 1];
+    if (!last.ok) { st[k] = "bad"; return; }
+    const strong = it.mcqOnly ? true : last.typed;
+    let i = h.length - 2, otherDay = false;
+    while (i >= 0 && h[i].ok){ if (h[i].day !== last.day) { otherDay = true; break; } i--; }
+    st[k] = strong && otherDay ? "ok" : "mid";
+  }));
+  return st;
+}
+function chapCards(ch){ return DECKS.filter(d => ch === "all" || d.code === ch).flatMap(d => d.items.filter(it => !rvOf(d, it).exclu).map(it => ({ d, it, k:cardKey(d.key, it.front) }))); }
+function chapSummary(ch, st){
+  const cards = chapCards(ch); if (!cards.length) return null;
+  const c = { ok:0, mid:0, bad:0, new:0 }; cards.forEach(x => c[st[x.k] || "new"]++);
+  const total = cards.length, pct = Math.round(c.ok / total * 100);
+  const state = c.new === total ? "start" : pct >= 80 && !c.bad ? "ok" : pct >= 80 ? "almost" : pct >= 50 ? "mid" : "low";
+  return { ...c, total, pct, state };
+}
+const P_LABEL = { start:"à commencer", low:"à revoir", mid:"en route", almost:"presque", ok:"OK ✓" };
+function pColor(state){ return state === "ok" ? "var(--p-ok)" : state === "low" ? "var(--p-low)" : "var(--p-mid)"; }
+function ringSvg(sum, size, inner){
+  const r = size / 2 - (size > 50 ? 6 : 5), w = size > 50 ? 8 : 6, C = 2 * Math.PI * r, h = size / 2;
+  if (sum.state === "start") return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" stroke-dasharray="3 3" style="stroke:var(--st)"/><text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
+  const seg = (n, off, color) => n ? `<circle r="${r}" fill="none" stroke-width="${w}" stroke="${color}" stroke-dasharray="${(C * n / sum.total).toFixed(2)} 999" stroke-dashoffset="${(-C * off / sum.total).toFixed(2)}" transform="rotate(-90)"/>` : "";
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" style="stroke:var(--rule)"/>${seg(sum.ok, 0, pColor(sum.state))}${seg(sum.mid, sum.ok, "var(--p-midsoft)")}${seg(sum.bad, sum.ok + sum.mid, "var(--p-low)")}<text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
+}
+function trendOf(ch, sum){
+  const last = rootTests().filter(a => a.questions.some(inChap(ch))).pop(); if (!last) return "";
+  const before = chapSummary(ch, cardStates(last.id));
+  return sum.ok > before.ok ? " ↗" : sum.ok < before.ok ? " ↘" : "";
+}
+function pastille(ch){
+  if (!S.loaded) return "";
+  const sum = chapSummary(ch, cardStates()); if (!sum) return "";
+  return `<span class="pst" aria-label="${sum.ok} cartes acquises sur ${sum.total}, ${P_LABEL[sum.state]}">${ringSvg(sum, 46, sum.ok + "/" + sum.total)}<span class="pst-l pst-${sum.state}">${P_LABEL[sum.state]}${trendOf(ch, sum)}</span></span>`;
+}
+function globalPastille(){
+  if (!S.loaded) return "";
+  const st = cardStates(), sum = chapSummary("all", st); if (!sum) return "";
+  const chs = PAGES.filter(p => chapCards(p.id).length).map(p => ({ id:p.id, s:chapSummary(p.id, st) }));
+  const nOk = chs.filter(x => x.s.state === "ok").length;
+  return `<div class="pglob">${ringSvg(sum, 66, sum.pct + " %")}<div class="pglob-x"><b>Avancement général · ${P_LABEL[sum.state]}</b><span>${sum.ok} cartes acquises sur ${sum.total} · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} chapitre${nOk > 1 ? "s" : ""} OK sur ${chs.length}</span></div></div>
+  <details class="plegend"><summary>Comment se lit la pastille ?</summary>
+  <p><b>Acquise</b> : juste à deux tests, dont un un autre jour, et la dernière fois à écrire quand la carte le permet.</p>
+  <p><b>En route</b> : juste au dernier test, mais pas encore acquise.</p>
+  <p><b>À revoir</b> : fausse ou « Je ne sais pas » au dernier test.</p>
+  <p><b>Pas encore posée</b> : jamais tombée dans un test.</p>
+  <p>Seul le premier passage d'un test compte : refaire ses erreurs aide à apprendre, mais ne remplit pas la pastille. Le chapitre est <b>OK ✓</b> à partir de 80 % de cartes acquises, sans carte à revoir. Rouge : moins de 50 %, orange : 50 à 79 %, vert : 80 % et plus.</p></details>`;
+}
+function chapStatus(ch){
+  if (!S.loaded) return "";
+  const st = cardStates(), sum = chapSummary(ch, st); if (!sum) return "";
+  const bad = chapCards(ch).filter(x => st[x.k] === "bad");
+  return `<div class="pchap">${ringSvg(sum, 46, sum.ok + "/" + sum.total)}<div class="pchap-x"><b>Ce chapitre : ${P_LABEL[sum.state]}${trendOf(ch, sum)}</b><span>${sum.ok} acquises · ${sum.mid} en route · ${sum.bad} à revoir · ${sum.new} pas encore posées</span>
+  ${bad.length ? `<button class="ghost small" data-act="redoCards" data-v="${ch}">Refaire mes ${bad.length} carte${bad.length > 1 ? "s" : ""} à revoir</button>` : ""}</div></div>`;
+}
+function redoCards(v){
+  let keys;
+  if (v === "resist") keys = new Set(resistant().map(x => x.k));
+  else { const st = cardStates(); keys = new Set(chapCards(v).filter(x => st[x.k] === "bad").map(x => x.k)); }
+  const decks = [...new Set([...keys].map(k => k.split("|")[0]))];
+  const qs = buildTest(decks, "hard").filter(q => keys.has(cardKey(q.deckKey, q.word)));
+  if (!qs.length) return;
+  let n = 0; qs.forEach(q => { q.num = ++n; });
+  S.selected = decks; S.difficulty = "hard"; S.mode = "train"; S.frozen = null; S.vidOpen = null; S.vidDone = null;
+  startQuiz(qs, false);
+}
+/* ----- onglet Scores ----- */
+function resistant(){
+  const m = {};
+  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qKey(x); m[k] = m[k] || { k, word:x.question.word, ch:chapOfQ(x), n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
+  return Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
+}
+function shapeSvg(a, x, y){
+  const f = `fill="var(--box)" stroke="var(--sheet)" stroke-width="2"`;
+  if (isExam(a)) { const p = []; for (let i = 0; i < 10; i++){ const r = i % 2 ? 3.6 : 8.5, t = Math.PI / 5 * i - Math.PI / 2; p.push((x + r * Math.cos(t)).toFixed(1) + "," + (y + r * Math.sin(t)).toFixed(1)); } return `<polygon points="${p.join(" ")}" ${f}/>`; }
+  if (a.difficulty === DIFFICULTIES.easy.label) return `<circle cx="${x}" cy="${y}" r="6" ${f}/>`;
+  if (a.difficulty === DIFFICULTIES.normal.label) return `<rect x="${x - 6}" y="${y - 6}" width="12" height="12" ${f}/>`;
+  return `<polygon points="${x},${y - 8} ${x + 8},${y} ${x},${y + 8} ${x - 8},${y}" ${f}/>`;
+}
+const fmtN = n => fmtNote(n);
+function suiviChart(){
+  const s = sv();
+  let tests = rootTests(); if (s.f === "exam") tests = tests.filter(a => a.difficulty === DIFFICULTIES.hard.label || isExam(a));
+  const pts = tests.map(a => ({ a, sc:testScore(a, s.ch) })).filter(p => p.sc);
+  if (!pts.length) return `<p class="fine">Aucun test ne correspond à ce choix pour l'instant.</p>`;
+  const L = 44, R = 18, T = 24, B = 40, H = 220, step = 58, W = Math.max(330, L + R + step * pts.length);
+  const y = n => T + (6 - n) / 5 * (H - T - B), X = i => L + step / 2 + i * step;
+  let g = "";
+  [1,2,3,4,5,6].forEach(n => { g += `<line x1="${L}" x2="${W - R}" y1="${y(n)}" y2="${y(n)}" style="stroke:var(--rule)" stroke-width="1"${n === 4 ? ' stroke-dasharray="5 4"' : ""}/><text x="${L - 8}" y="${y(n) + 4}" text-anchor="end" class="ch-t">${n}</text>`; });
+  g += `<text x="${W - R}" y="${y(4) - 5}" text-anchor="end" class="ch-t">4 suffisant</text>`;
+  pts.forEach((p, i) => { if (!p.sc.steps.length) return; const last = p.sc.steps[p.sc.steps.length - 1];
+    g += `<line x1="${X(i)}" x2="${X(i)}" y1="${y(p.sc.note) - 9}" y2="${y(last.note) + 6}" style="stroke:var(--good)" stroke-width="2" stroke-dasharray="4 3"/>`;
+    p.sc.steps.forEach((st, k) => { const fin = k === p.sc.steps.length - 1; g += `<circle cx="${X(i)}" cy="${y(st.note)}" r="${fin ? 5.5 : 3.5}" fill="var(--sheet)" style="stroke:var(--good)" stroke-width="2"/>`; });
+    g += `<text x="${X(i)}" y="${y(last.note) - 10}" text-anchor="middle" class="ch-t ch-g">${fmtN(last.note)}</text>`; });
+  g += `<polyline points="${pts.map((p, i) => X(i) + "," + y(p.sc.note)).join(" ")}" fill="none" style="stroke:var(--box)" stroke-width="2" stroke-linejoin="round"/>`;
+  pts.forEach((p, i) => { const on = s.pt === p.a.id;
+    g += `<g class="ch-pt" data-act="suiviPt" data-v="${p.a.id}" role="button" tabindex="0" aria-label="Test du ${dateLabel(p.a.date)}, note ${fmtN(p.sc.note)}">${on ? `<circle cx="${X(i)}" cy="${y(p.sc.note)}" r="13" fill="none" style="stroke:var(--crane)" stroke-width="2"/>` : ""}${shapeSvg(p.a, X(i), y(p.sc.note))}<rect x="${X(i) - 18}" y="${T - 6}" width="36" height="${H - T}" fill="transparent"/></g>`;
+    g += `<text x="${X(i) - 11}" y="${y(p.sc.note) + 4}" text-anchor="end" class="ch-t ch-b">${fmtN(p.sc.note)}</text>`;
+    const d = new Date(p.a.date); g += `<text x="${X(i)}" y="${H - B + 18}" text-anchor="middle" class="ch-t">${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}</text>`; });
+  g += `<text x="${L}" y="${H - 6}" class="ch-t">épreuve : ${esc(DUE.short)}</text>`;
+  let detail = "";
+  const sel = pts.find(p => p.a.id === s.pt);
+  if (sel){ const a = sel.a, sc = sel.sc;
+    detail = `<div class="ch-detail"><b>${dateLabel(a.date)} · ${esc(a.difficulty)} · ${esc(a.mode)}</b><span>${esc(a.deck)}${s.ch !== "all" ? " · questions du chapitre " + s.ch : ""}</span>
+    <span>Sans aide : ${sc.score} juste${sc.score > 1 ? "s" : ""} sur ${sc.total} → note ${fmtN(sc.note)}${sc.typos ? ` (dont ${sc.typos} faute${sc.typos > 1 ? "s" : ""} de frappe acceptée${sc.typos > 1 ? "s" : ""})` : ""}</span>
+    ${sc.steps.map((st, k) => `<span>${k + 1}${k ? "e" : "er"} rattrapage : ${st.ok} sur ${st.asked} → note ${fmtN(st.note)}</span>`).join("")}
+    <button class="ghost small" data-act="openAttempt" data-v="${a.id}">Voir les questions de ce test</button></div>`; }
+  return `<div class="ch-legend"><span><i class="lg-line"></i>Note du test, sans aide</span><span><i class="lg-ring"></i>Après « Refaire mes erreurs »</span><span>○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche</span></div>
+  <div class="ch-wrap"><svg class="ch-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des notes sans aide, avec la remontée après les rattrapages">${g}</svg></div>
+  <p class="fine">Touche un point pour voir le détail du test.</p>${detail}`;
+}
+function suiviHeat(){
+  const tests = rootTests(); if (!tests.length) return "";
+  const days = [...new Set(tests.map(a => dayOf(a.date)))].slice(-6);
+  const tested = new Set(tests.flatMap(a => a.questions.map(chapOfQ)));
+  const all = PAGES.filter(p => chapCards(p.id).length), chs = all.filter(p => tested.has(p.id)), rest = all.filter(p => !tested.has(p.id));
+  const lab = d => { const [y, m, j] = d.split("-"); return j.padStart(2, "0") + "." + m.padStart(2, "0"); };
+  let h = `<div class="tbl heat"><table><thead><tr><th>Chap.</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`;
+  chs.forEach(p => {
+    h += `<tr><td class="k">${p.id}</td>` + days.map(d => {
+      const qs = tests.filter(a => dayOf(a.date) === d).flatMap(a => a.questions.filter(inChap(p.id)));
+      if (!qs.length) return `<td class="hc-0">·</td>`;
+      const pc = Math.round(qs.filter(x => x.correct).length / qs.length * 100);
+      return `<td class="hc ${pc >= 80 ? "hc-ok" : pc >= 50 ? "hc-mid" : "hc-low"}">${pc}${pc >= 80 ? " ✓" : ""}</td>`; }).join("") + `</tr>`;
+  });
+  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(p => p.id).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par chapitre et par jour (6 derniers jours de révision). « · » : chapitre pas testé ce jour-là.</p>`;
+}
+function suiviBlock(){
+  const s = sv();
+  if (!rootTests().length) return "";
+  const chs = PAGES.filter(p => chapCards(p.id).length);
+  const res = resistant();
+  return `<section class="suivi"><h3>Ma courbe de notes</h3>
+  <div class="suivi-ctl"><label class="fine" for="suivi-ch">Chapitre</label><select id="suivi-ch" class="suivi-sel"><option value="all"${s.ch === "all" ? " selected" : ""}>Tout le Dossier</option>${chs.map(p => `<option value="${p.id}"${s.ch === p.id ? " selected" : ""}>${p.id} · ${esc(p.titre)}</option>`).join("")}</select>
+  <div class="row"><button class="ghost small${s.f === "all" ? " on" : ""}" data-act="suiviF" data-v="all" aria-pressed="${s.f === "all"}">Tous les tests</button><button class="ghost small${s.f === "exam" ? " on" : ""}" data-act="suiviF" data-v="exam" aria-pressed="${s.f === "exam"}">Niveau épreuve et épreuve blanche</button></div></div>
+  ${suiviChart()}
+  <h3>Mes chapitres jour après jour</h3>${suiviHeat()}
+  ${res.length ? `<h3>Les cartes qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${x.ch || ""}</span> ${esc(x.word)} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} cartes</button>` : ""}
+  </section>`;
+}
+function chainTxt(a){
+  if (a.rattrapage) return "";
+  const sc = testScore(a, "all"); if (!sc || !sc.steps.length) return "";
+  const last = sc.steps[sc.steps.length - 1];
+  return ` · ${fmtN(sc.note)} → ${fmtN(last.note)} après ${sc.steps.length} rattrapage${sc.steps.length > 1 ? "s" : ""}`;
+}
+document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ sv().ch = e.target.value; sv().pt = null; render(); } });
+document.addEventListener("keydown", e => { const t = e.target; if ((e.key === "Enter" || e.key === " ") && t && t.classList && t.classList.contains("ch-pt")){ e.preventDefault(); sv().pt = t.dataset.v; render(); } });
+
 const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
 const TAG_LABEL = Object.fromEntries(DECKS.map(d => [d.key, d.title]));
 
@@ -1514,13 +1722,13 @@ const pageById = id => PAGES.find(p => p.id === id);
 function pageTitle(id){ return id === "caps" ? "Les 12 capsules dans l'ordre" : id === "lex" ? "Lexique" : id === "src" ? "D'où viennent les questions" : pageById(id).titre; }
 function viewDossier(){ return S.page ? viewPage(S.page) : viewToc(); }
 function viewToc(){
-  let h = `<p class="intro">Ton cours complet, rangé comme ta feuille d'objectifs : un chapitre par « Je suis capable de ». Lis un chapitre, puis teste-toi avec les cartes ou le test.</p>
+  let h = `<p class="intro">Ton cours complet, rangé comme ta feuille d'objectifs : un chapitre par « Je suis capable de ». Lis un chapitre, puis teste-toi avec les cartes ou le test.</p>${globalPastille()}
   <div class="legend"><p><span class="tag book">Livre p. 66</span> définition de ton livre (bulle jaune), mot pour mot : à savoir par cœur.</p><p><span class="tag mine">Ton dossier</span> ce qui vient de tes fiches et de tes réponses.</p><p><span class="tag gen">À vérifier</span> explication générale, pas encore dans tes pages : jamais interrogée.</p></div>`;
   h += `<button class="caps-cta" data-act="page" data-v="caps"><span class="caps-cta-i" aria-hidden="true">▶</span><span><b>Les ${CAPS_ORDER.length} capsules dans l'ordre</b><small>${capsSeen()} / ${CAPS_ORDER.length} vues · regarde-les à la suite, sans quitter l'outil</small></span></button>`;
   h += `<section class="toc-ch"><h2>Avant de commencer <span>Les liens entre les chapitres et les schémas à connaître</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">Le fil rouge du contrôle${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">Un objet fabriqué en morceaux dans le monde, puis transporté : comment A, B et E se tiennent</span></span></button></section>`;
   CHAPTERS.forEach(c => {
     h += `<section class="toc-ch"><h2>${c.titre} <span>${esc(c.sous)}</span></h2>` + PAGES.filter(p => p.ch === c.key).map(p =>
-      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? (S.vidSeen[p.id] ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
+      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? (S.vidSeen[p.id] ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">${esc(p.court)}</span></span>${pastille(p.id)}</button>`).join("") + `</section>`;
   });
   h += `<section class="toc-ch"><h2>Pour finir</h2>
     <button class="toc-item" data-act="page" data-v="lex"><span class="code">ABC</span><span class="toc-t">Lexique<span class="toc-s">Les ${LEXIQUE.length} mots à connaître, en une ligne chacun</span></span></button>
@@ -1597,7 +1805,7 @@ function viewPage(id){
   } else {
     const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
     h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${videoBtn(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
-      ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + blankBlock(p) + chapTest(p.id, "end") + `</article>`;
+      ${p.obj ? `<p class="objective"><b>Je suis capable de…</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + blankBlock(p) + chapStatus(p.id) + chapTest(p.id, "end") + `</article>`;
   }
   return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
 }
@@ -1718,17 +1926,17 @@ function validate(val){
   if (S.mode !== "exam"){ Q.ok = right; Q.checked = true; render(); }
   else record(val, right);
 }
-function record(val, correct){
+function record(val, correct, typo){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i];
-  Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q });
+  Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, ...(typo ? { typo:true } : {}), expl:q.expl, tag:q.tag, question:q });
   if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
   else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; render(); }
 }
 async function finishQuiz(){
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
   const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:"Géographie", theme:THEME, deck:Q.label,
-    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, rattrapage:S.rattrapage, score, total, note:noteFrom(score/total), questions:Q.detail };
+    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, rattrapage:S.rattrapage, parent:S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
   S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
   try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Note ta note ou copie-la pour le chat." : ""; }
   catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
@@ -1813,7 +2021,7 @@ function retryWrong(id){
   const att = findAttempt(id);
   const qs = att.questions.filter(x => !x.correct && x.question).map(x => x.question);
   if (!qs.length) return;
-  S.rattrLabel = att.deck;
+  S.rattrLabel = att.deck; S.rattrParent = att.rattrapage ? (att.parent || parentOf(att) || att.id) : att.id;
   startQuiz(shuffle(qs), true);
 }
 
@@ -1898,15 +2106,17 @@ function viewScores(){
   if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
   const list = S.attempts;
   if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
-  const best = Math.max(...list.map(a => a.note)), avg = list.reduce((s,a) => s + a.note, 0)/list.length;
+  const roots = list.filter(a => !a.rattrapage), base = roots.length ? roots : list;
+  const best = Math.max(...base.map(a => a.note)), avg = base.reduce((s,a) => s + a.note, 0)/base.length;
   const exportText = list.map(a => `${dateLabel(a.date)} — ${a.deck} (${a.difficulty}, ${a.mode}${a.rattrapage ? ", rattrapage" : ""}) : ${a.score}/${a.total} → note ${fmtNote(a.note)}`).join("\n");
   let h = `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}
   ${store.mode === "local" ? `<p class="note">Tes scores sont gardés dans ce navigateur uniquement. Exporte-les de temps en temps.</p>` : ""}
-  <div class="stats"><div class="stat"><b>${list.length}</b><span>tests</span></div><div class="stat"><b>${fmtNote(best)}</b><span>meilleure</span></div><div class="stat"><b>${fmtNote(avg)}</b><span>moyenne</span></div></div>
+  <div class="stats"><div class="stat"><b>${roots.length}</b><span>tests</span></div><div class="stat"><b>${fmtNote(best)}</b><span>meilleure (sans aide)</span></div><div class="stat"><b>${fmtNote(avg)}</b><span>moyenne (sans aide)</span></div></div>
+  ${suiviBlock()}<p class="lab">Historique</p>
   <div class="rev">`;
   list.forEach(a => {
     const open = S.scores.open === a.id;
-    h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
+    h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}${chainTxt(a)}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
     if (open) h += `<div class="attempt-body">${bilanBlock(a)}${questionList(a)}</div>`;
     h += `</div>`;
   });
@@ -1978,7 +2188,7 @@ async function loadHistory(){
     S.loadErr = "Je n'arrive pas à lire tes anciens résultats pour l'instant. Les nouveaux tests s'afficheront quand même.";
   }
   S.loaded = true;
-  if (S.screen === "scores") render();
+  if (S.screen === "scores" || S.screen === "dossier") render();
 }
 
 /* ---------- événements ---------- */
@@ -2017,7 +2227,10 @@ document.addEventListener("click", e => {
     case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train") validate(Q.picked); else render(); break; }
     case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
     case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; render(); } else record("", false); break; }
-    case "typo": record(Q.typed, true); break;
+    case "typo": record(Q.typed, true, true); break;
+    case "suiviF": sv().f = v; sv().pt = null; render(); break;
+    case "suiviPt": sv().pt = sv().pt === v ? null : v; render(); break;
+    case "redoCards": redoCards(v); break;
     case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
     case "showErr": { const b = bilanState(v); b.errOnly = !errView(v); render(); break; }
     case "analyse": analyse(v); break;
@@ -2058,6 +2271,4 @@ loadHistory();
 </script>
 
 
-
-</body>
-</html>
+</body></html>
