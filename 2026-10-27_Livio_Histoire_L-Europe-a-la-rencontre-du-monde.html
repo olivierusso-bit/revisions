@@ -379,6 +379,13 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:4px;pa
 .read sup{font-size:.7em}
 a.cta.vlink{display:block;text-align:center;text-decoration:none}
 
+.media{display:grid;grid-template-columns:1fr 1fr;gap:10px}.media.one{grid-template-columns:1fr}
+.mbtn{display:flex;gap:10px;align-items:center;min-width:0;text-align:left;padding:10px;border:0;border-radius:4px;background:var(--board);color:#E9EEF2;cursor:pointer;font:inherit}
+.mbtn-i{flex:none;width:40px;height:40px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:16px}
+.mbtn-x{min-width:0}.mbtn b{display:block;font-family:var(--display);font-size:19px;line-height:1.1;color:#fff}.mbtn small{display:block;font-size:12.5px;color:#C9D3E0}
+.mbtn.a{background:var(--box)}.mbtn.a .mbtn-i{background:var(--sheet);color:var(--box)}.mbtn.a small{color:var(--on-box);opacity:.85}.mbtn.a b{color:var(--on-box)}
+.mbtn.a.on{box-shadow:inset 0 0 0 3px var(--crane)}
+.mbtn.off{background:var(--gen-wash);border:1px dashed var(--gen);cursor:default}.mbtn.off b,.mbtn.off small{color:var(--gen)}.mbtn.off .mbtn-i{background:var(--rule);color:var(--soft)}
 .aud-btn{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--box);border-radius:4px;background:var(--box-wash);color:var(--ink);cursor:pointer}
 .aud-btn b{display:block;font-size:15.5px;color:var(--box)}.aud-btn small{display:block;font-size:12.5px;color:var(--soft)}
 .aud-i{flex:none;width:38px;height:38px;border-radius:50%;background:var(--box);color:var(--on-box);display:flex;align-items:center;justify-content:center;font-size:17px}
@@ -389,6 +396,7 @@ a.cta.vlink{display:block;text-align:center;text-decoration:none}
 .aud-links .ghost.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box)}
 a.aud-ext,.aud-links a.ghost{text-align:center;text-decoration:none;color:var(--ink)}
 .caps-btns{display:flex;gap:6px}
+.toc-v.toc-aud{background:var(--box);color:var(--on-box)}
 .caps-play.aud{background:var(--box);color:var(--on-box);padding-left:0;font-size:17px;border-radius:50%}
 .vframe video{position:absolute;inset:0;width:100%;height:100%;background:#000}
 
@@ -1555,6 +1563,18 @@ window.addEventListener("message", e => {
   const st = d.event === "onStateChange" ? d.info : (d.event === "infoDelivery" && d.info && "playerState" in d.info ? d.info.playerState : null);
   if (st === 0) vidEnded(S.vidOpen);
 });
+/* Vidéo et audio côte à côte, sur une même ligne, en tête du chapitre. */
+function mediaRow(id){
+  if (S.vidDone === id) return vidDonePanel(id, "page");
+  if (S.vidOpen === id) return vidPlayer(id);
+  const v = VIDEOS[id], cap = capOf(id), n = audParts(id).length, aOn = S.audOpen === id;
+  const vb = !(id in VIDEOS) ? "" : v
+    ? `<button class="mbtn" data-act="vidPlay" data-v="${id}" aria-label="Regarder la capsule vidéo ${esc(id)}"><span class="mbtn-i" aria-hidden="true">▶</span><span class="mbtn-x"><b>Vidéo</b><small>${cap && cap.duree ? esc(cap.duree) : "regarder"}${S.vidSeen[id] ? " · ✓ vue" : ""}</small></span></button>`
+    : `<div class="mbtn off"><span class="mbtn-i" aria-hidden="true">▶</span><span class="mbtn-x"><b>Vidéo</b><small>bientôt disponible</small></span></div>`;
+  const ab = n ? `<button class="mbtn a${aOn ? " on" : ""}" data-act="${aOn ? "audHide" : "audPlay"}" data-v="${id}" aria-label="Écouter la piste audio ${esc(id)}"><span class="mbtn-i" aria-hidden="true">🎧</span><span class="mbtn-x"><b>Audio</b><small>${n > 1 ? n + " parties" : "écouter"}</small></span></button>` : "";
+  if (!vb && !ab) return "";
+  return `<div class="media${vb && ab ? "" : " one"}">${vb}${ab}</div>${aOn ? audPlayer(id) : ""}${HAS_CLAUDE && (v || n) ? `<p class="fine">Dans Claude, la vidéo et l'audio s'ouvrent dans un nouvel onglet.</p>` : ""}`;
+}
 const audParts = id => (AUDIOS[id] || []);
 function audioBtn(id){
   const parts = audParts(id); if (!parts.length) return "";
@@ -1785,10 +1805,10 @@ function viewToc(){
   let h = `<p class="intro">Ton cours complet, rangé exactement comme ta feuille d'objectifs : ce que tu dois savoir, ce que tu dois être capable de faire, puis les termes, les personnages et les dates. Lis un chapitre, puis teste-toi avec ses cartes.</p>
   <div class="legend"><p><span class="tag book">Livre p. 48</span> définition de ton livre (bulle jaune, glossaire ou lexique), mot pour mot : à savoir par cœur.</p><p><span class="tag dico">Dictionnaire</span> le mot n'est pas dans ton livre : définition du dictionnaire Larousse.</p><p><span class="tag mine">Ton dossier</span> ce qui vient de tes fiches et de tes réponses.</p><p><span class="tag gen">À vérifier</span> explication générale, pas encore dans tes pages : jamais interrogée.</p></div>`;
   if (CAPS_ORDER.length) h += `<button class="caps-cta" data-act="page" data-v="caps"><span class="caps-cta-i" aria-hidden="true">▶</span><span><b>Les ${CAPS_ORDER.length} capsules dans l'ordre</b><small>${capsSeen()} / ${CAPS_ORDER.length} vues · regarde-les à la suite, sans quitter l'outil</small></span></button>`;
-  h += `<section class="toc-ch"><h2>Avant de commencer <span>Le fil rouge et la frise de l'épreuve</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">${esc(pageById("LIENS").titre)}${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">${esc(pageById("LIENS").court)}</span></span></button></section>`;
+  h += `<section class="toc-ch"><h2>Avant de commencer <span>Le fil rouge et la frise de l'épreuve</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">${esc(pageById("LIENS").titre)}${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}${audParts("LIENS").length ? ` <span class="toc-v toc-aud">🎧 audio</span>` : ""}<span class="toc-s">${esc(pageById("LIENS").court)}</span></span></button></section>`;
   CHAPTERS.forEach(c => {
     h += `<section class="toc-ch"><h2>${c.titre} <span>${esc(c.sous)}</span></h2>` + PAGES.filter(p => p.ch === c.key).map(p =>
-      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? (S.vidSeen[p.id] ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
+      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? (S.vidSeen[p.id] ? ` <span class="toc-v seen">✓ vue</span>` : ` <span class="toc-v">▶ vidéo</span>`) : ""}${audParts(p.id).length ? ` <span class="toc-v toc-aud">🎧 audio</span>` : ""}<span class="toc-s">${esc(p.court)}</span></span></button>`).join("") + `</section>`;
   });
   h += `<section class="toc-ch"><h2>Pour finir</h2>
     <button class="toc-item" data-act="page" data-v="lex"><span class="code">ABC</span><span class="toc-t">Lexique<span class="toc-s">Les ${LEXIQUE.length} mots à connaître, en une ligne chacun</span></span></button>
@@ -1864,7 +1884,7 @@ function viewPage(id){
     h += `</article>`;
   } else {
     const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
-    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${videoBtn(p.id)}${audioBtn(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
+    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${mediaRow(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
       ${p.obj ? `<p class="objective"><b>${esc(c.objLabel || "Objectif")}</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + blankBlock(p) + chapTest(p.id, "end") + `</article>`;
   }
   return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
