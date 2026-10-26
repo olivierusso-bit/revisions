@@ -74,7 +74,8 @@ input.answer:focus{outline:3px solid color-mix(in srgb,var(--accent) 45%,transpa
 .feedback.no{border-color:var(--bad-bg);background:color-mix(in srgb,var(--bad-bg) 12%,var(--card))}
 /* onglets du bas */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card);border-top:1px solid var(--rule);
-  display:flex;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+nav.tabs .tabs-in{max-width:560px;margin:0 auto;display:flex}
 nav.tabs button{flex:1;border:none;background:transparent;color:var(--soft);font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px}
 nav.tabs button .ic{font-size:21px}
 nav.tabs button.on{color:var(--accent)}
@@ -156,21 +157,22 @@ a{color:var(--accent)}
   <div class="note-ver" id="verLine"></div>
 </div>
 
-<nav class="tabs" id="tabs">
+<nav class="tabs" id="tabs"><div class="tabs-in">
   <button data-go="fiche" class="on"><span class="ic">📚</span>Fiche</button>
   <button data-go="decks"><span class="ic">🏠</span>Paquets</button>
   <button data-go="cards"><span class="ic">🃏</span>Cartes</button>
   <button data-go="test"><span class="ic">🎯</span>Test</button>
   <button data-go="scores"><span class="ic">📊</span>Scores</button>
-</nav>
+</div></nav>
 
 <script>
 "use strict";
 /* ===== Environnement ===== */
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const QUIZ_ID = "liano-quiz-anglais-unit2nombres";
-const VERSION = { n:1, date:"26.10.2026" };
-/* v1 : 26.10.2026, première version — couche Langues (anglais), suivi à 3 anneaux et test en cours gardé. */
+const VERSION = { n:2, date:"26.10.2026" };
+/* v1 : 26.10.2026, première version — couche Langues (anglais), suivi à 3 anneaux et test en cours gardé.
+   v2 : 26.10.2026, barre du bas resserrée au centre sur grand écran, comme les autres outils. */
 const DUE = "vendredi 30 octobre";
 const FILE = "2026-10-30_Liano_Anglais_Unit-2-Nombres-1-20";
 
