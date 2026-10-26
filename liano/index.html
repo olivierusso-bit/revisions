@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Devoirs - Révisions (Liano)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,700;7..72,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout : un agenda de devoirs — une semaine = un bloc repliable, chaque jour = une pastille date + ses cartes. */
+:root{--paper:#F2F4F7;--sheet:#fff;--ink:#18202E;--soft:#5A6577;--rule:#D5DBE4;--cobalt:#2546B5;--marker:#F6D94A;--marker-ink:#3A2F00;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--paper:#11151D;--sheet:#1A2030;--ink:#E7EBF2;--soft:#9AA5B8;--rule:#2C3446;--cobalt:#8EA6FF;--marker:#E8C93A;--marker-ink:#2A2200;color-scheme:dark}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 'Atkinson Hyperlegible',system-ui,sans-serif}
+main{max-width:620px;margin:0 auto;padding-block:max(28px,env(safe-area-inset-top,0px)) 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-family:'Literata',Georgia,serif;font-weight:800;font-size:clamp(26px,8vw,32px);line-height:1.1;margin:0;border-bottom:2px solid var(--ink);padding-bottom:12px;text-wrap:balance}
+.sub{color:var(--soft);margin:8px 0 0}
+.tools{display:flex;justify-content:flex-end;margin-top:14px}
+.tools button{background:none;border:1px solid var(--rule);border-radius:20px;padding:5px 12px;font:inherit;font-size:13.5px;font-weight:700;color:var(--cobalt);cursor:pointer}
+details.week{margin-top:14px;border-top:1px solid var(--rule)}
+details.week>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 0 10px}
+details.week>summary::-webkit-details-marker{display:none}
+.chev{width:22px;height:22px;flex:none;border-radius:50%;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:12px;transition:transform .2s}
+details[open]>summary .chev{transform:rotate(90deg)}
+.wk-title{flex:1;font-family:'Literata',Georgia,serif;font-weight:700;font-size:19px}
+.wk-count{font-size:13px;color:var(--soft)}
+details.week.past .wk-title{color:var(--soft)}
+summary:focus-visible,.tools button:focus-visible,a.card:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+.day{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:start;margin-bottom:10px}
+.date{background:var(--ink);color:var(--paper);border-radius:8px;text-align:center;padding:6px 0;line-height:1.1}
+.date b{display:block;font-family:'Literata',Georgia,serif;font-size:22px;font-variant-numeric:tabular-nums}
+.date span{font-size:11px;text-transform:uppercase;letter-spacing:1px}
+.stack{display:flex;flex-direction:column;gap:8px;min-width:0}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;color:var(--ink);text-decoration:none;display:block}
+a.card:hover{border-color:var(--cobalt)}
+.card b{display:block}.card small{display:block;color:var(--soft);font-size:13.5px;margin-top:2px}
+.kind{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:1px 8px;border-radius:5px;margin-bottom:4px}
+.kind.test{background:#C62828;color:#fff}
+.kind.devoir{border:1px solid var(--soft);color:var(--soft)}
+.go{display:inline-block;margin-top:8px;background:var(--marker);color:var(--marker-ink);font-weight:700;font-size:13.5px;padding:3px 10px;border-radius:20px}
+.wait{display:inline-block;margin-top:8px;color:var(--soft);font-size:13px;border:1px dashed var(--rule);padding:2px 9px;border-radius:20px}
+.day.past{opacity:.45}
+.empty{color:var(--soft)}
+.maj{margin:28px 0 0;padding-top:12px;border-top:1px solid var(--rule);color:var(--soft);font-size:13px}
+@media (prefers-reduced-motion: reduce){.chev{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Devoirs - Révisions (Liano)</h1>
+<p class="sub">Les devoirs et les tests, au jour où ils sont attendus. Touche le titre d'une semaine pour la replier.</p>
+<div class="tools"><button type="button" id="toggle-all">Tout replier</button></div>
+<div id="weeks"><p class="empty">Chargement…</p></div>
+<p class="maj" id="maj"></p>
+</main>
+
+<!--
+  DONNÉES — la seule partie à modifier à chaque mise à jour.
+  Une ligne par devoir ou test, reprise de l'agenda Google « Liano ».
+  date   : jour où le devoir est attendu (AAAA-MM-JJ)
+  type   : "Test" ou "Devoir"
+  titre  : "Branche · sujet"
+  detail : une courte précision
+  lien   : (facultatif) fichier de révision, nommé AAAA-MM-JJ-branche.html avec la même date
+-->
+<!--
+  VERSION — à changer à chaque mise à jour de la page :
+  version = numéro suivant (un de plus que la fois précédente), maj = date et heure de Suisse (AAAA-MM-JJTHH:MM)
+-->
+<script id="version" type="application/json">{ "version": 1, "maj": "2026-10-26T17:08" }</script>
+
+<script id="devoirs" type="application/json">
+[
+  { "date": "2026-10-27", "type": "Test",   "titre": "Français · impératif présent",            "detail": "Évaluation de l'impératif présent" },
+  { "date": "2026-10-27", "type": "Devoir", "titre": "Français · verbe courir",                  "detail": "Copier et apprendre la conjugaison" },
+  { "date": "2026-10-27", "type": "Devoir", "titre": "MIU · envoyer un courriel au professeur",  "detail": "Devoir à faire" },
+  { "date": "2026-10-28", "type": "Devoir", "titre": "Histoire · lire les pages 14-15",          "detail": "Lire et comprendre" },
+  { "date": "2026-10-29", "type": "Test",   "titre": "Français · types et formes de phrases",    "detail": "Test" },
+  { "date": "2026-10-29", "type": "Test",   "titre": "Allemand · vocabulaire 1.6",               "detail": "Test de vocabulaire" },
+  { "date": "2026-10-29", "type": "Devoir", "titre": "Sciences · apporter un objet « énergie »", "detail": "Apporter un objet qui montre de l'énergie" },
+  { "date": "2026-10-30", "type": "Test",   "titre": "Anglais · 2.1 / 2.2",                      "detail": "Test" },
+  { "date": "2026-10-30", "type": "Test",   "titre": "Musique · les instruments",                "detail": "Évaluation sur les instruments" }
+]
+</script>
+
+<script>
+const MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const JOURS = ["dim.","lun.","mar.","mer.","jeu.","ven.","sam."];
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const parse = d => { const [y,m,j] = d.split("-").map(Number); return new Date(y, m-1, j); };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const monday = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6)%7)); return x; };
+function weekLabel(mon, lastDay){
+  const end = new Date(mon); end.setDate(end.getDate() + (lastDay.getDay() === 0 || lastDay.getDay() === 6 ? 6 : 4));
+  return mon.getMonth() === end.getMonth()
+    ? `Semaine du ${mon.getDate()} au ${end.getDate()} ${MOIS[end.getMonth()]}`
+    : `Semaine du ${mon.getDate()} ${MOIS[mon.getMonth()]} au ${end.getDate()} ${MOIS[end.getMonth()]}`;
+}
+function card(it){
+  const kind = `<span class="kind ${it.type === "Test" ? "test" : "devoir"}">${esc(it.type)}</span>`;
+  const body = `${kind}<b>${esc(it.titre)}</b>${it.detail ? `<small>${esc(it.detail)}</small>` : ""}`;
+  return it.lien
+    ? `<a class="card" href="${esc(it.lien)}">${body}<span class="go">Réviser →</span></a>`
+    : `<div class="card">${body}<span class="wait">Outil de révision pas encore en ligne</span></div>`;
+}
+function render(){
+  let items = [];
+  try { items = JSON.parse(document.getElementById("devoirs").textContent); } catch(e){}
+  const box = document.getElementById("weeks");
+  if (!items.length){ box.innerHTML = `<p class="empty">Aucun devoir noté pour l'instant.</p>`; return; }
+  const today = new Date(); today.setHours(0,0,0,0);
+  const thisMon = monday(today);
+  const weeks = {};
+  items.forEach(it => { const k = iso(monday(parse(it.date))); (weeks[k] = weeks[k] || []).push(it); });
+  box.innerHTML = Object.keys(weeks).sort().reverse().map(k => {  /* semaine la plus récente en haut, les anciennes en dessous */
+    const mon = parse(k), list = weeks[k].sort((a,b) => a.date.localeCompare(b.date));
+    const lastDay = parse(list[list.length-1].date);
+    const past = mon < thisMon;
+    const days = {}; list.forEach(it => (days[it.date] = days[it.date] || []).push(it));
+    const daysHtml = Object.keys(days).sort().map(d => {
+      const dt = parse(d);
+      return `<div class="day${dt < today ? " past" : ""}"><div class="date"><span>${JOURS[dt.getDay()]}</span><b>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</b></div><div class="stack">${days[d].map(card).join("")}</div></div>`;
+    }).join("");
+    const n = list.length;
+    return `<details class="week${past ? " past" : ""}"${past ? "" : " open"}><summary><span class="chev" aria-hidden="true">▶</span><span class="wk-title">${weekLabel(mon, lastDay)}</span><span class="wk-count">${n} ${n > 1 ? "éléments" : "élément"}</span></summary>${daysHtml}</details>`;
+  }).join("");
+  updateToggle();
+}
+function updateToggle(){
+  const all = [...document.querySelectorAll("details.week")];
+  document.getElementById("toggle-all").textContent = all.some(d => d.open) ? "Tout replier" : "Tout déplier";
+}
+document.getElementById("toggle-all").addEventListener("click", () => {
+  const all = [...document.querySelectorAll("details.week")], open = !all.some(d => d.open);
+  all.forEach(d => d.open = open); updateToggle();
+});
+document.addEventListener("toggle", updateToggle, true);
+function renderVersion(){
+  try {
+    const v = JSON.parse(document.getElementById("version").textContent);
+    const [d, t] = v.maj.split("T"), dt = parse(d), [h, m] = t.split(":");
+    const JOURS_LONGS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+    document.getElementById("maj").textContent = `Version ${v.version} · mise à jour le ${JOURS_LONGS[dt.getDay()]} ${dt.getDate()} ${MOIS[dt.getMonth()]} ${dt.getFullYear()} à ${h}h${m}`;
+  } catch(e){}
+}
+render();
+renderVersion();
+</script>
+</body>
+</html>
