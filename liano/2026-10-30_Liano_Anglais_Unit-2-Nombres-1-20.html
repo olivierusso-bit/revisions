@@ -170,9 +170,11 @@ a{color:var(--accent)}
 /* ===== Environnement ===== */
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const QUIZ_ID = "liano-quiz-anglais-unit2nombres";
-const VERSION = { n:2, date:"26.10.2026" };
+const VERSION = { n:4, date:"27.10.2026" };
 /* v1 : 26.10.2026, première version — couche Langues (anglais), suivi à 3 anneaux et test en cours gardé.
-   v2 : 26.10.2026, barre du bas resserrée au centre sur grand écran, comme les autres outils. */
+   v2 : 26.10.2026, barre du bas resserrée au centre sur grand écran, comme les autres outils.
+   v3 : 27.10.2026, pastille : chaque anneau lit son propre niveau ; une erreur en Niveau épreuve ne fait plus baisser l'Échauffement ni l'Entraînement.
+   v4 : 27.10.2026, « OK ✓ » vert foncé sur l'anneau extérieur quand le Niveau épreuve est réussi deux jours différents (cartes acquises). */
 const DUE = "vendredi 30 octobre";
 const FILE = "2026-10-30_Liano_Anglais_Unit-2-Nombres-1-20";
 
@@ -789,17 +791,36 @@ function levelRank(lv){ return {echauff:0,entrain:1,epreuve:2}[lv]??0; }
 // nb cartes justes à un niveau donné (dernier test de ce niveau où la carte tombe), par paquet
 function deckRingLevel(deckKey,lv){
   const items=deckOf(deckKey).items;
-  const tests=firstPassAnswers().filter(t=>levelRank(t.level)>=levelRank(lv));
+  // Chaque anneau = son propre niveau. Pour une carte : juste si son dernier résultat À CE NIVEAU est juste,
+  // ou si son dernier résultat à un niveau PLUS DIFFICILE est juste (une réussite compte pour les niveaux plus faciles).
+  // Une erreur à un niveau plus difficile ne fait jamais baisser l'anneau d'un niveau plus facile.
+  const tests=firstPassAnswers();
+  const lastAt=(cardKey,level)=>{ for(let i=tests.length-1;i>=0;i--){ if(tests[i].level!==level) continue; const a=tests[i].answers.find(x=>x.cardKey===cardKey); if(a) return a; } return null; };
+  const levels=["echauff","entrain","epreuve"].filter(l=>levelRank(l)>=levelRank(lv));
   let right=0, tested=false;
   items.forEach(it=>{
-    // dernier test de niveau >= lv où la carte tombe
-    let res=null; for(let i=tests.length-1;i>=0;i--){ const a=tests[i].answers.find(x=>x.cardKey===it.cardKey); if(a){ res=a; break; } }
-    if(res){ tested=true; if(res.c) right++; }
+    const res=levels.map(l=>lastAt(it.cardKey,l)).filter(Boolean);
+    if(res.length){ tested=true; if(res.some(a=>a.c)) right++; }
   });
   const total=items.length;
   const anyTested=firstPassAnswers().some(t=>levelRank(t.level)>=levelRank(lv) && t.answers.some(a=>items.find(it=>it.cardKey===a.cardKey)));
-  return { right, total, state:anyTested?lvlInfo(right,total).key:"start" };
+  let state=anyTested?lvlInfo(right,total).key:"start";
+  // « OK ✓ » (anneau extérieur seulement) : cartes ACQUISES = justes au dernier Niveau épreuve
+  // et déjà justes à un Niveau épreuve d'un AUTRE JOUR, sans erreur entre les deux. Note sur les acquises ≥ 5 → vert foncé.
+  let acquired=0;
+  if(lv==="epreuve" && anyTested){
+    items.forEach(it=>{
+      const seq=tests.filter(t=>t.level==="epreuve").map(t=>{ const a=t.answers.find(x=>x.cardKey===it.cardKey); return a?{ok:a.c,day:dayKey(t.ts)}:null; }).filter(Boolean);
+      if(!seq.length || !seq[seq.length-1].ok) return;
+      const last=seq[seq.length-1];
+      for(let i=seq.length-2;i>=0 && seq[i].ok;i--){ if(seq[i].day!==last.day){ acquired++; break; } }
+    });
+    if(noteOf(acquired,total)>=5) state="okdark";
+  }
+  return { right, total, state, acquired };
 }
+function dayKey(ts){ const d=new Date(ts); return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate(); }
+const STATE_WORD={start:"à commencer",low:"à revoir",mid:"en route",ok:"réussi",okdark:"OK ✓"};
 function hardestTested(deckKey){
   const items=deckOf(deckKey).items;
   for(const lv of ["epreuve","entrain","echauff"]){
@@ -813,7 +834,7 @@ function deckSummary(deckKey){ // pour le centre : niveau le plus difficile test
   if(!hl) return { right:0,total:deckOf(deckKey).items.length,state:"start",rings:[ring("echauff"),ring("entrain"),ring("epreuve")] };
   function ring(lv){ return deckRingLevel(deckKey,lv); }
   const centerR=deckRingLevel(deckKey,hl);
-  return { right:centerR.right, total:centerR.total, state:lvlInfo(centerR.right,centerR.total).key,
+  return { right:centerR.right, total:centerR.total, state:centerR.state, acquired:centerR.acquired||0, hl,
     rings:[deckRingLevel(deckKey,"echauff"),deckRingLevel(deckKey,"entrain"),deckRingLevel(deckKey,"epreuve")] };
 }
 function ringArc(sum,r,w){
@@ -834,12 +855,13 @@ function ringSvg(summary,size){
 function pastilleFull(deckKey){
   const sum=deckSummary(deckKey);
   const hl=hardestTested(deckKey);
-  const info= hl?lvlInfo(sum.right,sum.total):{mot:"à commencer"};
+  const info={mot:STATE_WORD[hl?sum.state:"start"]};
+  const conf= hl==="epreuve" ? (sum.state==="okdark" ? ` · dont ${sum.acquired} acquises` : sum.state==="ok" ? " · refais un Niveau épreuve un autre jour pour le confirmer" : "") : "";
   // flèche + baisse
   const drop=dropOf(deckKey);
   return `<div class="pastille">${ringSvg(sum,86)}
     <div class="pst-txt"><div class="lvl">${esc(deckOf(deckKey).title)}</div>
-      <div class="sub">${hl?`${sum.right}/${sum.total} au dernier test · ${info.mot} ${drop.arrow}`:"pas encore testé"}</div>
+      <div class="sub">${hl?`${sum.right}/${sum.total} au dernier test · ${info.mot} ${drop.arrow}${conf}`:"pas encore testé"}</div>
       ${drop.was?`<div class="pst-was">avant : ${drop.was}</div>`:""}
     </div></div>`;
 }
