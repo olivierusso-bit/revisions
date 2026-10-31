@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Komparativ und Superlativ · à savoir pour le mardi 3 novembre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Thème « le podium » : comparer, c'est monter les marches. gut → besser → am besten.
+   Bleu ruban de médaille, or, argent, bronze sur un gris piste. */
+:root{
+  --paper:#ECEFF3; --sheet:#FFFFFF; --ink:#18233A; --soft:#5E6A80; --rule:#CDD4DF;
+  --court:#24477E; --court-wash:#E3EAF5; --jersey:#C98A1C; --score:#E8B024; --board:#18233A;
+  --silver:#98A3B3; --bronze:#AE6A3A;
+  --good:#1F7A5A; --good-wash:#DCF1E7; --bad:#B8382A; --bad-wash:#F9E2DE; --on-court:#FFFFFF;
+  --p-okdark:#16634A; --p-ok:#1F8A63; --p-mid:#D07F22; --p-low:#B8382A; --p-lowsoft:#F0C7C0;
+  --box:#24477E; --crane:#C98A1C;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif;
+  --body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#10151F; --sheet:#19202D; --ink:#E5EAF2; --soft:#9AA6BA; --rule:#2B3546;
+  --court:#86A8E6; --court-wash:#1C2A44; --jersey:#E8B024; --score:#E8B024; --board:#0A0F18;
+  --silver:#8C97A8; --bronze:#C98557;
+  --good:#5ED3A0; --good-wash:#15362A; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-court:#0A0F18;
+  --p-okdark:#3FB488; --p-ok:#5ED3A0; --p-mid:#E8A24D; --p-low:#FF8A7D; --p-lowsoft:#5A2A25;
+  --box:#86A8E6; --crane:#E8B024; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#10151F; --sheet:#19202D; --ink:#E5EAF2; --soft:#9AA6BA; --rule:#2B3546;
+  --court:#86A8E6; --court-wash:#1C2A44; --jersey:#E8B024; --score:#E8B024; --board:#0A0F18;
+  --silver:#8C97A8; --bronze:#C98557;
+  --good:#5ED3A0; --good-wash:#15362A; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-court:#0A0F18;
+  --p-okdark:#3FB488; --p-ok:#5ED3A0; --p-mid:#E8A24D; --p-low:#FF8A7D; --p-lowsoft:#5A2A25;
+  --box:#86A8E6; --crane:#E8B024; color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin:0}
+.wrap{max-width:620px;margin:0 auto;padding-block:18px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[role=button]:focus-visible{outline:3px solid var(--score);outline-offset:2px}
+
+/* en-tête : le podium 2 · 1 · 3 */
+.head{display:flex;gap:14px;align-items:flex-end;margin-bottom:18px}
+.podium{flex:none;display:flex;align-items:flex-end;gap:3px;height:62px}
+.podium span{width:21px;display:flex;align-items:flex-start;justify-content:center;font-family:var(--display);font-weight:800;font-size:15px;color:#fff;border-radius:3px 3px 0 0;padding-top:2px}
+.podium .p2{height:40px;background:var(--silver)} .podium .p1{height:58px;background:var(--score);color:#3A2A00} .podium .p3{height:28px;background:var(--bronze)}
+.head h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,8.4vw,38px);line-height:.95;margin:0;letter-spacing:.2px}
+.head p{margin:5px 0 0;color:var(--soft);font-size:14px}
+
+.screen{display:flex;flex-direction:column;gap:12px}
+.intro{margin:0;font-size:15.5px}
+.lab{font-family:var(--display);font-weight:700;font-size:22px;margin:12px 0 0}
+.fine{font-size:13px;color:var(--soft);margin:0}
+.warn{background:var(--bad-wash);border-left:3px solid var(--bad);padding:10px 12px;font-size:14px;border-radius:0 8px 8px 0;margin:0}
+.note{background:var(--court-wash);border-radius:8px;padding:10px 12px;font-size:14px;margin:0}
+.back{align-self:flex-start;background:none;border:0;color:var(--court);font-weight:700;padding:0;cursor:pointer}
+
+.cta{width:100%;padding:15px;border:0;border-radius:8px;background:var(--court);color:var(--on-court);font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:.3px;cursor:pointer}
+.cta:disabled{opacity:.45;cursor:not-allowed}
+.ghost{width:100%;padding:12px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);font-weight:700;font-size:14.5px;cursor:pointer}
+.ghost.small{font-size:13.5px;padding:10px}
+.ghost.on{border-color:var(--court);box-shadow:inset 0 0 0 1px var(--court);color:var(--court)}
+.ghost.danger{color:var(--bad)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+
+/* fiche */
+.entry{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.entry.open{border-left:5px solid var(--court)}
+.entry-head{width:100%;display:flex;align-items:center;gap:12px;background:none;border:0;padding:14px;text-align:left;cursor:pointer}
+.entry-icon{font-size:19px;width:24px;text-align:center}
+.entry-title{flex:1;font-family:var(--display);font-weight:700;font-size:20px}
+.entry-count{font-size:12.5px;color:var(--soft)}
+.entry-body{padding:0 14px 14px}
+.pair{display:grid;grid-template-columns:1fr;gap:1px;padding:8px 0;border-top:1px solid var(--rule);font-size:15px}
+.pair-de{font-weight:700;color:var(--court)}
+.astuce{margin:12px 0 0;padding:10px 12px;border-radius:8px;background:var(--court-wash);font-size:14px}
+.astuce b{display:block;color:var(--court);margin-bottom:2px}
+.src-date{font-weight:400;color:var(--soft);font-size:13px}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.photos figure{margin:0}.photos img{width:100%;height:auto;border-radius:6px;border:1px solid var(--rule);display:block}
+.photos .missing span{display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;border:1px dashed var(--rule);border-radius:6px;color:var(--soft);font-size:13px;text-align:center;padding:8px}
+.photos figcaption{font-size:12.5px;color:var(--soft);margin-top:4px}
+.version{margin:4px 0 0;text-align:center;font-size:12.5px;color:var(--soft)}
+.tip{margin:0;padding:8px 0 8px 12px;border-left:3px solid var(--score);font-size:15px}
+/* les trois marches d'un adjectif */
+.steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;align-items:end;padding:8px 0;border-top:1px solid var(--rule)}
+.steps span{display:block;text-align:center;font-weight:700;font-size:13px;padding:6px 2px;border-radius:4px 4px 0 0;overflow-wrap:anywhere;line-height:1.2}
+.steps .s1{background:var(--court-wash);min-height:34px}
+.steps .s2{background:color-mix(in srgb,var(--silver) 32%,var(--sheet));min-height:44px}
+.steps .s3{background:color-mix(in srgb,var(--score) 34%,var(--sheet));min-height:54px}
+.steps .fr{grid-column:1/4;font-size:13px;color:var(--soft);font-weight:400;text-align:left;padding:0}
+.steps.irr .s1{box-shadow:inset 3px 0 0 var(--jersey)}
+
+/* paquets */
+.deckrow{display:flex;align-items:stretch;gap:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.deckrow.on{border-color:var(--court);box-shadow:inset 0 0 0 1px var(--court);background:var(--court-wash)}
+.deck-sel{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;padding:12px;text-align:left;cursor:pointer}
+.deck-e{font-size:22px;flex:none}
+.deck-txt{min-width:0}
+.deck-t{display:block;font-weight:700;font-size:15px;line-height:1.2}
+.deck-n{display:block;font-size:12.5px;color:var(--soft)}
+.deck-tick{flex:none;color:var(--court);font-weight:800;font-size:18px;align-self:center;padding-right:4px}
+.deck-pst{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 12px 8px 0;text-align:center}
+.deck-redo{margin:-4px 0 8px;padding:0 12px}
+
+.pst-l{font-size:12px;font-weight:700}
+.pst-start{color:var(--soft)} .pst-low{color:var(--p-low)} .pst-mid{color:var(--p-mid)} .pst-win{color:var(--p-ok)} .pst-ok{color:var(--p-okdark)}
+.pst-notes{font-size:10.5px;color:var(--soft)}
+.pring-t{font-family:var(--display);font-weight:700;fill:var(--ink);font-size:14px}
+.pglob{display:flex;gap:14px;align-items:center;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.pglob-x b{display:block;font-family:var(--display);font-size:19px}
+.pglob-x span{display:block;font-size:12.5px;color:var(--soft);margin-top:2px}
+.plegend{background:var(--court-wash);border-radius:8px;padding:0 12px}
+.plegend summary{cursor:pointer;font-weight:700;font-size:13.5px;padding:10px 0;color:var(--court)}
+.plegend p{margin:0 0 8px;font-size:13px}
+
+/* cartes */
+.flash{position:relative;height:262px;perspective:1200px;cursor:pointer;border:0;background:none;padding:0;width:100%}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;background:var(--sheet);border:1px solid var(--rule);border-top:6px solid var(--jersey);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:22px;transition:transform .45s;overflow:auto}
+.face.b{transform:rotateY(180deg);background:var(--court-wash);border-color:var(--court);border-top-color:var(--court)}
+.flash.flipped .face.f{transform:rotateY(180deg)}
+.flash.flipped .face.b{transform:rotateY(360deg)}
+.face-tag{font-size:12px;font-weight:700;color:var(--soft)}
+.face-word{font-family:var(--display);font-weight:700;font-size:clamp(22px,6vw,28px);text-align:center;line-height:1.15}
+.face-mini{font-size:13.5px;color:var(--court);font-weight:700;text-align:center}
+.face-hint{position:absolute;bottom:12px;font-size:12px;color:var(--soft)}
+
+/* réglages */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;cursor:pointer}
+.opt.on{border-color:var(--court);box-shadow:inset 0 0 0 1px var(--court);background:var(--court-wash)}
+.opt-e{grid-row:1/3;font-size:20px}
+.opt-main{font-weight:700}
+.opt-sub{font-size:13px;color:var(--soft)}
+.paper{background:var(--sheet);border:1px dashed var(--court);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+
+/* quiz */
+.qtop{display:flex;align-items:center;gap:10px}
+.quit{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid var(--rule);background:var(--sheet);cursor:pointer;color:var(--soft)}
+.bar{flex:1;height:10px;border-radius:5px;background:var(--sheet);border:1px solid var(--rule);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--court);transition:width .3s}
+.qn{font-size:13px;font-weight:700;color:var(--soft);font-variant-numeric:tabular-nums}
+.badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.num{font-family:var(--display);font-weight:800;font-size:16px;background:var(--board);color:var(--score);padding:1px 9px;border-radius:4px;font-variant-numeric:tabular-nums}
+.chip{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--court-wash);color:var(--court)}
+.chip.komparativ{background:#E6ECF5;color:#2D4B7A}
+.chip.superlativ{background:#FBEBC0;color:#7A5806}
+.chip.sens,.chip.allemand{background:#E7F3E6;color:#2C6E34}
+.chip.phrase{background:#EFE0F2;color:#6E3A7C}
+.chip.regle{background:#DDEFF7;color:#1C5A77}
+.chip.article,.chip.pluriel{background:#F7E2DC;color:#9A3C27}
+.ref{font-size:12px;color:var(--soft)}
+.consigne{margin:0;font-size:14.5px;color:var(--soft)}
+.qword{font-family:var(--display);font-weight:700;font-size:clamp(25px,7vw,31px);line-height:1.15;margin:0;overflow-wrap:anywhere}
+.qhint{margin:0;font-size:14px;color:var(--soft)}
+.choice{padding:14px;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);text-align:left;font-size:17px;font-weight:700;cursor:pointer}
+.choice.sel{border-color:var(--court);box-shadow:inset 0 0 0 2px var(--court)}
+.choice.good{background:var(--good-wash);border-color:var(--good);color:var(--good)}
+.choice.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.choice.off{opacity:.5}
+.tinput{width:100%;padding:14px;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);font:inherit;font-size:19px;font-weight:700;color:var(--ink)}
+.tinput.good{background:var(--good-wash);border-color:var(--good)}
+.tinput.bad{background:var(--bad-wash);border-color:var(--bad)}
+.umlauts{display:flex;gap:8px}
+.umlauts button{flex:1;padding:9px 0;border-radius:6px;border:1px solid var(--rule);background:var(--sheet);font-size:18px;font-weight:700;cursor:pointer}
+.fb{padding:14px;border-radius:8px;border:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
+.fb.ok{background:var(--good-wash);border-color:var(--good)}
+.fb.no{background:var(--bad-wash);border-color:var(--bad)}
+.fb-t{font-family:var(--display);font-weight:700;font-size:22px;margin:0}
+.fb p{margin:0}
+.fb-x{font-size:14px;color:var(--soft)}
+
+/* résultats */
+.scorebox{background:var(--board);border:4px solid #2E3D5C;border-radius:10px;padding:18px;text-align:center}
+.scorebox.rattr-box{border-color:var(--bad)}
+.score-n{font-family:var(--display);font-weight:800;font-size:60px;line-height:1;color:var(--score);font-variant-numeric:tabular-nums}
+.score-n small{font-size:30px;color:#B9A256}
+.score-note{display:inline-block;margin-top:8px;background:var(--score);color:#18233A;font-weight:800;padding:4px 14px;border-radius:4px}
+.rattr{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#FF8A78}
+.rev{display:flex;flex-direction:column;gap:9px}
+.revcard{background:var(--sheet);border:1px solid var(--rule);border-left:4px solid var(--bad);border-radius:8px;padding:11px 12px;display:flex;flex-direction:column;gap:3px}
+.revcard.ok{border-left-color:var(--good)}
+.revcard p{margin:0;font-size:14.5px}
+.rev-q{font-weight:700}
+.rev-good{color:var(--good)}
+.rev-x{font-size:13px!important;color:var(--soft)}
+
+/* bilan */
+.bilan{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bilan h3{font-family:var(--display);font-size:22px;margin:0}
+.bilan-lab{font-size:13px;font-weight:700;color:var(--soft);margin:4px 0 0}
+.bilan ul{margin:0;padding-left:18px}
+.bilan li{margin-bottom:4px;font-size:14.5px}
+.bilan ul.forts li{color:var(--good)}
+.bilan ul.work li{color:var(--bad)}
+.bilan-tip{background:var(--court-wash);border-radius:8px;padding:10px 12px;font-size:14.5px;margin:0}
+textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:8px;padding:10px;background:var(--paper);color:var(--ink);font:13px/1.45 var(--body)}
+
+/* scores */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:var(--board);border-radius:8px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:30px;line-height:1;color:var(--score);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:#C9D0E6}
+.attempt{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.attempt-head{width:100%;display:flex;gap:10px;align-items:center;background:none;border:0;padding:12px;text-align:left;cursor:pointer}
+.attempt-left{flex:1;min-width:0}
+.attempt-left b{display:block;font-size:14.5px}
+.attempt-left span{display:block;font-size:12px;color:var(--soft)}
+.rattr-tag{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px}
+.attempt-note{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:19px;color:var(--on-court)}
+.attempt-note.good{background:var(--good)} .attempt-note.low{background:var(--bad)}
+.attempt-body{padding:0 12px 12px;display:flex;flex-direction:column;gap:9px}
+.confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;font-size:14px}
+.mini{padding:9px 14px;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);font-weight:700;cursor:pointer}
+.mini.yes{background:var(--bad);border-color:var(--bad);color:#fff}
+
+/* suivi */
+.suivi{display:flex;flex-direction:column;gap:10px}
+.suivi h3{font-family:var(--display);font-size:21px;margin:6px 0 0}
+.suivi-ctl{display:flex;flex-direction:column;gap:8px}
+.suivi-sel{width:100%;padding:10px;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);font:inherit;font-weight:700}
+.ch-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--soft)}
+.ch-legend i{display:inline-block;vertical-align:middle;margin-right:4px}
+.lg-line{width:16px;height:0;border-top:2px solid var(--box)}
+.lg-ring{width:11px;height:11px;border:2px solid var(--good);border-radius:50%}
+.ch-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--sheet)}
+.ch-svg{display:block}
+.ch-t{fill:var(--soft);font-size:11px;font-family:var(--body)}
+.ch-b{fill:var(--ink);font-weight:700}
+.ch-g{fill:var(--good);font-weight:700}
+.ch-pt{cursor:pointer}
+.ch-detail{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:11px 12px;display:flex;flex-direction:column;gap:3px;font-size:13.5px}
+.ch-detail b{font-size:14.5px}
+.tbl{overflow-x:auto}
+.heat table{border-collapse:collapse;width:100%;font-size:13px}
+.heat th,.heat td{border:1px solid var(--rule);padding:6px 8px;text-align:center;font-variant-numeric:tabular-nums}
+.heat th{background:var(--court-wash);font-weight:700}
+.heat td.k{text-align:left;font-weight:700}
+.heat td.hc-0{color:var(--soft)}
+.heat td.hc-ok{background:var(--good-wash);color:var(--good);font-weight:700}
+.heat td.hc-mid{background:#FBF0D8;color:#7A5806;font-weight:700}
+.heat td.hc-low{background:var(--bad-wash);color:var(--bad);font-weight:700}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .heat td.hc-mid{background:#3A3016;color:#E8C27A}}
+:root[data-theme="dark"] .heat td.hc-mid{background:#3A3016;color:#E8C27A}
+.resist{display:flex;flex-direction:column;gap:6px}
+.resist p{margin:0;font-size:14px}
+.resist .code{display:inline-block;background:var(--court-wash);color:var(--court);font-weight:700;font-size:12px;padding:1px 7px;border-radius:4px;margin-right:4px}
+.resist small{color:var(--soft)}
+
+/* test en cours */
+.draft{background:var(--court-wash);border:1px solid var(--court);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.draft.block{border-color:var(--bad);background:var(--bad-wash)}
+.draft p{margin:0}
+.draft p b{display:block;font-family:var(--display);font-size:18px}
+.draft p span{display:block;font-size:13px;color:var(--soft);margin-top:2px}
+.draft-stop b{color:var(--bad)}
+.draft-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+
+/* voir mes erreurs */
+.dx-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0;font-size:13px;color:var(--soft)}
+.dx-line{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;align-items:baseline;margin:2px 0!important}
+.dx-lab{font-size:12.5px!important;font-weight:700;color:var(--soft)}
+.dx-ans{font-size:17px;font-weight:700;overflow-wrap:anywhere;letter-spacing:.3px;line-height:1.7}
+.dx-bad{background:#A3241B;color:#fff;text-decoration:line-through;text-decoration-thickness:1px;border-radius:3px;padding:1px 2px}
+.dx-good{background:#D4F0E1;color:#08402A;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;border-radius:3px;padding:1px 2px;font-weight:800}
+.dx-miss{display:inline-block;background:#A3241B;color:#fff;border-radius:3px;padding:0 4px;margin:0 1px;font-weight:800;font-size:14px;line-height:1.35;vertical-align:1px;text-decoration:none}
+.dx-none{font-style:italic;font-weight:400;color:var(--soft)}
+.dx-note{font-size:13.5px!important;font-weight:700}
+
+/* correction en direct */
+.live{display:flex;flex-direction:column;gap:4px}
+.live-lab{margin:0;font-size:12.5px;font-weight:700;color:var(--soft)}
+.live-box{min-height:46px;padding:8px 12px;border:1px dashed var(--rule);border-radius:8px;background:var(--sheet);font-size:21px;font-weight:700;letter-spacing:1px;line-height:1.7;overflow-wrap:anywhere}
+.lv-bad{display:inline-block;background:#A3241B;color:#fff;border-radius:4px;padding:0 4px;margin:0 2px;line-height:1.35;box-shadow:0 0 0 2px var(--sheet)}
+.lv-empty{font-size:14px;font-weight:400;color:var(--soft);letter-spacing:0}
+.live-state{margin:0;font-size:13.5px;font-weight:700}
+
+/* onglets */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--sheet);border-top:3px solid var(--court);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabbar-in{max-width:620px;margin:0 auto;display:flex}
+.tab{flex:1;background:none;border:0;padding:8px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;color:var(--soft)}
+.tab-e{font-size:18px} .tab-l{font-size:11px;font-weight:700}
+.tab.on{color:var(--court);background:var(--court-wash)}
+
+@media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+/* ============================================================
+   ALLEMAND — Geni@l Klick, Sequenz 2 « Fit und sportlich! » : Komparativ und Superlativ
+   Outil de révision de Livio — 10e HarmoS (10N2). Test (TO, ½ Gruppe) : mardi 3 novembre 2026.
+   Couche Langues (prompt-artefact-revision.md § 11.4) : vocabulaire et correction en direct du modèle d'allemand,
+   suivi à 3 anneaux et test en cours gardé du modèle de français.
+   Adaptations signalées au parent :
+   - les Umlaute (ä, ö, ü) ne sont PAS tolérés à la correction : c'est justement ce que la leçon fait apprendre
+     (alt → älter). Les accents français restent tolérés, ß = ss aussi ; touches ä ö ü sous le champ.
+   - réglage « Combien de questions » (10, 20, 30 ou toutes), parce que tous les paquets donnent plus de 150 questions.
+   ============================================================ */
+
+const QUIZ_ID = "livio-quiz-allemand-sequenz2-komparativ";
+const DUE = { iso:"2026-11-03", long:"mardi 3 novembre", short:"03.11" };
+const HAS_CLAUDE = !!(window.claude && window.claude.use);
+const INDEX_KEY = QUIZ_ID + "-index";
+const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
+const DRAFT_ID = QUIZ_ID + "-test-en-cours";
+const THEME = "Sequenz 2 — Komparativ und Superlativ";
+const VERSION = { n:1, date:"31.10.2026" };   /* v1 : 31.10.2026, première version (Claude) */
+
+/* ---------- SOURCES ---------- */
+const SOURCES = [
+  { titre:"Photo 1 — Récapitulatif (10N2)", recue:"31.10.2026", contenu:"Comparatif de supériorité (adj + -er als), d'égalité (so … wie), d'infériorité (nicht so … wie), leurs exemples, et les « Exceptions à savoir » (gross > grösser … gern > lieber)." },
+  { titre:"Photo 2 — Liste des adjectifs (Adjektive – Komparative – Superlative)", recue:"31.10.2026", contenu:"Tableau français / adjectif / comparatif / superlatif, 22 adjectifs du vocabulaire, les 2 adjectifs en plus (klein, gross) et la ligne N2 (anstrengen)." },
+  { titre:"Photo 3 — Grammatik : Der Superlativ", recue:"31.10.2026", contenu:"Superlatif de l'adjectif, du nom et de l'adverbe, avec leurs exemples ; encadré des exceptions (gut, viel, gern, gross, teuer) ; Übung 1 (10 phrases)." },
+  { titre:"Photo 4 — Lernziele Sequenz 2", recue:"31.10.2026", contenu:"Feuille d'objectifs : comparatif, superlatif, nombres ordinaux, W-Fragen, phrases avec « weil ». Seuls le comparatif et le superlatif sont dans cet outil (voir ci-dessous)." },
+  { titre:"Photo 5 — Korrekturen", recue:"31.10.2026", contenu:"Les 16 phrases corrigées (comparatif et superlatif)." },
+  { titre:"Photo 6 — Grammatik : Der Komparativ", recue:"31.10.2026", contenu:"Plus que (adj + -er ; Umlaut pour une syllabe en a, o, u ; exceptions gut, gern, viel), autant que (so / genauso … wie), pas autant que (nicht so … wie), exemples Superman et Calimero." },
+  { titre:"Photo 7 — Wortschatz p. 15", recue:"31.10.2026", contenu:"viel – mehr – am meisten, gern – lieber – am liebsten, so … wie, als, der Weltrekord, der Sieg, das Rennen, et leurs phrases." },
+];
+const SOURCES_NOTE = "Pas repris dans cet outil : les nombres ordinaux, les W-Fragen et les phrases avec « weil » de la feuille d'objectifs. Livio a dit à son papa qu'il n'avait pas besoin de réviser ces points. Les formes sont recopiées telles que les feuilles les écrivent, y compris « am grössen » et « anstrengen » (liste des adjectifs) et « am äletesten » (Korrekturen n° 10) ; quand une autre feuille de Livio donne une autre forme (« am grössten » sur la feuille Superlativ, « gesünder » sur le Récapitulatif, « am ältesten » sur la liste), elle est acceptée aussi et signalée dans la correction. Pour l'Übung 1, les réponses écrites par Livio ne sont pas reprises : la bonne réponse vient des formes imprimées de la liste des adjectifs. Le Wortschatz du devoir est la p. 15 seulement.";
+const PHOTOS = [
+  { titre:"Récapitulatif", url:"/_blob/104bd342118ef7fa1f5b8486dce91d54" },
+  { titre:"Liste des adjectifs", url:"/_blob/bf3466adfbc887bb4b41ebd4c1e530c5" },
+  { titre:"Der Superlativ + Übung 1", url:"/_blob/9d3eebf80a46df2b5a340f1f1d975ed3" },
+  { titre:"Lernziele", url:"/_blob/895e5db87a044466ab5fe944fecf0d5d" },
+  { titre:"Korrekturen", url:"/_blob/ba9f5e43d94e288a48cb01db1137a0c3" },
+  { titre:"Der Komparativ", url:"/_blob/b69388e7c78c7770c438a7c422a5e43d" },
+  { titre:"Wortschatz p. 15", url:"/_blob/12b9868d1253ac6c4b35d2f17a64cfe9" },
+];
+
+/* ---------- CONTENU : paquets ----------
+   Le type d'un item se lit à ses champs :
+   komp + sup = ligne de la liste des adjectifs (3 cartes : sens, comparatif, superlatif)
+   komp seul  = exception du Récapitulatif (1 carte : comparatif)
+   s          = phrase à compléter (o[0] = bonne réponse à choix, acc = réponses écrites acceptées)
+   q          = règle (toujours à choix, o[0] = bonne réponse)
+   de + fr    = mot du Wortschatz (sens ; article et pluriel pour les noms) */
+const L = "liste des adjectifs";
+const DECKS = [
+  { key:"adj", title:"La liste des adjectifs", emoji:"📋", unit:"adjectifs", src:"Liste des adjectifs (à savoir pour le TO)", items:[
+    { fr:["facile"], de:"einfach", komp:"einfacher", sup:"am einfachsten" },
+    { fr:["difficile"], de:"schwierig", komp:"schwieriger", sup:"am schwierigsten" },
+    { fr:["dangereux"], de:"gefährlich", komp:"gefährlicher", sup:"am gefährlichsten" },
+    { fr:["pas dangereux"], de:"ungefährlich", komp:"ungefährlicher", sup:"am ungefährlichsten" },
+    { fr:["rapide"], de:"schnell", komp:"schneller", sup:"am schnellsten" },
+    { fr:["lent"], de:"langsam", komp:"langsamer", sup:"am langsamsten" },
+    { fr:["bon marché"], de:"billig", komp:"billiger", sup:"am billigsten" },
+    { fr:["cher"], de:"teuer", komp:"teurer", sup:"am teuersten", irr:true },
+    { fr:["fort"], de:"stark", komp:"stärker", sup:"am stärksten" },
+    { fr:["faible"], de:"schwach", komp:"schwächer", sup:"am schwächsten" },
+    { fr:["important"], de:"wichtig", komp:"wichtiger", sup:"am wichtigsten" },
+    { fr:["pas important"], de:"unwichtig", komp:"unwichtiger", sup:"am unwichtigsten" },
+    { fr:["sain"], de:"gesund", komp:"gesunder", kAlt:["gesünder"], kNote:"le Récapitulatif écrit « gesünder » : les deux sont acceptés", sup:"am gesundesten" },
+    { fr:["malsain"], de:"ungesund", komp:"ungesunder", sup:"am ungesundesten" },
+    { fr:["haut"], de:"hoch", komp:"höher", sup:"am höchsten", irr:true },
+    { fr:["loin"], de:"weit", komp:"weiter", sup:"am weitesten", irr:true },
+    { fr:["proche"], de:"nah", komp:"näher", sup:"am nächsten" },
+    { fr:["vieux"], de:"alt", komp:"älter", sup:"am ältesten" },
+    { fr:["jeune"], de:"jung", komp:"jünger", sup:"am jüngsten" },
+    { fr:["bon / bien","bon","bien"], de:"gut", komp:"besser", sup:"am besten", irr:true },
+    { fr:["beaucoup"], de:"viel", komp:"mehr", sup:"am meisten", irr:true },
+    { fr:["volontiers"], de:"gern", komp:"lieber", sup:"am liebsten", irr:true },
+    { fr:["petit"], de:"klein", komp:"kleiner", sup:"am kleinsten", extra:true },
+    { fr:["grand"], de:"gross", komp:"grösser", sup:"am grössen", sAlt:["am grössten"], sNote:"la feuille Superlativ écrit « am grössten » : les deux sont acceptés", extra:true },
+    { fr:["fatigant","fatiguant"], de:"anstrengen", komp:"anstrengender", sup:"am anstrengendsten", n2:true },
+  ]},
+  { key:"exc", title:"Exceptions à savoir", emoji:"⭐", unit:"comparatifs", src:"Récapitulatif, « Exceptions à savoir »", items:[
+    { de:"gross", komp:"grösser", wrong:["grosser","grösster","mehr gross"] },
+    { de:"alt", komp:"älter", wrong:["alter","älterer","mehr alt"] },
+    { de:"jung", komp:"jünger", wrong:["junger","jüngster","mehr jung"] },
+    { de:"dunkel", komp:"dunkler", wrong:["dunkeler","dünkler","mehr dunkel"] },
+    { de:"teuer", komp:"teurer", wrong:["teuerer","täurer","mehr teuer"] },
+    { de:"stark", komp:"stärker", wrong:["starker","stärkster","mehr stark"] },
+    { de:"schwach", komp:"schwächer", wrong:["schwacher","schwächster","mehr schwach"] },
+    { de:"hoch", komp:"höher", wrong:["hocher","höcher","höchster"] },
+    { de:"nah", komp:"näher", wrong:["naher","nächster","mehr nah"] },
+    { de:"gesund", komp:"gesünder", kAlt:["gesunder"], kNote:"la liste des adjectifs écrit « gesunder » : les deux sont acceptés", wrong:["gesundster","mehr gesund","gesündester"] },
+    { de:"gut", komp:"besser", wrong:["guter","güter","am besten"] },
+    { de:"viel", komp:"mehr", wrong:["vieler","mehrer","am meisten"] },
+    { de:"gern", komp:"lieber", wrong:["gerner","mehr gern","am liebsten"] },
+  ]},
+  { key:"komp", title:"Comparatif : als, so … wie", emoji:"⚖️", unit:"phrases", src:"Récapitulatif, Der Komparativ, Lernziele", items:[
+    { s:"Ein Zug ist ___ ein Fahrrad.", h:"schnell · plus … que", acc:["schneller als"], o:["schneller als","schneller wie","so schnell als","am schnellsten"], src:"Récapitulatif, A" },
+    { s:"Mein Vater ist ___ meine Mutter.", h:"alt · plus … que", acc:["älter als"], o:["älter als","alter als","älter wie","am ältesten"], src:"Récapitulatif, A" },
+    { s:"Ich trinke ___ Tee als Kaffee.", h:"gern · préférer", acc:["lieber"], o:["lieber","gerner","mehr gern","am liebsten"], src:"Récapitulatif, A" },
+    { s:"Peter ist ___ Paul.", h:"klein · aussi … que", acc:["so klein wie"], o:["so klein wie","so klein als","kleiner wie","nicht so klein wie"], src:"Récapitulatif, B" },
+    { s:"Ich bin ___ du.", h:"alt · aussi … que", acc:["so alt wie"], o:["so alt wie","so alt als","älter wie","so älter wie"], src:"Récapitulatif, B" },
+    { s:"Tanias Auto ist ___ Jans Auto.", h:"neu · pas aussi … que", acc:["nicht so neu wie"], o:["nicht so neu wie","nicht neuer als","so neu wie","nicht so neu als"], src:"Récapitulatif, C" },
+    { s:"Meine Haare sind ___ deine.", h:"schön · pas aussi … que", acc:["nicht so schön wie"], o:["nicht so schön wie","so schön wie","nicht schöner wie","nicht so schön als"], src:"Récapitulatif, C" },
+    { s:"Superman ist ___ Calimero.", h:"schnell · plus … que", acc:["schneller als"], o:["schneller als","schneller wie","mehr schnell als","am schnellsten"], src:"Der Komparativ, A" },
+    { s:"Calimero ist ___ Superman.", h:"klein · plus … que", acc:["kleiner als"], o:["kleiner als","kleiner wie","mehr klein als","so klein als"], src:"Der Komparativ, A" },
+    { s:"Superman ist ___ Calimero.", h:"stark · plus … que", acc:["stärker als"], o:["stärker als","starker als","stärker wie","am stärksten"], src:"Der Komparativ, A (Umlaut)" },
+    { s:"Calimero ist ___ Superman.", h:"jung · plus … que", acc:["jünger als"], o:["jünger als","junger als","jünger wie","am jüngsten"], src:"Der Komparativ, A (Umlaut)" },
+    { s:"Superman fliegt ___ Calimero.", h:"gut · mieux que", acc:["besser als"], o:["besser als","guter als","besser wie","mehr gut als"], src:"Der Komparativ, A (exceptions)" },
+    { s:"Superman hat ___ Kraft als Calimero.", h:"viel · plus de", acc:["mehr"], o:["mehr","vieler","am meisten","mehrer"], src:"Der Komparativ, A (exceptions)" },
+    { s:"Calimero ist ___ Superman.", h:"lustig · aussi … que", acc:["so lustig wie","genauso lustig wie"], o:["so lustig wie","lustiger wie","so lustig als","nicht so lustig wie"], src:"Der Komparativ, B" },
+    { s:"Calimero ist ___ Superman.", h:"stark · pas aussi … que", acc:["nicht so stark wie"], o:["nicht so stark wie","nicht stärker wie","so stark wie","nicht so stark als"], src:"Der Komparativ, C" },
+    { s:"Er läuft ___ meine Freundin.", h:"schnell · plus … que", acc:["schneller als"], o:["schneller als","schneller wie","so schnell als","am schnellsten"], src:"Lernziele, le comparatif" },
+    { s:"Er läuft ___ meine Freundin.", h:"schnell · aussi … que", acc:["so schnell wie"], o:["so schnell wie","so schnell als","schneller wie","nicht so schnell wie"], src:"Lernziele, le comparatif (N2)" },
+    { s:"Er läuft ___ meine Freundin.", h:"schnell · pas aussi … que", acc:["nicht so schnell wie"], o:["nicht so schnell wie","nicht schneller wie","so schnell wie","nicht so schnell als"], src:"Lernziele, le comparatif (N2)" },
+  ]},
+  { key:"sup", title:"Superlatif : adjectif, adverbe, nom", emoji:"🥇", unit:"phrases", src:"Der Superlativ (encadrés et Übung 1)", items:[
+    { s:"Er ist der ___ Läufer.", h:"schnell · superlatif de l'adjectif", acc:["schnellste"], o:["schnellste","schnellsten","schneller","am schnellsten"], src:"Der Superlativ, superlatif de l'adjectif", why:"devant un nom (Läufer), c'est le superlatif de l'adjectif : der … -ste." },
+    { s:"Sie ist die ___ Läuferin.", h:"schnell · superlatif de l'adjectif", acc:["schnellste"], o:["schnellste","schnellsten","schneller","am schnellsten"], src:"Der Superlativ, superlatif de l'adjectif", why:"devant un nom (Läuferin), c'est le superlatif de l'adjectif : die … -ste." },
+    { s:"Er ist der ___.", h:"schnell · superlatif du nom", acc:["Schnellste"], o:["Schnellste","Schneller","am schnellsten","Schnellsten"], src:"Der Superlativ, superlatif du nom", why:"sans nom après, le superlatif devient lui-même un nom : der Schnellste, avec une majuscule." },
+    { s:"Er rennt ___.", h:"schnell · superlatif de l'adverbe", acc:["am schnellsten"], o:["am schnellsten","der schnellste","am schnellste","schneller"], src:"Der Superlativ, superlatif de l'adverbe", why:"il dit comment il court (après le verbe rennt) : superlatif de l'adverbe, am … -sten." },
+    { s:"Sie spielt ___.", h:"gut · superlatif de l'adverbe", acc:["am besten"], o:["am besten","am gutesten","die beste","besser"], src:"Der Superlativ, superlatif de l'adverbe", why:"après le verbe spielt : am … -sten, et gut est une exception : am besten." },
+    { s:"Du springst ___.", h:"weit · superlatif de l'adverbe", acc:["am weitesten"], o:["am weitesten","am weitsten","der weiteste","weiter"], src:"Der Superlativ, superlatif de l'adverbe", why:"après le verbe springst : am … -sten ; la liste des adjectifs donne weit – weiter – am weitesten." },
+    { s:"gut ⇒ der, die, das ___ …", h:"exception, superlatif de l'adjectif", acc:["beste"], o:["beste","guteste","besser","gutste"], src:"Der Superlativ, Achtung Ausnahmen", why:"gut ⇒ der, die, das beste… / Beste / am besten." },
+    { s:"viel ⇒ am ___", h:"exception, superlatif de l'adverbe", acc:["meisten"], o:["meisten","vielsten","mehrsten","vielesten"], src:"Der Superlativ, Achtung Ausnahmen", why:"viel ⇒ der, die, das meiste… / Meiste / am meisten." },
+    { s:"gern ⇒ der, die, das ___ …", h:"exception, superlatif de l'adjectif", acc:["liebste"], o:["liebste","gernste","gerneste","lieberste"], src:"Der Superlativ, Achtung Ausnahmen", why:"gern ⇒ der, die, das liebste… / Liebste / am liebsten." },
+    { s:"gross ⇒ am ___", h:"exception, superlatif de l'adverbe", acc:["grössten"], o:["grössten","grossesten","grosssten","grösseren"], src:"Der Superlativ, Achtung Ausnahmen", why:"gross ⇒ der, die, das grösste… / Grösste / am grössten (avec ö, souligné sur la feuille)." },
+    { s:"teuer ⇒ der, die, das ___ …", h:"exception, superlatif de l'adjectif", acc:["teuerste"], o:["teuerste","teurerste","teuerere","teurste"], src:"Der Superlativ, Achtung Ausnahmen", why:"teuer ⇒ der, die, das teuerste… / Teuerste / am teuersten." },
+    { s:"Er ist ___ Schüler in der Klasse.", h:"klein", acc:["der kleinste"], o:["der kleinste","der kleiste","der kleinsten","am kleinsten"], src:"Der Superlativ, Übung 1 n° 1", why:"devant le nom Schüler : der + …ste. Liste : klein – kleiner – am kleinsten → der kleinste (avec le n de klein)." },
+    { s:"Dieser Junge hat ___ Geld.", h:"viel", acc:["am meisten","das meiste"], o:["am meisten","am vielsten","mehr","die meisten"], src:"Der Superlativ, Übung 1 n° 2", why:"viel est une exception : am meisten (ou das meiste Geld, d'après l'encadré des exceptions)." },
+    { s:"Diese Schülerin hat ___ Note in Deutsch gemacht.", h:"gut", acc:["die beste"], o:["die beste","die besten","am besten","die guteste"], src:"Der Superlativ, Übung 1 n° 3", why:"devant le nom Note (die Note) : die beste. gut est une exception." },
+    { s:"Usain Bolt rennt ___.", h:"schnell", acc:["am schnellsten"], o:["am schnellsten","der schnellste","am schnellste","schneller"], src:"Der Superlativ, Übung 1 n° 4", why:"après le verbe rennt : superlatif de l'adverbe, am schnellsten." },
+    { s:"Wer malt ___?", h:"gut", acc:["am besten"], o:["am besten","am gutesten","der beste","besser"], src:"Der Superlativ, Übung 1 n° 5", why:"après le verbe malt : am besten (exception de gut)." },
+    { s:"Mein Haus ist ___ Haus.", h:"hoch", acc:["das höchste"], o:["das höchste","das hochste","das höchsten","am höchsten"], src:"Der Superlativ, Übung 1 n° 6", why:"devant le nom Haus (das Haus) : das + …ste. Liste : hoch – höher – am höchsten → das höchste, avec ö." },
+    { s:"Was ist ___ Sportart?", h:"gefährlich", acc:["die gefährlichste"], o:["die gefährlichste","die gefährichste","die gefährlichsten","am gefährlichsten"], src:"Der Superlativ, Übung 1 n° 7", why:"devant le nom Sportart (die Sportart) : die + …ste. Liste : gefährlich → am gefährlichsten → die gefährlichste (n'oublie pas le l de -lich)." },
+    { s:"Welcher Schüler springt ___?", h:"hoch", acc:["am höchsten"], o:["am höchsten","am hochsten","der höchste","höher"], src:"Der Superlativ, Übung 1 n° 8", why:"après le verbe springt : am höchsten, avec ö (liste des adjectifs)." },
+    { s:"Welcher Schüler hat ___ Kunst?", h:"gern", acc:["am liebsten"], o:["am liebsten","am gernsten","lieber","der liebste"], src:"Der Superlativ, Übung 1 n° 9", why:"gern est une exception : am liebsten." },
+    { s:"Beckham ist ___ Fussballspieler.", h:"alt", acc:["der älteste"], o:["der älteste","der alteste","der ältesten","am ältesten"], src:"Der Superlativ, Übung 1 n° 10", why:"devant le nom Fussballspieler : der + …ste. Liste : alt – älter – am ältesten → der älteste, avec ä." },
+  ]},
+  { key:"korr", title:"Korrekturen : 16 phrases", emoji:"✅", unit:"phrases", src:"Korrekturen", items:[
+    { s:"Seine Jacke ist ___ als meine Jacke.", h:"schön", acc:["schöner"], o:["schöner","schoner","schönster","am schönsten"], src:"Korrekturen n° 1" },
+    { s:"Roger Federer ist einfach ___.", h:"gut", a:"der Beste / am besten", acc:["der Beste","am besten"], o:["der Beste","besser","der Guteste","am guten"], src:"Korrekturen n° 2" },
+    { s:"Laura läuft ___ als ich.", h:"schnell", acc:["schneller"], o:["schneller","am schnellsten","schnellste","so schnell"], src:"Korrekturen n° 3" },
+    { s:"Ist Karate ___ als Judo?", h:"gefährlich", acc:["gefährlicher"], o:["gefährlicher","gefährlichste","gefährlich","gefährlichster"], src:"Korrekturen n° 4" },
+    { s:"Mein Bruder ist ___ als ich.", h:"alt", acc:["älter"], o:["älter","alter","älteste","am ältesten"], src:"Korrekturen n° 5" },
+    { s:"Meine Schwester ist ___ als deine Schwester.", h:"jung", acc:["jünger"], o:["jünger","junger","jüngste","am jüngsten"], src:"Korrekturen n° 6" },
+    { s:"Carla tanzt ___ als ihre Freundin.", h:"gut", acc:["besser"], o:["besser","guter","am besten","mehr gut"], src:"Korrekturen n° 7" },
+    { s:"In der Klasse macht Yann immer gute Noten. Er ist ___.", h:"gut", a:"der Beste / am besten", acc:["der Beste","am besten"], o:["der Beste","der Guteste","besser","am guten"], src:"Korrekturen n° 8" },
+    { s:"Usain Bolt hat die Goldmedaille gewonnen. Er ist ___.", h:"schnell", a:"der Schnellste / am schnellsten", acc:["der Schnellste","am schnellsten"], o:["der Schnellste","schneller","der Schneller","am schnellste"], src:"Korrekturen n° 9" },
+    { s:"Mein Grossvater ist ___ in unserer Familie.", h:"alt", a:"der Älteste / am äletesten", acc:["der Älteste","am äletesten","am ältesten"], o:["der Älteste","der Alteste","älter","der Ältesten"], src:"Korrekturen n° 10", note:"la feuille écrit « am äletesten » ; la liste des adjectifs écrit « am ältesten » : les deux sont acceptés." },
+    { s:"Ich trage am ___ eine Jeans und ein Sweatshirt.", h:"gern", acc:["liebsten"], o:["liebsten","gernsten","lieber","liebste"], src:"Korrekturen n° 11" },
+    { s:"Ich habe die ___ Grossmutter.", h:"lieb", acc:["liebste"], o:["liebste","liebsten","lieber","am liebsten"], src:"Korrekturen n° 12" },
+    { s:"Fussball ist ___ als Volleyball aber Boxen ist am brutalsten.", h:"brutal", acc:["brutaler"], o:["brutaler","brutalster","brutal","am brutalsten"], src:"Korrekturen n° 13" },
+    { s:"Fussball ist brutaler als Volleyball aber Boxen ist am ___.", h:"brutal", acc:["brutalsten"], o:["brutalsten","brutaler","brutalste","brutalesten"], src:"Korrekturen n° 13" },
+    { s:"Der Sommer ist ___ als der Frühling.", h:"warm", acc:["wärmer"], o:["wärmer","warmer","wärmste","am wärmsten"], src:"Korrekturen n° 14" },
+    { s:"Reiten macht ___ Spass als Tennis spielen.", h:"viel", acc:["mehr"], o:["mehr","vieler","am meisten","meiste"], src:"Korrekturen n° 15" },
+    { s:"Chasseral ist ___ als Chaumont.", h:"hoch", acc:["höher"], o:["höher","hocher","höchste","am höchsten"], src:"Korrekturen n° 16" },
+  ]},
+  { key:"regles", title:"Les règles", emoji:"📐", unit:"règles", src:"Récapitulatif, Der Komparativ, Der Superlativ", items:[
+    { q:"Avec le comparatif, on compare…", o:["deux choses ou deux personnes","une chose avec toutes les autres","seulement des personnes"], expl:"Avec le comparatif, on compare deux choses ou deux personnes.", src:"Der Komparativ" },
+    { q:"Comment se forme le comparatif de supériorité (plus … que) ?", o:["adj + -er + als","so + adj + wie","am + adj + -sten"], expl:"Le comparatif de supériorité se forme avec adj + -er als : Ein Zug ist schneller als ein Fahrrad.", src:"Récapitulatif, A" },
+    { q:"Comment se forme le comparatif d'égalité (aussi … que) ?", o:["so + adj + wie","adj + -er + als","nicht so + adj + wie"], expl:"Le comparatif d'égalité se forme avec so … wie (ou genauso … wie) : Peter ist so klein wie Paul.", src:"Récapitulatif, B" },
+    { q:"Comment se forme le comparatif d'infériorité (pas aussi … que) ?", o:["nicht so + adj + wie","nicht + adj + -er + als","so + adj + als"], expl:"Le comparatif d'infériorité se forme avec nicht so … wie : Tanias Auto ist nicht so neu wie Jans Auto.", src:"Récapitulatif, C" },
+    { q:"Un adjectif d'une syllabe en a, o, u (alt, gross, jung) fait son comparatif avec…", o:["Umlaut + -er","-er sans Umlaut","mehr devant l'adjectif"], expl:"Adjectifs avec une syllabe en « a, o, u » → adjectif + Umlaut + « er » : stark → stärker, jung → jünger, hoch → höher, gross → grösser.", src:"Der Komparativ, A" },
+    { q:"« Er rennt am schnellsten. » : c'est le superlatif…", o:["de l'adverbe","de l'adjectif","du nom"], expl:"Er rennt am schnellsten. (= adverbe) : am … -sten, après un verbe.", src:"Der Superlativ" },
+    { q:"« Er ist der schnellste Läufer. » : c'est le superlatif…", o:["de l'adjectif","de l'adverbe","du nom"], expl:"Er ist der schnellste Läufer. (= adjectif) : der/die/das … -ste devant un nom.", src:"Der Superlativ" },
+    { q:"« Er ist der Schnellste. » : c'est le superlatif…", o:["du nom","de l'adjectif","de l'adverbe"], expl:"Er ist der Schnellste. (= nom) : le superlatif s'écrit avec une majuscule.", src:"Der Superlativ" },
+  ]},
+  { key:"wort", title:"Wortschatz p. 15", emoji:"📗", unit:"entrées", src:"Wortschatz p. 15", items:[
+    { de:"viel – mehr – am meisten", alt:["viel mehr am meisten"], fr:["beaucoup – plus – le plus"] },
+    { de:"gern – lieber – am liebsten", alt:["gern lieber am liebsten"], fr:["volontiers – plutôt – aimer le plus…, préférer…"] },
+    { de:"so … wie", alt:["so wie"], fr:["aussi que"] },
+    { de:"als", fr:["que"] },
+    { de:"der Weltrekord", art:"der", pl:"die Weltrekorde", plo:["die Weltrekorde","die Weltrekords","die Weltrekorden","die Weltrekörde"], fr:["le record du monde"] },
+    { de:"der Sieg", art:"der", pl:"die Siege", plo:["die Siege","die Sieger","die Siegen","die Siegs"], fr:["la victoire"] },
+    { de:"das Rennen", art:"das", pl:"die Rennen", plo:["die Rennen","die Rennens","die Rennenen","die Renner"], fr:["la course"] },
+    { s:"Carola macht ___ Sport.", h:"viel · le plus", acc:["am meisten"], o:["am meisten","am vielsten","mehr","die meisten"], src:"Wortschatz p. 15, viel – mehr – am meisten" },
+    { s:"Ich spiele ___ Tennis als Basketball.", h:"gern · préférer", acc:["lieber"], o:["lieber","gerner","am liebsten","mehr gern"], src:"Wortschatz p. 15, gern – lieber – am liebsten" },
+    { s:"Pia ist ___ Tom.", h:"gross · aussi … que", acc:["so gross wie"], o:["so gross wie","so gross als","grösser wie","so grösser wie"], src:"Wortschatz p. 15, so … wie" },
+    { s:"Tina ist ___ Tom.", h:"gross · plus … que", acc:["grösser als"], o:["grösser als","grosser als","grösser wie","so gross als"], src:"Wortschatz p. 15, als" },
+  ]},
+];
+const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
+
+/* ---------- utilitaires ---------- */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+/* Les Umlaute restent distincts (ä ≠ a) ; les autres accents (français) sont tolérés ; ß = ss. */
+function deAcc(s){ return String(s).replace(/ä/g,"\u0001").replace(/ö/g,"\u0002").replace(/ü/g,"\u0003").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\u0001/g,"ä").replace(/\u0002/g,"ö").replace(/\u0003/g,"ü"); }
+function norm(s, apoMode){
+  return deAcc(String(s || "").toLowerCase().replace(/ß/g,"ss").normalize("NFC"))
+    .replace(/…|\.\.\./g," ").replace(/[’'`]/g, apoMode === "del" ? "" : " ")
+    .replace(/[.!?;,:«»"()\/\-+–]/g," ").replace(/\s+/g," ").trim();
+}
+const stripFr = s => s.replace(/^(le |la |les |l |un |une |des |du |de la |d )/,"").trim();
+const stripDe = s => s.replace(/^(der |die |das )/,"").trim();
+function matchAnswer(input, accept, lang, keep){
+  return ["sp","del"].some(m => {
+    const a = norm(input, m); if (!a) return false;
+    return accept.some(raw => { const b = norm(raw, m); if (a === b) return true; if (keep) return false;
+      if (lang === "fr") return stripFr(a) === stripFr(b);
+      return stripDe(a) === stripDe(b); });
+  });
+}
+function shuffle(arr){ const a = [...arr]; for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function fillOpts(good, cands, pool, n = 4){
+  const out = [good], seen = new Set([norm(good)]);
+  const add = v => { if (out.length >= n || !v) return; const k = norm(v); if (seen.has(k)) return; seen.add(k); out.push(v); };
+  cands.forEach(add); shuffle(pool).forEach(add);
+  return shuffle(out);
+}
+const noteFrom = r => Math.round((1 + 5*r)*2)/2;
+const fmtNote = n => Number(n).toFixed(1).replace(".", ",");
+function dateLabel(ts){ const d = new Date(ts), p = x => String(x).padStart(2,"0"); return `${p(d.getDate())}.${p(d.getMonth()+1)}.${d.getFullYear()} · ${p(d.getHours())}h${p(d.getMinutes())}`; }
+function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
+const unUml = s => s.replace(/ä/g,"a").replace(/ö/g,"o").replace(/ü/g,"u");
+
+/* ---------- cartes : chaque item donne 1 à 3 cartes (aspects) ----------
+   carte = { k, dk, aspect, tag, label, mcqOnly, mcq:{consigne, word, hint, options, answer}, typ:{consigne, word, hint, accept, answer, lang, keep}, expl } */
+const TAG_LABEL = { sens:"sens de l'adjectif", allemand:"vocabulaire", komparativ:"comparatif", superlativ:"superlatif", phrase:"phrase à compléter", regle:"règle", article:"der / die / das", pluriel:"pluriel" };
+function cardKey(dk, label, aspect){ return dk + "|" + label + "|" + aspect; }
+function itemLabel(it){ return it.s ? it.s + (it.h ? " (" + it.h + ")" : "") : it.q || it.de; }
+function cardsOf(d, it){
+  const lab = itemLabel(it), out = [], src = it.src || d.src;
+  const mk = (aspect, tag, o) => out.push({ k:cardKey(d.key, lab, aspect), dk:d.key, aspect, tag, label:lab, ...o });
+  if (it.q){
+    mk("regle", "regle", { mcqOnly:true, mcq:{ consigne:"Choisis la bonne réponse.", word:it.q, hint:"", options:shuffle(it.o.slice()), answer:it.o[0] }, typ:null, expl:it.expl + " — " + src });
+  } else if (it.s){
+    const ans = it.a || it.acc[0];
+    const why = it.why ? " " + it.why[0].toUpperCase() + it.why.slice(1) : "";
+    const note = it.note ? " Note : " + it.note : "";
+    const full = it.s.replace("___", ans.includes(" / ") ? "[" + ans + "]" : ans);
+    mk("phrase", "phrase", { mcqOnly:false,
+      mcq:{ consigne:"Complète la phrase.", word:it.s, hint:it.h, options:shuffle(it.o.slice()), answer:it.o[0] },
+      typ:{ consigne:"Complète la phrase (écris ce qui manque).", word:it.s, hint:it.h, accept:it.acc.slice(), answer:ans, lang:"de", keep:true },
+      expl:`${full}${why}${note} — ${src}` });
+  } else if (it.komp && it.sup){
+    const others = d.items;
+    const base = `${it.de} – ${it.komp} – ${it.sup} = ${it.fr[0]}`;
+    const tail = (it.extra ? " (adjectif en plus, pas dans le voc)" : "") + (it.n2 ? " (ligne N2)" : "") + " — " + L + ".";
+    mk("sens", "sens", { mcqOnly:false,
+      mcq:{ consigne:"Choisis la traduction en français.", word:it.de, hint:"", options:fillOpts(it.fr[0], [], others.map(x => x.fr[0])), answer:it.fr[0] },
+      typ:{ consigne:"Écris l'adjectif en allemand.", word:it.fr[0], hint:"", accept:[it.de], answer:it.de, lang:"de", keep:true },
+      expl:base + tail });
+    const kAcc = [it.komp, ...(it.kAlt || [])];
+    mk("komp", "komparativ", { mcqOnly:false,
+      mcq:{ consigne:"Choisis le comparatif.", word:it.de, hint:it.fr[0], options:fillOpts(it.komp, [it.de + "er", unUml(it.komp), it.sup, "mehr " + it.de], others.map(x => x.komp)), answer:it.komp },
+      typ:{ consigne:"Écris le comparatif (Komparativ).", word:it.de, hint:it.fr[0], accept:kAcc, answer:it.komp, lang:"de", keep:true },
+      expl:base + (it.kNote ? " (" + it.kNote + ")" : "") + tail });
+    const sAcc = [it.sup, ...(it.sAlt || [])];
+    mk("sup", "superlativ", { mcqOnly:false,
+      mcq:{ consigne:"Choisis le superlatif avec « am ».", word:it.de, hint:it.fr[0], options:fillOpts(it.sup, ["am " + it.de + "sten", "am " + it.de + "esten", unUml(it.sup), it.komp], others.map(x => x.sup)), answer:it.sup },
+      typ:{ consigne:"Écris le superlatif avec « am » (Superlativ).", word:it.de, hint:it.fr[0], accept:sAcc, answer:it.sup, lang:"de", keep:true },
+      expl:base + (it.sNote ? " (" + it.sNote + ")" : "") + tail });
+  } else if (it.komp){
+    const kAcc = [it.komp, ...(it.kAlt || [])];
+    mk("komp", "komparativ", { mcqOnly:false,
+      mcq:{ consigne:"Choisis le comparatif.", word:it.de, hint:"", options:fillOpts(it.komp, it.wrong, d.items.map(x => x.komp)), answer:it.komp },
+      typ:{ consigne:"Écris le comparatif (Komparativ).", word:it.de, hint:"", accept:kAcc, answer:it.komp, lang:"de", keep:true },
+      expl:`${it.de} > ${it.komp}${it.kNote ? " (" + it.kNote + ")" : ""} — ${src}.` });
+  } else {
+    const voc = d.items.filter(x => x.de && !x.komp);
+    const base = `${it.de}${it.pl ? " (pluriel : " + it.pl + ")" : ""} = ${it.fr[0]} — ${src}.`;
+    mk("sens", "allemand", { mcqOnly:false,
+      mcq:{ consigne:"Choisis la traduction en français.", word:it.de, hint:"", options:fillOpts(it.fr[0], [], voc.map(x => x.fr[0])), answer:it.fr[0] },
+      typ:{ consigne:it.art ? "Écris en allemand, avec l'article." : "Écris en allemand.", word:it.fr[0], hint:"", accept:[it.de, ...(it.alt || [])], answer:it.de, lang:"de", keep:!!it.art },
+      expl:base });
+    if (it.art) mk("art", "article", { mcqOnly:true,
+      mcq:{ consigne:"Choisis l'article : der, die ou das.", word:stripDe(it.de), hint:it.fr[0], options:["der","die","das"], answer:it.art }, typ:null, expl:base });
+    if (it.pl) mk("pl", "pluriel", { mcqOnly:false,
+      mcq:{ consigne:"Choisis le pluriel.", word:it.de, hint:it.fr[0], options:shuffle(it.plo.slice()), answer:it.pl },
+      typ:{ consigne:"Écris le pluriel, avec l'article.", word:it.de, hint:it.fr[0], accept:[it.pl], answer:it.pl, lang:"de", keep:true },
+      expl:base });
+  }
+  return out;
+}
+function allCards(){ const out = []; DECKS.forEach(d => d.items.forEach(it => cardsOf(d, it).forEach(c => { c.levels = [0,1,2]; out.push(c); }))); return out; }
+const CARDS = allCards();
+const CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
+function deckCards(dk){ return CARDS.filter(c => c.dk === dk); }
+
+/* ---------- fabrication du test ---------- */
+const ASPECT_ORDER = ["regle","sens","komp","sup","phrase","art","pl"];
+function buildTest(deckKeys, difficulty, limit){
+  const sel = DECKS.filter(d => deckKeys.includes(d.key));
+  /* cartes fraîches (les options se mélangent à chaque test) */
+  let pick = [];
+  sel.forEach(d => d.items.forEach(it => cardsOf(d, it).forEach(c => pick.push(c))));
+  if (limit && limit < pick.length){
+    /* répartition équilibrée : une carte de chaque paquet à tour de rôle */
+    const by = sel.map(d => shuffle(pick.filter(c => c.dk === d.key)));
+    const chosen = []; let i = 0;
+    while (chosen.length < limit){ const b = by[i % by.length]; if (b.length) chosen.push(b.shift()); i++; if (by.every(x => !x.length)) break; }
+    pick = chosen;
+  }
+  const qs = []; let num = 0, ex = 0;
+  sel.forEach(d => {
+    const mine = shuffle(pick.filter(c => c.dk === d.key));
+    const groups = {};
+    mine.forEach(c => {
+      const useMcq = c.mcqOnly || !c.typ || difficulty === "easy" || (difficulty === "normal" && Math.random() < 0.5);
+      const g = c.aspect + "|" + (useMcq ? "m" : "t");
+      (groups[g] = groups[g] || []).push({ c, useMcq });
+    });
+    const keys = Object.keys(groups).sort((a, b) => ASPECT_ORDER.indexOf(a.split("|")[0]) - ASPECT_ORDER.indexOf(b.split("|")[0]) || (a < b ? -1 : 1));
+    keys.forEach(g => {
+      ex++;
+      groups[g].forEach(({ c, useMcq }) => {
+        num++;
+        const part = useMcq ? c.mcq : c.typ;
+        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, aspect:c.aspect, card:c.k, tag:c.tag,
+          type: useMcq ? "mcq" : "type", consigne:part.consigne, word:part.word, hint:part.hint || "",
+          answer:part.answer, expl:c.expl, lang: useMcq ? "de" : part.lang, keep: useMcq ? true : part.keep };
+        if (useMcq) q.options = part.options.slice(); else q.accept = part.accept.slice();
+        q.prompt = `${q.consigne} « ${q.word} »${q.hint ? " (" + q.hint + ")" : ""}`;
+        qs.push(q);
+      });
+    });
+  });
+  return qs;
+}
+
+/* ---------- fiche ---------- */
+const FICHE = [
+  { icon:"⚖️", titre:"Le comparatif : plus, autant, pas autant", pairs:[
+    ["Supériorité (plus … que) : adj + -er als","Ein Zug ist schneller als ein Fahrrad. · Mein Vater ist älter als meine Mutter. · Ich trinke lieber Tee als Kaffee."],
+    ["Égalité (aussi … que) : so … wie (genauso … wie)","Peter ist so klein wie Paul. · Ich bin so alt wie du. · Calimero ist genauso lustig wie Superman."],
+    ["Infériorité (pas aussi … que) : nicht so … wie","Tanias Auto ist nicht so neu wie Jans Auto. · Meine Haare sind nicht so schön wie deine."]],
+    astuce:"Le piège : -er va avec als, et so … wie va ensemble. Jamais « schneller wie » ni « so schnell als ». Ta feuille d'objectifs marque l'égalité et l'infériorité N2 : tu es en 10N2, elles sont pour toi." },
+  { icon:"⭐", titre:"Umlaut et exceptions à savoir", steps:["gross","alt","jung","dunkel","teuer","stark","schwach","hoch","nah","gesund","gut","viel","gern"],
+    astuce:"Une syllabe avec a, o ou u → Umlaut + -er : stark → stärker, jung → jünger, hoch → höher, gross → grösser. dunkel et teuer perdent un e : dunkler, teurer. gut, viel, gern changent complètement : besser, mehr, lieber. Ta feuille met « important » à côté de cette liste." },
+  { icon:"🥇", titre:"Le superlatif : adjectif, adverbe, nom", pairs:[
+    ["Superlatif de l'adjectif (devant un nom)","Er ist der schnellste Läufer. · Sie ist die schnellste Läuferin."],
+    ["Superlatif du nom (majuscule)","Er ist der Schnellste. · Sie ist die Schnellste."],
+    ["Superlatif de l'adverbe (après un verbe) : am … -sten","Er rennt am schnellsten. · Sie spielt am besten. · Du springst am weitesten."]],
+    astuce:"Demande-toi : y a-t-il un nom juste après ? → der/die/das …ste (der schnellste Läufer). Rien après, mais on parle d'une personne ? → der Schnellste. Ça dit comment on fait l'action ? → am …sten." },
+  { icon:"⚠️", titre:"Exceptions du superlatif", pairs:[
+    ["gut","der, die, das beste… / Beste / am besten"],
+    ["viel","der, die, das meiste… / Meiste / am meisten"],
+    ["gern","der, die, das liebste… / Liebste / am liebsten"],
+    ["gross","der, die, das grösste… / Grösste / am grössten"],
+    ["teuer","der, die, das teuerste… / Teuerste / am teuersten"]] },
+  { icon:"📋", titre:"La liste des adjectifs (à savoir pour le TO)", table:true,
+    astuce:"Un trait doré à gauche = une ligne en gras sur ta feuille (teuer, hoch, weit, gut, viel, gern). klein et gross sont les deux adjectifs en plus, anstrengen la ligne N2. Les formes sont recopiées comme sur ta feuille : elle écrit « am grössen » (la feuille Superlativ écrit « am grössten ») et « anstrengen »." },
+  { icon:"📗", titre:"Wortschatz p. 15", pairs:[
+    ["viel – mehr – am meisten","beaucoup – plus – le plus · Carola macht am meisten Sport."],
+    ["gern – lieber – am liebsten","volontiers – plutôt – aimer le plus…, préférer… · Ich spiele lieber Tennis als Basketball."],
+    ["so … wie","aussi que · Pia ist so gross wie Tom."],
+    ["als","que · Tina ist grösser als Tom."],
+    ["der Weltrekord, -e","le record du monde"],
+    ["der Sieg, -e","la victoire"],
+    ["das Rennen, -","la course"]],
+    astuce:"Lerntipp de ta page : la plupart des adjectifs fonctionnent comme « schnell » (schnell – schneller – am schnellsten)." },
+  { icon:"🎯", titre:"Mes réflexes pour mardi", tips:[
+    "L'Umlaut compte : älter, jünger, stärker, höher, grösser. Dans cet outil, « alter » au lieu de « älter » est faux, comme au test.",
+    "Recopie bien la forme de la liste avant d'ajouter -ste : klein → der kleinste (avec le n), gefährlich → die gefährlichste (avec le l), hoch → das höchste (avec ö).",
+    "Avec un nom, accorde der / die / das : der älteste Fussballspieler, die beste Note, das höchste Haus.",
+    "-er + als, so … wie, nicht so … wie : récite les trois phrases « Er läuft … meine Freundin » de ta feuille d'objectifs."] },
+  { icon:"🚫", titre:"Ce que cet outil ne couvre pas", tips:[
+    "Les nombres ordinaux (der erste, am ersten Januar), les W-Fragen (wann, wie oft, wo, warum, mit wem) et les phrases avec « weil » sont sur ta feuille d'objectifs, mais pas dans cet outil : tu as dit à ton papa que tu n'avais pas besoin de les réviser."] },
+];
+
+const DIFFICULTIES = {
+  easy:{ label:"Échauffement", sub:"Je choisis parmi plusieurs réponses", emoji:"🟢" },
+  normal:{ label:"Entraînement", sub:"Je choisis et j'écris", emoji:"🔵" },
+  hard:{ label:"Niveau épreuve", sub:"J'écris tout en allemand", emoji:"🔴" },
+};
+const LVL_OF_LABEL = { "Échauffement":0, "Entraînement":1, "Niveau épreuve":2 };
+const MODES = {
+  train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
+  live:{ label:"Correction en direct", sub:"Chaque lettre fausse est marquée pendant que tu écris", emoji:"✍️" },
+  exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
+};
+const COUNTS = [10, 20, 30, 0];
+
+/* ---------- stockage ---------- */
+const store = {
+  mode:"memory", col:null, mem:{}, memDocs:{},
+  async init(){
+    try {
+      if (window.claude && window.claude.use){
+        const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+        if (db && user){ const uid = await user.id(); if (uid){ this.col = db.collection("data/users/" + uid); this.mode = "db"; return; } }
+      }
+    } catch(e){}
+    try { localStorage.setItem(QUIZ_ID + "-probe","1"); localStorage.removeItem(QUIZ_ID + "-probe"); this.mode = "local"; } catch(e){ this.mode = "memory"; }
+  },
+  async list(){
+    if (this.mode === "db"){ const snap = await this.col.limit(1000).get(); return snap.docs.filter(d => d.id.startsWith(ATTEMPT_PREFIX)).map(d => d.data()).filter(Boolean); }
+    if (this.mode === "local"){ const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); return idx.map(id => { try { return JSON.parse(localStorage.getItem(ATTEMPT_PREFIX + id)); } catch(e){ return null; } }).filter(Boolean); }
+    return Object.values(this.mem);
+  },
+  async save(att){
+    if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + att.id).set(att); return; }
+    if (this.mode === "local"){ localStorage.setItem(ATTEMPT_PREFIX + att.id, JSON.stringify(att)); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); if (!idx.includes(att.id)) idx.unshift(att.id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return; }
+    this.mem[att.id] = att;
+  },
+  async remove(id){
+    if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + id).delete(); return; }
+    if (this.mode === "local"){ localStorage.removeItem(ATTEMPT_PREFIX + id); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]").filter(x => x !== id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return; }
+    delete this.mem[id];
+  },
+  async getDoc(id){
+    if (this.mode === "db"){ const sn = await this.col.doc(id).get(); return sn && sn.exists ? sn.data() : null; }
+    if (this.mode === "local"){ const v = localStorage.getItem(id); return v ? JSON.parse(v) : null; }
+    return this.memDocs[id] || null;
+  },
+  async setDoc(id, obj){
+    if (this.mode === "db"){ await this.col.doc(id).set(obj); return; }
+    if (this.mode === "local"){ localStorage.setItem(id, JSON.stringify(obj)); return; }
+    this.memDocs[id] = obj;
+  },
+};
+
+/* ---------- état ---------- */
+const S = {
+  screen:"fiche", ficheOpen:0,
+  selected: DECKS.map(d => d.key),
+  difficulty:"normal", mode:"train", count:20,
+  frozen:null, paperMsg:"", paperCopy:"",
+  quiz:null, rattrapage:false, rattrLabel:"", lastResult:null, storeMsg:"",
+  attempts:[], loaded:false, loadErr:"",
+  cards:{ order:[], pos:0, flip:false },
+  scores:{ open:null, exportOpen:false, confirm:false },
+  suivi:{ ch:"all", f:"all", pt:null },
+  bilan:{},
+  draft:null, draftAsk:false, draftBlock:false, draftErr:false, quitAsk:false,
+};
+const deckLabel = keys => keys.length === DECKS.length ? "Toute la séquence" : keys.map(k => DECK[k].title).join(" + ");
+
+/* ============================================================
+   SUIVI GRAPHIQUE (§ 6 quater) — 3 anneaux par paquet (§ 11.4)
+   ============================================================ */
+function rootTests(){ return S.attempts.filter(a => !a.rattrapage).sort((a, b) => a.date - b.date); }
+function parentOf(a){
+  if (a.parent) return a.parent;
+  const prev = S.attempts.filter(x => !x.rattrapage && x.date < a.date && dayOf(x.date) === dayOf(a.date)).sort((x, y) => y.date - x.date)[0];
+  return prev ? prev.id : null;
+}
+function isExam(a){ return a.mode === MODES.exam.label; }
+function chapOfQ(x){ return x.question ? x.question.deckKey : null; }
+function inChap(ch){ return x => ch === "all" || chapOfQ(x) === ch; }
+function qCardKey(x){ return x.question ? x.question.card : ("p|" + x.prompt); }
+function testScore(root, ch){
+  const qs = root.questions.filter(inChap(ch)), score = qs.filter(x => x.correct).length, total = qs.length;
+  if (!total) return null;
+  const wrong = new Set(qs.filter(x => !x.correct).map(qCardKey)), fixed = new Set(), steps = [];
+  S.attempts.filter(a => a.rattrapage && parentOf(a) === root.id).sort((a, b) => a.date - b.date).forEach(r => {
+    const rq = r.questions.filter(inChap(ch)); if (!rq.length) return;
+    rq.forEach(x => { if (x.correct && wrong.has(qCardKey(x))) fixed.add(qCardKey(x)); });
+    const sc = score + fixed.size;
+    steps.push({ score:sc, note:noteFrom(sc / total), asked:rq.length, ok:rq.filter(x => x.correct).length });
+  });
+  return { score, total, note:noteFrom(score / total), typos:qs.filter(x => x.typo).length, steps };
+}
+function histByCard(exceptId){
+  const h = {};
+  rootTests().filter(a => a.id !== exceptId).forEach(a => {
+    const lvl = LVL_OF_LABEL[a.difficulty]; if (lvl == null) return;
+    a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); (h[k] = h[k] || []).push({ ok:x.correct, lvl, day:dayOf(a.date), date:a.date }); });
+  });
+  Object.values(h).forEach(arr => arr.sort((a, b) => a.date - b.date));
+  return h;
+}
+function ringState(entries, ringLvl){
+  const es = entries.filter(e => e.lvl >= ringLvl);
+  if (!es.length) return "new";
+  return es[es.length - 1].ok ? "ok" : "bad";
+}
+function acquiredOuter(entries){
+  const hd = entries.filter(e => e.lvl === 2);
+  if (!hd.length || !hd[hd.length - 1].ok) return false;
+  const days = new Set(); for (let i = hd.length - 1; i >= 0 && hd[i].ok; i--) days.add(hd[i].day);
+  return days.size >= 2;
+}
+function ringSummary(cards, ringLvl, hist){
+  const sub = cards.filter(c => c.levels.includes(ringLvl));
+  const c = { ok:0, mid:0, bad:0, new:0 }, total = sub.length;
+  sub.forEach(card => {
+    const st = ringState(hist[card.k] || [], ringLvl);
+    if (st === "new") c.new++;
+    else if (st === "bad") c.bad++;
+    else { if (ringLvl === 2 && acquiredOuter(hist[card.k] || [])) c.ok++; else c.mid++; }
+  });
+  const right = c.ok + c.mid, pct = total ? Math.round(right / total * 100) : 0;
+  const note = total ? noteFrom(right / total) : 0, noteAcq = total ? noteFrom(c.ok / total) : 0;
+  const state = c.new === total ? "start" : (ringLvl === 2 && noteAcq >= 5) ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
+  return { ...c, total, right, pct, note, state, ringLvl };
+}
+function paquetRings(dk, hist){ const cards = deckCards(dk); return [0,1,2].map(l => ringSummary(cards, l, hist)); }
+const P_LABEL = { start:"à commencer", low:"à revoir", mid:"en route", win:"réussi", ok:"OK ✓" };
+const LVL_LABEL = ["à revoir", "en route", "réussi"];
+function lvlOf(sum){ return !sum || sum.state === "start" ? -1 : sum.note >= 5 ? 2 : sum.note >= 4 ? 1 : 0; }
+function pColor(state){ return state === "ok" ? "var(--p-okdark)" : state === "win" ? "var(--p-ok)" : state === "mid" ? "var(--p-mid)" : "var(--p-low)"; }
+function ringArc(sum, r, w){
+  if (sum.state === "start") return `<circle r="${r}" fill="none" stroke-width="${w}" stroke-dasharray="3 3" style="stroke:var(--rule)"/>`;
+  const C = 2 * Math.PI * r, c = pColor(sum.state);
+  return `<circle r="${r}" fill="none" stroke-width="${w}" stroke="${c}" stroke-opacity=".22"/>` +
+    (sum.right ? `<circle r="${r}" fill="none" stroke-width="${w}" stroke="${c}" stroke-dasharray="${(C * sum.right / sum.total).toFixed(2)} 999" transform="rotate(-90)"/>` : "");
+}
+function ring3Svg(rings, size, centerText){
+  const h = size / 2, w = 6, radii = [h - 24, h - 16, h - 8];
+  const body = rings.map((s, i) => ringArc(s, radii[i], w)).join("");
+  const fs = centerText.length >= 5 ? 11.5 : 13.5;
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true">${body}<text x="0" y="${(fs/3).toFixed(1)}" text-anchor="middle" class="pring-t" style="font-size:${fs}px">${centerText}</text></svg>`;
+}
+function topRing(rings){ let t = -1; rings.forEach((s, i) => { if (s.state !== "start") t = i; }); return t; }
+function ring1Svg(sum, size, centerText){
+  const h = size / 2, r = h - 7, w = 8;
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true">${ringArc(sum, r, w)}<text x="0" y="6" text-anchor="middle" class="pring-t" style="font-size:16px">${centerText}</text></svg>`;
+}
+function trendOf(dk, hist, lvl = 2){
+  const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return "";
+  const now = paquetRings(dk, hist)[lvl];
+  const prev = ringSummary(deckCards(dk), lvl, histByCard(tests[tests.length - 1].id));
+  if (prev.state === "start") return "";
+  return now.right > prev.right ? " ↗" : now.right < prev.right ? " ↘" : "";
+}
+function dropOf(dk, hist, lvl = 2){
+  const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return null;
+  const last = tests[tests.length - 1];
+  const now = paquetRings(dk, hist)[lvl], prevHist = histByCard(last.id), prev = ringSummary(deckCards(dk), lvl, prevHist);
+  if (lvlOf(now) < 0 || lvlOf(prev) <= lvlOf(now)) return null;
+  const lost = deckCards(dk).filter(c => { const ps = ringState(prevHist[c.k] || [], lvl), ns = ringState(hist[c.k] || [], lvl); return ps === "ok" && ns === "bad"; });
+  return { prev, lost, date:tests[tests.length - 2].date };
+}
+function pastille3(dk){
+  if (!S.loaded) return "";
+  const hist = histByCard(), rings = paquetRings(dk, hist), top = topRing(rings);
+  const ref = top < 0 ? rings[2] : rings[top];
+  const dr = top < 0 ? null : dropOf(dk, hist, top);
+  const NIV = ["Échauffement", "Entraînement", "Niveau épreuve"];
+  const label = top < 0 ? "Pas encore testé" : `${NIV[top]} : ${ref.right} sur ${ref.total}, ${P_LABEL[ref.state]}${dr ? ", avant : " + LVL_LABEL[lvlOf(dr.prev)] : ""}`;
+  return `<div class="deck-pst" aria-label="${label}">${ring3Svg(rings, 84, top < 0 ? "" : ref.right + "/" + ref.total)}<span class="pst-l pst-${ref.state}">${P_LABEL[ref.state]}${top < 0 ? "" : trendOf(dk, hist, top)}</span>${dr ? `<span class="pst-notes">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</div>`;
+}
+function globalPastille(){
+  if (!S.loaded || !rootTests().length) return "";
+  const hist = histByCard(), sum = ringSummary(CARDS, 2, hist);
+  const nOk = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "ok").length;
+  const nWin = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "win").length;
+  return `<div class="pglob">${ring1Svg(sum, 66, sum.state === "start" ? "—" : sum.pct + " %")}<div class="pglob-x"><b>Avancement général (niveau épreuve) · ${P_LABEL[sum.state]}</b><span>${sum.right} cartes justes au niveau épreuve sur ${sum.total}, dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} paquet${nOk>1?"s":""} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
+  <details class="plegend"><summary>Comment se lisent les 3 anneaux ?</summary>
+  <p>Chaque paquet a <b>trois anneaux</b> : à l'intérieur l'Échauffement, au milieu l'Entraînement, à l'extérieur le Niveau épreuve. Une carte réussie au niveau épreuve remplit aussi les anneaux plus faciles.</p>
+  <p>Dans chaque anneau, la partie en couleur pleine, ce sont tes cartes justes ; la partie claire, celles qu'il te reste. Un anneau gris en pointillé n'a pas encore été testé. Au centre : tes cartes justes sur le total, au niveau le plus difficile que tu as déjà fait.</p>
+  <p>Couleur de chaque anneau selon la note : <b>rouge</b> à revoir (moins de 4), <b>orange</b> en route (4–4,5), <b>vert</b> réussi (5 et plus), <b>vert foncé</b> OK ✓ (réussi au niveau épreuve et confirmé un autre jour).</p>
+  <p>Seul le premier passage d'un test compte ; refaire ses erreurs aide à apprendre mais ne change pas les anneaux.</p></details>`;
+}
+function paqBad(dk, hist){ return deckCards(dk).filter(c => ringState((hist || histByCard())[c.k] || [], 2) === "bad"); }
+function redoCards(v){
+  let keys; const hist = histByCard();
+  if (v === "resist") keys = new Set(resistant().map(x => x.k));
+  else if (v.startsWith("lost:")){ const dk = v.slice(5), dr = dropOf(dk, hist); keys = new Set(dr ? dr.lost.map(c => c.k) : []); }
+  else keys = new Set(paqBad(v, hist).map(c => c.k));
+  if (!keys.size) return;
+  const decks = [...new Set([...keys].map(k => k.split("|")[0]))];
+  const qs = buildTest(decks, "hard", 0).filter(q => keys.has(q.card));
+  if (!qs.length) return;
+  let n = 0; qs.forEach(q => { q.num = ++n; });
+  S.selected = decks; S.difficulty = "hard"; S.mode = "train"; S.frozen = null;
+  startQuiz(qs, false);
+}
+function resistant(){
+  const m = {};
+  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); m[k] = m[k] || { k, word:x.question.word + (x.question.hint ? " (" + x.question.hint + ")" : ""), ch:x.question.deckKey, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
+  return Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
+}
+function shapeSvg(a, x, y){
+  const f = `fill="var(--box)" stroke="var(--sheet)" stroke-width="2"`;
+  if (isExam(a)){ const p = []; for (let i = 0; i < 10; i++){ const r = i % 2 ? 3.6 : 8.5, t = Math.PI/5*i - Math.PI/2; p.push((x + r*Math.cos(t)).toFixed(1) + "," + (y + r*Math.sin(t)).toFixed(1)); } return `<polygon points="${p.join(" ")}" ${f}/>`; }
+  if (a.difficulty === DIFFICULTIES.easy.label) return `<circle cx="${x}" cy="${y}" r="6" ${f}/>`;
+  if (a.difficulty === DIFFICULTIES.normal.label) return `<rect x="${x-6}" y="${y-6}" width="12" height="12" ${f}/>`;
+  return `<polygon points="${x},${y-8} ${x+8},${y} ${x},${y+8} ${x-8},${y}" ${f}/>`;
+}
+function suiviChart(){
+  const s = S.suivi;
+  let tests = rootTests(); if (s.f === "exam") tests = tests.filter(a => a.difficulty === DIFFICULTIES.hard.label || isExam(a));
+  const pts = tests.map(a => ({ a, sc:testScore(a, s.ch) })).filter(p => p.sc);
+  if (!pts.length) return `<p class="fine">Aucun test ne correspond à ce choix pour l'instant.</p>`;
+  const Lm = 44, R = 18, T = 24, B = 40, H = 220, step = 58, W = Math.max(330, Lm + R + step * pts.length);
+  const y = n => T + (6 - n)/5 * (H - T - B), X = i => Lm + step/2 + i*step;
+  let g = "";
+  [1,2,3,4,5,6].forEach(n => { g += `<line x1="${Lm}" x2="${W-R}" y1="${y(n)}" y2="${y(n)}" style="stroke:var(--rule)" stroke-width="1"${n===4?' stroke-dasharray="5 4"':""}/><text x="${Lm-8}" y="${y(n)+4}" text-anchor="end" class="ch-t">${n}</text>`; });
+  g += `<text x="${W-R}" y="${y(4)-5}" text-anchor="end" class="ch-t">4 suffisant</text>`;
+  pts.forEach((p, i) => { if (!p.sc.steps.length) return; const last = p.sc.steps[p.sc.steps.length-1];
+    g += `<line x1="${X(i)}" x2="${X(i)}" y1="${y(p.sc.note)-9}" y2="${y(last.note)+6}" style="stroke:var(--good)" stroke-width="2" stroke-dasharray="4 3"/>`;
+    p.sc.steps.forEach((st, k) => { const fin = k === p.sc.steps.length-1; g += `<circle cx="${X(i)}" cy="${y(st.note)}" r="${fin?5.5:3.5}" fill="var(--sheet)" style="stroke:var(--good)" stroke-width="2"/>`; });
+    g += `<text x="${X(i)}" y="${y(last.note)-10}" text-anchor="middle" class="ch-t ch-g">${fmtNote(last.note)}</text>`; });
+  g += `<polyline points="${pts.map((p,i) => X(i)+","+y(p.sc.note)).join(" ")}" fill="none" style="stroke:var(--box)" stroke-width="2" stroke-linejoin="round"/>`;
+  pts.forEach((p, i) => { const on = s.pt === p.a.id;
+    g += `<g class="ch-pt" data-act="suiviPt" data-v="${p.a.id}" role="button" tabindex="0" aria-label="Test du ${dateLabel(p.a.date)}, note ${fmtNote(p.sc.note)}">${on ? `<circle cx="${X(i)}" cy="${y(p.sc.note)}" r="13" fill="none" style="stroke:var(--crane)" stroke-width="2"/>` : ""}${shapeSvg(p.a, X(i), y(p.sc.note))}<rect x="${X(i)-18}" y="${T-6}" width="36" height="${H-T}" fill="transparent"/></g>`;
+    g += `<text x="${X(i)-11}" y="${y(p.sc.note)+4}" text-anchor="end" class="ch-t ch-b">${fmtNote(p.sc.note)}</text>`;
+    const d = new Date(p.a.date); g += `<text x="${X(i)}" y="${H-B+18}" text-anchor="middle" class="ch-t">${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}</text>`; });
+  g += `<text x="${Lm}" y="${H-6}" class="ch-t">épreuve : ${esc(DUE.short)}</text>`;
+  let detail = "";
+  const sel = pts.find(p => p.a.id === s.pt);
+  if (sel){ const a = sel.a, sc = sel.sc;
+    detail = `<div class="ch-detail"><b>${dateLabel(a.date)} · ${esc(a.difficulty)} · ${esc(a.mode)}</b><span>${esc(a.deck)}${s.ch !== "all" ? " · questions du paquet « " + esc(DECK[s.ch].title) + " »" : ""}</span>
+    <span>Sans aide : ${sc.score} juste${sc.score>1?"s":""} sur ${sc.total} → note ${fmtNote(sc.note)}${sc.typos?` (dont ${sc.typos} faute${sc.typos>1?"s":""} de frappe acceptée${sc.typos>1?"s":""})`:""}</span>
+    ${sc.steps.map((st, k) => `<span>${k+1}${k?"e":"er"} rattrapage : ${st.ok} sur ${st.asked} → note ${fmtNote(st.note)}</span>`).join("")}
+    <button class="ghost small" data-act="openAttempt" data-v="${a.id}">Voir les questions de ce test</button></div>`; }
+  return `<div class="ch-legend"><span><i class="lg-line"></i>Note du test, sans aide</span><span><i class="lg-ring"></i>Après « Refaire mes erreurs »</span><span>○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche</span></div>
+  <div class="ch-wrap"><svg class="ch-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des notes sans aide, avec la remontée après les rattrapages">${g}</svg></div>
+  <p class="fine">Touche un point pour voir le détail du test.</p>${detail}`;
+}
+function suiviHeat(){
+  const tests = rootTests(); if (!tests.length) return "";
+  const days = [...new Set(tests.map(a => dayOf(a.date)))].slice(-6);
+  const tested = new Set(tests.flatMap(a => a.questions.map(chapOfQ)));
+  const chs = DECKS.filter(d => tested.has(d.key)), rest = DECKS.filter(d => !tested.has(d.key));
+  const lab = d => { const [, m, j] = d.split("-"); return j.padStart(2,"0") + "." + m.padStart(2,"0"); };
+  let h = `<div class="tbl heat"><table><thead><tr><th>Paquet</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`;
+  chs.forEach(d => {
+    h += `<tr><td class="k">${esc(d.emoji)} ${esc(d.title)}</td>` + days.map(day => {
+      const qs = tests.filter(a => dayOf(a.date) === day).flatMap(a => a.questions.filter(inChap(d.key)));
+      if (!qs.length) return `<td class="hc-0">·</td>`;
+      const pc = Math.round(qs.filter(x => x.correct).length / qs.length * 100), n = noteFrom(pc/100);
+      return `<td class="${n>=5?"hc-ok":n>=4?"hc-mid":"hc-low"}">${pc}${n>=5?" ✓":""}</td>`;
+    }).join("") + `</tr>`;
+  });
+  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par paquet et par jour (6 derniers jours). Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
+}
+function suiviBlock(){
+  const s = S.suivi;
+  if (!rootTests().length) return "";
+  const res = resistant();
+  return `<section class="suivi"><h3>Ma courbe de notes</h3>
+  <div class="suivi-ctl"><label class="fine" for="suivi-ch">Paquet</label><select id="suivi-ch" class="suivi-sel"><option value="all"${s.ch==="all"?" selected":""}>Toute la séquence</option>${DECKS.map(d => `<option value="${d.key}"${s.ch===d.key?" selected":""}>${esc(d.title)}</option>`).join("")}</select>
+  <div class="row"><button class="ghost small${s.f==="all"?" on":""}" data-act="suiviF" data-v="all" aria-pressed="${s.f==="all"}">Tous les tests</button><button class="ghost small${s.f==="exam"?" on":""}" data-act="suiviF" data-v="exam" aria-pressed="${s.f==="exam"}">Niveau épreuve et épreuve blanche</button></div></div>
+  ${suiviChart()}
+  <h3>Mes paquets jour après jour</h3>${suiviHeat()}
+  ${res.length ? `<h3>Les cartes qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${esc(DECK[x.ch].title)}</span> ${esc(x.word)} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} cartes</button>` : ""}
+  </section>`;
+}
+function chainTxt(a){
+  if (a.rattrapage) return "";
+  const sc = testScore(a, "all"); if (!sc || !sc.steps.length) return "";
+  const last = sc.steps[sc.steps.length-1];
+  return ` · ${fmtNote(sc.note)} → ${fmtNote(last.note)} après ${sc.steps.length} rattrapage${sc.steps.length>1?"s":""}`;
+}
+
+/* ============================================================
+   TEST EN COURS GARDÉ (§ 2)
+   ============================================================ */
+let draftChain = Promise.resolve();
+function draftLocalSet(obj){ try { localStorage.setItem(DRAFT_ID, JSON.stringify(obj)); return true; } catch(e){ return false; } }
+function draftLocalGet(){ try { const v = localStorage.getItem(DRAFT_ID); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
+function draftWrite(obj){
+  const okLocal = draftLocalSet(obj);
+  if (store.mode === "db") draftChain = draftChain.then(() => store.setDoc(DRAFT_ID, obj)).then(() => { S.draftErr = false; }, () => { S.draftErr = !okLocal; draftErrShow(); });
+  else if (store.mode === "memory"){ store.setDoc(DRAFT_ID, obj); S.draftErr = !okLocal; draftErrShow(); }
+}
+function draftErrShow(){ const m = document.getElementById("draft-err"); if (m) m.hidden = !S.draftErr; }
+function draftSave(){
+  const Q = S.quiz; if (!Q || Q.done) return;
+  const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => { const o = { u:x.user, c:x.correct }; if (x.typo) o.t = 1; if (x.liveFixed){ o.lf = 1; o.ls = x.liveSnap; } return o; }),
+    picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok, liveFixed:!!Q.liveFixed, errSnap:Q.errSnap || "",
+    label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "", rattrParent:S.rattrParent || null,
+    selected:S.selected, difficulty:S.difficulty, mode:S.mode };
+  S.draft = d; draftWrite(d);
+}
+function draftDetail(d){
+  return (d.answers || []).map((x, k) => { const q = d.questions[k];
+    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!x.lf, liveSnap:x.ls || "", expl:q.expl, tag:q.tag, question:q }; });
+}
+const draftN = d => (d.answers || []).length;
+const draftOk = d => !!(d && d.questions && d.questions.length && d.answers);
+function draftPick(a, b){ const ta = a ? a.saved || 0 : -1, tb = b ? b.saved || 0 : -1; const w = ta >= tb ? a : b; return draftOk(w) ? w : null; }
+function draftClear(){ S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
+function draftResume(){
+  const d = S.draft; if (!d) return;
+  S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = d.mode; S.frozen = null;
+  S.rattrapage = d.rattrapage; S.rattrLabel = d.rattrLabel; S.rattrParent = d.rattrParent;
+  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, liveFixed:!!d.liveFixed, hadErr:!!d.liveFixed, errSnap:d.errSnap || "", detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
+  S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.draftBlock = false; S.screen = "quiz";
+  render(); window.scrollTo(0,0);
+}
+function draftWhat(d){ return d.rattrapage ? "Rattrapage" : DIFFICULTIES[d.difficulty].label + " · " + MODES[d.mode].label; }
+function draftBanner(){
+  const d = S.draft; if (!d) return "";
+  const n = draftN(d), tot = d.questions.length;
+  if (S.draftAsk) return `<div class="draft"><p><b>Abandonner ce test ?</b><span>Tes ${n} réponse${n>1?"s":""} ser${n>1?"ont effacées":"a effacée"} et ne compter${n>1?"ont":"a"} nulle part.</span></p>
+    <div class="draft-row"><button class="ghost small" data-act="draftDrop">Oui, abandonner</button><button class="cta" data-act="draftNo">Non, je le garde</button></div></div>`;
+  return `<div class="draft${S.draftBlock?" block":""}">${S.draftBlock ? `<p class="draft-stop"><b>Un seul test à la fois</b><span>Reprends ce test ou abandonne-le avant d'en lancer un autre.</span></p>` : ""}<p><b>⏸ Tu as un test en cours</b><span>${esc(d.label)} · ${esc(draftWhat(d))} · ${n} sur ${tot} répondue${n>1?"s":""} · ${dateLabel(d.saved)}</span></p>
+    <div class="draft-row"><button class="cta" data-act="draftResume">Reprendre mon test</button><button class="ghost small" data-act="draftAsk">Abandonner</button></div>
+    <p class="fine">Il compte dans tes scores seulement quand tu l'as terminé. Tu ne peux pas lancer un autre test tant que celui-ci n'est pas terminé ou abandonné.</p></div>`;
+}
+function quitView(){
+  const Q = S.quiz, n = Q.detail.length, tot = Q.questions.length;
+  return `<div class="draft"><p><b>Tu veux arrêter ce test ?</b><span>Tu as répondu à ${n} question${n>1?"s":""} sur ${tot}.</span></p>
+  <button class="cta" data-act="quitKeep">Garder pour plus tard</button>
+  <p class="fine">Ton test est gardé tel quel : tu le reprends depuis la Fiche, les Paquets ou le Test, à la question où tu t'es arrêté. Il compte seulement quand il est terminé.</p>
+  <button class="ghost" data-act="quitDrop">Abandonner ce test</button>
+  <p class="fine">Tes réponses sont effacées et ne comptent nulle part.</p>
+  <button class="ghost small" data-act="quitNo">← Continuer le test</button></div>`;
+}
+function draftErrLine(){ return `<p class="warn" id="draft-err"${S.draftErr?"":" hidden"}>Je n'arrive pas à garder ce test sur cet appareil : ne ferme pas la page avant la fin.</p>`; }
+
+/* ---------- rendu ---------- */
+const app = document.getElementById("app");
+function render(){
+  if (S.screen === "quiz" && !S.quiz) S.screen = "fiche";
+  if (S.screen === "results" && !S.lastResult) S.screen = "home";
+  const v = { fiche:viewFiche, home:viewHome, cards:viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
+  app.innerHTML = header() + `<div class="screen">${v()}</div>`;
+  renderTabs();
+  if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
+}
+function header(){
+  return `<header class="head"><div class="podium" aria-hidden="true"><span class="p2">2</span><span class="p1">1</span><span class="p3">3</span></div><div><h1>Komparativ und Superlativ</h1><p>Allemand · Sequenz 2 « Fit und sportlich! » — à savoir pour le ${DUE.long}</p></div></header>`;
+}
+function renderTabs(){
+  const bar = document.getElementById("tabbar");
+  if (S.screen === "quiz"){ bar.hidden = true; return; }
+  bar.hidden = false;
+  const tabs = [["fiche","📚","Fiche"],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
+  bar.innerHTML = `<div class="tabbar-in">` + tabs.map(([k,e,l]) => {
+    const on = S.screen === k || (k === "setup" && S.screen === "results");
+    return `<button class="tab${on?" on":""}" data-act="nav" data-v="${k}" aria-current="${on?"page":"false"}"><span class="tab-e">${e}</span><span class="tab-l">${l}</span></button>`;
+  }).join("") + `</div>`;
+}
+
+function viewFiche(){
+  let h = draftBanner() + `<p class="intro">Tout ce qu'il faut pour le test de mardi : le comparatif, le superlatif, la liste des adjectifs et ta page de Wortschatz. Ouvre une section, lis-la à voix haute, puis passe aux cartes ou au test.</p>`;
+  FICHE.forEach((sec, i) => {
+    const open = S.ficheOpen === i;
+    const cnt = sec.pairs ? sec.pairs.length : sec.table ? DECK.adj.items.length : sec.steps ? sec.steps.length : 0;
+    h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}"><span class="entry-icon">${sec.icon}</span><span class="entry-title">${esc(sec.titre)}</span>${cnt ? `<span class="entry-count">${cnt}</span>` : ""}</button>`;
+    if (open){
+      h += `<div class="entry-body">`;
+      if (sec.pairs) h += sec.pairs.map(p => `<div class="pair"><span class="pair-de">${esc(p[0])}</span><span>${esc(p[1])}</span></div>`).join("");
+      if (sec.steps) h += sec.steps.map(de => { const it = DECK.exc.items.find(x => x.de === de); return `<div class="pair"><span class="pair-de">${esc(it.de)} &gt; ${esc(it.komp)}</span></div>`; }).join("");
+      if (sec.table) h += DECK.adj.items.map(it => `<div class="steps${it.irr?" irr":""}"><span class="s1">${esc(it.de)}</span><span class="s2">${esc(it.komp)}</span><span class="s3">${esc(it.sup)}</span><span class="fr">${esc(it.fr[0])}${it.extra?" · en plus":""}${it.n2?" · N2":""}</span></div>`).join("");
+      if (sec.tips) h += `<div style="display:flex;flex-direction:column;gap:6px">` + sec.tips.map(t => `<p class="tip">${esc(t)}</p>`).join("") + `</div>`;
+      if (sec.astuce) h += `<p class="astuce"><b>Astuce</b>${esc(sec.astuce)}</p>`;
+      h += `</div>`;
+    }
+    h += `</section>`;
+  });
+  const openS = S.ficheOpen === FICHE.length;
+  h += `<section class="entry${openS?" open":""}"><button class="entry-head" data-act="fiche" data-v="${FICHE.length}" aria-expanded="${openS}"><span class="entry-icon">🔎</span><span class="entry-title">D'où viennent les questions</span></button>`;
+  if (openS){
+    h += `<div class="entry-body">` + SOURCES.map(x => `<div class="pair"><span class="pair-de">${esc(x.titre)} <span class="src-date">reçue le ${esc(x.recue)}</span></span><span>${esc(x.contenu)}</span></div>`).join("") + `<p class="astuce"><b>Contrôle</b>${esc(SOURCES_NOTE)}</p>`;
+    if (HAS_CLAUDE){
+      h += `<div class="photos">` + PHOTOS.map(ph => ph.url
+        ? `<figure><a href="${esc(ph.url)}" target="_blank" rel="noopener"><img src="${esc(ph.url)}" alt="${esc(ph.titre)}" loading="lazy"></a><figcaption>${esc(ph.titre)}</figcaption></figure>`
+        : `<figure class="missing"><span>Photo à renvoyer dans le chat</span><figcaption>${esc(ph.titre)}</figcaption></figure>`).join("") + `</div>`;
+    }
+    h += `</div>`;
+  }
+  h += `</section>`;
+  return h + `<button class="cta" data-act="nav" data-v="home">Je passe à l'entraînement</button><p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
+}
+
+function viewHome(){
+  const allOn = S.selected.length === DECKS.length;
+  const count = S.selected.reduce((n,k) => n + deckCards(k).length, 0);
+  const hist = S.loaded ? histByCard() : null;
+  let h = draftBanner() + globalPastille() + `<p class="intro">Choisis ce que tu veux travailler. Tu peux cocher plusieurs paquets. Les anneaux montrent ta progression.</p>`;
+  h += DECKS.map(d => {
+    const on = S.selected.includes(d.key);
+    const bad = hist ? paqBad(d.key, hist) : [];
+    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-e">${d.emoji}</span><span class="deck-txt"><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)} · ${deckCards(d.key).length} cartes</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastille3(d.key)}</div>` +
+      (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">Refaire mes ${bad.length} carte${bad.length>1?"s":""} à revoir</button></div>` : "");
+  }).join("");
+  h += `<button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
+  <p class="fine">${count} cartes sélectionnées</p>
+  <div class="row"><button class="ghost" data-act="toCards" ${count?"":"disabled"}>🃏 Cartes</button><button class="cta" data-act="nav" data-v="setup" ${count?"":"disabled"}>🎯 Test</button></div>`;
+  return h;
+}
+
+function cardList(){ return CARDS.filter(c => S.selected.includes(c.dk)); }
+function viewCards(){
+  const list = cardList();
+  if (!list.length) return `<p class="intro">Coche au moins un paquet pour voir les cartes.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
+  if (S.cards.order.length !== list.length){ S.cards.order = shuffle(list.map((_,i) => i)); S.cards.pos = 0; S.cards.flip = false; }
+  const c = list[S.cards.order[S.cards.pos]];
+  const part = c.mcq;
+  const backWord = c.typ && c.aspect === "phrase" ? c.typ.answer : part.answer;
+  return `<button class="back" data-act="nav" data-v="home">← Paquets</button>
+  <p class="fine">${esc(deckLabel(S.selected))} · carte ${S.cards.pos+1} sur ${list.length}</p>
+  <button class="flash${S.cards.flip?" flipped":""}" data-act="flip" aria-label="Retourner la carte">
+    <span class="face f"><span class="face-tag">${esc(TAG_LABEL[c.tag])}</span><span class="face-word">${esc(part.word)}</span>${part.hint ? `<span class="face-mini">${esc(part.hint)}</span>` : ""}<span class="face-hint">touche la carte</span></span>
+    <span class="face b"><span class="face-tag">Réponse</span><span class="face-word">${esc(backWord)}</span><span class="face-mini">${esc(c.expl)}</span></span>
+  </button>
+  <div class="row3"><button class="ghost" data-act="card" data-v="-1">Précédente</button><button class="ghost" data-act="cardShuffle">Mélanger</button><button class="ghost" data-act="card" data-v="1">Suivante</button></div>`;
+}
+
+function viewSetup(){
+  if (!S.selected.length) return `<p class="intro">Coche au moins un paquet avant de lancer un test.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
+  const total = S.selected.reduce((n,k) => n + deckCards(k).length, 0);
+  let h = draftBanner() + `<button class="back" data-act="nav" data-v="home">← Paquets</button>
+  <p class="fine">${esc(deckLabel(S.selected))} · ${total} cartes en tout</p>
+  <p class="lab">Combien de questions</p><div class="row4">${COUNTS.map(n => `<button class="ghost small${S.count===n?" on":""}" data-act="count" data-v="${n}" aria-pressed="${S.count===n}">${n ? n : "Toutes"}</button>`).join("")}</div>
+  <p class="fine">Les questions sont tirées dans tous les paquets cochés, à tour de rôle.</p>
+  <p class="lab">Ton niveau</p><div class="opts">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="opt${S.difficulty===k?" on":""}" data-act="diff" data-v="${k}" aria-pressed="${S.difficulty===k}"><span class="opt-e">${d.emoji}</span><span class="opt-main">${d.label}</span><span class="opt-sub">${d.sub}</span></button>`).join("")}</div>
+  <p class="lab">Comment on corrige</p><div class="opts">${Object.entries(MODES).map(([k,m]) => `<button class="opt${S.mode===k?" on":""}" data-act="mode" data-v="${k}" aria-pressed="${S.mode===k}"><span class="opt-e">${m.emoji}</span><span class="opt-main">${m.label}</span><span class="opt-sub">${m.sub}</span></button>`).join("")}</div>`;
+  if (S.frozen){
+    h += `<div class="paper"><b>Version papier prête</b><p class="fine">Ce test est figé : la question N° 5 de la feuille sera la N° 5 à l'écran.</p>
+      <button class="ghost small" data-act="paper" data-v="ex">Feuille d'exercices</button>
+      <button class="ghost small" data-act="paper" data-v="both">Exercices + corrigé en dernière page</button>
+      <button class="ghost small" data-act="paper" data-v="key">Corrigé seul</button>
+      ${S.paperMsg ? `<p class="warn">${esc(S.paperMsg)}</p>` : ""}
+      ${S.paperCopy ? `<textarea class="exportarea" readonly rows="6" id="paper-copy">${esc(S.paperCopy)}</textarea>` : ""}
+      <button class="ghost small" data-act="unfreeze">Annuler et tirer un autre test</button></div>
+      <button class="cta" data-act="start">Commencer ce test à l'écran</button>`;
+  } else {
+    h += `<button class="ghost" data-act="freeze">🖨️ Version papier de ce test</button><button class="cta" data-act="start">Commencer</button>`;
+  }
+  h += `<p class="fine">${S.mode === "live" ? "En correction en direct, une lettre fausse est marquée dès que tu la tapes. Un mot que tu as dû corriger ne compte pas dans la note : il revient dans « Refaire mes erreurs »." : "Ordre conseillé : Correction en direct pour fixer l'orthographe (et les Umlaute), puis Épreuve blanche, où tu ne vois aucune réponse avant la fin, comme mardi."}</p>`;
+  return h;
+}
+
+/* ---------- correction en direct ---------- */
+function lvUnit(c){ return /[\p{L}\p{N}]/u.test(c) ? dxN(c) : ""; }
+function lvCands(q){
+  const out = new Set();
+  (q.accept || [q.answer]).forEach(a => {
+    [a, a.replace(/\s*\([^)]*\)\s*/g, " "), a.replace(/[()]/g, "")].forEach(v => {
+      out.add(v);
+      if (q.lang === "fr" && !q.keep) out.add(v.trim().replace(/^(le |la |les |l'|l’|un |une |des |du |de la |d'|d’)/i, ""));
+      if (q.lang === "de" && !q.keep) out.add(v.trim().replace(/^(der |die |das )/i, ""));
+    });
+  });
+  return [...out].map(v => [...v].map(lvUnit).join("")).filter(Boolean);
+}
+function lvCheck(typed, cands){
+  const chars = [...typed], T = [];
+  chars.forEach((c, i) => { for (const u of lvUnit(c)) T.push({ ch:u, i }); });
+  const t = T.map(x => x.ch), m = t.length;
+  let best = null;
+  cands.forEach(cs => {
+    const c = [...cs], n = c.length;
+    const D = Array.from({ length:m+1 }, () => new Array(n+1).fill(0));
+    for (let i = 0; i <= m; i++) D[i][0] = i;
+    for (let j = 0; j <= n; j++) D[0][j] = j;
+    for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) D[i][j] = Math.min(D[i-1][j] + 1, D[i][j-1] + 1, D[i-1][j-1] + (t[i-1] === c[j-1] ? 0 : 1));
+    let bj = 0; for (let j = 0; j <= n; j++) if (D[m][j] < D[m][bj]) bj = j;
+    if (!best || D[m][bj] < best.cost) best = { cost:D[m][bj], D, c, bj };
+  });
+  const bad = new Set(), miss = new Set();
+  if (best && best.cost > 0){
+    const { D, c } = best; let i = m, j = best.bj;
+    while (i > 0 && j > 0){
+      if (D[i][j] === D[i-1][j-1] + (t[i-1] === c[j-1] ? 0 : 1)){ if (t[i-1] !== c[j-1]) bad.add(T[i-1].i); i--; j--; }
+      else if (D[i][j] === D[i-1][j] + 1){ bad.add(T[i-1].i); i--; }
+      else { miss.add(i < m ? T[i].i : -1); j--; }
+    }
+    while (i > 0){ bad.add(T[i-1].i); i--; }
+    while (j > 0){ miss.add(m ? T[0].i : -1); j--; }
+  }
+  return { bad, miss, n: bad.size + miss.size };
+}
+function lvHtml(typed, r){
+  let h = "";
+  [...typed].forEach((c, i) => {
+    if (r.miss.has(i)) h += dxMiss;
+    h += r.bad.has(i) ? `<span class="lv-bad">${esc(c)}</span>` : esc(c);
+  });
+  if (r.miss.has(-1)) h += dxMiss;
+  return h || `<span class="lv-empty">Tes lettres s'affichent ici</span>`;
+}
+function updateLive(){
+  const Q = S.quiz; if (!Q || S.mode !== "live") return;
+  const q = Q.questions[Q.i]; if (!q || q.type !== "type" || Q.checked) return;
+  Q.lvcache = Q.lvcache || {};
+  const cands = Q.lvcache[Q.i] || (Q.lvcache[Q.i] = lvCands(q));
+  const r = lvCheck(Q.typed, cands);
+  if (r.n > 0){ Q.hadErr = true; Q.errSnap = Q.typed; }
+  const box = document.getElementById("live-box"); if (box) box.innerHTML = lvHtml(Q.typed, r);
+  const st = document.getElementById("live-state");
+  if (st) st.textContent = r.n ? `✗ ${r.n} ${r.n > 1 ? "lettres à corriger" : "lettre à corriger"}`
+    : Q.hadErr ? "✓ Corrigé — ce mot ne comptera pas dans la note" : Q.typed.trim() ? "✓ Pour l'instant, c'est juste" : "";
+}
+
+/* ---------- quiz ---------- */
+function startQuiz(questions, rattrapage){
+  if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
+  S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, start:Date.now(), label: rattrapage ? S.rattrLabel : deckLabel(S.selected) };
+  S.rattrapage = rattrapage; S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.screen = "quiz";
+  draftSave(); render(); window.scrollTo(0,0);
+}
+function viewQuiz(){
+  if (S.quitAsk) return quitView();
+  const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
+  let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
+  <div class="badges"><span class="num">N° ${q.num}</span><span class="chip ${q.tag}">${TAG_LABEL[q.tag]}</span><span class="ref">Exercice ${q.ex} · ${esc(q.exTitle)}</span></div>
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.hint ? `<p class="qhint">${esc(q.hint)}</p>` : ""}`;
+  if (q.type === "mcq"){
+    h += `<div class="opts">` + q.options.map((o, k) => {
+      let c = "choice";
+      if (Q.checked){ c += o === q.answer ? " good" : o === Q.picked ? " bad" : " off"; } else if (o === Q.picked) c += " sel";
+      return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${esc(o)}</button>`;
+    }).join("") + `</div>`;
+  } else {
+    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    if (q.lang === "de" && !Q.checked && !Q.finishing) h += `<div class="umlauts" aria-label="Lettres avec Umlaut">${["ä","ö","ü","Ä","Ö","Ü"].map(u => `<button data-act="uml" data-v="${u}" aria-label="Ajouter ${u}">${u}</button>`).join("")}</div>`;
+    if (S.mode === "live" && !Q.checked) h += `<div class="live"><p class="live-lab">Ta réponse, lettre par lettre</p><div class="live-box" id="live-box"></div><p class="live-state" id="live-state" aria-live="polite"></p></div>`;
+  }
+  if (Q.finishing) h += `<p class="fine">J'enregistre ton résultat…</p>`;
+  if (!Q.checked && !Q.finishing){
+    const last = Q.i + 1 >= total;
+    if (q.type === "type") h += `<button class="cta" data-act="validate" id="validate-btn" ${Q.typed.trim()?"":"disabled"}>${instant ? "Vérifier" : last ? "Terminer" : "Valider"}</button>`;
+    else if (!instant) h += `<button class="cta" data-act="validate" ${Q.picked===null?"disabled":""}>${last ? "Terminer" : "Valider"}</button>`;
+    h += `<button class="ghost small" data-act="dontknow">Je ne sais pas</button>`;
+  }
+  if (Q.checked){
+    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? ["Juste !","Bien vu.","Nickel.","Exact.","Sur le podium."][Q.i % 5] : Q.liveFixed ? "✓ Juste à la fin, avec de l'aide." : "Presque. Regarde bien :"}</p>
+      ${Q.liveFixed ? `<p>Tu as corrigé des lettres en direct : ce mot ne compte pas dans la note. Il reviendra dans « Refaire mes erreurs ».</p>` : ""}
+      ${Q.ok ? "" : `<p>Réponse : <b>${esc(q.answer)}</b></p>`}<p class="fb-x">${esc(q.expl)}</p>
+      ${q.type === "type" && !Q.ok && !Q.liveFixed && S.mode === "train" ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
+      <button class="cta" data-act="next">${Q.i+1 >= total ? "Voir mon résultat" : "Suivante"}</button></div>`;
+  }
+  return h;
+}
+function isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnswer(val, q.accept, q.lang, q.keep); }
+function validate(val){
+  const Q = S.quiz; if (Q.done) return;
+  const q = Q.questions[Q.i], right = isRight(q, val);
+  const liveFixed = S.mode === "live" && q.type === "type" && right && !!Q.hadErr;
+  const correct = right && !liveFixed;
+  if (S.mode !== "exam"){ Q.ok = correct; Q.liveFixed = liveFixed; Q.checked = true; draftSave(); render(); }
+  else record(val, correct);
+}
+function record(val, correct, typo){
+  const Q = S.quiz; if (Q.done) return;
+  const q = Q.questions[Q.i];
+  const liveFixed = !!(S.mode === "live" && Q.liveFixed);
+  const e = { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" };
+  if (typo) e.typo = true;
+  Q.detail.push(e);
+  if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
+  else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; Q.hadErr = false; Q.errSnap = ""; Q.liveFixed = false; draftSave(); render(); }
+}
+async function finishQuiz(){
+  const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
+  const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:"Allemand", theme:THEME, deck:Q.label,
+    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
+  S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
+  try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Pense à noter ta note ou à l'exporter." : ""; }
+  catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
+  draftClear();
+  S.lastResult = att; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; S.screen = "results"; render(); window.scrollTo(0,0);
+}
+
+/* ---------- bilan ---------- */
+function bilanState(id){ return S.bilan[id] || (S.bilan[id] = { busy:false, err:"", copied:false, fallback:"" }); }
+function bilanBlock(att){
+  const b = bilanState(att.id), a = att.analysis;
+  const wrong = att.questions.filter(x => !x.correct), canRetry = wrong.some(x => x.question);
+  let h = `<div class="bilan">`;
+  if (!a && !b.busy && HAS_CLAUDE) h += `<p class="fine">Tu veux savoir ce qui coince vraiment ? Je regarde tes réponses et je te dis quoi travailler.</p><button class="cta" data-act="analyse" data-v="${att.id}">Analyser mes résultats</button>`;
+  if (!a && !HAS_CLAUDE) h += `<p class="fine">Pour savoir ce qui coince vraiment, copie tes résultats et colle-les dans le chat de révisions : on les analyse ensemble.</p>`;
+  if (b.busy) h += `<p class="fine">Je regarde tes réponses une par une…</p>`;
+  if (b.err) h += `<p class="warn">${esc(b.err)}</p>`;
+  if (a){
+    h += `<h3>Ton bilan</h3>`;
+    if (a.points_forts.length) h += `<p class="bilan-lab">Ce qui est acquis</p><ul class="forts">${a.points_forts.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (a.a_travailler.length) h += `<p class="bilan-lab">À travailler</p><ul class="work">${a.a_travailler.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (a.conseil) h += `<p class="bilan-tip">${esc(a.conseil)}</p>`;
+  }
+  if (canRetry) h += `<button class="cta" data-act="retryWrong" data-v="${att.id}">Refaire mes erreurs (${wrong.length})</button>`;
+  const ev = errView(att.id);
+  h += `<div class="${wrong.length?"row":""}">${wrong.length ? `<button class="ghost" data-act="showErr" data-v="${att.id}" aria-pressed="${ev}">${ev ? "Voir toutes les questions" : `Voir mes erreurs (${wrong.length})`}</button>` : ""}<button class="ghost" data-act="copy" data-v="${att.id}">${b.copied ? "Copié — colle-le dans le chat" : "Copier pour le chat"}</button></div>`;
+  if (b.fallback) h += `<p class="fine">La copie automatique est bloquée ici. Le texte est sélectionné : copie-le à la main.</p><textarea class="exportarea" readonly rows="8" id="fb-${att.id}">${esc(b.fallback)}</textarea>`;
+  return h + `</div>`;
+}
+function findAttempt(id){ return (S.lastResult && S.lastResult.id === id) ? S.lastResult : S.attempts.find(a => a.id === id); }
+async function analyse(id){
+  const att = findAttempt(id), b = bilanState(id); b.busy = true; b.err = ""; render();
+  try {
+    const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
+    if (!sample) throw new Error("no sample");
+    const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? (q.typo ? "JUSTE (faute de frappe acceptée)" : "JUSTE") : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
+    const prompt = `Tu es un professeur d'allemand suisse, bienveillant, qui analyse le test d'un élève de 13 ans (10e HarmoS, niveau 2, canton de Neuchâtel). Il révise le comparatif et le superlatif (Geni@l Klick, séquence 2 « Fit und sportlich! ») pour un test le ${DUE.long}.
+
+Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
+Paquets : ${att.deck}
+Niveau : ${att.difficulty} — Mode : ${att.mode}
+
+Détail (étiquette entre crochets : sens = traduire un adjectif ou un mot, komparativ = forme du comparatif, superlativ = forme du superlatif avec am, phrase = compléter une phrase (als, so … wie, nicht so … wie, der/die/das …ste, am …sten), regle = règle de grammaire, article, pluriel ; entre parenthèses, le paquet) :
+${lignes}
+
+Analyse les ERREURS pour trouver ce qui coince vraiment : l'Umlaut oublié (alter au lieu de älter), les exceptions (gut, viel, gern, hoch, teuer, dunkel), als confondu avec wie, superlatif de l'adjectif (der …ste) confondu avec celui de l'adverbe (am …sten), une lettre oubliée en ajoutant -ste, l'accord der/die/das ? Cherche le point commun, ne recopie pas la liste. S'il n'y a pas de motif clair, dis-le honnêtement.
+
+Réponds UNIQUEMENT par un objet JSON valide, sans texte autour, exactement dans ce format :
+{"points_forts":["..."],"a_travailler":["..."],"conseil":"..."}
+- "points_forts" : 1 à 3 points courts et concrets.
+- "a_travailler" : 1 à 3 axes de progrès formulés positivement, avec l'exemple précis tiré du test.
+- "conseil" : 2 phrases maximum, une action à faire ce soir.
+Tu tutoies l'élève. Français de Suisse romande, ton encourageant, pas enfantin.`;
+    const parsed = await sample.json(prompt, { modelTier:"default" });
+    att.analysis = { points_forts: Array.isArray(parsed.points_forts) ? parsed.points_forts : [], a_travailler: Array.isArray(parsed.a_travailler) ? parsed.a_travailler : [], conseil: parsed.conseil || "" };
+    try { await store.save(att); } catch(e){}
+  } catch(e){
+    b.err = "Le bilan n'a pas pu être calculé ici. Le bouton de copie fonctionne quand même : colle tes résultats dans le chat et je les analyse là.";
+  }
+  b.busy = false; render();
+}
+function copyText(att){
+  const a = att.analysis, l = [];
+  l.push("RÉSULTAT — Allemand, Komparativ und Superlativ (test du " + DUE.short + ")");
+  l.push(`${dateLabel(att.date)} · ${att.deck} · ${att.difficulty} · ${att.mode}${att.rattrapage ? " · RATTRAPAGE (questions ratées rejouées)" : ""}`);
+  l.push(`Score : ${att.score}/${att.total} — note ${fmtNote(att.note)}/6`, "");
+  if (a){ l.push("BILAN"); if (a.points_forts.length) l.push("Acquis : " + a.points_forts.join(" · ")); if (a.a_travailler.length) l.push("À travailler : " + a.a_travailler.join(" · ")); if (a.conseil) l.push("Conseil : " + a.conseil); l.push(""); }
+  const wrong = att.questions.filter(q => !q.correct);
+  l.push(`ERREURS (${wrong.length}/${att.total})`);
+  if (!wrong.length) l.push("Aucune erreur.");
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → ${q.liveFixed ? `corrigé en direct (j'avais écrit « ${q.liveSnap} », puis « ${q.user} »)` : `j'ai répondu « ${q.user || "rien"} »`}, attendu : ${q.answer} (${(q.expl.split(" — ").pop() || "").trim()})`));
+  return l.join("\n");
+}
+function copyFor(id){
+  const att = findAttempt(id), b = bilanState(id), text = copyText(att);
+  const fail = () => { b.fallback = text; render(); setTimeout(() => { const t = document.getElementById("fb-" + id); if (t){ t.focus(); t.select(); } }, 30); };
+  try { navigator.clipboard.writeText(text).then(() => { b.copied = true; render(); setTimeout(() => { b.copied = false; render(); }, 2500); }, fail); }
+  catch(e){ fail(); }
+}
+function retryWrong(id){
+  const att = findAttempt(id);
+  const qs = att.questions.filter(x => !x.correct && x.question).map(x => x.question);
+  if (!qs.length) return;
+  S.rattrLabel = att.deck; S.rattrParent = att.rattrapage ? (att.parent || att.id) : att.id;
+  startQuiz(shuffle(qs), true);
+}
+
+/* ---------- voir mes erreurs ---------- */
+function dxN(c){ return deAcc(String(c).toLowerCase().replace(/ß/g,"ss").normalize("NFC")); }
+function dxW(w){ return dxN(w).replace(/[.,!?;:«»"()…]/g,""); }
+function lev(a, b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,j)=>j); for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
+function lcsOps(A, B, eq){
+  const m=A.length, n=B.length, Lt=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=m-1;i>=0;i--) for(let j=n-1;j>=0;j--) Lt[i][j]=eq(A[i],B[j])?Lt[i+1][j+1]+1:Math.max(Lt[i+1][j],Lt[i][j+1]);
+  const ops=[]; let i=0,j=0;
+  while(i<m&&j<n){ if(eq(A[i],B[j])){ ops.push({t:"=",a:A[i],b:B[j]}); i++; j++; } else if(Lt[i+1][j]>=Lt[i][j+1]) ops.push({t:"-",a:A[i++]}); else ops.push({t:"+",b:B[j++]}); }
+  while(i<m) ops.push({t:"-",a:A[i++]}); while(j<n) ops.push({t:"+",b:B[j++]});
+  return ops;
+}
+function dxBlocks(ops){ const out=[]; let cur=null; ops.forEach(o=>{ if(o.t==="="){ cur=null; out.push(o); } else { if(!cur){ cur={t:"x",del:[],ins:[]}; out.push(cur); } (o.t==="-"?cur.del:cur.ins).push(o.t==="-"?o.a:o.b); } }); return out; }
+const dxBad = t => `<del class="dx-bad">${esc(t)}</del>`;
+const dxGood = t => `<ins class="dx-good">${esc(t)}</ins>`;
+const dxMiss = `<span class="dx-miss" aria-label="il manque quelque chose ici">?</span>`;
+function dxChars(u, r){
+  let U="", R="";
+  dxBlocks(lcsOps([...u],[...r],(x,y)=>dxN(x)===dxN(y))).forEach(b=>{
+    if(b.t==="="){ U+=esc(b.a); R+=esc(b.b); return; }
+    U += b.del.length ? dxBad(b.del.join("")) : dxMiss;
+    if(b.ins.length) R += dxGood(b.ins.join(""));
+  });
+  return { U, R };
+}
+function dxDiff(user, right){
+  const A=user.trim().split(/\s+/).filter(Boolean), B=right.trim().split(/\s+/).filter(Boolean);
+  const U=[], R=[]; let common=0;
+  dxBlocks(lcsOps(A,B,(x,y)=>dxW(x)===dxW(y))).forEach(b=>{
+    if(b.t==="="){ common++; U.push(esc(b.a)); R.push(esc(b.b)); return; }
+    const k=Math.min(b.del.length,b.ins.length);
+    for(let i=0;i<k;i++){
+      const x=b.del[i], y=b.ins[i], lim=Math.max(1, Math.floor(Math.max(dxW(x).length,dxW(y).length)*0.4));
+      if(lev(dxW(x),dxW(y))<=lim){ const c=dxChars(x,y); U.push(c.U); R.push(c.R); common++; }
+      else { U.push(dxBad(x)); R.push(dxGood(y)); }
+    }
+    b.del.slice(k).forEach(x=>U.push(dxBad(x)));
+    if(b.ins.length>k){ U.push(dxMiss); b.ins.slice(k).forEach(y=>R.push(dxGood(y))); }
+  });
+  return { U:U.join(" "), R:R.join(" "), other: common===0 };
+}
+function dxLegend(){ return `<p class="dx-legend"><span>${dxBad("barré")} = ce qui était faux</span><span>${dxGood("souligné")} = ce qu'il fallait écrire</span><span>${dxMiss} = il manque quelque chose</span></p>`; }
+function errCard(q){
+  const Q = q.question || {}, isMcq = Q.type === "mcq", user = ((q.liveFixed && q.liveSnap) ? q.liveSnap : (q.user || "")).trim();
+  let right = q.answer, U, R, note = "";
+  if (!user){ U = `<span class="dx-none">rien</span>`; R = dxGood(right); }
+  else if (isMcq){ U = dxBad(user); R = dxGood(right); }
+  else {
+    const cands = (Q.accept && Q.accept.length ? Q.accept : [q.answer]).filter(Boolean);
+    right = cands.reduce((best, c) => lev(dxN(user), dxN(c)) < lev(dxN(user), dxN(best)) ? c : best, cands[0]);
+    const d = dxDiff(user, right); U = d.U; R = d.R;
+    if (d.other) note = "Ce n'est pas le même mot : apprends-le en entier.";
+  }
+  if (q.liveFixed) note = "Corrigé en direct : juste à la fin, mais avec de l'aide. Ce mot ne compte pas dans la note.";
+  return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
+    <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : q.liveFixed ? "Tu avais écrit" : "Tu as écrit"}</span><span class="dx-ans">${U}</span></p>
+    <p class="dx-line"><span class="dx-lab">✓ Il fallait</span><span class="dx-ans">${R}</span></p>
+    ${note ? `<p class="dx-note">${note}</p>` : ""}${right !== q.answer ? `<p class="fine">Réponse complète : ${esc(q.answer)}</p>` : ""}
+    <p class="rev-x">${esc(q.expl)}</p></div>`;
+}
+function errView(id){ const b = bilanState(id); return b.errOnly != null ? b.errOnly : S.screen === "results"; }
+function questionList(att){
+  const only = errView(att.id), wrong = att.questions.filter(q => !q.correct), list = only ? wrong : att.questions;
+  return (wrong.length ? dxLegend() : "") + list.map(q => q.correct ? revCard(q, !only) : errCard(q)).join("");
+}
+function revCard(q, showGoodAlways){
+  return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(q.user) : "—"}${q.typo ? " (faute de frappe acceptée)" : ""}</p>${(!q.correct || showGoodAlways) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(q.answer)}</b></p>` : ""}<p class="rev-x">${esc(q.expl)}</p></div>`;
+}
+function viewResults(){
+  const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
+  const msg = pct === 100 ? "Sans faute. Tu es prêt pour mardi." : pct >= 80 ? "Solide. Repasse juste sur les quelques ratés." : pct >= 60 ? "La base est là. Refais tes erreurs, tu vas vite grimper." : pct >= 40 ? "Bon début. Relis la fiche, puis refais un tour en Échauffement." : "C'est le moment de relire la fiche tranquillement. Ça va venir.";
+  const lf = att.questions.filter(q => q.liveFixed).length;
+  return `<div class="scorebox${att.rattrapage ? " rattr-box" : ""}"><div class="score-n">${att.score}<small>/${att.total}</small></div><span class="score-note">note ${fmtNote(att.note)}</span>${att.rattrapage ? `<span class="rattr">Rattrapage — ${att.total} question${att.total>1?"s":""} ratée${att.total>1?"s":""} rejouée${att.total>1?"s":""}</span>` : ""}</div>
+  <p class="intro">${msg}</p>${lf ? `<p class="fine">Dont ${lf} mot${lf>1?"s":""} juste${lf>1?"s":""} après correction en direct : ${lf>1?"ils ne comptent":"il ne compte"} pas dans la note.</p>` : ""}${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
+  ${bilanBlock(att)}
+  <p class="lab">${!wrong.length ? "Aucune erreur" : errView(att.id) ? `Mes erreurs (${wrong.length})` : `Toutes les questions (${att.total})`}</p>
+  <div class="rev">${questionList(att)}</div>
+  <div class="row"><button class="ghost" data-act="start">Refaire le test</button><button class="ghost" data-act="nav" data-v="home">Paquets</button></div>`;
+}
+
+function viewScores(){
+  if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
+  const list = S.attempts;
+  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
+  const roots = rootTests();
+  const best = roots.length ? Math.max(...roots.map(a => a.note)) : 0, avg = roots.length ? roots.reduce((s,a) => s + a.note, 0)/roots.length : 0;
+  const sorted = [...list].sort((a,b) => b.date - a.date);
+  const exportText = sorted.map(a => `${dateLabel(a.date)} — ${a.deck} (${a.difficulty}, ${a.mode}${a.rattrapage ? ", rattrapage" : ""}) : ${a.score}/${a.total} → note ${fmtNote(a.note)}`).join("\n");
+  let h = `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}
+  ${store.mode === "local" ? `<p class="note">Tes scores sont gardés dans ce navigateur uniquement. Exporte-les de temps en temps.</p>` : ""}
+  <div class="stats"><div class="stat"><b>${roots.length}</b><span>tests</span></div><div class="stat"><b>${roots.length?fmtNote(best):"—"}</b><span>meilleure</span></div><div class="stat"><b>${roots.length?fmtNote(avg):"—"}</b><span>moyenne</span></div></div>
+  ${suiviBlock()}
+  <p class="lab">Historique</p>
+  <div class="rev">`;
+  sorted.forEach(a => {
+    const open = S.scores.open === a.id;
+    h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}${esc(chainTxt(a))}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
+    if (open) h += `<div class="attempt-body">${bilanBlock(a)}${questionList(a)}</div>`;
+    h += `</div>`;
+  });
+  h += `</div><button class="ghost" data-act="exportToggle">${S.scores.exportOpen ? "Cacher la sauvegarde" : "💾 Exporter mes scores"}</button>`;
+  if (S.scores.exportOpen) h += `<p class="fine">Touche le texte, copie-le et colle-le dans une note ou envoie-le à tes parents.</p><textarea class="exportarea" readonly rows="${Math.min(list.length+1, 8)}" id="export-area">${esc(exportText)}</textarea>`;
+  h += S.scores.confirm
+    ? `<div class="confirm"><span>Tout effacer, sans retour possible ?</span><button class="mini yes" data-act="clearYes">Effacer</button><button class="mini" data-act="clearNo">Annuler</button></div>`
+    : `<button class="ghost danger" data-act="clearAsk">🗑️ Effacer tout l'historique</button>`;
+  return h;
+}
+
+/* ---------- version papier ---------- */
+function paperHtml(qs, part){
+  const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
+  const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
+  const line = q => `<b>${q.num}.</b> ${esc(q.word)}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}`;
+  const srcOf = q => esc((q.expl.split(" — ").pop() || "").replace(/\.$/,""));
+  const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
+    ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
+    : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
+  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b> <span class="hint">(${srcOf(q)})</span></div>`).join("")}</section>`).join("");
+  const head = `<h1>Allemand — Komparativ und Superlativ</h1><p class="meta">Prénom : Livio · test du ${DUE.long} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
+  const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
+  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Allemand Komparativ — ${DUE.short}</title><style>
+@page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
+.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}
+.k{font-size:13.5px;margin:3px 0}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
+</style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
+}
+async function savePaper(part){
+  const qs = S.frozen; S.paperMsg = ""; S.paperCopy = "";
+  const names = { ex:"exercices", both:"exercices-et-corrige", key:"corrige" };
+  const filename = `${DUE.iso}_allemand-komparativ-livio-${names[part]}.html`;
+  try {
+    if (!HAS_CLAUDE){
+      const url = URL.createObjectURL(new Blob([paperHtml(qs, part)], { type:"text/html" }));
+      const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      S.paperMsg = "Fichier téléchargé : ouvre-le, puis touche « Imprimer »."; render(); return;
+    }
+    const dl = await window.claude.use("downloads");
+    if (!dl) throw { code:"unavailable" };
+    await dl.save({ filename, data:paperHtml(qs, part) });
+  } catch(e){
+    if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
+    else {
+      S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
+      S.paperCopy = "#PDF-ALLEMAND-KOMPARATIV\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.hint ? " (" + q.hint + ")" : ""}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
+    }
+  }
+  render();
+}
+
+/* ---------- chargement ---------- */
+async function loadHistory(){
+  try {
+    await store.init();
+    let raw = await store.list();
+    raw.sort((a,b) => b.date - a.date);
+    const cleaned = raw.filter((a, k) => { const prev = raw[k-1]; return !(prev && prev.deck === a.deck && Math.abs(prev.date - a.date) < 3000); });
+    for (const a of raw) if (!cleaned.includes(a)) { try { await store.remove(a.id); } catch(e){} }
+    const known = new Set(S.attempts.map(a => a.id));
+    S.attempts = [...S.attempts, ...cleaned.filter(a => !known.has(a.id))].sort((a,b) => b.date - a.date);
+  } catch(e){
+    S.loadErr = "Je n'arrive pas à lire tes anciens résultats pour l'instant. Les nouveaux tests s'afficheront quand même.";
+  }
+  try { let dd = null; try { dd = await store.getDoc(DRAFT_ID); } catch(e){} const dl = draftLocalGet(); const d = draftPick(dd, dl); if (!S.quiz) S.draft = d; } catch(e){}
+  S.loaded = true;
+  render();
+}
+
+/* ---------- événements ---------- */
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el || el.disabled) return;
+  const act = el.dataset.act, v = el.dataset.v;
+  const Q = S.quiz;
+  switch(act){
+    case "nav": S.draftBlock = false; S.screen = v; S.scores.confirm = false; render(); window.scrollTo(0,0); break;
+    case "fiche": S.ficheOpen = S.ficheOpen === +v ? -1 : +v; render(); break;
+    case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : DECKS.map(d => d.key).filter(k => k === v || S.selected.includes(k)); S.frozen = null; S.cards.order = []; render(); break;
+    case "allDecks": S.selected = S.selected.length === DECKS.length ? [] : DECKS.map(d => d.key); S.frozen = null; S.cards.order = []; render(); break;
+    case "toCards": S.screen = "cards"; render(); break;
+    case "flip": S.cards.flip = !S.cards.flip; render(); break;
+    case "card": { const n = cardList().length; S.cards.flip = false; S.cards.pos = (S.cards.pos + (+v) + n) % n; render(); break; }
+    case "cardShuffle": S.cards.order = shuffle(S.cards.order); S.cards.pos = 0; S.cards.flip = false; render(); break;
+    case "count": S.count = +v; S.frozen = null; render(); break;
+    case "diff": S.difficulty = v; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
+    case "mode": S.mode = v; render(); break;
+    case "freeze": S.frozen = buildTest(S.selected, S.difficulty, S.count); render(); break;
+    case "unfreeze": S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
+    case "paper": savePaper(v); break;
+    case "start": S.rattrParent = null; startQuiz(S.frozen || buildTest(S.selected, S.difficulty, S.count), false); break;
+    case "quit": S.quitAsk = true; render(); break;
+    case "quitKeep": draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "quitDrop": draftClear(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "quitNo": S.quitAsk = false; render(); break;
+    case "draftResume": draftResume(); break;
+    case "draftAsk": S.draftAsk = true; render(); break;
+    case "draftNo": S.draftAsk = false; render(); break;
+    case "draftDrop": draftClear(); render(); break;
+    case "uml": { const inp = document.getElementById("answer-input"); if (!inp || inp.disabled) return; const s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s; inp.value = inp.value.slice(0, s) + v + inp.value.slice(en); Q.typed = inp.value; inp.focus(); inp.setSelectionRange(s + 1, s + 1); const b = document.getElementById("validate-btn"); if (b) b.disabled = !Q.typed.trim(); updateLive(); break; }
+    case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train" || S.mode === "live") validate(Q.picked); else render(); break; }
+    case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
+    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.liveFixed = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; draftSave(); render(); } else record("", false); break; }
+    case "typo": record(Q.typed, true, true); break;
+    case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
+    case "showErr": { const b = bilanState(v); b.errOnly = !errView(v); render(); break; }
+    case "analyse": analyse(v); break;
+    case "copy": copyFor(v); break;
+    case "retryWrong": retryWrong(v); break;
+    case "redoBad": redoCards(v); break;
+    case "redoCards": redoCards(v); break;
+    case "suiviF": S.suivi.f = v; S.suivi.pt = null; render(); break;
+    case "suiviPt": S.suivi.pt = S.suivi.pt === v ? null : v; render(); break;
+    case "openAttempt": S.scores.open = S.scores.open === v ? null : v; render(); break;
+    case "exportToggle": S.scores.exportOpen = !S.scores.exportOpen; render(); break;
+    case "clearAsk": S.scores.confirm = true; render(); break;
+    case "clearNo": S.scores.confirm = false; render(); break;
+    case "clearYes": (async () => {
+      const ids = S.attempts.map(a => a.id); S.attempts = []; S.scores = { open:null, exportOpen:false, confirm:false }; render();
+      let failed = false; for (const id of ids){ try { await store.remove(id); } catch(e){ failed = true; } }
+      if (failed){ S.loadErr = "L'effacement n'a pas pu être enregistré partout. Recharge la page et réessaie."; render(); }
+    })(); break;
+  }
+});
+document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ S.suivi.ch = e.target.value; S.suivi.pt = null; render(); } });
+document.addEventListener("input", e => {
+  if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); }
+});
+document.addEventListener("keydown", e => {
+  if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
+  if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("ch-pt")){ e.preventDefault(); const v = e.target.dataset.v; S.suivi.pt = S.suivi.pt === v ? null : v; render(); }
+});
+document.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("exportarea")) e.target.select(); });
+
+render();
+loadHistory();
+</script>
+</body>
+</html>
