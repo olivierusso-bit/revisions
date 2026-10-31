@@ -1,0 +1,1982 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"></head><body><title>Géographie · Une Suisse · lundi 2 novembre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,600;0,800;1,400&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
+<style>
+/* Carte de la Suisse : rouge du drapeau, papier de carte, vert du Jura, jaune du Moyen-Pays, brun des Alpes ; le cours se lit en Alegreya, l'outil se manie en Alegreya Sans. */
+:root{
+  --dock:#F3EEE8; --sheet:#FFFFFF; --ink:#1F1A1B; --soft:#55616E; --st:#8E978F; --rule:#C4CFCD;
+  --box:#B3202E; --box-wash:#F8E3E4; --crane:#E3A923; --crane-ink:#3A2700; --board:#2A1C1E; --on-box:#FFFFFF;
+  --jura:#7DB65A; --mp:#F2DC6B; --alp:#A97B5A; --border:#C21E2E; --water:#3F86C6; --sea:#DCEBF2;
+  --good:#1F6E4E; --good-wash:#DDF1E6; --bad:#A3243B; --bad-wash:#F7E1E5;
+  --gen:#55616B; --gen-wash:#EEF1F4; --book-wash:#FFF1B8; --book-ink:#5A4500; --dico:#6A3D8F; --dico-wash:#EFE6F7;
+  --land:#EFEAE0; --r1:#B3261E; --r2:#6B3FA0; --r3:#1E7A46; --r4:#7A6A12; --r5:#8E2A2A; --r6:#2361A8;
+  --display:'Alegreya',Georgia,serif;
+  --ui:'Alegreya Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --read:'Alegreya',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --dock:#171213; --sheet:#221B1C; --ink:#EEE6E6; --soft:#9DB0B3; --st:#5E6E70; --rule:#2A3B3F;
+  --box:#FF8A92; --box-wash:#3A1D21; --crane:#E8B13A; --crane-ink:#1C1300; --board:#120B0C; --on-box:#2A0A0E;
+  --jura:#4F8A36; --mp:#B9A43A; --alp:#7E5A42; --border:#FF6B78; --water:#6FB2EA; --sea:#173040;
+  --good:#5FD3A0; --good-wash:#14332A; --bad:#FF8FA0; --bad-wash:#3A1D23;
+  --gen:#A9B6BF; --gen-wash:#1D2830; --book-wash:#3A3110; --book-ink:#F4D46A; --dico:#C9A3EC; --dico-wash:#2B2136;
+  --land:#2E2A26; --r1:#FF8A80; --r2:#C3A6F0; --r3:#7FD6A4; --r4:#E2CF6A; --r5:#F0A0A0; --r6:#8DB8F2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --dock:#171213; --sheet:#221B1C; --ink:#EEE6E6; --soft:#9DB0B3; --st:#5E6E70; --rule:#2A3B3F;
+  --box:#FF8A92; --box-wash:#3A1D21; --crane:#E8B13A; --crane-ink:#1C1300; --board:#120B0C; --on-box:#2A0A0E;
+  --jura:#4F8A36; --mp:#B9A43A; --alp:#7E5A42; --border:#FF6B78; --water:#6FB2EA; --sea:#173040;
+  --good:#5FD3A0; --good-wash:#14332A; --bad:#FF8FA0; --bad-wash:#3A1D23;
+  --gen:#A9B6BF; --gen-wash:#1D2830; --book-wash:#3A3110; --book-ink:#F4D46A; --dico:#C9A3EC; --dico-wash:#2B2136;
+  --land:#2E2A26; --r1:#FF8A80; --r2:#C3A6F0; --r3:#7FD6A4; --r4:#E2CF6A; --r5:#F0A0A0; --r6:#8DB8F2; color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--dock);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding-block:18px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--crane);outline-offset:2px}
+
+/* en-tête : un conteneur vu de côté (ondulations de la tôle) */
+.head{position:relative;overflow:hidden;display:flex;gap:14px;align-items:center;margin-bottom:18px;padding:16px 14px 16px 16px;border-radius:4px;color:#fff;background:repeating-conic-gradient(from 3deg at 92% 30%,rgba(255,255,255,0) 0deg 10.5deg,rgba(255,255,255,.18) 10.5deg 11.25deg),#B3202E}
+.head-code{flex:none;background:#E3A923;color:#3A2700;font-family:var(--display);font-weight:800;font-size:15px;padding:4px 8px;border-radius:2px;letter-spacing:.5px;line-height:1.1;text-align:center}
+.head-code b{display:block;font-size:24px}
+.head h1{font-family:var(--display);font-weight:800;font-size:clamp(25px,7.4vw,34px);line-height:1;margin:0;text-wrap:balance}
+.head p{margin:4px 0 0;font-size:14px;opacity:.92}
+
+.screen{display:flex;flex-direction:column;gap:12px}
+.intro{margin:0;font-size:15.5px}
+.lab{font-family:var(--display);font-weight:700;font-size:22px;margin:12px 0 0}
+.fine{font-size:13px;color:var(--soft);margin:0}
+.warn{background:var(--bad-wash);border-left:3px solid var(--bad);padding:10px 12px;font-size:14px;border-radius:0 6px 6px 0;margin:0}
+.note{background:var(--box-wash);border-radius:6px;padding:10px 12px;font-size:14px;margin:0}
+.back{align-self:flex-start;background:none;border:0;color:var(--box);font-weight:700;padding:0;cursor:pointer}
+.cta{width:100%;padding:15px;border:0;border-radius:4px;background:var(--box);color:var(--on-box);font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.3px;cursor:pointer}
+.cta:disabled{opacity:.45;cursor:not-allowed}
+.ghost{width:100%;padding:12px;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);font-weight:700;font-size:14.5px;cursor:pointer}
+.ghost.small{font-size:13.5px;padding:10px}
+.ghost.danger{color:var(--bad)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* ===== DOSSIER (e-book) ===== */
+.toc-ch{display:flex;flex-direction:column;gap:6px}
+.toc-ch h2{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1;margin:14px 0 2px;display:flex;flex-direction:column;gap:2px}
+.toc-ch h2 span{font-family:var(--ui);font-weight:600;font-size:14px;color:var(--soft)}
+.toc-item{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:11px 12px;cursor:pointer}
+.code{font-family:var(--display);font-weight:800;font-size:16px;background:var(--board);color:var(--crane);padding:3px 8px;border-radius:2px;letter-spacing:.5px;min-width:42px;text-align:center}
+.toc-t{font-weight:700;font-size:15px;line-height:1.3}
+.toc-s{display:block;font-weight:400;font-size:12.5px;color:var(--soft)}
+.legend{display:flex;flex-direction:column;gap:6px;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px}
+.legend p{margin:0;font-size:14px;display:flex;gap:8px;align-items:baseline}
+
+.page{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:18px 16px 20px;display:flex;flex-direction:column;gap:14px}
+.crumb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--soft)}
+.page h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,7.5vw,32px);line-height:1.05;margin:0;text-wrap:balance}
+.objective{margin:0;padding:10px 12px;border:2px solid var(--board);border-radius:3px;font-size:14.5px;background:var(--dock)}
+.objective b{display:block;font-family:var(--display);font-size:15px;letter-spacing:.3px;color:var(--soft);font-weight:700}
+.read{font-family:var(--read);font-size:17px;line-height:1.65;margin:0;max-width:65ch}
+.page h3{font-family:var(--display);font-weight:700;font-size:21px;margin:6px 0 -4px}
+.def{border-left:4px solid var(--box);padding:4px 0 4px 12px;display:flex;flex-direction:column;gap:2px}
+.def-term{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.15}
+.def .read{font-size:16.5px}
+.def.gen{border-left:4px dashed var(--gen);background:var(--gen-wash);padding:8px 10px 8px 12px;border-radius:0 4px 4px 0}
+.def.book{border-left:4px solid var(--crane);background:var(--book-wash);padding:9px 10px 9px 12px;border-radius:0 14px 14px 0}
+.def.book .read{font-weight:600}
+.tag.book{background:var(--crane);color:var(--crane-ink)}
+.step.st .step-bar{width:6px;justify-self:center;opacity:.55}
+.rv-d{font-family:var(--display);font-weight:700;font-size:15px;color:var(--soft)}
+.rv-c{font-size:12.5px;font-weight:700;color:var(--box);margin-top:3px}
+.nike{gap:10px}
+.nk{display:flex;flex-direction:column;gap:3px}
+.nk-r{font-weight:700;font-size:14px}
+.tag{display:inline-block;white-space:nowrap;flex:none;font-family:var(--ui);font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:3px;vertical-align:2px}
+.tag.mine{background:var(--box-wash);color:var(--box)}
+.tag.gen{background:var(--gen-wash);color:var(--gen);border:1px dashed var(--gen)}
+.mywork{background:var(--box-wash);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.mywork-t{font-weight:700;font-size:14px;color:var(--box);margin:0}
+.mywork ul{margin:0;padding-left:18px}
+.mywork li{font-family:var(--read);font-size:15.5px;margin:2px 0}
+.tip{margin:0;padding:10px 12px;border-radius:4px;background:var(--board);color:#E9EEF2;font-size:15px}
+.tip b{color:var(--crane);font-family:var(--display);font-size:17px;display:block}
+.todo{margin:0;padding:10px 12px;border:1px dashed var(--bad);border-radius:4px;font-size:14px;color:var(--ink)}
+.src{font-size:12.5px;color:var(--soft);margin:0}
+.exl{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.exl-t{margin:0;padding:8px 12px;font-weight:700;font-size:14px;background:var(--box-wash);color:var(--box)}
+.exr{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:9px 12px;border-top:1px solid var(--rule);font-size:14.5px}
+.exr .code{font-size:13px;min-width:0;padding:2px 6px;align-self:start}
+.exr b{font-weight:600}
+.exr span.so{display:block;color:var(--soft);font-size:13.5px;margin-top:2px}
+.links{display:flex;flex-direction:column;gap:10px}
+.lk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--rule);border-radius:4px}
+.lk-ids{display:flex;flex-direction:column;gap:4px;align-items:center}
+.lk-ids button{border:0;background:var(--board);color:var(--crane);font-family:var(--display);font-weight:800;font-size:14px;padding:2px 7px;border-radius:2px;cursor:pointer}
+.lk-ids i{font-style:normal;color:var(--soft);font-size:12px;line-height:1}
+.lk p{margin:0;font-size:15px}
+.trio{display:flex;flex-direction:column;gap:0}
+.trio-s{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:10px 0}
+.trio-s + .trio-s{border-top:1px dashed var(--rule)}
+.trio-k{font-family:var(--display);font-weight:800;font-size:28px;line-height:1;color:var(--on-box);background:var(--box);border-radius:3px;display:flex;align-items:center;justify-content:center;height:44px}
+.trio-s b{display:block;font-family:var(--display);font-size:20px;line-height:1.1}
+.trio-s p{margin:2px 0 6px;font-size:14.5px;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--rule);background:var(--dock);border-radius:3px;padding:3px 8px;font-size:13px;font-weight:700;cursor:pointer}
+.rv-s{width:34px;height:34px;color:var(--box)}
+.sect6{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sx{border:2px solid var(--board);border-radius:3px;padding:9px 10px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.sx b{font-family:var(--display);font-size:17px;line-height:1.1}
+.sx span{font-size:13.5px;color:var(--soft)}
+.pbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:4;display:flex;align-items:center;gap:12px;background:var(--dock);border-bottom:1px solid var(--rule);
+  margin-left:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));margin-right:calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding:9px max(16px, env(safe-area-inset-right, 0px)) 9px max(16px, env(safe-area-inset-left, 0px))}
+.pbar-back{flex:none;background:none;border:0;color:var(--box);font-weight:700;font-size:15px;padding:4px 0;cursor:pointer}
+.pbar-t{min-width:0;flex:1;display:flex;gap:8px;align-items:center}
+.pbar-t .code{flex:none;font-size:13px;min-width:0;padding:2px 6px}
+.pbar-x{min-width:0;font-weight:700;font-size:14.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--dock)}
+.vid{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:4px;background:var(--board);color:#E9EEF2;text-decoration:none;margin:0}
+.vid b{display:block;font-size:15.5px;color:#fff}.vid small{display:block;font-size:12.5px;color:#C9D3E0}
+.vid-i{flex:none;width:38px;height:38px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:15px;padding-left:2px}
+.vid.off{background:var(--gen-wash);color:var(--gen);border:1px dashed var(--gen)}.vid.off b{color:var(--gen)}.vid.off small{color:var(--gen)}.vid.off .vid-i{background:var(--rule);color:var(--soft)}
+.vthumb{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:4px;overflow:hidden;background:var(--board);cursor:pointer;color:#fff;text-align:left}
+.vthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.vthumb-play{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:24px;padding-left:4px;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.vthumb-t{position:absolute;left:0;right:0;bottom:0;padding:10px 12px;background:linear-gradient(transparent,rgba(10,17,23,.9))}
+.vthumb-t b{display:block;font-size:15.5px}.vthumb-t small{display:block;font-size:12.5px;color:#D5DEE6}
+.vplay{display:flex;flex-direction:column;gap:8px}
+.vframe{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:4px;overflow:hidden}
+.vframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vbar{display:grid;grid-template-columns:1fr auto;gap:8px}
+.vfb{margin:0}.vfb a{color:var(--soft)}
+.vdone{background:var(--good-wash);border:1px solid var(--good);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.vdone-t{margin:0;font-family:var(--display);font-weight:800;font-size:22px;color:var(--good)}
+.toc-v.seen{background:var(--good-wash);color:var(--good);border:1px solid var(--good)}
+.ctest{border:1px solid var(--box);background:var(--box-wash);border-radius:4px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.ctest.end{margin-top:4px}
+.ctest-t{margin:0;font-weight:700;font-size:15px;color:var(--box)}.ctest-t small{display:block;font-weight:400;font-size:12.5px;color:var(--soft)}
+.ctest-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);cursor:pointer;min-width:0}
+.ctest-b span{font-size:17px}.ctest-b b{font-size:13px;line-height:1.2;text-align:center}
+.prebox{border:2px dashed var(--crane);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--sheet)}
+.prebox-t,.blank-t{margin:0;font-weight:700;font-size:15.5px}.prebox-t small,.blank-t small{display:block;font-weight:400;font-size:13px;color:var(--soft)}
+.prebox ol{margin:0;padding-left:20px;font-size:15px}.prebox li{margin:3px 0}.prebox details li{font-size:14.5px}.prebox .bsrc{display:block;margin:2px 0 0}
+.pause{border-left:5px solid var(--crane);background:var(--book-wash);border-radius:0 4px 4px 0;padding:9px 12px;display:flex;flex-direction:column;gap:5px}
+.pause-t{margin:0;font-family:var(--display);font-weight:800;font-size:17px;color:var(--book-ink)}
+.pause-q{margin:0;font-weight:700;font-size:15.5px}
+.pause details p{margin:6px 0 0;font-size:15px}
+details summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--box);padding:4px 0}
+.blank{border:2px solid var(--board);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--dock)}
+.blank-c{margin:0;font-size:15.5px}
+.blank-l{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.blank-l label{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;cursor:pointer}.blank-l input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--box)}
+.svgfig{margin:0;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:8px}
+.svgfig svg{display:block;width:100%;height:auto}
+.blank .bsrc{margin:6px 0 0}
+.svgfig figcaption{font-size:13px;color:var(--soft);margin-top:4px;font-weight:700}
+.caps-cta{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;border:0;border-radius:4px;background:var(--board);color:#E9EEF2;cursor:pointer}
+.caps-cta b{display:block;font-family:var(--display);font-size:20px;color:#fff;line-height:1.1}.caps-cta small{display:block;font-size:13px;color:#C9D3E0}
+.caps-cta-i,.caps-play{flex:none;width:42px;height:42px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:16px;padding-left:3px;border:0;cursor:pointer}
+.caps-meta{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.caps-date{font-weight:700;font-size:14px;background:var(--box-wash);color:var(--box);padding:5px 10px;border-radius:4px}
+.caps-prog{font-weight:700;color:var(--soft)}.caps-prog b{color:var(--good)}
+.caps-ch{display:flex;flex-direction:column;gap:8px}
+.caps-ch h3{margin:8px 0 0;border-bottom:2px solid var(--board);padding-bottom:5px}.caps-ch h3 small{display:block;font-family:var(--ui);font-weight:400;font-size:13.5px;color:var(--soft)}
+.caps-row{border:1px solid var(--rule);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;scroll-margin-top:64px}
+.caps-row.seen{background:var(--good-wash);border-color:var(--good)}.caps-row.on{border-color:var(--box)}
+.caps-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center}
+.caps-line .code{font-size:14px;min-width:46px;padding:3px 6px}
+.caps-txt b{display:block;font-size:15.5px;line-height:1.25}.caps-txt small{display:block;font-size:13px;color:var(--soft);line-height:1.35;margin-top:2px}
+.caps-st{margin:0;font-size:12.5px;color:var(--soft)}.caps-st .back{font-size:12.5px;display:inline}
+.caps-row.seen .caps-st{color:var(--good);font-weight:700}
+.toc-v{display:inline-block;font-size:11.5px;font-weight:700;background:var(--crane);color:var(--crane-ink);padding:0 6px;border-radius:3px;vertical-align:2px;white-space:nowrap}
+.pm{margin:0 0 6px;font-size:14.5px}
+.pm b{display:inline-block;width:16px}
+.bsrc{margin:-8px 0 0;font-size:12.5px;color:var(--soft);line-height:1.35}
+.see{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.see button{border:1px solid var(--rule);background:var(--dock);border-radius:3px;padding:5px 9px;cursor:pointer;font-weight:700}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pager button{text-align:left;padding:10px 12px;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);cursor:pointer;min-width:0}
+.pager button:last-child{text-align:right}
+.pager small{display:block;color:var(--soft);font-size:12px}
+.pager b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* schémas */
+.chain{display:flex;flex-direction:column;gap:0}
+.step{display:grid;grid-template-columns:14px minmax(0,1fr);gap:12px;align-items:stretch}
+.step-bar{border-radius:3px}
+.step-body{padding:8px 0 12px}
+.step-body b{font-family:var(--display);font-size:19px;display:block;line-height:1.1}
+.step-body span{font-size:14.5px;color:var(--soft)}
+.step + .step .step-body{border-top:1px dashed var(--rule)}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-size:14.5px}
+.tbl th,.tbl td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl th{font-family:var(--display);font-size:16px;font-weight:700;color:var(--soft)}
+.tbl td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.rev4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rv{border:2px solid var(--board);border-radius:3px;padding:9px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.rv-n{font-family:var(--display);font-weight:800;font-size:28px;line-height:1;color:var(--box)}
+.rv-i{font-weight:700;font-size:14.5px}
+.rv-x{font-size:13px;color:var(--soft)}
+.rv-i{line-height:1.3}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bar-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;align-items:center;font-size:14px}
+.bar-track{display:flex;gap:4px;align-items:center}
+.bar-fill{height:14px;border-radius:2px;background:var(--box)}
+.bar-fill.b{background:var(--crane)}
+.bar-v{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;white-space:nowrap}
+.box3d{border:2px solid var(--board);border-radius:3px;padding:12px;text-align:center;font-family:var(--display);font-size:20px;font-weight:700;background:repeating-linear-gradient(90deg,var(--box-wash) 0 8px,var(--sheet) 8px 11px)}
+.box3d small{display:block;font-family:var(--ui);font-size:13px;font-weight:400;color:var(--soft)}
+.version{margin:4px 0 0;text-align:center;font-size:12.5px;color:var(--soft)}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.photos figure{margin:0}.photos img{width:100%;height:auto;border-radius:4px;border:1px solid var(--rule);display:block}
+.photos .missing span{display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;border:1px dashed var(--rule);border-radius:4px;color:var(--soft);font-size:13px;text-align:center;padding:8px}
+.photos figcaption{font-size:12.5px;color:var(--soft);margin-top:4px}
+.srcrow{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--rule);font-size:14.5px}
+.srcrow b{color:var(--box)}
+
+/* paquets */
+.decks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.deck{position:relative;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0}
+.deck.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box);background:var(--box-wash)}
+.deck-c{align-self:flex-start;font-family:var(--display);font-weight:800;font-size:13px;background:var(--board);color:var(--crane);padding:1px 6px;border-radius:2px}
+.deck-t{font-weight:700;font-size:14.5px;line-height:1.25}
+.deck-n{font-size:12.5px;color:var(--soft)}
+.deck-tick{position:absolute;top:9px;right:10px;color:var(--box);font-weight:800}
+
+/* cartes */
+.flash{position:relative;height:480px;perspective:1200px;cursor:pointer;border:0;background:none;padding:0;width:100%}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:4px;background:var(--sheet);border:1px solid var(--rule);border-top:8px solid var(--box);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:10px;padding:16px 16px 34px;overflow:auto;transition:transform .45s}
+.face.b{transform:rotateY(180deg);background:var(--box-wash);border-color:var(--box)}
+.flash.flipped .face.f{transform:rotateY(180deg)}
+.flash.flipped .face.b{transform:rotateY(360deg)}
+.face-tag{font-size:13.5px;font-weight:700;color:var(--soft)}
+.face-word{font-family:var(--display);font-weight:700;font-size:clamp(25px,7.5vw,32px);text-align:center;line-height:1.2;overflow-wrap:anywhere}
+.face-hint{position:absolute;bottom:10px;font-size:13.5px;color:var(--soft)}
+.face-word.mid{font-size:24px}
+.face-word.long{font-size:21px;line-height:1.3}
+.face-ans{font-size:18px;text-align:center;line-height:1.4;max-width:46ch}
+.face-src{font-size:14.5px;color:var(--soft);text-align:center;border-top:1px dashed var(--rule);padding-top:6px}
+.rvsum{background:var(--sheet);border:1px dashed var(--box);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.rvsum-t{margin:0;font-size:14px}
+.rv-clear{font-size:13px;color:var(--bad)}
+.rvw{background:var(--sheet);border:1px solid var(--box);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.rvw-t{margin:0;font-weight:700;color:var(--box);font-size:14.5px}
+.ck{display:flex;gap:10px;align-items:flex-start;font-size:15px;cursor:pointer}
+.ck input{width:22px;height:22px;flex:none;margin:0;accent-color:var(--box)}
+.rv-note{width:100%;border:1px solid var(--rule);border-radius:4px;padding:8px 10px;background:var(--dock);color:var(--ink);font:14.5px/1.4 var(--ui)}
+.rv-toggle{align-self:center;font-size:13.5px;margin-top:4px}
+
+/* réglages */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px 14px;cursor:pointer}
+.opt.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box);background:var(--box-wash)}
+.opt-e{grid-row:1/3;font-size:20px}
+.opt-main{font-weight:700}
+.opt-sub{font-size:13px;color:var(--soft)}
+.paper{background:var(--sheet);border:1px dashed var(--box);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:8px}
+
+/* quiz */
+.qtop{display:flex;align-items:center;gap:10px}
+.quit{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid var(--rule);background:var(--sheet);cursor:pointer;color:var(--soft)}
+.bar{flex:1;height:10px;border-radius:2px;background:var(--sheet);border:1px solid var(--rule);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--box);transition:width .3s}
+.qn{font-size:13px;font-weight:700;color:var(--soft);font-variant-numeric:tabular-nums}
+.badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.num{font-family:var(--display);font-weight:800;font-size:15px;background:var(--board);color:var(--crane);padding:2px 9px;border-radius:2px;font-variant-numeric:tabular-nums}
+.chip{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--box-wash);color:var(--box)}
+.ref{font-size:12px;color:var(--soft)}
+.consigne{margin:0;font-size:14.5px;color:var(--soft)}
+.qword{font-family:var(--display);font-weight:700;font-size:clamp(22px,6.5vw,28px);line-height:1.2;margin:0;overflow-wrap:anywhere}
+.choice{padding:14px;border-radius:4px;border:1px solid var(--rule);background:var(--sheet);text-align:left;font-size:16px;font-weight:700;cursor:pointer}
+.choice.sel{border-color:var(--box);box-shadow:inset 0 0 0 2px var(--box)}
+.choice.good{background:var(--good-wash);border-color:var(--good);color:var(--good)}
+.choice.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.choice.good::before{content:"✓ "}.choice.bad::before{content:"✗ "}
+.choice.off{opacity:.5}
+.tinput{width:100%;padding:14px;border-radius:4px;border:1px solid var(--rule);background:var(--sheet);font:inherit;font-size:18px;font-weight:700;color:var(--ink)}
+.tinput.good{background:var(--good-wash);border-color:var(--good)}
+.tinput.bad{background:var(--bad-wash);border-color:var(--bad)}
+.fb{padding:14px;border-radius:4px;border:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
+.fb.ok{background:var(--good-wash);border-color:var(--good)}
+.fb.no{background:var(--bad-wash);border-color:var(--bad)}
+.fb-t{font-family:var(--display);font-weight:700;font-size:21px;margin:0}
+.fb p{margin:0}
+.fb-x{font-size:14px;color:var(--soft)}
+
+/* résultats */
+.scorebox{background:var(--board);border:4px solid var(--box);border-radius:4px;padding:18px;text-align:center}
+.scorebox.rattr-box{border-color:var(--bad)}
+.score-n{font-family:var(--display);font-weight:800;font-size:60px;line-height:1;color:var(--crane);font-variant-numeric:tabular-nums}
+.score-n small{font-size:30px;color:#B9A256}
+.score-note{display:inline-block;margin-top:8px;background:var(--crane);color:#16232E;font-weight:800;padding:4px 14px;border-radius:2px}
+.rattr{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#FF9A88}
+.rev{display:flex;flex-direction:column;gap:9px}
+.revcard{background:var(--sheet);border:1px solid var(--rule);border-left:4px solid var(--bad);border-radius:4px;padding:11px 12px;display:flex;flex-direction:column;gap:3px}
+.revcard.ok{border-left-color:var(--good)}
+.revcard p{margin:0;font-size:14.5px}
+.rev-q{font-weight:700}
+.rev-good{color:var(--good)}
+.rev-x{font-size:13px!important;color:var(--soft)}
+
+/* bilan */
+.bilan{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bilan h3{font-family:var(--display);font-size:21px;margin:0}
+.bilan-lab{font-size:13px;font-weight:700;color:var(--soft);margin:4px 0 0}
+.bilan ul{margin:0;padding-left:18px}
+.bilan li{margin-bottom:4px;font-size:14.5px}
+.bilan ul.forts li{color:var(--good)}
+.bilan ul.work li{color:var(--bad)}
+.bilan-tip{background:var(--box-wash);border-radius:4px;padding:10px 12px;font-size:14.5px;margin:0}
+textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:4px;padding:10px;background:var(--dock);color:var(--ink);font:13px/1.45 var(--ui)}
+
+/* scores */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:var(--board);border-radius:4px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:30px;line-height:1;color:var(--crane);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:#C9D3E0}
+.attempt{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.attempt-head{width:100%;display:flex;gap:10px;align-items:center;background:none;border:0;padding:12px;text-align:left;cursor:pointer}
+.attempt-left{flex:1;min-width:0}
+.attempt-left b{display:block;font-size:14.5px}
+.attempt-left span{display:block;font-size:12px;color:var(--soft)}
+.rattr-tag{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:3px;margin-right:6px}
+.attempt-note{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:18px;color:var(--on-box)}
+.attempt-note.good{background:var(--good)} .attempt-note.low{background:var(--bad)}
+.attempt-body{padding:0 12px 12px;display:flex;flex-direction:column;gap:9px}
+.confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;font-size:14px}
+.mini{padding:9px 14px;border-radius:4px;border:1px solid var(--rule);background:var(--sheet);font-weight:700;cursor:pointer}
+.mini.yes{background:var(--bad);border-color:var(--bad);color:#fff}
+
+/* onglets */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--sheet);border-top:3px solid var(--box);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabbar-in{max-width:640px;margin:0 auto;display:flex}
+.tab{flex:1;background:none;border:0;padding:8px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;color:var(--soft)}
+.tab-e{font-size:18px} .tab-l{font-size:11px;font-weight:700}
+.tab.on{color:var(--box);background:var(--box-wash)}
+
+/* voir mes erreurs : lisible sans les couleurs */
+.dx-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0;font-size:13px;color:var(--soft)}
+.dx-line{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;align-items:baseline;margin:2px 0!important}
+.dx-lab{font-size:12.5px!important;font-weight:700;color:var(--soft)}
+.dx-ans{font-size:17px;font-weight:700;overflow-wrap:anywhere;letter-spacing:.3px;line-height:1.7}
+.dx-bad{background:#A3241B;color:#fff;text-decoration:line-through;text-decoration-thickness:1px;border-radius:3px;padding:1px 2px}
+.dx-good{background:#D4F0E1;color:#08402A;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;border-radius:3px;padding:1px 2px;font-weight:800}
+.dx-miss{display:inline-block;background:#A3241B;color:#fff;border-radius:3px;padding:0 4px;margin:0 1px;font-weight:800;font-size:14px;line-height:1.35;vertical-align:1px;text-decoration:none}
+.dx-none{font-style:italic;font-weight:400;color:var(--soft)}
+.dx-note{font-size:13.5px!important;font-weight:700}
+
+@media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
+.tag.dico{background:var(--dico-wash);color:var(--dico);border:1px solid var(--dico)}
+.def.dico{border-left:4px solid var(--dico);background:var(--dico-wash);padding:9px 10px 9px 12px;border-radius:0 14px 14px 0}
+.tbl td.k{font-weight:600}
+.def-term{font-family:var(--display)}
+.score-n,.stat b{font-family:var(--display)}
+.read sup{font-size:.7em}
+a.cta.vlink{display:block;text-align:center;text-decoration:none}
+
+.media{display:grid;grid-template-columns:1fr 1fr;gap:10px}.media.one{grid-template-columns:1fr}
+.mbtn{display:flex;gap:10px;align-items:center;min-width:0;text-align:left;padding:10px;border:0;border-radius:4px;background:var(--board);color:#E9EEF2;cursor:pointer;font:inherit}
+.mbtn-i{flex:none;width:40px;height:40px;border-radius:50%;background:var(--crane);color:var(--crane-ink);display:flex;align-items:center;justify-content:center;font-size:16px}
+.mbtn-x{min-width:0}.mbtn b{display:block;font-family:var(--display);font-size:19px;line-height:1.1;color:#fff}.mbtn small{display:block;font-size:12.5px;color:#C9D3E0}
+.mbtn.a{background:var(--box)}.mbtn.a .mbtn-i{background:var(--sheet);color:var(--box)}.mbtn.a small{color:var(--on-box);opacity:.85}.mbtn.a b{color:var(--on-box)}
+.mbtn.a.on{box-shadow:inset 0 0 0 3px var(--crane)}
+.mbtn.off{background:var(--gen-wash);border:1px dashed var(--gen);cursor:default}.mbtn.off b,.mbtn.off small{color:var(--gen)}.mbtn.off .mbtn-i{background:var(--rule);color:var(--soft)}
+.aud-btn{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--box);border-radius:4px;background:var(--box-wash);color:var(--ink);cursor:pointer}
+.aud-btn b{display:block;font-size:15.5px;color:var(--box)}.aud-btn small{display:block;font-size:12.5px;color:var(--soft)}
+.aud-i{flex:none;width:38px;height:38px;border-radius:50%;background:var(--box);color:var(--on-box);display:flex;align-items:center;justify-content:center;font-size:17px}
+.aud{border:1px solid var(--box);background:var(--box-wash);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.aud-t{margin:0;font-weight:700;font-size:15px;color:var(--box)}
+.aud audio{width:100%;max-width:100%}
+.aud-links{display:flex;flex-wrap:wrap;gap:8px}.aud-links .ghost{width:auto;flex:1 1 auto;text-align:center;text-decoration:none}
+.aud-links .ghost.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box)}
+a.aud-ext,.aud-links a.ghost{text-align:center;text-decoration:none;color:var(--ink)}
+.caps-btns{display:flex;gap:6px}
+.toc-v.toc-aud{background:var(--box);color:var(--on-box)}
+.caps-play.aud{background:var(--box);color:var(--on-box);padding-left:0;font-size:17px;border-radius:50%}
+
+:root{--p-ok:#3C9A44;--p-okdark:#1B5E20;--p-mid:#D07A00;--p-midsoft:#E8B35C;--p-low:#C62828;--p-lowsoft:#F1A9A0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--p-ok:#7BD486;--p-okdark:#3FA34D;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80;--p-lowsoft:#7A3A35}}
+:root[data-theme="dark"]{--p-ok:#7BD486;--p-okdark:#3FA34D;--p-mid:#F0A43A;--p-midsoft:#8A6A2E;--p-low:#FF8A80;--p-lowsoft:#7A3A35}
+.toc-item{grid-template-columns:auto minmax(0,1fr) auto}
+.pst{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px}
+.pring-t{font-family:var(--ui);font-size:11px;font-weight:700;fill:var(--ink)}
+.pst-l{font-size:11px;font-weight:700;color:var(--soft);white-space:nowrap}
+.pst-was{font-size:10.5px;color:var(--soft);white-space:nowrap}.pdrop{margin:2px 0 0;font-size:13.5px;border-left:3px solid var(--p-mid);padding:2px 0 2px 8px;border-radius:0}
+.pst-ok{color:var(--p-okdark)}.pst-win{color:var(--p-ok)}.pst-low{color:var(--p-low)}.pst-mid{color:var(--p-mid)}
+.pglob{display:flex;gap:14px;align-items:center;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px 14px}
+.pglob .pring-t{font-size:13px}.pglob-x{display:flex;flex-direction:column;gap:2px;min-width:0}.pglob-x b{font-family:var(--display);font-size:19px;line-height:1.15}.pglob-x span{font-size:13px;color:var(--soft)}
+.plegend{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:6px 12px;font-size:14px}.plegend p{margin:6px 0}
+.pchap .pring,.pglob .pring,.pst .pring{flex:none}
+.pchap{display:flex;gap:12px;align-items:center;border:1px solid var(--rule);border-radius:4px;padding:10px 12px;background:var(--dock)}
+.pchap-x{display:flex;flex-direction:column;gap:4px;min-width:0}.pchap-x b{font-size:15px}.pchap-x span{font-size:13px;color:var(--soft)}.pchap-x .ghost{width:auto;align-self:flex-start}
+.suivi{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.suivi h3{font-family:var(--display);font-size:20px;margin:4px 0 0}
+.suivi-ctl{display:flex;flex-direction:column;gap:6px}.suivi-sel{font:inherit;font-size:15px;padding:8px;border:1px solid var(--rule);border-radius:4px;background:var(--dock);color:var(--ink);max-width:100%}
+.suivi .ghost.on{border-color:var(--box);box-shadow:inset 0 0 0 1px var(--box);background:var(--box-wash)}
+.ch-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--soft)}.ch-legend span{display:flex;align-items:center;gap:5px}
+.lg-line{display:inline-block;width:20px;height:2px;background:var(--box)}.lg-ring{display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid var(--good)}
+.ch-wrap{overflow-x:auto;max-width:100%}.ch-svg{display:block}
+.ch-t{font-family:var(--ui);font-size:11px;fill:var(--soft)}.ch-b{fill:var(--ink);font-weight:700;font-size:12px}.ch-g{fill:var(--good);font-weight:700}
+.ch-pt{cursor:pointer}.ch-pt:focus{outline:none}.ch-pt:focus-visible circle,.ch-pt:focus-visible polygon,.ch-pt:focus-visible rect{stroke:var(--crane)}
+.ch-detail{display:flex;flex-direction:column;gap:3px;border-left:3px solid var(--crane);padding:6px 10px;font-size:14px;border-radius:0}.ch-detail .ghost{width:auto;align-self:flex-start;margin-top:4px}
+.heat table{font-size:13px}.heat th,.heat td{text-align:center;padding:5px 4px}.heat td.k{text-align:left;font-weight:700}
+.hc{font-variant-numeric:tabular-nums;font-weight:700}.hc-ok{background:color-mix(in srgb,var(--p-ok) 18%,transparent)}.hc-mid{background:color-mix(in srgb,var(--p-mid) 18%,transparent)}.hc-low{background:color-mix(in srgb,var(--p-low) 18%,transparent)}.hc-0{color:var(--st)}
+.resist p{margin:4px 0;font-size:14.5px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.resist .code{font-size:12px;min-width:0;padding:1px 6px}.resist small{color:var(--soft)}
+
+.draft{border:2px solid var(--box);background:var(--box-wash);border-radius:14px;padding:12px 14px;margin:0 0 16px;display:grid;gap:10px}
+.draft p{margin:0}.draft p b{display:block;font-size:18px}.draft p span{display:block;color:var(--soft);margin-top:2px}
+.draft-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.draft-row .cta{flex:1 1 180px;margin:0}
+.draft.block{border-color:var(--bad)}.draft-stop b{color:var(--bad)}
+.quitbox{margin-top:8px}.quitbox .cta,.quitbox .ghost{width:100%;margin:0}
+.vframe video{position:absolute;inset:0;width:100%;height:100%;background:#000}
+
+</style>
+
+<div class="wrap" id="app"></div>
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+/* ============================================================
+   GÉOGRAPHIE — Une Suisse, des Suisses ? (introduction)
+   Outil de révision de Liano — 7e HarmoS
+   Onglet « Dossier » : un chapitre par objectif de la feuille « Objectifs évaluation – Intro : Une Suisse, des Suisses ? » (7 objectifs).
+   Date de l'épreuve : lundi 2 novembre 2026 (agenda : « Liano - Test : géo, une Suisse »).
+   ============================================================ */
+
+const QUIZ_ID = "liano-quiz-geographie-une-suisse";
+const DUE = { iso:"2026-11-02", long:"lundi 2 novembre", short:"02.11" };
+const HAS_CLAUDE = !!(window.claude && window.claude.use);
+const INDEX_KEY = QUIZ_ID + "-index";
+const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
+const THEME = "Une Suisse, des Suisses ?";
+const BRANCHE = "Géographie";
+const HEAD = { code:"GÉO", num:"7", titre:"Une Suisse, des Suisses ?", sous:"Les 7 objectifs · test : " };
+const SUBJECT_LONG = "Géographie, Une Suisse, des Suisses ? (introduction)";
+const FILE_SLUG = "geographie-une-suisse-liano";
+const VERSION = { n:1, date:"31.10.2026" };   /* v1 : 31.10.2026, première version : un chapitre et un paquet de cartes par objectif (7), cartes de la Suisse et profils du relief redessinés, sans capsule vidéo */
+
+/* ---------- SOURCES ----------
+   Feuille d'objectifs « GEO 7e », fichier « Une Suisse, des Suisses ? » (page des limites, pp. 3, 4, 5),
+   feuilles « Les trois régions naturelles de la Suisse », « La Suisse et ses pays limitrophes »,
+   « Situation et étendue de la Suisse — Introduction : les frontières », activité « Reconnaître la Suisse et quelques repères utiles ».
+   Pas de page du livre (LE pp. 4-5, ODR) : le papa a demandé de faire sans. Les cartes et les tests ne reprennent que ces feuilles. */
+const SOURCES = [
+  { titre:"Feuille d'objectifs « GEO 7e — Intro : Une Suisse, des Suisses ? »", recue:"31.10.2026", contenu:"Les 7 objectifs, recopiés mot pour mot en tête de chaque chapitre." },
+  { titre:"Fichier, « Quelles sont les limites de la Suisse ? » (numéro de page pas visible)", recue:"31.10.2026", contenu:"Ex. 1 : carte avec les limites en rouge, le Moyen-Pays en jaune, le Jura en vert, les Alpes en brun ; repères Berne, Schaffhouse, Crêt-de-la-Neige, Mont-Blanc ; drapeaux des pays voisins. Ex. 2 : les parts du territoire (64 %, 26 %, 10 %)." },
+  { titre:"Fichier p. 3, « Quelles sont les caractéristiques naturelles des trois grandes régions de la Suisse ? »", recue:"31.10.2026", contenu:"Tes listes de caractéristiques pour le Jura, le Moyen-Pays et les Alpes, et tes lignes de relief." },
+  { titre:"Fichier p. 4, profil Bâle → Chiasso (222 km)", recue:"31.10.2026", contenu:"Les 9 altitudes imprimées sur la carte, de Bâle (278 m) à Chiasso (238 m)." },
+  { titre:"Fichier p. 5, profil Genève → Schaffhouse (251 km)", recue:"31.10.2026", contenu:"Les 9 altitudes imprimées sur la carte, de Genève (375 m) à Schaffhouse (456 m)." },
+  { titre:"Feuille « Les trois régions naturelles de la Suisse »", recue:"31.10.2026", contenu:"La photo du Chasseral (canton de Berne), où l'on voit les trois régions." },
+  { titre:"Feuille « La Suisse et ses pays limitrophes »", recue:"31.10.2026", contenu:"La carte collée : France (Paris), Allemagne (Berlin), Autriche (Vienne), Liechtenstein (Vaduz), Italie (Rome), Suisse (Berne)." },
+  { titre:"Feuille « Situation et étendue de la Suisse — Introduction : les frontières »", recue:"31.10.2026", contenu:"Tes réponses : frontière naturelle, mer la plus proche, pays limitrophe (exemple), et les éléments A à H de la frontière (Rhin, lac de Constance, Doubs, mont Risoux, lac Léman, Alpes valaisannes, Silvretta, Rätikon)." },
+  { titre:"Activité d'évaluation « Reconnaître la Suisse et quelques repères utiles »", recue:"31.10.2026", contenu:"Les lacs Léman, de Neuchâtel et de Constance, le Rhin et le Rhône ; les villes à placer : Genève, Bâle, Schaffhouse." },
+];
+const SOURCES_NOTE = "Tout vient de tes feuilles (étiquette « Ton dossier »). Les définitions de l'objectif 7 et les caractéristiques de l'objectif 2 sont tes propres réponses, orthographe corrigée. Les pages du livre (LE pp. 4-5, ODR) n'ont pas été photographiées. Écartés : le « é » écrit près des lacs du Tessin sur la feuille des frontières (on ne sait pas ce qu'il désigne) et tes réponses de la feuille du Chasseral. Les cartes et les profils sont redessinés, simplifiés, pas à l'échelle.";
+const PHOTOS = [];
+
+/* Pas de capsule vidéo ni de piste audio pour cet outil (choix du papa, test deux jours plus tard). */
+const VIDEOS = {};
+const AUDIOS = {};
+const CAPSULES = { titre:THEME, controle:DUE.long, consigne:"", diffusion:"", chapitres:[] };
+
+/* Un seul chapitre du Dossier : la feuille d'objectifs, dans son ordre. */
+const CHAPTERS = [
+  { key:"O", titre:"Tes 7 objectifs", sous:"Un chapitre par ligne de ta feuille d'objectifs", objLabel:"Au terme de ce chapitre, l'élève est capable de :" },
+];
+
+const DEFS = [];
+const DEF = {};
+const bookDef = k => null;
+
+/* ---------- SCHÉMAS SVG (dessinés pour le Dossier, jamais tirés du livre) ---------- */
+const P_PAGE = { ink:"var(--ink)", soft:"var(--soft)", rule:"var(--rule)", sheet:"var(--sheet)", box:"var(--box)", wash:"var(--box-wash)",
+  crane:"var(--crane)", craneInk:"var(--crane-ink)", land:"var(--land)", coast:"var(--st)", sea:"var(--sea)", red:"var(--bad)",
+  jura:"var(--jura)", mp:"var(--mp)", alp:"var(--alp)", border:"var(--border)", water:"var(--water)",
+  font:"'Alegreya Sans', system-ui, sans-serif" };
+const P_FIXE = { ink:"#1F1A1B", soft:"#5E5557", rule:"#D8CFCF", sheet:"#FFFFFF", box:"#B3202E", wash:"#F8E3E4",
+  crane:"#E3A923", craneInk:"#3A2700", land:"#EFEAE0", coast:"#9A9090", sea:"#DCEBF2", red:"#A3243B",
+  jura:"#7DB65A", mp:"#F2DC6B", alp:"#A97B5A", border:"#C21E2E", water:"#3F86C6",
+  font:"Arial, Helvetica, sans-serif" };
+const svgEsc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* Carte simplifiée de la Suisse : contour approximatif (longitude, latitude), pas à l'échelle exacte. */
+const CH = [[5.96,46.2],[6.1,46.55],[6.45,46.95],[6.95,47.25],[7.0,47.45],[7.55,47.58],[8.2,47.6],[8.45,47.62],[8.55,47.8],[8.75,47.72],[8.9,47.66],[9.5,47.55],[9.55,47.27],[9.48,47.06],[9.9,46.97],[10.4,46.88],[10.48,46.6],[10.1,46.4],[10.05,46.25],[9.45,46.48],[9.25,46.3],[9.05,45.85],[8.85,46.05],[8.45,46.25],[8.1,46.1],[7.85,45.92],[7.0,45.92],[6.8,46.12],[6.8,46.4],[6.25,46.32]];
+const L_JURA = [[6.0,46.28],[6.6,46.78],[7.25,47.12],[8.0,47.4],[8.4,47.62],[8.42,48.3],[5.4,48.3],[5.4,46.28]];
+const L_ALPES = [[6.72,46.38],[7.2,46.66],[7.8,46.8],[8.4,47.0],[9.0,47.2],[9.65,47.48],[11,47.48],[11,45],[6.72,45]];
+const gx = lon => +(14 + (lon - 5.9) * 72).toFixed(1), gy = lat => +(26 + (47.85 - lat) * 105).toFixed(1);
+const gpath = pts => "M" + pts.map(([a, b]) => gx(a) + "," + gy(b)).join("L");
+function halo(P, x, y, t, o = {}){
+  const s = o.size || 11, w = o.bold === false ? 400 : 700, a = o.anchor || "middle", f = o.fill || P.ink;
+  return `<text x="${x}" y="${y}" text-anchor="${a}" style="font-family:${P.font};font-size:${s}px;font-weight:${w};fill:${f};stroke:${P.sheet};stroke-width:3;paint-order:stroke;stroke-linejoin:round${o.ls ? ";letter-spacing:" + o.ls : ""}">${svgEsc(t)}</text>`;
+}
+function svgSuisse(P, mode){
+  const id = "ch" + mode;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 ${mode === "reg" ? 300 : 296}" role="img" aria-label="${mode === "reg" ? "Carte simplifiée des trois régions naturelles de la Suisse" : "Carte simplifiée de la Suisse, de ses voisins et de quelques repères"}">`;
+  s += `<defs><clipPath id="${id}"><path d="${gpath(CH)}Z"/></clipPath></defs>`;
+  s += `<rect x="0" y="0" width="440" height="262" rx="4" style="fill:${P.land}"/>`;
+  if (mode === "reg"){
+    s += `<g clip-path="url(#${id})"><path d="${gpath(CH)}Z" style="fill:${P.mp}"/><path d="${gpath(L_JURA)}Z" style="fill:${P.jura}"/><path d="${gpath(L_ALPES)}Z" style="fill:${P.alp}"/></g>`;
+  } else {
+    s += `<path d="${gpath(CH)}Z" style="fill:${P.sheet}"/>`;
+  }
+  s += `<path d="${gpath(CH)}Z" style="fill:none;stroke:${P.border};stroke-width:2.2;stroke-linejoin:round"/>`;
+  const lake = (lon, lat, rx, ry, rot, n) => `<ellipse cx="${gx(lon)}" cy="${gy(lat)}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${gx(lon)} ${gy(lat)})" style="fill:${P.water};stroke:${P.sheet};stroke-width:.8"/>`;
+  s += lake(6.52, 46.43, 25, 6, -12) + lake(6.85, 46.88, 13, 3.6, -38) + lake(9.3, 47.62, 20, 6, -22);
+  if (mode === "reg"){
+    s += halo(P, gx(7.75), gy(47.43) + 4, "JURA", { size:12, ls:"1px" });
+    s += halo(P, gx(7.75), gy(47.06), "MOYEN-PAYS", { size:13, ls:"1px" });
+    s += halo(P, gx(8.75), gy(46.5), "ALPES", { size:15, ls:"2px" });
+    s += `<circle cx="${gx(7.45)}" cy="${gy(46.95)}" r="3.2" style="fill:${P.ink}"/>` + halo(P, gx(7.45) + 6, gy(46.95) + 12, "Berne", { size:10, anchor:"start" });
+    s += `<circle cx="${gx(8.63)}" cy="${gy(47.7)}" r="3.2" style="fill:${P.ink}"/>` + halo(P, gx(8.63), gy(47.7) - 7, "Schaffhouse", { size:10 });
+    const tri = (lon, lat, t, dx, dy, a) => `<polygon points="${gx(lon)},${gy(lat) - 5} ${gx(lon) - 4.5},${gy(lat) + 3} ${gx(lon) + 4.5},${gy(lat) + 3}" style="fill:${P.ink}"/>` + halo(P, gx(lon) + dx, gy(lat) + dy, t, { size:10, anchor:a || "middle" });
+    s += tri(5.94, 46.3, "Crêt-de-la-Neige", -6, 16, "start") + tri(6.86, 45.85, "Mont-Blanc", 0, 14);
+    const sw = (x, c, t) => `<rect x="${x}" y="272" width="16" height="12" rx="2" style="fill:${c};stroke:${P.ink};stroke-width:.6"/><text x="${x + 21}" y="282" style="font-family:${P.font};font-size:12px;fill:${P.ink}">${t}</text>`;
+    s += sw(14, P.jura, "Jura (vert)") + sw(130, P.mp, "Moyen-Pays (jaune)") + sw(282, P.alp, "Alpes (brun)");
+    s += `<text x="14" y="298" style="font-family:${P.font};font-size:10px;fill:${P.soft}">Trait rouge = frontière de la Suisse. Schéma simplifié, pas à l'échelle.</text>`;
+  } else {
+    const riv = pts => `<path d="${gpath(pts)}" style="fill:none;stroke:${P.water};stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"/>`;
+    s += riv([[7.55,47.57],[8.2,47.59],[8.6,47.67],[9.02,47.68]]) + riv([[9.6,47.47],[9.5,47.15],[9.42,46.9],[9.05,46.66]]);
+    s += riv([[8.35,46.55],[7.9,46.3],[7.35,46.22],[7.05,46.12],[6.9,46.37]]) + riv([[6.15,46.21],[5.97,46.13]]);
+    const city = (lon, lat, t, dx, dy, a, star) => (star ? `<polygon points="${starPts(gx(lon), gy(lat), 6, 2.6)}" style="fill:${P.box};stroke:${P.sheet};stroke-width:.8"/>` : `<circle cx="${gx(lon)}" cy="${gy(lat)}" r="3.4" style="fill:${P.ink};stroke:${P.sheet};stroke-width:1"/>`) + halo(P, gx(lon) + dx, gy(lat) + dy, t, { size:11, anchor:a || "middle" });
+    s += city(6.14, 46.2, "Genève", 4, 15, "start") + city(7.59, 47.56, "Bâle", -6, 4, "end") + city(8.63, 47.7, "Schaffhouse", 0, -8) + city(7.45, 46.95, "Berne (capitale)", 8, 4, "start", true);
+    s += halo(P, gx(6.52), gy(46.43) + 17, "Léman", { size:10, fill:P.water }) + halo(P, gx(6.85) - 8, gy(46.88) + 18, "lac de Neuchâtel", { size:9.5, fill:P.water, anchor:"end" }) + halo(P, gx(9.3) + 6, gy(47.62) - 9, "lac de Constance", { size:9.5, fill:P.water, anchor:"start" });
+    s += halo(P, gx(8.15) + 4, gy(47.59) + 12, "Rhin", { size:10, fill:P.water }) + halo(P, gx(7.6), gy(46.26) + 13, "Rhône", { size:10, fill:P.water });
+    s += halo(P, 60, 70, "FRANCE", { size:13, ls:"1px" }) + halo(P, 70, 245, "FRANCE", { size:11, ls:"1px" }) + halo(P, 200, 16, "ALLEMAGNE", { size:13, ls:"1px" });
+    s += halo(P, 360, 70, "AUTRICHE", { size:13, ls:"1px" }) + halo(P, 225, 255, "ITALIE", { size:13, ls:"1px" });
+    s += `<rect x="${gx(9.52) - 2.5}" y="${gy(47.15) - 4}" width="5" height="8" style="fill:${P.crane};stroke:${P.ink};stroke-width:.8"/><line x1="${gx(9.52) + 3}" y1="${gy(47.15)}" x2="356" y2="122" style="stroke:${P.ink};stroke-width:.8"/>` + halo(P, 358, 125, "Liechtenstein", { size:10, anchor:"start" });
+    s += `<text x="14" y="278" style="font-family:${P.font};font-size:10px;fill:${P.soft}">Trait rouge = frontière · bleu = lacs et cours d'eau · ★ = la capitale.</text><text x="14" y="291" style="font-family:${P.font};font-size:10px;fill:${P.soft}">Schéma simplifié, pas à l'échelle.</text>`;
+  }
+  return s + `</svg>`;
+}
+function starPts(cx, cy, R, r){ const p = []; for (let i = 0; i < 10; i++){ const a = -Math.PI/2 + i*Math.PI/5, q = i % 2 ? r : R; p.push((cx + q*Math.cos(a)).toFixed(1) + "," + (cy + q*Math.sin(a)).toFixed(1)); } return p.join(" "); }
+
+/* Profils du relief, d'après les altitudes imprimées sur les cartes du fichier pp. 4 et 5.
+   Position de chaque lieu = position du triangle sous le diagramme de la fiche (approximative). */
+const PROFIL_GS = { titre:"Genève → Schaffhouse (251 km)", max:1000, pas:200, pts:[["Genève",0,375],["Ouchy",.29,374],["Lausanne",.32,447],["Romont",.47,780],["Fribourg",.51,629],["Berne",.66,540],["Zofingue",.82,437],["Baden",.92,383],["Schaffhouse",1,456]] };
+const PROFIL_BC = { titre:"Bâle → Chiasso (222 km)", max:4000, pas:1000, pts:[["Bâle",0,278],["Belchenflue",.14,1123],["Härkingen",.18,452],["Willisau",.29,557],["Risetenstock",.40,1760],["Dammastock",.58,3630],["Locarno",.83,198],["Monte Magno",.88,1636],["Chiasso",1,238]] };
+function svgProfil(P, pr){
+  const L = 44, R = 326, T = 18, B = 160, X = f => L + f*(R - L), Y = a => B - a/pr.max*(B - T);
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 262" role="img" aria-label="Profil du relief ${svgEsc(pr.titre)}">`;
+  for (let a = 0; a <= pr.max; a += pr.pas) s += `<line x1="${L}" y1="${Y(a)}" x2="${R}" y2="${Y(a)}" style="stroke:${P.rule};stroke-width:.8;stroke-dasharray:2 3"/><text x="${L - 5}" y="${Y(a) + 3.5}" text-anchor="end" style="font-family:${P.font};font-size:10px;fill:${P.soft}">${a} m</text>`;
+  s += `<path d="M${X(0)},${B}` + pr.pts.map(p => `L${X(p[1]).toFixed(1)},${Y(p[2]).toFixed(1)}`).join("") + `L${X(1)},${B}Z" style="fill:${P.wash}"/>`;
+  s += `<path d="M` + pr.pts.map(p => `${X(p[1]).toFixed(1)},${Y(p[2]).toFixed(1)}`).join("L") + `" style="fill:none;stroke:${P.box};stroke-width:2.2;stroke-linejoin:round"/>`;
+  pr.pts.forEach(([n, f, a], i) => {
+    const x = X(f), y = Y(a), up = i % 2 === 0 || a > pr.max*.6;
+    s += `<path d="M${x - 4},${y - 4}L${x + 4},${y + 4}M${x - 4},${y + 4}L${x + 4},${y - 4}" style="stroke:${P.ink};stroke-width:1.8"/>`;
+    s += halo(P, x, up ? y - 8 : y + 15, a + " m", { size:9.5 });
+    s += `<text transform="translate(${x + 3},${B + 8}) rotate(80)" style="font-family:${P.font};font-size:9.5px;fill:${P.ink}">${svgEsc(n)}</text>`;
+  });
+  s += `<line x1="${L}" y1="${B}" x2="${R}" y2="${B}" style="stroke:${P.ink};stroke-width:1"/>`;
+  return s + `<text x="4" y="258" style="font-family:${P.font};font-size:10px;fill:${P.soft}">Altitudes de ta fiche · distances entre les lieux approximatives.</text></svg>`;
+}
+const SVGS = { regions:P => svgSuisse(P, "reg"), reperes:P => svgSuisse(P, "rep"), profilGS:P => svgProfil(P, PROFIL_GS), profilBC:P => svgProfil(P, PROFIL_BC) };
+
+/* ============================================================
+   DOSSIER — un chapitre par objectif de la feuille.
+   Blocs : p, h3, def, mine, html, tip, ex, links, see, src, pause, svg
+   ============================================================ */
+const tbl = (head, rows, note) => `<div class="tbl"><table><thead><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${i === 0 ? ' class="k"' : ""}>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>${note ? `<p class="fine">${note}</p>` : ""}`;
+const tiles = (items, note) => `<div class="sect6">${items.map(([b, t]) => `<div class="sx"><b>${b}</b><span>${t}</span></div>`).join("")}</div>${note ? `<p class="fine">${note}</p>` : ""}`;
+const S_OBJ = "Feuille d'objectifs « GEO 7e »";
+const S_LIM = "Fichier, « Quelles sont les limites de la Suisse ? », ex. 1 (carte)";
+const S_PCT = "Fichier, « Quelles sont les limites de la Suisse ? », ex. 2";
+const S_P3 = "Fichier p. 3, tes caractéristiques et tes lignes de relief";
+const S_P4 = "Fichier p. 4, profil Bâle → Chiasso";
+const S_P5 = "Fichier p. 5, profil Genève → Schaffhouse";
+const S_LIMI = "Feuille « La Suisse et ses pays limitrophes »";
+const S_FRO = "Feuille « Les frontières », tes réponses";
+const S_REP = "Activité « Reconnaître la Suisse et quelques repères utiles »";
+
+const PAGES = [
+/* ---------------- FIL ROUGE ---------------- */
+{ id:"LIENS", ch:"", titre:"La Suisse en un coup d'œil", court:"Les voisins, les frontières, les trois régions, le relief",
+  pre:[{ q:"Combien de pays touchent la Suisse ?", a:"Cinq : la France, l'Allemagne, l'Autriche, le Liechtenstein et l'Italie.", s:S_LIMI }, { q:"Quelle est la plus grande région de la Suisse ?", a:"Les Alpes : 64 % du territoire.", s:S_PCT }],
+  blank:{ consigne:"Sur une feuille blanche, dessine une Suisse toute simple. Écris autour les 5 pays voisins, et dedans les 3 régions.", points:["Au nord : l'Allemagne ; à l'ouest : la France ; au sud : l'Italie ; à l'est : l'Autriche et le petit Liechtenstein", "Le Jura au nord-ouest, le Moyen-Pays au milieu, les Alpes au sud", "Berne, la capitale, est dans le Moyen-Pays"], s:S_LIM + " · " + S_LIMI },
+  blocks:[
+  { t:"p", s:S_OBJ, h:"Ton test parle d'une seule chose : <b>la Suisse sur la carte</b>. Où sont ses <b>frontières</b> et ses <b>voisins</b>, quelles sont ses <b>trois régions</b>, et comment on dessine son <b>relief</b>. Chaque objectif de ta feuille a son chapitre et son paquet de cartes." },
+  { t:"svg", k:"reperes", titre:"La Suisse, ses voisins et quelques repères", alt:"La carte montre la Suisse au milieu, entourée d'un trait rouge. Au nord, l'Allemagne ; à l'ouest et au sud-ouest, la France ; au sud, l'Italie ; à l'est, l'Autriche et le petit Liechtenstein. Berne, la capitale, est au milieu. Genève est au bord du Léman, au sud-ouest ; Bâle et Schaffhouse sont au nord, le long du Rhin. Le lac de Neuchâtel est à l'ouest, le lac de Constance au nord-est. Le Rhône arrive dans le Léman.", s:S_LIMI + " · " + S_REP + " · " + S_LIM },
+  { t:"html", s:S_OBJ, h:`<div class="trio">
+    <div class="trio-s"><span class="trio-k">1</span><div><b>Les voisins et les frontières</b><p>5 pays et leur capitale ; frontière naturelle, pays limitrophe.</p><div class="chips"><button data-act="page" data-v="O6">O6 pays et capitales</button><button data-act="page" data-v="O7">O7 frontière naturelle</button></div></div></div>
+    <div class="trio-s"><span class="trio-k">2</span><div><b>Les trois régions</b><p>Les nommer, les reconnaître, les placer.</p><div class="chips"><button data-act="page" data-v="O1">O1 citer</button><button data-act="page" data-v="O2">O2 caractéristiques</button><button data-act="page" data-v="O3">O3 situer</button></div></div></div>
+    <div class="trio-s"><span class="trio-k">3</span><div><b>La carte et le relief</b><p>Villes, lacs, rivières, monts ; dessiner un profil.</p><div class="chips"><button data-act="page" data-v="O5">O5 repères</button><button data-act="page" data-v="O4">O4 relief</button></div></div></div></div>` },
+  { t:"pause", q:"Quelle est la capitale de la Suisse ?", a:"Berne.", s:S_LIMI },
+  { t:"tip", h:"Les pays limitrophes et leurs capitales comptent beaucoup au test : commence par le chapitre O6, puis fais les autres dans l'ordre." },
+]},
+
+/* ---------------- O1 ---------------- */
+{ id:"O1", ch:"O", titre:"Les trois régions naturelles", court:"Le Jura, le Moyen-Pays, les Alpes",
+  obj:"Citer les trois grandes régions naturelles de la Suisse",
+  pre:[{ q:"Peux-tu déjà nommer les trois régions ?", a:"Le Jura, le Moyen-Pays et les Alpes.", s:S_P3 }, { q:"Laquelle prend le plus de place ?", a:"Les Alpes (64 % du territoire).", s:S_PCT }],
+  blank:{ consigne:"Écris les trois régions, de la plus grande à la plus petite, avec leur pourcentage.", points:["Les Alpes : 64 % du territoire", "Le Moyen-Pays : 26 %", "Le Jura : 10 %"], s:S_PCT },
+  blocks:[
+  { t:"p", s:S_P3, h:"La Suisse a <b>trois grandes régions naturelles</b> : <b>le Jura</b>, <b>le Moyen-Pays</b> et <b>les Alpes</b>." },
+  { t:"html", s:S_PCT, h:tiles([["Les Alpes","64 % du territoire : la plus grande"],["Le Moyen-Pays","26 % du territoire"],["Le Jura","10 % du territoire : la plus petite"]]) },
+  { t:"pause", q:"Quelle région fait 10 % du territoire ?", a:"Le Jura.", s:S_PCT },
+  { t:"tip", h:"Une astuce pour l'ordre : de la plus grande à la plus petite, c'est A, M, J (Alpes, Moyen-Pays, Jura). Et écris bien « Moyen-Pays », avec un trait d'union." },
+  { t:"see", ids:["O2","O3"] },
+  { t:"src", h:"Fichier p. 3 · fichier, ex. 2 des limites de la Suisse" },
+]},
+
+/* ---------------- O2 ---------------- */
+{ id:"O2", ch:"O", titre:"Ce qui rend chaque région différente", court:"Montagnes pas très hautes, plaines et lacs, hautes montagnes et glaciers",
+  obj:"Nommer les caractéristiques des trois régions naturelles de la Suisse",
+  pre:[{ q:"Dans quelle région trouve-t-on des glaciers ?", a:"Dans les Alpes.", s:S_P3 }, { q:"Dans quelle région trouve-t-on des plaines, des champs et des marais ?", a:"Dans le Moyen-Pays.", s:S_P3 }],
+  blank:{ consigne:"Pour chaque région, écris deux caractéristiques et dessine sa ligne de relief.", points:["Jura : des montagnes pas très hautes, des forêts ; une ligne en vagues régulières", "Moyen-Pays : des plaines, des lacs, des champs ; une ligne presque plate, avec de petites collines", "Alpes : de hautes montagnes, des vallées profondes, des glaciers, de la neige en été ; une ligne avec de grandes pointes"], s:S_P3 },
+  blocks:[
+  { t:"p", s:S_P3, h:"Sur ta fiche p. 3, tu as classé les photos et noté les caractéristiques de chaque région. Retiens surtout ce qui la <b>distingue</b> des deux autres :" },
+  { t:"html", s:S_P3, h:tbl(["Région","Ce qui la distingue (tes mots)"], [
+    ["Le Jura","des <b>montagnes pas très hautes</b>, des <b>forêts</b>, des collines, des falaises"],
+    ["Le Moyen-Pays","des <b>plaines</b>, des <b>lacs</b>, des <b>champs</b>, des <b>marais</b>, des collines"],
+    ["Les Alpes","de <b>hautes montagnes</b>, des <b>vallées profondes</b>, des <b>glaciers</b>, de la <b>neige en été</b>"]], "Les rivières et les prairies, tu les as notées partout : elles ne permettent pas de reconnaître une région.") },
+  { t:"pause", q:"« Neige en été, glaciers, vallées profondes » : de quelle région s'agit-il ?", a:"Les Alpes.", s:S_P3 },
+  { t:"h3", h:"Le relief en une ligne" },
+  { t:"html", s:S_P3, h:tiles([["Jura","des vagues régulières : montagnes pas très hautes"],["Moyen-Pays","presque plat, de petites bosses"],["Alpes","de grandes pointes et des creux profonds"]]) },
+  { t:"p", s:"Feuille « Les trois régions naturelles de la Suisse »", h:"Sur la photo prise depuis le <b>Chasseral</b> (canton de Berne), on voit les trois régions à la fois." },
+  { t:"pause", q:"Quelle région a des montagnes pas très hautes et beaucoup de forêts ?", a:"Le Jura.", s:S_P3 },
+  { t:"tip", h:"Pour reconnaître une région, cherche le mot qui n'appartient qu'à elle : glacier → Alpes ; plaine ou marais → Moyen-Pays ; montagnes pas très hautes → Jura." },
+  { t:"see", ids:["O1","O4"] },
+  { t:"src", h:"Fichier p. 3 · feuille « Les trois régions naturelles de la Suisse »" },
+]},
+
+/* ---------------- O3 ---------------- */
+{ id:"O3", ch:"O", titre:"Placer les trois régions sur la carte", court:"Jura au nord-ouest, Moyen-Pays au milieu, Alpes au sud",
+  obj:"Situer sur une carte les trois grandes régions naturelles de la Suisse",
+  pre:[{ q:"Le Jura est-il plutôt au nord-ouest ou au sud-est de la Suisse ?", a:"Au nord-ouest, le long de la frontière avec la France.", s:S_LIM }, { q:"Dans quelle région se trouve Berne ?", a:"Dans le Moyen-Pays.", s:S_LIM }],
+  blank:{ consigne:"Dessine la Suisse et colorie les trois régions comme sur ta fiche.", points:["Le Jura en vert, en bande au nord-ouest", "Le Moyen-Pays en jaune, au milieu, de Genève au lac de Constance", "Les Alpes en brun, tout le sud et l'est"], s:S_LIM },
+  blocks:[
+  { t:"svg", k:"regions", titre:"Les trois régions, comme sur ta carte coloriée", alt:"La carte montre la Suisse entourée d'un trait rouge. Le Jura, en vert, forme une bande au nord-ouest, le long de la frontière. Le Moyen-Pays, en jaune, traverse la Suisse au milieu, de Genève jusqu'au lac de Constance ; Berne et Schaffhouse s'y trouvent. Les Alpes, en brun, occupent tout le sud et l'est. Le Crêt-de-la-Neige est dans le Jura, près de Genève ; le Mont-Blanc est dans les Alpes.", s:S_LIM },
+  { t:"p", s:S_LIM, h:"Sur ta carte, la <b>frontière en rouge</b>, le <b>Jura en vert</b> au <b>nord-ouest</b>, le <b>Moyen-Pays en jaune</b> au <b>milieu</b> et les <b>Alpes en brun</b> au <b>sud et à l'est</b>. Le Moyen-Pays est donc <b>entre</b> le Jura et les Alpes." },
+  { t:"pause", q:"Quelle région se trouve entre le Jura et les Alpes ?", a:"Le Moyen-Pays.", s:S_LIM },
+  { t:"html", s:S_LIM, h:tbl(["Repère de ta carte","Région"], [["Berne","le Moyen-Pays"],["Schaffhouse","le Moyen-Pays"],["Crêt-de-la-Neige","le Jura"],["Mont-Blanc","les Alpes"]]) },
+  { t:"pause", q:"Le Mont-Blanc est-il dans le Jura ou dans les Alpes ?", a:"Dans les Alpes.", s:S_LIM },
+  { t:"tip", h:"Retiens l'ordre en partant du nord-ouest : Jura, puis Moyen-Pays, puis Alpes. Les Alpes prennent la plus grande place." },
+  { t:"see", ids:["O1","O5"] },
+  { t:"src", h:"Fichier, ex. 1 des limites de la Suisse (carte)" },
+]},
+
+/* ---------------- O4 ---------------- */
+{ id:"O4", ch:"O", titre:"Dessiner le relief avec les altitudes", court:"Une croix par lieu, puis on relie les croix",
+  obj:"Représenter un relief à l'aide des altitudes",
+  pre:[{ q:"Sur le profil Bâle → Chiasso, quel est le point le plus haut ?", a:"Le Dammastock, 3630 m.", s:S_P4 }, { q:"Quelle est l'altitude de Schaffhouse ?", a:"456 m.", s:S_P5 }],
+  blank:{ consigne:"Sans regarder, explique les étapes pour dessiner un profil du relief, puis place 3 lieux de ton choix.", points:["Je lis l'altitude du lieu sur la carte", "Je pars de son triangle, je monte jusqu'à la bonne ligne d'altitude et je fais une croix", "Je relie les croix dans l'ordre", "Exemple : Romont 780 m, juste sous la ligne 800 m"], s:S_P4 + " · " + S_P5 },
+  blocks:[
+  { t:"p", s:S_P5, h:"Un <b>profil du relief</b> montre les montées et les descentes le long d'une ligne sur la carte. Sur ta fiche, chaque lieu a son <b>altitude</b> notée en mètres." },
+  { t:"html", s:"Conseil de méthode (pas une page du livre)", h:tiles([["1. Lire","l'altitude du lieu sur la carte"],["2. Monter","depuis son triangle jusqu'à la bonne ligne d'altitude"],["3. Croix","une croix bien à la bonne hauteur"],["4. Relier","toutes les croix, dans l'ordre"]]) },
+  { t:"h3", h:"Genève → Schaffhouse" },
+  { t:"svg", k:"profilGS", titre:"Le profil Genève → Schaffhouse, avec les altitudes de ta fiche", alt:"Le profil va de Genève, 375 mètres, à Schaffhouse, 456 mètres. Il passe par Ouchy, 374 mètres, Lausanne, 447 mètres, Romont, 780 mètres, le point le plus haut, Fribourg, 629 mètres, Berne, 540 mètres, Zofingue, 437 mètres, et Baden, 383 mètres. Aucun lieu ne dépasse 800 mètres.", s:S_P5 },
+  { t:"pause", q:"Sur ce profil, quel lieu est le plus haut, et quel lieu est le plus bas ?", a:"Le plus haut : Romont (780 m). Le plus bas : Ouchy (374 m).", s:S_P5 },
+  { t:"h3", h:"Bâle → Chiasso" },
+  { t:"svg", k:"profilBC", titre:"Le profil Bâle → Chiasso, avec les altitudes de ta fiche", alt:"Le profil va de Bâle, 278 mètres, à Chiasso, 238 mètres. Il monte à la Belchenflue, 1123 mètres, redescend à Härkingen, 452 mètres, et Willisau, 557 mètres, remonte au Risetenstock, 1760 mètres, puis au Dammastock, 3630 mètres, le point le plus haut. Il redescend à Locarno, 198 mètres, le point le plus bas, remonte au Monte Magno, 1636 mètres, et finit à Chiasso.", s:S_P4 },
+  { t:"pause", q:"Sur ce profil, quel est le point le plus bas ?", a:"Locarno, 198 m.", s:S_P4 },
+  { t:"tip", h:"Vérifie chaque croix : sur ta fiche, Schaffhouse (456 m) était placée trop haut, vers 600 m, et Locarno (198 m) presque à 0 m. Une croix doit tomber exactement à son altitude : 456 m, c'est un peu au-dessus de la ligne 400 m." },
+  { t:"see", ids:["O2","O5"] },
+  { t:"src", h:"Fichier pp. 4 et 5" },
+]},
+
+/* ---------------- O5 ---------------- */
+{ id:"O5", ch:"O", titre:"Les villes, les lacs, les rivières et les monts", court:"Genève, Bâle, Schaffhouse, Berne ; Léman, Neuchâtel, Constance ; Rhin, Rhône",
+  obj:"Situer sur une carte les différentes villes, les différents lacs, rivières, monts et fleuves vus en cours",
+  pre:[{ q:"Quel cours d'eau se jette dans le Léman ?", a:"Le Rhône.", s:S_REP }, { q:"Quelle ville est au bord du Léman, tout au sud-ouest ?", a:"Genève.", s:S_REP + " · " + S_P5 }],
+  blank:{ consigne:"Dessine la Suisse et place : 3 lacs, 2 cours d'eau, 4 villes.", points:["Le Léman au sud-ouest, le lac de Neuchâtel à l'ouest, le lac de Constance au nord-est", "Le Rhin au nord (frontière), le Rhône qui arrive dans le Léman", "Genève au sud-ouest, Bâle et Schaffhouse au nord, Berne au milieu"], s:S_REP },
+  blocks:[
+  { t:"svg", k:"reperes", titre:"Les repères à savoir placer", alt:"La carte montre la Suisse. Le Léman est au sud-ouest, avec Genève au bout. Le lac de Neuchâtel est à l'ouest, le lac de Constance au nord-est. Le Rhin coule au nord, le long de la frontière, où se trouvent Bâle et Schaffhouse. Le Rhône traverse le sud et arrive dans le Léman. Berne, la capitale, est au milieu.", s:S_REP + " · " + S_LIM },
+  { t:"h3", h:"Les lacs et les cours d'eau" },
+  { t:"html", s:S_REP, h:tbl(["N° de ta fiche","Nom","Où ?"], [["1","le lac Léman","au sud-ouest, Genève est au bout"],["2","le lac de Neuchâtel","à l'ouest"],["3","le lac de Constance","au nord-est, sur la frontière"],["4","le Rhin","au nord et à l'est, le long de la frontière"],["5","le Rhône","au sud, il arrive dans le Léman"]]) },
+  { t:"pause", q:"Quel lac est au nord-est de la Suisse ?", a:"Le lac de Constance.", s:S_REP },
+  { t:"h3", h:"Les villes" },
+  { t:"html", s:S_REP + " · " + S_LIM + " · " + S_P4, h:tbl(["Ville","Où ?"], [["Genève","au sud-ouest, au bout du Léman"],["Bâle","au nord, au bord du Rhin"],["Schaffhouse","au nord, tout en haut de la carte"],["Berne","au milieu : c'est la capitale"]]) },
+  { t:"pause", q:"Quelles villes de ta fiche sont au nord, près du Rhin ?", a:"Bâle et Schaffhouse.", s:S_REP + " · " + S_P4 },
+  { t:"h3", h:"Les monts" },
+  { t:"html", s:S_LIM + " · " + S_P4 + " · " + S_FRO, h:tbl(["Mont","Ce que dit ta fiche"], [["le Dammastock","3630 m, le plus haut du profil Bâle → Chiasso, dans les Alpes"],["le Mont-Blanc","dans les Alpes, sur ta carte des régions"],["le Crêt-de-la-Neige","dans le Jura, près de Genève"],["le mont Risoux","dans le Jura, sur la frontière (lettre D)"]]) },
+  { t:"tip", h:"Pour placer une ville, repère d'abord un lac ou un cours d'eau : Genève avec le Léman, Bâle avec le Rhin, Schaffhouse tout au nord." },
+  { t:"see", ids:["O3","O7"] },
+  { t:"src", h:"Activité « Reconnaître la Suisse » · fichier, carte des limites · fichier p. 4 · feuille « Les frontières »" },
+]},
+
+/* ---------------- O6 ---------------- */
+{ id:"O6", ch:"O", titre:"Les 5 pays voisins et leur capitale", court:"France, Allemagne, Autriche, Liechtenstein, Italie",
+  obj:"Citer et situer les pays limitrophes de la Suisse avec leur capitale",
+  pre:[{ q:"Quel pays voisin est au nord de la Suisse ?", a:"L'Allemagne.", s:S_LIM + " · " + S_LIMI }, { q:"Quelle est la capitale du Liechtenstein ?", a:"Vaduz.", s:S_LIMI }],
+  blank:{ consigne:"Dessine la Suisse au milieu. Écris autour les 5 pays voisins, chacun avec sa capitale, sans faute.", points:["Au nord : l'Allemagne, capitale Berlin", "À l'ouest : la France, capitale Paris", "Au sud : l'Italie, capitale Rome", "À l'est : l'Autriche, capitale Vienne", "À l'est aussi, tout petit : le Liechtenstein, capitale Vaduz", "Au milieu : la Suisse, capitale Berne"], s:S_LIMI },
+  blocks:[
+  { t:"p", s:S_LIMI, h:"La Suisse a <b>5 pays limitrophes</b> : des pays qui la touchent. Il faut savoir leur <b>nom</b>, leur <b>capitale</b> et <b>où ils sont</b>." },
+  { t:"html", s:S_LIMI + " · " + S_LIM, h:tbl(["Où ?","Pays","Capitale"], [["au nord","<b>l'Allemagne</b>","<b>Berlin</b>"],["à l'ouest","<b>la France</b>","<b>Paris</b>"],["au sud","<b>l'Italie</b>","<b>Rome</b>"],["à l'est","<b>l'Autriche</b>","<b>Vienne</b>"],["à l'est, tout petit","<b>le Liechtenstein</b>","<b>Vaduz</b>"],["au milieu","<b>la Suisse</b>","<b>Berne</b>"]]) },
+  { t:"svg", k:"reperes", titre:"La Suisse et ses 5 voisins", alt:"La Suisse est au milieu. L'Allemagne est au nord, la France à l'ouest, l'Italie au sud, l'Autriche à l'est. Le Liechtenstein est un tout petit pays, à l'est, entre la Suisse et l'Autriche. Berne, la capitale de la Suisse, est au milieu.", s:S_LIMI + " · " + S_LIM },
+  { t:"pause", q:"Quel tout petit pays est coincé entre la Suisse et l'Autriche, et quelle est sa capitale ?", a:"Le Liechtenstein, capitale Vaduz.", s:S_LIMI },
+  { t:"pause", q:"Quelle est la capitale de l'Autriche ?", a:"Vienne.", s:S_LIMI },
+  { t:"p", s:S_FRO, h:"La mer la plus proche de la Suisse est la <b>mer Méditerranée</b>." },
+  { t:"tip", h:"Attention à l'orthographe : on écrit « France » (pas « franche ») et « Italie » (pas « itali »). Et sur ta carte collée, la Suisse était à l'envers : le Jura et Bâle sont en haut, l'Italie en bas." },
+  { t:"see", ids:["O7","O5"] },
+  { t:"src", h:"Feuille « La Suisse et ses pays limitrophes » · fichier, carte des limites (drapeaux) · feuille « Les frontières »" },
+]},
+
+/* ---------------- O7 ---------------- */
+{ id:"O7", ch:"O", titre:"Frontière naturelle et pays limitrophe", court:"Deux définitions et des exemples",
+  obj:"Expliquer ce qu'est une frontière naturelle ainsi qu'un pays limitrophe",
+  pre:[{ q:"Le Rhin et le lac Léman servent de frontière à la Suisse. Pourquoi les appelle-t-on des frontières naturelles ?", a:"Parce que ce sont des éléments du paysage que les hommes ont utilisés pour fixer la frontière.", s:S_FRO }, { q:"Le Liechtenstein est-il un pays limitrophe de la Suisse ?", a:"Oui : il a une frontière commune avec la Suisse.", s:S_FRO }],
+  blank:{ consigne:"Écris les deux définitions avec tes mots, puis donne deux exemples de frontières naturelles et un exemple de pays limitrophe.", points:["Frontière naturelle : les hommes ont utilisé un élément du paysage (rivière, lac, montagne) pour fixer la frontière", "Pays limitrophe : un pays qui a une frontière commune avec un autre pays", "Frontières naturelles : le Rhin, le lac Léman, le Doubs, le lac de Constance, le mont Risoux…", "Pays limitrophe : le Liechtenstein (ou la France, l'Allemagne, l'Autriche, l'Italie)"], s:S_FRO },
+  blocks:[
+  { t:"def", term:"Frontière naturelle", h:"Les hommes ont parfois utilisé des éléments du paysage pour fixer les frontières du pays.", s:S_FRO + ", question 1" },
+  { t:"def", term:"Pays limitrophe", h:"Pays dont les frontières sont communes avec un autre pays. Exemple : le Liechtenstein.", s:S_FRO + ", question 6" },
+  { t:"pause", q:"Explique avec tes mots ce qu'est un pays limitrophe.", a:"Un pays qui a une frontière commune avec un autre, comme le Liechtenstein avec la Suisse.", s:S_FRO },
+  { t:"h3", h:"Les frontières naturelles de la Suisse (ta feuille, lettres A à H)" },
+  { t:"html", s:S_FRO + ", question 5", h:tbl(["Élément du paysage","Exemples sur ta feuille"], [["des cours d'eau","le <b>Rhin</b> (A), le <b>Doubs</b> (C)"],["des lacs","le <b>lac de Constance</b> (B), le <b>lac Léman</b> (E)"],["des montagnes","le <b>mont Risoux</b> (D), les <b>Alpes valaisannes</b> (F), la <b>Silvretta</b> (G), le <b>Rätikon</b> (H)"]]) },
+  { t:"pause", q:"Cite une rivière et un lac qui servent de frontière naturelle à la Suisse.", a:"Par exemple le Rhin (ou le Doubs) et le lac Léman (ou le lac de Constance).", s:S_FRO },
+  { t:"tip", h:"Une définition complète = la phrase + un exemple. « Une frontière naturelle, c'est un élément du paysage utilisé pour fixer la frontière, par exemple le Rhin. »" },
+  { t:"see", ids:["O6","O5"] },
+  { t:"src", h:"Feuille « Les frontières », questions 1, 5 et 6" },
+]},
+];
+
+const LEXIQUE = [
+  { t:"Frontière naturelle", h:"Les hommes ont parfois utilisé des éléments du paysage pour fixer les frontières du pays.", ref:"O7", lab:"Ton dossier", s:S_FRO + ", question 1" },
+  { t:"Pays limitrophe", h:"Pays dont les frontières sont communes avec un autre pays (exemple : le Liechtenstein).", ref:"O7", lab:"Ton dossier", s:S_FRO + ", question 6" },
+  { t:"Jura", h:"Région du nord-ouest (10 % du territoire) : des montagnes pas très hautes, des forêts.", ref:"O2", lab:"Ton dossier", s:S_P3 + " · " + S_PCT },
+  { t:"Moyen-Pays", h:"Région du milieu (26 % du territoire) : des plaines, des lacs, des champs.", ref:"O2", lab:"Ton dossier", s:S_P3 + " · " + S_PCT },
+  { t:"Alpes", h:"Région du sud et de l'est (64 % du territoire) : de hautes montagnes, des vallées profondes, des glaciers.", ref:"O2", lab:"Ton dossier", s:S_P3 + " · " + S_PCT },
+  { t:"Profil du relief", h:"Dessin des montées et des descentes le long d'une ligne de la carte, fait avec les altitudes.", ref:"O4", lab:"Ton dossier", s:S_P4 + " · " + S_P5 },
+];
+
+/* ============================================================
+   PAQUETS (cartes et tests) — un paquet par objectif de la feuille.
+   Item : front, back[] (1re = affichée), opts (choix fixes), wrong[] (distracteurs), grp, mcqOnly, keepOrder, ans/expl, src
+   ============================================================ */
+const REG = ["le Jura","le Moyen-Pays","les Alpes"];
+const RJ = ["le Jura","Jura"], RM = ["le Moyen-Pays","Moyen-Pays","moyen pays","le moyen pays"], RA = ["les Alpes","Alpes"];
+const PAYS = ["la France","l'Allemagne","l'Italie","l'Autriche","le Liechtenstein"];
+const CAPS = ["Paris","Berlin","Rome","Vienne","Vaduz","Berne"];
+const DECKS = [
+  { key:"o1", code:"O1", title:"Citer les trois régions", src:"fichier p. 3 · ex. 2 des limites", items:[
+    { front:"Quelles sont les trois grandes régions naturelles de la Suisse ?", back:["Le Jura, le Moyen-Pays et les Alpes"], wrong:["Le Jura, les Préalpes et le Tessin","Le Moyen-Pays, le Valais et les Grisons","Les Alpes, le Plateau et la Forêt-Noire"], mcqOnly:true, ans:"Le Jura, le Moyen-Pays et les Alpes.", src:"fichier p. 3" },
+    { front:"Quelle région occupe 64 % du territoire de la Suisse ?", back:RA, opts:REG, keepOrder:true, ans:"Les Alpes : c'est la plus grande région.", src:"fichier, ex. 2 des limites" },
+    { front:"Quelle région occupe 26 % du territoire de la Suisse ?", back:RM, opts:REG, keepOrder:true, ans:"Le Moyen-Pays.", src:"fichier, ex. 2 des limites" },
+    { front:"Quelle région occupe 10 % du territoire de la Suisse ?", back:RJ, opts:REG, keepOrder:true, ans:"Le Jura : c'est la plus petite région.", src:"fichier, ex. 2 des limites" },
+    { front:"Quelle part du territoire occupent les Alpes ?", back:["64 %"], opts:["10 %","26 %","64 %"], keepOrder:true, mcqOnly:true, ans:"64 % : plus de la moitié de la Suisse.", src:"fichier, ex. 2 des limites" },
+    { front:"Quelle est la plus petite des trois régions ?", back:RJ, opts:REG, keepOrder:true, ans:"Le Jura (10 %).", src:"fichier, ex. 2 des limites" },
+  ]},
+  { key:"o2", code:"O2", title:"Les caractéristiques", src:"fichier p. 3", items:[
+    { front:"Dans quelle région trouve-t-on des glaciers et de la neige en été ?", back:RA, opts:REG, keepOrder:true, ans:"Dans les Alpes, avec les hautes montagnes et les vallées profondes.", src:"fichier p. 3, tes caractéristiques" },
+    { front:"Dans quelle région trouve-t-on des plaines, des champs et des marais ?", back:RM, opts:REG, keepOrder:true, ans:"Dans le Moyen-Pays, avec aussi des lacs et des collines.", src:"fichier p. 3, tes caractéristiques" },
+    { front:"Quelle région a des montagnes pas très hautes et beaucoup de forêts ?", back:RJ, opts:REG, keepOrder:true, ans:"Le Jura.", src:"fichier p. 3, tes caractéristiques" },
+    { front:"Dans quelle région trouve-t-on des vallées profondes ?", back:RA, opts:REG, keepOrder:true, ans:"Dans les Alpes.", src:"fichier p. 3, tes caractéristiques" },
+    { front:"Quelles caractéristiques correspondent aux Alpes ?", back:["De hautes montagnes, des vallées profondes, des glaciers"], wrong:["Des plaines, des champs, des marais","Des montagnes pas très hautes et des forêts","Une côte au bord de la mer"], mcqOnly:true, ans:"Hautes montagnes, vallées profondes, glaciers, neige en été.", src:"fichier p. 3, tes caractéristiques" },
+    { front:"Quelles caractéristiques correspondent au Moyen-Pays ?", back:["Des plaines, des lacs, des champs"], wrong:["Des glaciers et de la neige en été","De hautes montagnes et des vallées profondes","Des montagnes pas très hautes et des forêts"], mcqOnly:true, ans:"Des plaines, des lacs, des champs, des marais, des collines.", src:"fichier p. 3, tes caractéristiques" },
+    { front:"Quelle ligne de relief correspond au Jura ?", back:["Des vagues régulières, pas très hautes"], wrong:["Presque plat, avec de petites bosses","De grandes pointes et des creux profonds","Une ligne toute droite"], mcqOnly:true, ans:"Le Jura : des vagues régulières, car ses montagnes ne sont pas très hautes.", src:"fichier p. 3, tes lignes de relief" },
+    { front:"Quelle ligne de relief correspond aux Alpes ?", back:["De grandes pointes et des creux profonds"], wrong:["Des vagues régulières, pas très hautes","Presque plat, avec de petites bosses","Une ligne toute droite"], mcqOnly:true, ans:"Les Alpes : de hautes montagnes et des vallées profondes.", src:"fichier p. 3, tes lignes de relief" },
+    { front:"Depuis quel sommet a été prise la photo où l'on voit les trois régions ?", back:["le Chasseral","Chasseral"], wrong:["le Mont-Blanc","le Dammastock","le mont Risoux"], ans:"Le Chasseral, dans le canton de Berne.", src:"feuille « Les trois régions naturelles de la Suisse »" },
+  ]},
+  { key:"o3", code:"O3", title:"Situer les régions", src:"fichier, carte des limites", items:[
+    { front:"Quelle région se trouve au nord-ouest de la Suisse, le long de la frontière ?", back:RJ, opts:REG, keepOrder:true, ans:"Le Jura, en vert sur ta carte.", src:"fichier, ex. 1 des limites (carte)" },
+    { front:"Quelle région se trouve au milieu, entre le Jura et les Alpes ?", back:RM, opts:REG, keepOrder:true, ans:"Le Moyen-Pays, en jaune sur ta carte.", src:"fichier, ex. 1 des limites (carte)" },
+    { front:"Quelle région occupe tout le sud et l'est de la Suisse ?", back:RA, opts:REG, keepOrder:true, ans:"Les Alpes, en brun sur ta carte.", src:"fichier, ex. 1 des limites (carte)" },
+    { front:"Dans quelle région se trouve Berne ?", back:RM, opts:REG, keepOrder:true, ans:"Dans le Moyen-Pays.", src:"fichier, ex. 1 des limites (carte)" },
+    { front:"Dans quelle région se trouve le Crêt-de-la-Neige ?", back:RJ, opts:REG, keepOrder:true, ans:"Dans le Jura, près de Genève.", src:"fichier, ex. 1 des limites (carte)" },
+    { front:"Dans quelle région se trouve le Mont-Blanc ?", back:RA, opts:REG, keepOrder:true, ans:"Dans les Alpes.", src:"fichier, ex. 1 des limites (carte)" },
+    { front:"De quelle couleur as-tu colorié le Moyen-Pays sur ta carte ?", back:["en jaune","jaune"], opts:["en vert","en jaune","en brun","en rouge"], keepOrder:true, mcqOnly:true, ans:"En jaune. Le Jura est en vert, les Alpes en brun, la frontière en rouge.", src:"fichier, ex. 1 des limites (consigne et légende)" },
+    { front:"En partant du nord-ouest vers le sud, dans quel ordre trouve-t-on les régions ?", back:["Jura, Moyen-Pays, Alpes"], wrong:["Alpes, Jura, Moyen-Pays","Moyen-Pays, Alpes, Jura","Jura, Alpes, Moyen-Pays"], mcqOnly:true, ans:"Jura, puis Moyen-Pays, puis Alpes.", src:"fichier, ex. 1 des limites (carte)" },
+  ]},
+  { key:"o4", code:"O4", title:"Le relief et les altitudes", src:"fichier pp. 4 et 5", items:[
+    { front:"Quelle est l'altitude de Schaffhouse, sur ta fiche ?", back:["456 m","456"], wrong:["600 m","383 m","540 m"], ans:"456 m : un peu au-dessus de la ligne 400 m.", src:"fichier p. 5" },
+    { front:"Quelle est l'altitude de Romont ?", back:["780 m","780"], wrong:["629 m","447 m","1123 m"], ans:"780 m : juste sous la ligne 800 m. C'est le point le plus haut du profil Genève → Schaffhouse.", src:"fichier p. 5" },
+    { front:"Quelle est l'altitude de Berne ?", back:["540 m","540"], wrong:["456 m","780 m","375 m"], ans:"540 m.", src:"fichier p. 5" },
+    { front:"Quelle est l'altitude de Genève ?", back:["375 m","375"], wrong:["456 m","278 m","540 m"], ans:"375 m.", src:"fichier p. 5" },
+    { front:"Sur le profil Genève → Schaffhouse, quel lieu est le plus haut ?", back:["Romont"], opts:["Genève","Romont","Berne","Schaffhouse"], keepOrder:true, ans:"Romont, 780 m.", src:"fichier p. 5" },
+    { front:"Sur le profil Bâle → Chiasso, quel est le point le plus haut ?", back:["le Dammastock","Dammastock"], opts:["la Belchenflue","le Risetenstock","le Dammastock","le Monte Magno"], keepOrder:true, ans:"Le Dammastock, 3630 m.", src:"fichier p. 4" },
+    { front:"Quelle est l'altitude du Dammastock ?", back:["3630 m","3630"], wrong:["1760 m","1636 m","1123 m"], ans:"3630 m.", src:"fichier p. 4" },
+    { front:"Sur le profil Bâle → Chiasso, quel est le point le plus bas ?", back:["Locarno"], opts:["Bâle","Willisau","Locarno","Chiasso"], keepOrder:true, ans:"Locarno, 198 m (pas 0 m !).", src:"fichier p. 4" },
+    { front:"Quelle est l'altitude de Locarno ?", back:["198 m","198"], wrong:["0 m","238 m","278 m"], ans:"198 m : un peu sous la ligne 200 m.", src:"fichier p. 4" },
+    { front:"Lequel des deux profils traverse de très hautes montagnes ?", back:["Bâle → Chiasso"], opts:["Bâle → Chiasso","Genève → Schaffhouse"], keepOrder:true, mcqOnly:true, ans:"Bâle → Chiasso, avec le Dammastock (3630 m). Sur Genève → Schaffhouse, aucun lieu ne dépasse 800 m.", src:"fichier pp. 4 et 5" },
+    { front:"Pour dessiner un profil, que fais-tu après avoir lu l'altitude d'un lieu ?", back:["Je monte depuis son triangle jusqu'à la bonne altitude et je fais une croix"], wrong:["Je relie tout de suite les triangles du bas","Je colorie le diagramme en brun","J'écris le nom du lieu en haut"], mcqOnly:true, ans:"Une croix à la bonne hauteur, au-dessus du triangle du lieu ; quand toutes les croix sont placées, je les relie dans l'ordre.", src:"conseil de méthode, avec le fichier pp. 4 et 5" },
+  ]},
+  { key:"o5", code:"O5", title:"Villes, lacs, rivières, monts", src:"activité « Reconnaître la Suisse » · fichier", items:[
+    { front:"Quel lac se trouve au sud-ouest, avec Genève au bout ?", back:["le lac Léman","Léman","lac Léman","le Léman"], wrong:["le lac de Neuchâtel","le lac de Constance","le lac de Zurich"], ans:"Le lac Léman (n° 1 sur ta fiche).", src:"activité « Reconnaître la Suisse », n° 1" },
+    { front:"Quel lac se trouve au nord-est de la Suisse, sur la frontière ?", back:["le lac de Constance","lac de Constance","Constance"], wrong:["le lac Léman","le lac de Neuchâtel","le lac de Bienne"], ans:"Le lac de Constance (n° 3).", src:"activité « Reconnaître la Suisse », n° 3" },
+    { front:"Quel lac se trouve à l'ouest, au pied du Jura ?", back:["le lac de Neuchâtel","lac de Neuchâtel","Neuchâtel"], wrong:["le lac Léman","le lac de Constance","le lac Majeur"], ans:"Le lac de Neuchâtel (n° 2).", src:"activité « Reconnaître la Suisse », n° 2 · fichier, carte des limites" },
+    { front:"Quel cours d'eau coule au nord de la Suisse, le long de la frontière, près de Bâle ?", back:["le Rhin","Rhin"], wrong:["le Rhône","le Doubs","l'Aar"], ans:"Le Rhin (n° 4 sur ta fiche, A sur la feuille des frontières).", src:"activité « Reconnaître la Suisse », n° 4 · feuille « Les frontières »" },
+    { front:"Quel cours d'eau arrive dans le lac Léman ?", back:["le Rhône","Rhône"], wrong:["le Rhin","le Doubs","l'Inn"], ans:"Le Rhône (n° 5).", src:"activité « Reconnaître la Suisse », n° 5" },
+    { front:"Quelle ville se trouve au sud-ouest, au bout du Léman ?", back:["Genève"], opts:["Genève","Bâle","Schaffhouse","Berne"], keepOrder:true, ans:"Genève.", src:"activité « Reconnaître la Suisse » · fichier p. 5 (carte)" },
+    { front:"Quelle ville se trouve au nord, au bord du Rhin, près de la France et de l'Allemagne ?", back:["Bâle"], opts:["Genève","Bâle","Berne","Locarno"], keepOrder:true, ans:"Bâle.", src:"activité « Reconnaître la Suisse » · fichier p. 4 (carte)" },
+    { front:"Quelle ville est tout au nord de la Suisse, en haut de la carte ?", back:["Schaffhouse"], opts:["Genève","Schaffhouse","Berne","Chiasso"], keepOrder:true, ans:"Schaffhouse.", src:"fichier, carte des limites · fichier p. 5 (carte)" },
+    { front:"Quel mont des Alpes atteint 3630 m sur ton profil ?", back:["le Dammastock","Dammastock"], wrong:["le Mont-Blanc","le Chasseral","le mont Risoux"], ans:"Le Dammastock.", src:"fichier p. 4" },
+    { front:"Quel mont du Jura est sur la frontière (lettre D de ta feuille) ?", back:["le mont Risoux","mont Risoux","Risoux"], wrong:["le Dammastock","le Mont-Blanc","la Silvretta"], ans:"Le mont Risoux.", src:"feuille « Les frontières », lettre D" },
+  ]},
+  { key:"o6", code:"O6", title:"Pays voisins et capitales", src:"feuille « La Suisse et ses pays limitrophes »", items:[
+    { front:"Combien de pays limitrophes la Suisse a-t-elle ?", back:["5","cinq"], opts:["3","4","5","6"], keepOrder:true, mcqOnly:true, ans:"5 : la France, l'Allemagne, l'Autriche, le Liechtenstein et l'Italie.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la capitale de la France ?", back:["Paris"], grp:"cap", ans:"Paris.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la capitale de l'Allemagne ?", back:["Berlin"], grp:"cap", ans:"Berlin.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la capitale de l'Italie ?", back:["Rome"], grp:"cap", ans:"Rome.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la capitale de l'Autriche ?", back:["Vienne"], grp:"cap", ans:"Vienne.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la capitale du Liechtenstein ?", back:["Vaduz"], grp:"cap", ans:"Vaduz.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la capitale de la Suisse ?", back:["Berne"], grp:"cap", ans:"Berne.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays a pour capitale Paris ?", back:["la France","France"], grp:"pays", ans:"La France (attention : « France », pas « franche »).", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays a pour capitale Rome ?", back:["l'Italie","Italie"], grp:"pays", ans:"L'Italie (attention : « Italie », avec un e à la fin).", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays a pour capitale Berlin ?", back:["l'Allemagne","Allemagne"], grp:"pays", ans:"L'Allemagne.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays a pour capitale Vienne ?", back:["l'Autriche","Autriche"], grp:"pays", ans:"L'Autriche.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays a pour capitale Vaduz ?", back:["le Liechtenstein","Liechtenstein"], grp:"pays", ans:"Le Liechtenstein, un tout petit pays.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays voisin est au nord de la Suisse ?", back:["l'Allemagne","Allemagne"], opts:PAYS, keepOrder:true, ans:"L'Allemagne.", src:"fichier, carte des limites (drapeaux) · feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays voisin est à l'ouest de la Suisse ?", back:["la France","France"], opts:PAYS, keepOrder:true, ans:"La France (à l'ouest et au sud-ouest, autour de Genève).", src:"fichier, carte des limites (drapeaux) · feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel pays voisin est au sud de la Suisse ?", back:["l'Italie","Italie"], opts:PAYS, keepOrder:true, ans:"L'Italie.", src:"fichier, carte des limites (drapeaux) · feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel grand pays voisin est à l'est de la Suisse ?", back:["l'Autriche","Autriche"], opts:PAYS, keepOrder:true, ans:"L'Autriche. Le petit Liechtenstein est aussi à l'est, entre la Suisse et l'Autriche.", src:"fichier, carte des limites (drapeaux) · feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quel tout petit pays se trouve entre la Suisse et l'Autriche ?", back:["le Liechtenstein","Liechtenstein"], opts:PAYS, keepOrder:true, ans:"Le Liechtenstein, capitale Vaduz.", src:"feuille « La Suisse et ses pays limitrophes »" },
+    { front:"Quelle est la mer la plus proche de la Suisse ?", back:["la mer Méditerranée","Méditerranée","mer Méditerranée"], wrong:["la mer du Nord","l'océan Atlantique","la mer Baltique"], ans:"La mer Méditerranée.", src:"feuille « Les frontières », question 2" },
+  ]},
+  { key:"o7", code:"O7", title:"Frontière naturelle, pays limitrophe", src:"feuille « Les frontières »", items:[
+    { front:"Qu'est-ce qu'une frontière naturelle ?", back:["Un élément du paysage que les hommes ont utilisé pour fixer la frontière"], wrong:["Une frontière tracée tout droit à la règle","Une frontière fermée par un mur","La capitale d'un pays voisin"], mcqOnly:true, ans:"Les hommes ont parfois utilisé des éléments du paysage (rivière, lac, montagne) pour fixer les frontières du pays.", src:"feuille « Les frontières », question 1" },
+    { front:"Qu'est-ce qu'un pays limitrophe ?", back:["Un pays qui a une frontière commune avec un autre pays"], wrong:["Un pays très loin de la Suisse","Un pays au bord de la mer","Une ville proche de la frontière"], mcqOnly:true, ans:"Un pays dont les frontières sont communes avec un autre, comme le Liechtenstein avec la Suisse.", src:"feuille « Les frontières », question 6" },
+    { front:"Quel pays est un exemple de pays limitrophe de la Suisse ?", back:["le Liechtenstein","Liechtenstein","la France","France","l'Allemagne","Allemagne","l'Autriche","Autriche","l'Italie","Italie"], wrong:["l'Espagne","la Belgique","la Pologne"], ans:"Ta feuille donne le Liechtenstein ; les 4 autres voisins sont justes aussi.", src:"feuille « Les frontières », question 6" },
+    { front:"Lequel de ces éléments est une frontière naturelle de la Suisse ?", back:["le Rhin"], wrong:["la ville de Berne","le Moyen-Pays","la route de Genève à Lausanne"], mcqOnly:true, ans:"Le Rhin, un cours d'eau (lettre A de ta feuille).", src:"feuille « Les frontières », lettre A" },
+    { front:"Quels lacs servent de frontière naturelle à la Suisse sur ta feuille ?", back:["le lac Léman et le lac de Constance"], wrong:["le lac de Neuchâtel et le lac de Bienne","le lac de Zurich et le lac de Thoune","le lac des Quatre-Cantons"], mcqOnly:true, ans:"Le lac de Constance (B) et le lac Léman (E).", src:"feuille « Les frontières », lettres B et E" },
+    { front:"Quelle rivière du Jura sert de frontière avec la France (lettre C) ?", back:["le Doubs","Doubs"], wrong:["le Rhône","le Rhin","l'Aar"], ans:"Le Doubs.", src:"feuille « Les frontières », lettre C" },
+    { front:"Quelles montagnes servent de frontière naturelle au sud et à l'est, sur ta feuille ?", back:["Les Alpes valaisannes, la Silvretta, le Rätikon"], wrong:["Le Jura et le Chasseral","Le Moyen-Pays et ses collines","Le Mont-Blanc et le Crêt-de-la-Neige"], mcqOnly:true, ans:"Les Alpes valaisannes (F), la Silvretta (G) et le Rätikon (H).", src:"feuille « Les frontières », lettres F, G, H" },
+  ]},
+];
+
+/* objectif des capsules = la phrase de la feuille d'objectifs du chapitre */
+CAPSULES.chapitres.forEach(c => c.capsules.forEach(x => { if (!x.objectif){ const p = PAGES.find(p => p.id === x.id); x.objectif = p ? (p.obj || p.court) : ""; } }));
+
+
+const capOf = id => CAPSULES.chapitres.flatMap(c => c.capsules).find(x => x.id === id);
+const CAPS_ORDER = CAPSULES.chapitres.flatMap(c => c.capsules.map(x => x.id));
+const capsSeen = () => CAPS_ORDER.filter(id => S.vidSeen[id]).length;
+const videoUrl = id => VIDEOS[id] || null;
+const VIDS_ID = QUIZ_ID + "-videos-vues";
+function nextAfter(id){ const i = PAGES.findIndex(p => p.id === id); return PAGES[i+1] ? PAGES[i+1].id : null; }
+function videoBtn(id){
+  if (!(id in VIDEOS)) return "";
+  const v = VIDEOS[id], u = videoUrl(id), seen = !!S.vidSeen[id];
+  if (!v) return `<p class="vid off"><span class="vid-i" aria-hidden="true">▶</span><span><b>Vidéo bientôt disponible</b><small>La capsule ${esc(id)} n'est pas encore en ligne</small></span></p>`;
+  if (S.vidDone === id) return vidDonePanel(id, "page");
+  if (S.vidOpen === id) return vidPlayer(id);
+  return vidThumb(id, seen);
+}
+function vidDonePanel(id, where){
+  const decks = DECKS.filter(d => d.code === id);
+  if (where === "caps"){
+    const i = CAPS_ORDER.indexOf(id), nx = CAPS_ORDER[i+1];
+    const nxTxt = nx ? (nx === "LIENS" ? "le fil rouge" : nx) : null;
+    return `<div class="vdone"><p class="vdone-t">✓ Capsule vue</p>
+      ${nx && VIDEOS[nx] ? `<button class="cta" data-act="vidPlay" data-v="${nx}">▶ Capsule suivante : ${esc(nxTxt)}</button>` : `<p class="fine">Tu as fini la série 👏 Passe aux tests du chapitre ou à l'épreuve blanche.</p>`}
+      <div class="row">${decks.length ? `<button class="ghost small" data-act="vidCards" data-v="${id}">Teste-toi : cartes ${esc(id)}</button>` : ""}<button class="ghost small" data-act="page" data-v="${id}">Lire ${id === "LIENS" ? "le fil rouge" : "le chapitre " + esc(id)}</button></div></div>`;
+  }
+  {
+    const nxt = nextAfter(id);
+    return `<div class="vdone"><p class="vdone-t">✓ Capsule vue</p>
+      ${decks.length ? `<button class="cta" data-act="vidCards" data-v="${id}">Teste-toi maintenant : cartes ${esc(id)}</button>` : nxt ? `<button class="cta" data-act="page" data-v="${nxt}">Commencer le chapitre ${esc(nxt)}</button>` : ""}
+      <div class="row"><button class="ghost small" data-act="vidReplay" data-v="${id}">Revoir la capsule</button><button class="ghost small" data-act="vidHide">Lire le chapitre</button></div></div>`;
+  }
+}
+function vidPlayer(id){
+  const v = VIDEOS[id], u = videoUrl(id), cap = capOf(id);
+  if (HAS_CLAUDE){
+    return `<div class="vplay"><a class="cta vlink" href="${esc(u)}" target="_blank" rel="noopener">▶ Ouvrir la capsule${cap && cap.duree ? " (" + esc(cap.duree) + ")" : ""}</a>
+      <p class="fine">Dans Claude, la vidéo s'ouvre dans un nouvel onglet. Quand tu as fini, reviens ici.</p>
+      <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>${chapTest(id, "play")}</div>`;
+  }
+  {
+    return `<div class="vplay"><div class="vframe"><video id="vid-el" src="${esc(u)}" controls playsinline autoplay preload="metadata" title="Capsule vidéo ${esc(id)}"></video></div>
+      <div class="vbar"><button class="ghost small" data-act="vidFinish" data-v="${id}">✓ J'ai fini la capsule</button><button class="ghost small" data-act="vidHide">Fermer</button></div>${chapTest(id, "play")}
+      <p class="fine vfb">La vidéo ne démarre pas ? <a href="${esc(u)}" target="_blank" rel="noopener">L'ouvrir dans un nouvel onglet</a></p></div>`;
+  }
+}
+function vidThumb(id, seen){
+  const v = VIDEOS[id];
+  return `<button class="vthumb" data-act="vidPlay" data-v="${id}" aria-label="Lire la capsule vidéo ${esc(id)}">
+    <span class="vthumb-play" aria-hidden="true">▶</span>
+    <span class="vthumb-t"><b>Regarder la capsule ${esc(id === "LIENS" ? "d'introduction" : id)}</b><small>${seen ? "✓ déjà vue · " : ""}${capOf(id) && capOf(id).duree ? esc(capOf(id).duree) + " · " : ""}${HAS_CLAUDE ? "s'ouvre dans un nouvel onglet" : "lue ici, sans quitter le Dossier"}</small></span></button>`;
+}
+function chapTest(id, where){
+  const decks = DECKS.filter(d => d.code === id); if (!decks.length) return "";
+  const n = decks.reduce((k,d) => k + d.items.filter(it => !rvOf(d, it).exclu).length, 0);
+  return `<div class="ctest${where === "end" ? " end" : ""}"><p class="ctest-t">🎯 Teste-toi sur ce chapitre <small>${n} questions · correction après chaque question</small></p>
+    <div class="row3">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="ctest-b" data-act="chapTest" data-v="${id}|${k}"><span>${d.emoji}</span><b>${d.label}</b></button>`).join("")}</div></div>`;
+}
+function vidPost(cmd){ const f = document.getElementById("vid-frame"); if (f && f.contentWindow) try { f.contentWindow.postMessage(JSON.stringify(cmd), "*"); } catch(e){} }
+function vidListen(){
+  const ve = document.getElementById("vid-el");
+  if (ve){ ve.addEventListener("ended", () => vidEnded(S.vidOpen)); ve.play && ve.play().catch(() => {}); return; }
+  const f = document.getElementById("vid-frame"); if (!f) return;
+  const hello = () => { vidPost({ event:"listening", id:"vid", channel:"widget" }); vidPost({ event:"command", func:"addEventListener", args:["onStateChange"], id:"vid", channel:"widget" }); };
+  f.addEventListener("load", () => { hello(); setTimeout(hello, 800); });
+}
+function vidEnded(id){
+  if (S.vidOpen !== id) return;
+  S.vidOpen = null; S.vidDone = id; S.vidSeen[id] = Date.now(); saveVids(); render();
+  const el = document.querySelector(".vdone"); if (el) el.scrollIntoView({ block:"center" });
+}
+async function saveVids(){ try { await store.setDoc(VIDS_ID, S.vidSeen); } catch(e){} }
+document.addEventListener("error", e => { const t = e.target; if (t && t.tagName === "IMG" && t.closest && t.closest(".vthumb")) t.remove(); }, true);
+window.addEventListener("message", e => {
+  if (!/youtube(-nocookie)?\.com$/.test(String(e.origin).replace(/^https?:\/\/(www\.)?/, "").split(":")[0])) return;
+  let d = e.data; if (typeof d === "string"){ try { d = JSON.parse(d); } catch(err){ return; } }
+  if (!d || !S.vidOpen) return;
+  const st = d.event === "onStateChange" ? d.info : (d.event === "infoDelivery" && d.info && "playerState" in d.info ? d.info.playerState : null);
+  if (st === 0) vidEnded(S.vidOpen);
+});
+/* Vidéo et audio côte à côte, sur une même ligne, en tête du chapitre. */
+function mediaRow(id){
+  if (S.vidDone === id) return vidDonePanel(id, "page");
+  if (S.vidOpen === id) return vidPlayer(id);
+  const v = VIDEOS[id], cap = capOf(id), n = audParts(id).length, aOn = S.audOpen === id;
+  const vb = !(id in VIDEOS) ? "" : v
+    ? `<button class="mbtn" data-act="vidPlay" data-v="${id}" aria-label="Regarder la capsule vidéo ${esc(id)}"><span class="mbtn-i" aria-hidden="true">▶</span><span class="mbtn-x"><b>Vidéo</b><small>${cap && cap.duree ? esc(cap.duree) : "regarder"}${S.vidSeen[id] ? " · ✓ vue" : ""}</small></span></button>`
+    : `<div class="mbtn off"><span class="mbtn-i" aria-hidden="true">▶</span><span class="mbtn-x"><b>Vidéo</b><small>bientôt disponible</small></span></div>`;
+  const ab = n ? `<button class="mbtn a${aOn ? " on" : ""}" data-act="${aOn ? "audHide" : "audPlay"}" data-v="${id}" aria-label="Écouter la piste audio ${esc(id)}"><span class="mbtn-i" aria-hidden="true">🎧</span><span class="mbtn-x"><b>Audio</b><small>${n > 1 ? n + " parties" : "écouter"}</small></span></button>` : "";
+  if (!vb && !ab) return "";
+  return `<div class="media${vb && ab ? "" : " one"}">${vb}${ab}</div>${aOn ? audPlayer(id) : ""}${HAS_CLAUDE && (v || n) ? `<p class="fine">Dans Claude, la vidéo et l'audio s'ouvrent dans un nouvel onglet.</p>` : ""}`;
+}
+const audParts = id => (AUDIOS[id] || []);
+function audioBtn(id){
+  const parts = audParts(id); if (!parts.length) return "";
+  if (S.audOpen === id) return audPlayer(id);
+  return `<button class="aud-btn" data-act="audPlay" data-v="${id}"><span class="aud-i" aria-hidden="true">🎧</span><span><b>Écouter la piste audio</b><small>${parts.length > 1 ? parts.length + " parties · " : ""}${HAS_CLAUDE ? "s'ouvre dans un nouvel onglet" : "le chapitre lu à voix haute, sans l'image"}</small></span></button>`;
+}
+function audHead(id, i, n){ return `🎧 Piste audio ${id === "LIENS" ? "du fil rouge" : esc(id)}${n > 1 ? ` · partie ${i+1} / ${n}` : ""}`; }
+function audPlayer(id){
+  const parts = audParts(id), n = parts.length, i = Math.min(S.audPart || 0, n - 1);
+  const note = `<p class="fine">La piste n'a pas de silence aux pauses : quand la voix te dit de mettre sur pause, arrête-la toi-même et réponds avant de continuer.</p>`;
+  if (HAS_CLAUDE) return `<div class="aud"><p class="aud-t">${audHead(id, 0, 1)}</p><div class="aud-links">${parts.map((u, k) => `<a class="ghost small" href="${esc(u)}" target="_blank" rel="noopener">▶ ${n > 1 ? "Partie " + (k+1) : "Écouter"}</a>`).join("")}</div>
+    <p class="fine">Dans Claude, la piste s'ouvre dans un nouvel onglet.${n > 1 ? " Écoute les parties dans l'ordre." : ""}</p>${note}<button class="ghost small" data-act="audHide">Fermer</button></div>`;
+  return `<div class="aud"><p class="aud-t" id="aud-t">${audHead(id, i, n)}</p><audio id="aud-el" src="${esc(parts[i])}" controls autoplay preload="metadata"></audio>
+    ${n > 1 ? `<div class="aud-links">${parts.map((u, k) => `<button class="ghost small${k === i ? " on" : ""}" data-act="audPart" data-v="${id}|${k}">Partie ${k+1}</button>`).join("")}</div><p class="fine">Les parties s'enchaînent toutes seules.</p>` : ""}
+    ${note}<div class="row"><button class="ghost small" data-act="audHide">Fermer</button><a class="ghost small aud-ext" id="aud-ext" href="${esc(parts[i])}" target="_blank" rel="noopener">Ouvrir dans un onglet</a></div></div>`;
+}
+function audListen(){
+  const a = document.getElementById("aud-el"); if (!a) return;
+  a.addEventListener("ended", () => {
+    const id = S.audOpen, parts = audParts(id), k = (S.audPart || 0) + 1;
+    if (k >= parts.length) return;
+    S.audPart = k; a.src = parts[k]; a.play && a.play().catch(() => {});
+    const t = document.getElementById("aud-t"); if (t) t.textContent = audHead(id, k, parts.length);
+    const x = document.getElementById("aud-ext"); if (x) x.href = parts[k];
+    document.querySelectorAll('[data-act="audPart"]').forEach(b => b.classList.toggle("on", b.dataset.v === id + "|" + k));
+  });
+  a.play && a.play().catch(() => {});
+}
+
+function capDur(id){ const c = capOf(id); return c && c.duree ? " (" + c.duree + ")" : ""; }
+/* ===== Suivi graphique ===== */
+function sv(){ return S.suivi || (S.suivi = { ch:"all", f:"all", pt:null }); }
+function cardKey(dk, w){ return dk + "|" + w; }
+function qKey(x){ const q = x.question; return q ? cardKey(q.deckKey, q.word) : "p|" + x.prompt; }
+function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
+function chapOfDeck(dk){ const d = DECK[dk]; return d ? d.code : null; }
+function chapOfQ(x){ return x.question ? chapOfDeck(x.question.deckKey) : null; }
+function rootTests(){ return S.attempts.filter(a => !a.rattrapage).sort((a, b) => a.date - b.date); }
+function parentOf(a){
+  if (a.parent) return a.parent;
+  const prev = S.attempts.filter(x => !x.rattrapage && x.date < a.date && dayOf(x.date) === dayOf(a.date)).sort((x, y) => y.date - x.date)[0];
+  return prev ? prev.id : null;
+}
+function isExam(a){ return a.mode === MODES.exam.label; }
+function inChap(ch){ return x => ch === "all" || chapOfQ(x) === ch; }
+/* note sans aide d'un test (éventuellement limitée à un chapitre) et remontée après chaque rattrapage */
+function testScore(root, ch){
+  const qs = root.questions.filter(inChap(ch)), score = qs.filter(x => x.correct).length, total = qs.length;
+  if (!total) return null;
+  const wrong = new Set(qs.filter(x => !x.correct).map(qKey)), fixed = new Set(), steps = [];
+  S.attempts.filter(a => a.rattrapage && parentOf(a) === root.id).sort((a, b) => a.date - b.date).forEach(r => {
+    const rq = r.questions.filter(inChap(ch)); if (!rq.length) return;
+    rq.forEach(x => { if (x.correct && wrong.has(qKey(x))) fixed.add(qKey(x)); });
+    const sc = score + fixed.size;
+    steps.push({ score:sc, note:noteFrom(sc / total), asked:rq.length, ok:rq.filter(x => x.correct).length });
+  });
+  return { score, total, note:noteFrom(score / total), typos:qs.filter(x => x.typo).length, steps };
+}
+/* état de chaque carte : réponses du premier passage des tests seulement (jamais les rattrapages) */
+function cardStates(exceptId){
+  const hist = {};
+  rootTests().filter(a => a.id !== exceptId).forEach(a => a.questions.forEach(x => {
+    if (!x.question) return; (hist[qKey(x)] = hist[qKey(x)] || []).push({ ok:x.correct, typed:x.question.kind === "type", day:dayOf(a.date) });
+  }));
+  const st = {};
+  DECKS.forEach(d => d.items.forEach(it => {
+    if (rvOf(d, it).exclu) return;
+    const k = cardKey(d.key, it.front), h = hist[k];
+    if (!h) { st[k] = "new"; return; }
+    const last = h[h.length - 1];
+    if (!last.ok) { st[k] = "bad"; return; }
+    const strong = it.mcqOnly ? true : last.typed;
+    let i = h.length - 2, otherDay = false;
+    while (i >= 0 && h[i].ok){ if (h[i].day !== last.day) { otherDay = true; break; } i--; }
+    st[k] = strong && otherDay ? "ok" : "mid";
+  }));
+  return st;
+}
+function chapCards(ch){ return DECKS.filter(d => ch === "all" || d.code === ch).flatMap(d => d.items.filter(it => !rvOf(d, it).exclu).map(it => ({ d, it, k:cardKey(d.key, it.front) }))); }
+function chapSummary(ch, st){
+  const cards = chapCards(ch); if (!cards.length) return null;
+  const c = { ok:0, mid:0, bad:0, new:0 }; cards.forEach(x => c[st[x.k] || "new"]++);
+  const total = cards.length, right = c.ok + c.mid, pct = Math.round(right / total * 100);
+  const note = noteFrom(right / total), noteAcq = noteFrom(c.ok / total);
+  /* niveaux du papa : note sous 4 rouge, de 4 à 4,5 orange, 5 et plus vert « réussi », confirmé un autre jour = OK (vert foncé) */
+  const state = c.new === total ? "start" : noteAcq >= 5 ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
+  return { ...c, total, right, pct, note, state };
+}
+const P_LABEL = { start:"à commencer", low:"à revoir", mid:"en route", win:"réussi", ok:"OK ✓" };
+function pColor(state){ return state === "ok" ? "var(--p-okdark)" : state === "win" ? "var(--p-ok)" : state === "mid" ? "var(--p-mid)" : "var(--p-low)"; }
+function ringSvg(sum, size, inner){
+  const r = size / 2 - (size > 50 ? 6 : 5), w = size > 50 ? 8 : 6, C = 2 * Math.PI * r, h = size / 2;
+  if (sum.state === "start") return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" stroke-dasharray="3 3" style="stroke:var(--st)"/><text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
+  const seg = (n, off, color) => n ? `<circle r="${r}" fill="none" stroke-width="${w}" stroke="${color}" stroke-dasharray="${(C * n / sum.total).toFixed(2)} 999" stroke-dashoffset="${(-C * off / sum.total).toFixed(2)}" transform="rotate(-90)"/>` : "";
+  const midColor = sum.state === "ok" ? "var(--p-ok)" : pColor(sum.state);
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true"><circle r="${r}" fill="none" stroke-width="${w}" style="stroke:var(--rule)"/>${seg(sum.ok, 0, "var(--p-okdark)")}${seg(sum.mid, sum.ok, midColor)}${seg(sum.bad, sum.ok + sum.mid, "var(--p-lowsoft)")}<text x="0" y="4" text-anchor="middle" class="pring-t">${inner}</text></svg>`;
+}
+function lvlOf(sum){ return !sum || sum.state === "start" ? -1 : sum.note >= 5 ? 2 : sum.note >= 4 ? 1 : 0; }
+const LVL_LABEL = ["à revoir", "en route", "réussi"];
+/* baisse de niveau (note sous 4 / 4 à 4,5 / 5 et plus) depuis le test précédent du chapitre : seulement dans ce cas on montre les cartes perdues */
+function dropOf(ch, st, sum){
+  const tests = rootTests().filter(a => a.questions.some(inChap(ch))); if (tests.length < 2) return null;
+  const last = tests[tests.length - 1], prevSt = cardStates(last.id), prev = chapSummary(ch, prevSt);
+  if (lvlOf(sum) < 0 || lvlOf(prev) <= lvlOf(sum)) return null;
+  const lost = chapCards(ch).filter(x => (prevSt[x.k] === "ok" || prevSt[x.k] === "mid") && st[x.k] === "bad");
+  return { prev, lost, date:tests[tests.length - 2].date };
+}
+function trendOf(ch, sum){
+  const last = rootTests().filter(a => a.questions.some(inChap(ch))).pop(); if (!last) return "";
+  const before = chapSummary(ch, cardStates(last.id));
+  return sum.right > before.right ? " ↗" : sum.right < before.right ? " ↘" : "";
+}
+function pastille(ch){
+  if (!S.loaded) return "";
+  const sum = chapSummary(ch, cardStates()); if (!sum) return "";
+  const dr = dropOf(ch, cardStates(), sum);
+  return `<span class="pst" aria-label="${sum.right} cartes justes au dernier test sur ${sum.total}, dont ${sum.ok} acquises : ${P_LABEL[sum.state]}${dr ? ", avant : " + LVL_LABEL[lvlOf(dr.prev)] : ""}">${ringSvg(sum, 46, sum.right + "/" + sum.total)}<span class="pst-l pst-${sum.state}">${P_LABEL[sum.state]}${trendOf(ch, sum)}</span>${dr ? `<span class="pst-was">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</span>`;
+}
+function globalPastille(){
+  if (!S.loaded) return "";
+  const st = cardStates(), sum = chapSummary("all", st); if (!sum) return "";
+  const chs = PAGES.filter(p => chapCards(p.id).length).map(p => ({ id:p.id, s:chapSummary(p.id, st) }));
+  const nOk = chs.filter(x => x.s.state === "ok").length, nWin = chs.filter(x => x.s.state === "win").length;
+  return `<div class="pglob">${ringSvg(sum, 66, sum.pct + " %")}<div class="pglob-x"><b>Avancement général · ${P_LABEL[sum.state]}</b><span>${sum.right} cartes justes au dernier test sur ${sum.total}, dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} chapitre${nOk > 1 ? "s" : ""} OK · ${nWin} réussi${nWin > 1 ? "s" : ""}, à confirmer · sur ${chs.length}</span></div></div>
+  <details class="plegend"><summary>Comment se lit la pastille ?</summary>
+  <p>Le chiffre au centre : les cartes <b>justes au dernier test</b> où elles sont tombées, sur le total du chapitre. La couleur suit la note que ça donnerait :</p>
+  <p><b>Rouge · à revoir</b> : note sous 4. <b>Orange · en route</b> : note de 4 à 4,5. <b>Vert · réussi</b> : note de 5 ou plus. <b>Vert foncé · OK ✓</b> : réussi et confirmé un autre jour.</p>
+  <p>Dans l'anneau : <b>vert foncé</b> = cartes acquises (justes à deux tests, dont un un autre jour, la dernière fois à écrire quand c'est possible) ; couleur du niveau = justes au dernier test, pas encore confirmées ; <b>rouge pâle</b> = fausses au dernier test ; gris = pas encore posées.</p>
+  <p>Seul le premier passage d'un test compte : refaire ses erreurs aide à apprendre, mais ne change pas la pastille.</p></details>`;
+}
+function chapStatus(ch){
+  if (!S.loaded) return "";
+  const st = cardStates(), sum = chapSummary(ch, st); if (!sum) return "";
+  const bad = chapCards(ch).filter(x => st[x.k] === "bad");
+  const conf = sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : "";
+  const dr = dropOf(ch, st, sum);
+  const drop = dr ? `<p class="pdrop">↘ Le ${dateLabel(dr.date).replace(/ ·.*$/, "")}, ce chapitre était à « ${LVL_LABEL[lvlOf(dr.prev)]} » (note ${fmtNote(dr.prev.note)}).${dr.lost.length ? ` ${dr.lost.length} carte${dr.lost.length > 1 ? "s" : ""} réussie${dr.lost.length > 1 ? "s" : ""} avant ${dr.lost.length > 1 ? "sont ratées" : "est ratée"} au dernier test : ce sont elles à reprendre.` : ""}</p>${dr.lost.length ? `<button class="ghost small" data-act="redoCards" data-v="lost:${ch}">Refaire ces ${dr.lost.length} carte${dr.lost.length > 1 ? "s" : ""}</button>` : ""}` : "";
+  return `<div class="pchap">${ringSvg(sum, 46, sum.right + "/" + sum.total)}<div class="pchap-x"><b>Ce chapitre : ${P_LABEL[sum.state]}${trendOf(ch, sum)}</b><span>${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées${conf}</span>${drop}
+  ${!dr && bad.length ? `<button class="ghost small" data-act="redoCards" data-v="${ch}">Refaire mes ${bad.length} carte${bad.length > 1 ? "s" : ""} à revoir</button>` : ""}</div></div>`;
+}
+function redoCards(v){
+  let keys;
+  if (v === "resist") keys = new Set(resistant().map(x => x.k));
+  else if (v.startsWith("lost:")) { const ch = v.slice(5), st = cardStates(), dr = dropOf(ch, st, chapSummary(ch, st)); keys = new Set(dr ? dr.lost.map(x => x.k) : []); }
+  else { const st = cardStates(); keys = new Set(chapCards(v).filter(x => st[x.k] === "bad").map(x => x.k)); }
+  const decks = [...new Set([...keys].map(k => k.split("|")[0]))];
+  const qs = buildTest(decks, "hard").filter(q => keys.has(cardKey(q.deckKey, q.word)));
+  if (!qs.length) return;
+  let n = 0; qs.forEach(q => { q.num = ++n; });
+  S.selected = decks; S.difficulty = "hard"; S.mode = "train"; S.frozen = null; S.vidOpen = null; S.vidDone = null;
+  startQuiz(qs, false);
+}
+/* ----- onglet Scores ----- */
+function resistant(){
+  const m = {};
+  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qKey(x); m[k] = m[k] || { k, word:x.question.word, ch:chapOfQ(x), n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
+  return Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
+}
+function shapeSvg(a, x, y){
+  const f = `fill="var(--box)" stroke="var(--sheet)" stroke-width="2"`;
+  if (isExam(a)) { const p = []; for (let i = 0; i < 10; i++){ const r = i % 2 ? 3.6 : 8.5, t = Math.PI / 5 * i - Math.PI / 2; p.push((x + r * Math.cos(t)).toFixed(1) + "," + (y + r * Math.sin(t)).toFixed(1)); } return `<polygon points="${p.join(" ")}" ${f}/>`; }
+  if (a.difficulty === DIFFICULTIES.easy.label) return `<circle cx="${x}" cy="${y}" r="6" ${f}/>`;
+  if (a.difficulty === DIFFICULTIES.normal.label) return `<rect x="${x - 6}" y="${y - 6}" width="12" height="12" ${f}/>`;
+  return `<polygon points="${x},${y - 8} ${x + 8},${y} ${x},${y + 8} ${x - 8},${y}" ${f}/>`;
+}
+const fmtN = n => fmtNote(n);
+function suiviChart(){
+  const s = sv();
+  let tests = rootTests(); if (s.f === "exam") tests = tests.filter(a => a.difficulty === DIFFICULTIES.hard.label || isExam(a));
+  const pts = tests.map(a => ({ a, sc:testScore(a, s.ch) })).filter(p => p.sc);
+  if (!pts.length) return `<p class="fine">Aucun test ne correspond à ce choix pour l'instant.</p>`;
+  const L = 44, R = 18, T = 24, B = 40, H = 220, step = 58, W = Math.max(330, L + R + step * pts.length);
+  const y = n => T + (6 - n) / 5 * (H - T - B), X = i => L + step / 2 + i * step;
+  let g = "";
+  [1,2,3,4,5,6].forEach(n => { g += `<line x1="${L}" x2="${W - R}" y1="${y(n)}" y2="${y(n)}" style="stroke:var(--rule)" stroke-width="1"${n === 4 ? ' stroke-dasharray="5 4"' : ""}/><text x="${L - 8}" y="${y(n) + 4}" text-anchor="end" class="ch-t">${n}</text>`; });
+  g += `<text x="${W - R}" y="${y(4) - 5}" text-anchor="end" class="ch-t">4 suffisant</text>`;
+  pts.forEach((p, i) => { if (!p.sc.steps.length) return; const last = p.sc.steps[p.sc.steps.length - 1];
+    g += `<line x1="${X(i)}" x2="${X(i)}" y1="${y(p.sc.note) - 9}" y2="${y(last.note) + 6}" style="stroke:var(--good)" stroke-width="2" stroke-dasharray="4 3"/>`;
+    p.sc.steps.forEach((st, k) => { const fin = k === p.sc.steps.length - 1; g += `<circle cx="${X(i)}" cy="${y(st.note)}" r="${fin ? 5.5 : 3.5}" fill="var(--sheet)" style="stroke:var(--good)" stroke-width="2"/>`; });
+    g += `<text x="${X(i)}" y="${y(last.note) - 10}" text-anchor="middle" class="ch-t ch-g">${fmtN(last.note)}</text>`; });
+  g += `<polyline points="${pts.map((p, i) => X(i) + "," + y(p.sc.note)).join(" ")}" fill="none" style="stroke:var(--box)" stroke-width="2" stroke-linejoin="round"/>`;
+  pts.forEach((p, i) => { const on = s.pt === p.a.id;
+    g += `<g class="ch-pt" data-act="suiviPt" data-v="${p.a.id}" role="button" tabindex="0" aria-label="Test du ${dateLabel(p.a.date)}, note ${fmtN(p.sc.note)}">${on ? `<circle cx="${X(i)}" cy="${y(p.sc.note)}" r="13" fill="none" style="stroke:var(--crane)" stroke-width="2"/>` : ""}${shapeSvg(p.a, X(i), y(p.sc.note))}<rect x="${X(i) - 18}" y="${T - 6}" width="36" height="${H - T}" fill="transparent"/></g>`;
+    g += `<text x="${X(i) - 11}" y="${y(p.sc.note) + 4}" text-anchor="end" class="ch-t ch-b">${fmtN(p.sc.note)}</text>`;
+    const d = new Date(p.a.date); g += `<text x="${X(i)}" y="${H - B + 18}" text-anchor="middle" class="ch-t">${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}</text>`; });
+  g += `<text x="${L}" y="${H - 6}" class="ch-t">épreuve : ${esc(DUE.short)}</text>`;
+  let detail = "";
+  const sel = pts.find(p => p.a.id === s.pt);
+  if (sel){ const a = sel.a, sc = sel.sc;
+    detail = `<div class="ch-detail"><b>${dateLabel(a.date)} · ${esc(a.difficulty)} · ${esc(a.mode)}</b><span>${esc(a.deck)}${s.ch !== "all" ? " · questions du chapitre " + s.ch : ""}</span>
+    <span>Sans aide : ${sc.score} juste${sc.score > 1 ? "s" : ""} sur ${sc.total} → note ${fmtN(sc.note)}${sc.typos ? ` (dont ${sc.typos} faute${sc.typos > 1 ? "s" : ""} de frappe acceptée${sc.typos > 1 ? "s" : ""})` : ""}</span>
+    ${sc.steps.map((st, k) => `<span>${k + 1}${k ? "e" : "er"} rattrapage : ${st.ok} sur ${st.asked} → note ${fmtN(st.note)}</span>`).join("")}
+    <button class="ghost small" data-act="openAttempt" data-v="${a.id}">Voir les questions de ce test</button></div>`; }
+  return `<div class="ch-legend"><span><i class="lg-line"></i>Note du test, sans aide</span><span><i class="lg-ring"></i>Après « Refaire mes erreurs »</span><span>○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche</span></div>
+  <div class="ch-wrap"><svg class="ch-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des notes sans aide, avec la remontée après les rattrapages">${g}</svg></div>
+  <p class="fine">Touche un point pour voir le détail du test.</p>${detail}`;
+}
+function suiviHeat(){
+  const tests = rootTests(); if (!tests.length) return "";
+  const days = [...new Set(tests.map(a => dayOf(a.date)))].slice(-6);
+  const tested = new Set(tests.flatMap(a => a.questions.map(chapOfQ)));
+  const all = PAGES.filter(p => chapCards(p.id).length), chs = all.filter(p => tested.has(p.id)), rest = all.filter(p => !tested.has(p.id));
+  const lab = d => { const [y, m, j] = d.split("-"); return j.padStart(2, "0") + "." + m.padStart(2, "0"); };
+  let h = `<div class="tbl heat"><table><thead><tr><th>Chap.</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`;
+  chs.forEach(p => {
+    h += `<tr><td class="k">${p.id}</td>` + days.map(d => {
+      const qs = tests.filter(a => dayOf(a.date) === d).flatMap(a => a.questions.filter(inChap(p.id)));
+      if (!qs.length) return `<td class="hc-0">·</td>`;
+      const pc = Math.round(qs.filter(x => x.correct).length / qs.length * 100);
+      const n = noteFrom(pc / 100); return `<td class="hc ${n >= 5 ? "hc-ok" : n >= 4 ? "hc-mid" : "hc-low"}">${pc}${n >= 5 ? " ✓" : ""}</td>`; }).join("") + `</tr>`;
+  });
+  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(p => p.id).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par chapitre et par jour (6 derniers jours de révision). Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4. « · » : chapitre pas testé ce jour-là.</p>`;
+}
+function suiviBlock(){
+  const s = sv();
+  if (!rootTests().length) return "";
+  const chs = PAGES.filter(p => chapCards(p.id).length);
+  const res = resistant();
+  return `<section class="suivi"><h3>Ma courbe de notes</h3>
+  <div class="suivi-ctl"><label class="fine" for="suivi-ch">Chapitre</label><select id="suivi-ch" class="suivi-sel"><option value="all"${s.ch === "all" ? " selected" : ""}>Tout le Dossier</option>${chs.map(p => `<option value="${p.id}"${s.ch === p.id ? " selected" : ""}>${p.id} · ${esc(p.titre)}</option>`).join("")}</select>
+  <div class="row"><button class="ghost small${s.f === "all" ? " on" : ""}" data-act="suiviF" data-v="all" aria-pressed="${s.f === "all"}">Tous les tests</button><button class="ghost small${s.f === "exam" ? " on" : ""}" data-act="suiviF" data-v="exam" aria-pressed="${s.f === "exam"}">Niveau épreuve et épreuve blanche</button></div></div>
+  ${suiviChart()}
+  <h3>Mes chapitres jour après jour</h3>${suiviHeat()}
+  ${res.length ? `<h3>Les cartes qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${x.ch || ""}</span> ${esc(x.word)} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} cartes</button>` : ""}
+  </section>`;
+}
+function chainTxt(a){
+  if (a.rattrapage) return "";
+  const sc = testScore(a, "all"); if (!sc || !sc.steps.length) return "";
+  const last = sc.steps[sc.steps.length - 1];
+  return ` · ${fmtN(sc.note)} → ${fmtN(last.note)} après ${sc.steps.length} rattrapage${sc.steps.length > 1 ? "s" : ""}`;
+}
+document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ sv().ch = e.target.value; sv().pt = null; render(); } });
+document.addEventListener("keydown", e => { const t = e.target; if ((e.key === "Enter" || e.key === " ") && t && t.classList && t.classList.contains("ch-pt")){ e.preventDefault(); sv().pt = t.dataset.v; render(); } });
+
+/* ===== Test en cours (gardé après chaque réponse, compté seulement une fois terminé) ===== */
+const DRAFT_ID = QUIZ_ID + "-test-en-cours";
+let draftChain = Promise.resolve();
+/* gardé à deux endroits : le navigateur de l'appareil (toujours, écriture immédiate) et, dans Claude, les données privées (db) */
+function draftLocalSet(obj){ try { localStorage.setItem(DRAFT_ID, JSON.stringify(obj)); return true; } catch(e){ return false; } }
+function draftLocalGet(){ try { const v = localStorage.getItem(DRAFT_ID); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
+function draftWrite(obj){
+  const okLocal = draftLocalSet(obj);
+  if (store.mode === "db") draftChain = draftChain.then(() => store.setDoc(DRAFT_ID, obj)).then(() => { S.draftErr = false; }, () => { S.draftErr = !okLocal; draftErrShow(); });
+  else if (store.mode === "memory") { S.draftErr = !okLocal; draftErrShow(); }
+}
+function draftErrShow(){ const m = document.getElementById("draft-err"); if (m) m.hidden = !S.draftErr; }
+/* réponses compactes : la question se retrouve par sa position (le 256 Kio d'un document n'est jamais atteint) */
+function draftSave(){
+  const Q = S.quiz; if (!Q || Q.done) return;
+  const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => x.typo ? { u:x.user, c:x.correct, t:1 } : { u:x.user, c:x.correct }),
+    picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok,
+    label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrParent:S.rattrParent || null, rattrLabel:S.rattrLabel || "",
+    selected:S.selected, difficulty:S.difficulty, mode:S.mode };
+  S.draft = d; draftWrite(d);
+}
+function draftDetail(d){
+  if (d.detail) return d.detail;
+  return (d.answers || []).map((x, k) => { const q = d.questions[k];
+    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), expl:q.expl, tag:q.tag, question:q }; });
+}
+const draftN = d => (d.answers || d.detail || []).length;
+const draftOk = d => !!(d && d.questions && d.questions.length && (d.answers || d.detail));
+function draftPick(a, b){ const ta = a ? a.saved || 0 : -1, tb = b ? b.saved || 0 : -1; const w = ta >= tb ? a : b; return draftOk(w) ? w : null; }
+function draftClear(){ S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
+function draftResume(){
+  const d = S.draft; if (!d) return;
+  S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = d.mode;
+  S.rattrParent = d.rattrParent; S.rattrLabel = d.rattrLabel; S.frozen = null; S.vidOpen = null; S.vidDone = null; S.audOpen = null;
+  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
+  S.rattrapage = d.rattrapage; S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.draftBlock = false; S.screen = "quiz";
+  render(); window.scrollTo(0,0);
+}
+function draftWhat(d){ return d.rattrapage ? "Rattrapage" : DIFFICULTIES[d.difficulty].label + " · " + MODES[d.mode].label; }
+function draftBanner(){
+  const d = S.draft; if (!d) return "";
+  const n = draftN(d), tot = d.questions.length;
+  if (S.draftAsk) return `<div class="draft"><p><b>Abandonner ce test ?</b><span>Tes ${n} réponse${n > 1 ? "s" : ""} ser${n > 1 ? "ont effacées" : "a effacée"} et ne compter${n > 1 ? "ont" : "a"} nulle part.</span></p>
+    <div class="draft-row"><button class="ghost small" data-act="draftDrop">Oui, abandonner</button><button class="cta" data-act="draftNo">Non, je le garde</button></div></div>`;
+  return `<div class="draft${S.draftBlock ? " block" : ""}">${S.draftBlock ? `<p class="draft-stop"><b>Un seul test à la fois</b><span>Reprends ce test ou abandonne-le avant d'en lancer un autre.</span></p>` : ""}<p><b>⏸ Tu as un test en cours</b><span>${esc(d.label)} · ${esc(draftWhat(d))} · ${n} sur ${tot} répondue${n > 1 ? "s" : ""} · ${dateLabel(d.saved)}</span></p>
+    <div class="draft-row"><button class="cta" data-act="draftResume">Reprendre mon test</button><button class="ghost small" data-act="draftAsk">Abandonner</button></div>
+    <p class="fine">Il compte dans tes scores seulement quand tu l'as terminé. Tu ne peux pas lancer un autre test tant que celui-ci n'est pas terminé ou abandonné.</p></div>`;
+}
+function quitView(){
+  const Q = S.quiz, n = Q.detail.length, tot = Q.questions.length;
+  return `<div class="draft quitbox"><p><b>Tu veux arrêter ce test ?</b><span>Tu as répondu à ${n} question${n > 1 ? "s" : ""} sur ${tot}.</span></p>
+  <button class="cta" data-act="quitKeep">Garder pour plus tard</button>
+  <p class="fine">Ton test est gardé tel quel : tu le reprends depuis le Dossier, les Paquets ou le Test, à la question où tu t'es arrêté. Il compte dans tes scores seulement quand il est terminé.</p>
+  <button class="ghost" data-act="quitDrop">Abandonner ce test</button>
+  <p class="fine">Tes réponses sont effacées et ne comptent nulle part.</p>
+  <button class="ghost small" data-act="quitNo">← Continuer le test</button></div>`;
+}
+function draftErrLine(){ return `<p class="warn" id="draft-err"${S.draftErr ? "" : " hidden"}>Je n'arrive pas à garder ce test sur cet appareil : ne ferme pas la page avant la fin.</p>`;
+}
+
+const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
+const TAG_LABEL = Object.fromEntries(DECKS.map(d => [d.key, d.title]));
+
+const DIFFICULTIES = {
+  easy:{ label:"Échauffement", sub:"Je choisis parmi plusieurs réponses", emoji:"🟢" },
+  normal:{ label:"Entraînement", sub:"Je choisis et j'écris", emoji:"🔵" },
+  hard:{ label:"Niveau épreuve", sub:"J'écris tout ce qui peut s'écrire", emoji:"🔴" },
+};
+const MODES = {
+  train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
+  exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
+};
+const KINDS = {
+  mcq:{ type:"mcq", consigne:"Choisis la bonne réponse." },
+  type:{ type:"type", consigne:"Écris la réponse." },
+};
+
+/* ---------- utilitaires ---------- */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function norm(s, apoMode){
+  return String(s || "").toLowerCase().replace(/ß/g,"ss").replace(/œ/g,"oe").replace(/³/g,"3").normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/…|\.\.\./g," ").replace(/[’'`]/g, apoMode === "del" ? "" : " ")
+    .replace(/[.!?;,:«»"()\/\-+×]/g," ").replace(/\s+/g," ").trim();
+}
+const stripFr = s => s.replace(/^(le |la |les |l |un |une |des |du |de la |d )/,"").trim();
+function matchAnswer(input, accept){
+  return ["sp","del"].some(m => {
+    const a = norm(input, m); if (!a) return false;
+    return accept.some(raw => { const b = norm(raw, m); return a === b || stripFr(a) === stripFr(b); });
+  });
+}
+function shuffle(arr){ const a = [...arr]; for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+const noteFrom = r => Math.round((1 + 5*r)*2)/2;
+const fmtNote = n => Number(n).toFixed(1).replace(".", ",");
+function dateLabel(ts){ const d = new Date(ts), p = x => String(x).padStart(2,"0"); return `${p(d.getDate())}.${p(d.getMonth()+1)}.${d.getFullYear()} · ${p(d.getHours())}h${p(d.getMinutes())}`; }
+function explain(it, deck){ return (it.expl || it.ans || (it.front + " → " + it.back[0])) + " — " + (it.src || deck.src) + "."; }
+
+function optionsFor(it, deck){
+  const good = it.back[0];
+  if (it.opts) return it.keepOrder ? [...it.opts] : shuffle(it.opts);
+  if (it.wrong) return shuffle([good, ...it.wrong]);
+  const pool = deck.items.filter(x => x !== it && (x.grp || "") === (it.grp || "") && !x.opts && !x.wrong);
+  const out = [], seen = new Set([norm(good)]);
+  shuffle(pool).forEach(x => { if (out.length >= 3) return; const v = x.back[0]; if (!seen.has(norm(v))){ seen.add(norm(v)); out.push(v); } });
+  return shuffle([good, ...out]);
+}
+function chooseKind(it, difficulty){
+  if (it.mcqOnly) return "mcq";
+  if (difficulty === "easy") return "mcq";
+  if (difficulty === "hard") return "type";
+  return Math.random() < 0.5 ? "mcq" : "type";
+}
+
+/* ---------- fabrication du test : un exercice par paquet et par consigne, numérotation unique ---------- */
+function buildTest(deckKeys, difficulty){
+  const qs = []; let num = 0, ex = 0;
+  DECKS.filter(d => deckKeys.includes(d.key)).forEach(d => {
+    const groups = { mcq:[], type:[] };
+    shuffle(d.items.filter(it => !rvOf(d, it).exclu)).forEach(it => groups[chooseKind(it, difficulty)].push(it));
+    ["mcq","type"].forEach(kind => {
+      if (!groups[kind].length) return;
+      ex++; const K = KINDS[kind];
+      groups[kind].forEach(it => {
+        num++;
+        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:d.key, consigne:K.consigne, word:it.front, answer:it.back[0], expl:explain(it, d), src:it.src || d.src, hint:"" };
+        if (kind === "mcq") q.options = optionsFor(it, d); else q.accept = it.back;
+        q.prompt = `${K.consigne} « ${q.word} »`;
+        qs.push(q);
+      });
+    });
+  });
+  return qs;
+}
+
+/* ---------- stockage : db privée de l'utilisateur, sinon navigateur, sinon mémoire ---------- */
+const store = {
+  mode:"memory", col:null, mem:{},
+  async init(){
+    try {
+      if (window.claude && window.claude.use){
+        const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+        if (db && user){ const uid = await user.id(); if (uid){ this.col = db.collection("data/users/" + uid); this.mode = "db"; return; } }
+      }
+    } catch(e){}
+    try { localStorage.setItem(QUIZ_ID + "-probe","1"); localStorage.removeItem(QUIZ_ID + "-probe"); this.mode = "local"; } catch(e){ this.mode = "memory"; }
+  },
+  async list(){
+    if (this.mode === "db"){
+      const snap = await this.col.limit(1000).get();
+      return snap.docs.filter(d => d.id.startsWith(ATTEMPT_PREFIX)).map(d => d.data()).filter(Boolean);
+    }
+    if (this.mode === "local"){
+      const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]");
+      return idx.map(id => { try { return JSON.parse(localStorage.getItem(ATTEMPT_PREFIX + id)); } catch(e){ return null; } }).filter(Boolean);
+    }
+    return Object.values(this.mem);
+  },
+  async save(att){
+    if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + att.id).set(att); return; }
+    if (this.mode === "local"){
+      localStorage.setItem(ATTEMPT_PREFIX + att.id, JSON.stringify(att));
+      const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); if (!idx.includes(att.id)) idx.unshift(att.id);
+      localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return;
+    }
+    this.mem[att.id] = att;
+  },
+  memDocs:{},
+  async getDoc(id){
+    if (this.mode === "db"){ const sn = await this.col.doc(id).get(); return sn && sn.exists ? sn.data() : null; }
+    if (this.mode === "local"){ const v = localStorage.getItem(id); return v ? JSON.parse(v) : null; }
+    return this.memDocs[id] || null;
+  },
+  async setDoc(id, obj){
+    if (this.mode === "db"){ await this.col.doc(id).set(obj); return; }
+    if (this.mode === "local"){ localStorage.setItem(id, JSON.stringify(obj)); return; }
+    this.memDocs[id] = obj;
+  },
+  async remove(id){
+    if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + id).delete(); return; }
+    if (this.mode === "local"){ localStorage.removeItem(ATTEMPT_PREFIX + id); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]").filter(x => x !== id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return; }
+    delete this.mem[id];
+  },
+};
+
+/* ---------- état ---------- */
+const S = {
+  screen:"dossier", page:null,
+  selected: DECKS.map(d => d.key),
+  difficulty:"normal", mode:"train",
+  frozen:null, paperMsg:"", paperCopy:"",
+  quiz:null, rattrapage:false, lastResult:null, storeMsg:"",
+  attempts:[], loaded:false, loadErr:"",
+  cards:{ order:[], pos:0, flip:false },
+  scores:{ open:null, exportOpen:false, confirm:false },
+  bilan:{},
+};
+const REVIEW_ID = QUIZ_ID + "-revue-cartes";
+S.draft = null; S.draftAsk = false; S.quitAsk = false; S.draftBlock = false; S.draftErr = false;
+S.vidSeen = {}; S.vidOpen = null; S.vidDone = null; S.audOpen = null; S.audPart = 0;
+S.review = {}; S.rvMsg = ""; S.rvCopy = ""; S.rvCopied = false; S.rvConfirm = false;
+try { S.revMode = localStorage.getItem(QUIZ_ID + "-revmode") === "1"; } catch(e){ S.revMode = false; }
+function cardId(d, it){ let h = 5381; for (const c of it.front) h = ((h << 5) + h + c.charCodeAt(0)) | 0; return d.key + "-" + (h >>> 0).toString(36); }
+const rvOf = (d, it) => S.review[cardId(d, it)] || {};
+const rvMarked = r => !!(r && (r.revoir || r.exclu || (r.note && r.note.trim())));
+let rvTimer = null;
+function saveReview(){
+  clearTimeout(rvTimer);
+  rvTimer = setTimeout(async () => {
+    try { await store.setDoc(REVIEW_ID, S.review); S.rvMsg = store.mode === "memory" ? "Revue gardée seulement tant que la page reste ouverte : pense à la copier pour le chat." : ""; }
+    catch(e){ S.rvMsg = "La revue n'a pas pu être enregistrée. Copie-la pour le chat avant de fermer la page."; }
+    const m = document.getElementById("rv-msg"); if (m) m.textContent = S.rvMsg;
+  }, 400);
+}
+function reviewCounts(){
+  let revoir = 0, exclu = 0, notes = 0;
+  DECKS.forEach(d => d.items.forEach(it => { const r = rvOf(d, it); if (r.revoir) revoir++; if (r.exclu) exclu++; if (r.note && r.note.trim()) notes++; }));
+  return { revoir, exclu, notes };
+}
+function reviewText(){
+  const l = ["REVUE DES CARTES — " + SUBJECT_LONG + " (outil version " + VERSION.n + ")"], c = reviewCounts();
+  l.push(`${c.revoir} à revoir · ${c.exclu} hors test · ${c.notes} remarque(s)`, "");
+  DECKS.forEach(d => d.items.forEach((it, i) => { const r = rvOf(d, it); if (!rvMarked(r)) return;
+    const tags = [r.revoir ? "À REVOIR" : "", r.exclu ? "HORS TEST" : ""].filter(Boolean).join(" + ") || "remarque";
+    l.push(`- ${d.code} · ${d.title} · carte ${i+1} [${tags}]`, `  Q : ${it.front}`, `  R : ${it.back[0]}`);
+    if (r.note && r.note.trim()) l.push(`  Remarque : ${r.note.trim()}`);
+  }));
+  if (!c.revoir && !c.exclu && !c.notes) l.push("Aucune carte marquée.");
+  return l.join("\n");
+}
+const deckLabel = keys => keys.length === DECKS.length ? "Tout le Dossier" : keys.map(k => DECK[k].title).join(" + ");
+const BOOK = [...(CAPS_ORDER.length ? ["caps"] : []), ...PAGES.map(p => p.id), "lex", "src"];
+
+/* ---------- rendu ---------- */
+const app = document.getElementById("app");
+function render(){
+  const v = { dossier:viewDossier, home:viewHome, cards:viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
+  app.innerHTML = header() + `<div class="screen">${v()}</div>`;
+  renderTabs();
+  if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); }
+}
+function header(){
+  return `<header class="head"><div class="head-code" aria-hidden="true">${HEAD.code}<b>${HEAD.num}</b></div><div><h1>${esc(HEAD.titre)}</h1><p>${esc(HEAD.sous)}${esc(DUE.long)}</p></div></header>`;
+}
+function renderTabs(){
+  const bar = document.getElementById("tabbar");
+  if (S.screen === "quiz"){ bar.hidden = true; return; }
+  bar.hidden = false;
+  const tabs = [["dossier","📖","Dossier"],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
+  bar.innerHTML = `<div class="tabbar-in">` + tabs.map(([k,e,l]) => {
+    const on = S.screen === k || (k === "setup" && S.screen === "results");
+    return `<button class="tab${on?" on":""}" data-act="nav" data-v="${k}" aria-current="${on?"page":"false"}"><span class="tab-e">${e}</span><span class="tab-l">${l}</span></button>`;
+  }).join("") + `</div>`;
+}
+
+/* ---------- DOSSIER ---------- */
+const pageById = id => PAGES.find(p => p.id === id);
+function pageTitle(id){ return id === "caps" ? "Les " + CAPS_ORDER.length + " capsules dans l'ordre" : id === "lex" ? "Lexique" : id === "src" ? "D'où viennent les questions" : pageById(id).titre; }
+function viewDossier(){ return S.page ? viewPage(S.page) : viewToc(); }
+function viewToc(){
+  let h = draftBanner() + `<p class="intro">Ton cours pour le test de géographie, rangé comme ta feuille d'objectifs : un chapitre par objectif. Lis un chapitre, puis teste-toi avec ses cartes. Commence par O6, les pays voisins et leurs capitales !</p>${globalPastille()}
+  <div class="legend"><p><span class="tag mine">Ton dossier</span> tout vient de tes feuilles et de tes réponses : c'est ce qu'il faut savoir.</p><p><span class="tag gen" style="border-style:solid">Conseil</span> une astuce pour apprendre, pas une page de tes feuilles.</p></div>`;
+  if (CAPS_ORDER.length) h += `<button class="caps-cta" data-act="page" data-v="caps"><span class="caps-cta-i" aria-hidden="true">▶</span><span><b>Les ${CAPS_ORDER.length} capsules dans l'ordre</b><small>${capsSeen()} / ${CAPS_ORDER.length} vues · regarde-les à la suite, sans quitter l'outil</small></span></button>`;
+  h += `<section class="toc-ch"><h2>Avant de commencer <span>La Suisse en un coup d'œil</span></h2><button class="toc-item" data-act="page" data-v="LIENS"><span class="code">LIENS</span><span class="toc-t">${esc(pageById("LIENS").titre)}${VIDEOS.LIENS ? (S.vidSeen.LIENS ? ` <span class="toc-v seen">✓ vue${capDur("LIENS")}</span>` : ` <span class="toc-v">▶ vidéo${capDur("LIENS")}</span>`) : ""}${audParts("LIENS").length ? ` <span class="toc-v toc-aud">🎧 audio</span>` : ""}<span class="toc-s">${esc(pageById("LIENS").court)}</span></span></button></section>`;
+  CHAPTERS.forEach(c => {
+    h += `<section class="toc-ch"><h2>${c.titre} <span>${esc(c.sous)}</span></h2>` + PAGES.filter(p => p.ch === c.key).map(p =>
+      `<button class="toc-item" data-act="page" data-v="${p.id}"><span class="code">${p.id}</span><span class="toc-t">${esc(p.titre)}${VIDEOS[p.id] ? (S.vidSeen[p.id] ? ` <span class="toc-v seen">✓ vue${capDur(p.id)}</span>` : ` <span class="toc-v">▶ vidéo${capDur(p.id)}</span>`) : ""}${audParts(p.id).length ? ` <span class="toc-v toc-aud">🎧 audio</span>` : ""}<span class="toc-s">${esc(p.court)}</span></span>${pastille(p.id)}</button>`).join("") + `</section>`;
+  });
+  h += `<section class="toc-ch"><h2>Pour finir</h2>
+    <button class="toc-item" data-act="page" data-v="lex"><span class="code">ABC</span><span class="toc-t">Lexique<span class="toc-s">Les ${LEXIQUE.length} mots à connaître, en une ligne chacun</span></span></button>
+    <button class="toc-item" data-act="page" data-v="src"><span class="code">SRC</span><span class="toc-t">D'où viennent les questions<span class="toc-s">Les photos qui ont servi et ce qui manque</span></span></button></section>`;
+  return h + `<button class="cta" data-act="page" data-v="LIENS">Commencer la lecture</button><p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
+}
+function bsrc(b){
+  if (!["p","def","html","mine","ex","links","tip","pause","svg"].includes(b.t)) return "";
+  const t = b.s || (b.t === "def" && b.gen ? "Pas dans tes photos : à vérifier dans le livre" : b.t === "tip" ? "Conseil de méthode (pas une page du livre)" : b.t === "def" ? "Fiches d'exercices" : "");
+  return t ? `<p class="bsrc">📖 ${esc(t)}</p>` : "";
+}
+function block(b){ return blockBody(b) + bsrc(b); }
+function preBlock(p){
+  if (!p.pre) return "";
+  return `<div class="prebox"><p class="prebox-t">🤔 Avant de lire : essaie de répondre<small>Même si tu ne sais pas encore. Chercher la réponse t'aide à la retenir quand elle arrive.</small></p>
+    <ol>${p.pre.map(x => `<li>${esc(x.q)}</li>`).join("")}</ol>
+    <details><summary>Voir les réponses (après la lecture)</summary><ol>${p.pre.map(x => `<li>${esc(x.a)}<span class="bsrc">📖 ${esc(x.s)}</span></li>`).join("")}</ol></details></div>`;
+}
+function blankBlock(p){
+  if (!p.blank) return "";
+  const b = p.blank;
+  return `<div class="blank"><p class="blank-t">📝 Feuille blanche<small>Ferme le Dossier, écris tout ce dont tu te souviens, puis vérifie.</small></p>
+    <p class="blank-c">${esc(b.consigne)}</p>
+    <details><summary>Vérifier : les points clés</summary><ul class="blank-l">${b.points.map((x,i) => `<li><label><input type="checkbox"> <span>${esc(x)}</span></label></li>`).join("")}</ul><p class="bsrc">📖 ${esc(b.s)}</p></details></div>`;
+}
+function blockBody(b){
+  switch(b.t){
+    case "p": return `<p class="read">${b.h}</p>`;
+    case "h3": return `<h3>${b.h}</h3>`;
+    case "def": { const cls = b.dico ? "dico" : b.book ? "book" : b.gen ? "gen" : "mine", lab = b.book ? (/^(Livre|Dictionnaire)/.test(b.book) ? b.book : "Livre " + b.book) : b.gen ? "À vérifier" : "Ton dossier";
+      return `<div class="def ${cls}"><span class="def-term">${esc(b.term)} <span class="tag ${cls}">${esc(lab)}</span></span><p class="read">${b.h}</p></div>`; }
+    case "mine": return `<div class="mywork"><p class="mywork-t">${esc(b.titre)}</p><ul>${b.items.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`;
+    case "html": return b.h;
+    case "tip": return `<p class="tip"><b>Pour l'épreuve</b>${b.h}</p>`;
+    case "todo": return `<p class="todo">📷 ${b.h}</p>`;
+    case "ex": return `<div class="exl"><p class="exl-t">Ce que tes exercices t'ont montré</p>${b.items.map(([c,w,so]) => `<div class="exr"><span class="code">${esc(c)}</span><span><b>${w}</b><span class="so">→ ${so}</span></span></div>`).join("")}</div>`;
+    case "links": return `<div class="links">${b.items.map(([ids,t]) => `<div class="lk"><span class="lk-ids">${ids.map((id,i) => (i?`<i>↓</i>`:"") + `<button data-act="page" data-v="${id}">${id}</button>`).join("")}</span><p>${t}</p></div>`).join("")}</div>`;
+    case "see": return `<div class="see"><span>Voir aussi :</span>${b.ids.map(id => `<button data-act="page" data-v="${id}">${id} · ${esc(pageById(id).titre)}</button>`).join("")}</div>`;
+    case "src": return `<p class="src">Toutes les sources de ce chapitre : ${esc(b.h)}</p>`;
+    case "pause": return `<div class="pause"><p class="pause-t">⏸ Mets sur pause et réponds</p><p class="pause-q">${esc(b.q)}</p><details><summary>Voir la réponse</summary><p>${esc(b.a)}</p></details></div>`;
+    case "svg": return `<figure class="svgfig">${SVGS[b.k](P_PAGE)}<figcaption>${esc(b.titre)}</figcaption></figure>`;
+  }
+  return "";
+}
+function pager(id){
+  const i = BOOK.indexOf(id), prev = BOOK[i-1], next = BOOK[i+1];
+  return `<div class="pager">${prev ? `<button data-act="page" data-v="${prev}"><small>← Précédent</small><b>${esc(pageTitle(prev))}</b></button>` : `<button data-act="page" data-v=""><small>← Retour</small><b>Sommaire</b></button>`}${next ? `<button data-act="page" data-v="${next}"><small>Suivant →</small><b>${esc(pageTitle(next))}</b></button>` : `<button data-act="nav" data-v="home"><small>Et maintenant →</small><b>M'entraîner</b></button>`}</div>`;
+}
+function viewPage(id){
+  const code = id === "caps" ? "▶" : id === "lex" ? "ABC" : id === "src" ? "SRC" : id;
+  let h = `<div class="pbar"><button class="pbar-back" data-act="page" data-v="">← Sommaire</button><span class="pbar-t"><span class="code">${code}</span><span class="pbar-x">${esc(pageTitle(id))}</span></span></div>`;
+  if (id === "caps"){
+    const n = capsSeen(), tot = CAPS_ORDER.length;
+    h += `<article class="page"><h2>Les ${tot} capsules dans l'ordre</h2>
+      <div class="caps-meta"><span class="caps-date">Contrôle : ${esc(CAPSULES.controle)}</span><span class="caps-prog"><b>${n}</b> / ${tot} vues</span></div>
+      <p class="read">${esc(CAPSULES.consigne)}</p>` +
+      CAPSULES.chapitres.map(c => `<section class="caps-ch"><h3>${esc(c.chapitre)}<small>${esc(c.question)}</small></h3>` + c.capsules.map(x => {
+        const seen = !!S.vidSeen[x.id];
+        const body = S.vidDone === x.id ? vidDonePanel(x.id, "caps") : S.vidOpen === x.id ? vidPlayer(x.id) : S.audOpen === x.id ? audPlayer(x.id) : "";
+        return `<div class="caps-row${seen ? " seen" : ""}${body ? " on" : ""}" id="cap-${x.id}">
+          <div class="caps-line"><span class="code">${esc(x.code)}</span><span class="caps-txt"><b>${esc(x.titre)}</b><small>${esc(x.objectif)}</small></span>
+          ${body ? "" : `<span class="caps-btns"><button class="caps-play" data-act="vidPlay" data-v="${x.id}" aria-label="Lire la capsule ${esc(x.code)}">▶</button>${audParts(x.id).length ? `<button class="caps-play aud" data-act="audPlay" data-v="${x.id}" aria-label="Écouter la piste audio ${esc(x.code)}">🎧</button>` : ""}</span>`}</div>
+          <p class="caps-st">${seen ? "✓ vue" : "pas encore vue"} · <button class="back" data-act="page" data-v="${x.id}">lire le chapitre</button></p>${body}</div>`;
+      }).join("") + `</section>`).join("") +
+      `<p class="fine">${esc(CAPSULES.diffusion)} La marque « vue » est enregistrée ${HAS_CLAUDE ? "dans tes données Claude" : "sur cet appareil"}.</p></article>`;
+  } else if (id === "lex"){
+    h += `<article class="page"><h2>Lexique</h2>` + LEXIQUE.map(x => `<div class="def ${x.dico?"dico":x.book?"book":x.gen?"gen":"mine"}"><span class="def-term">${esc(x.t)} <span class="tag ${x.dico?"dico":x.book?"book":x.gen?"gen":"mine"}">${esc(x.lab || (x.gen?"À vérifier":"Ton dossier"))}</span></span><p class="read">${esc(x.h)} <button class="back" data-act="page" data-v="${x.ref}" style="display:inline;font-size:14px">${x.ref}</button></p>${x.s ? `<p class="bsrc" style="margin:0">📖 ${esc(x.s)}</p>` : ""}</div>`).join("") + `</article>`;
+  } else if (id === "src"){
+    h += `<article class="page"><h2>D'où viennent les questions</h2>` + SOURCES.map(x => `<div class="srcrow"><b>${esc(x.titre)}</b><span class="fine">reçue le ${esc(x.recue)}</span><span>${esc(x.contenu)}</span></div>`).join("") + `<p class="note">${esc(SOURCES_NOTE)}</p>`;
+    if (HAS_CLAUDE) h += `<div class="photos">` + PHOTOS.map(ph => ph.url
+      ? `<figure><a href="${esc(ph.url)}" target="_blank" rel="noopener"><img src="${esc(ph.url)}" alt="${esc(ph.titre)}" loading="lazy"></a><figcaption>${esc(ph.titre)}</figcaption></figure>`
+      : `<figure class="missing"><span>Photo à renvoyer dans le chat</span><figcaption>${esc(ph.titre)}</figcaption></figure>`).join("") + `</div>`;
+    h += `</article>`;
+  } else {
+    const p = pageById(id), c = CHAPTERS.find(x => x.key === p.ch) || { titre:"Avant de commencer", sous:"Comment les chapitres se relient" };
+    h += `<article class="page"><div class="crumb"><span class="code">${p.id}</span><span>${esc(c.titre)} · ${esc(c.sous)}</span></div><h2>${esc(p.titre)}</h2>${preBlock(p)}${mediaRow(p.id)}${S.vidOpen === p.id ? "" : chapTest(p.id)}
+      ${p.obj ? `<p class="objective"><b>${esc(c.objLabel || "Objectif")}</b>${esc(p.obj)}</p>` : ""}` + p.blocks.map(block).join("") + blankBlock(p) + chapStatus(p.id) + chapTest(p.id, "end") + `</article>`;
+  }
+  return h + pager(id) + `<p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
+}
+
+/* ---------- PAQUETS, CARTES, TEST ---------- */
+function viewHome(){
+  const allOn = S.selected.length === DECKS.length;
+  const count = S.selected.reduce((n,k) => n + DECK[k].items.length, 0);
+  return draftBanner() + `<p class="intro">Choisis ce que tu veux travailler. Chaque paquet renvoie à un chapitre du Dossier.</p>
+  <div class="decks">${DECKS.map(d => { const on = S.selected.includes(d.key); return `<button class="deck${on?" on":""}" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-c">${d.code}</span><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} questions</span>${on?`<span class="deck-tick">✓</span>`:""}</button>`; }).join("")}</div>
+  <button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
+  <p class="fine">${count} questions sélectionnées</p>
+  <div class="row"><button class="ghost" data-act="toCards" ${count?"":"disabled"}>🃏 Cartes</button><button class="cta" data-act="nav" data-v="setup" ${count?"":"disabled"}>🎯 Test</button></div>`;
+}
+function cardItems(){
+  let list = S.selected.flatMap(k => DECK[k].items.map((it, i) => ({ it, d:DECK[k], n:i+1, id:cardId(DECK[k], it) })));
+  if (S.cards.only) list = list.filter(x => rvMarked(S.review[x.id]));
+  return list;
+}
+function viewCards(){
+  let h = `<button class="back" data-act="nav" data-v="home">← Paquets</button>`;
+  if (S.revMode){
+    const c = reviewCounts();
+    h += `<div class="rvsum"><p class="rvsum-t">Revue des cartes · <b>${c.revoir}</b> à revoir · <b>${c.exclu}</b> hors test · <b>${c.notes}</b> remarque${c.notes>1?"s":""}</p>
+      <div class="row"><button class="ghost small" data-act="rvOnly" aria-pressed="${!!S.cards.only}">${S.cards.only ? "Voir toutes les cartes" : "Seulement les cartes marquées"}</button><button class="ghost small" data-act="rvCopy">${S.rvCopied ? "Copié — colle-le dans le chat" : "Copier ma revue pour le chat"}</button></div>
+      ${S.rvCopy ? `<textarea class="exportarea" readonly rows="6" id="rv-copy">${esc(S.rvCopy)}</textarea>` : ""}
+      ${S.rvConfirm ? `<div class="confirm"><span>Effacer toute la revue ?</span><button class="mini yes" data-act="rvClearYes">Effacer</button><button class="mini" data-act="rvClearNo">Annuler</button></div>` : `<button class="back rv-clear" data-act="rvClearAsk">Effacer la revue</button>`}</div>`;
+  }
+  const items = cardItems();
+  if (!items.length) return h + (S.cards.only ? `<p class="intro">Aucune carte marquée dans les paquets cochés.</p><button class="ghost" data-act="rvOnly">Voir toutes les cartes</button>` : `<p class="intro">Coche au moins un paquet pour voir les cartes.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`);
+  if (S.cards.order.length !== items.length){ S.cards.order = shuffle(items.map((_,i) => i)); S.cards.pos = 0; S.cards.flip = false; }
+  if (S.cards.pos >= items.length) S.cards.pos = 0;
+  const { it, d, n, id } = items[S.cards.order[S.cards.pos]];
+  S.cards.curId = id;
+  const src = it.src || d.src, more = it.ans || it.expl || "", r = S.review[id] || {};
+  const long = t => String(t).length > 90 ? " long" : String(t).length > 55 ? " mid" : "";
+  const marks = [r.revoir ? "à revoir" : "", r.exclu ? "hors test" : ""].filter(Boolean).join(" · ");
+  h += `<p class="fine">${esc(deckLabel(S.selected))} · carte ${S.cards.pos+1} sur ${items.length}${marks ? ` · <b>${marks}</b>` : ""}</p>
+  <button class="flash${S.cards.flip?" flipped":""}" data-act="flip" aria-label="Retourner la carte">
+    <span class="face f"><span class="face-tag">${esc(d.code)} · ${esc(d.title)} · carte ${n}</span><span class="face-word${long(it.front)}">${esc(it.front)}</span><span class="face-src">📖 Où vérifier : ${esc(src)}</span><span class="face-hint">touche la carte pour voir la réponse</span></span>
+    <span class="face b"><span class="face-tag">Réponse · ${esc(d.code)} carte ${n}</span><span class="face-word${long(it.back[0])}">${esc(it.back[0])}</span>${more && more !== it.back[0] ? `<span class="face-ans">${esc(more)}</span>` : ""}<span class="face-src">📖 Où vérifier : ${esc(src)}</span></span>
+  </button>
+  <div class="row3"><button class="ghost" data-act="card" data-v="-1">Précédente</button><button class="ghost" data-act="cardShuffle">Mélanger</button><button class="ghost" data-act="card" data-v="1">Suivante</button></div>`;
+  if (S.revMode){
+    h += `<div class="rvw"><p class="rvw-t">Revue de cette carte (${esc(d.code)} · carte ${n})</p>
+      <label class="ck"><input type="checkbox" id="rv-revoir" data-rvk="revoir"${r.revoir?" checked":""}><span>À revoir : la carte est mal posée ou pas claire</span></label>
+      <label class="ck"><input type="checkbox" id="rv-exclu" data-rvk="exclu"${r.exclu?" checked":""}><span>Hors test : ne pas poser cette question dans le test</span></label>
+      <label class="fine" for="rv-note">Remarque (facultatif)</label>
+      <textarea id="rv-note" class="rv-note" rows="2" placeholder="Ce qui ne va pas, ou comment la reformuler">${esc(r.note || "")}</textarea>
+      <p class="fine" id="rv-msg" aria-live="polite">${esc(S.rvMsg)}</p></div>`;
+  }
+  h += `<button class="ghost small" data-act="page" data-v="${d.code}">📖 Relire le chapitre ${d.code}</button>
+  <button class="back rv-toggle" data-act="rvMode">${S.revMode ? "Fermer la revue des cartes" : "✎ Revue des cartes (pour les parents)"}</button>`;
+  return h;
+}
+function viewSetup(){ return draftBanner() + viewSetup0(); }
+function viewSetup0(){
+  if (!S.selected.length) return `<p class="intro">Coche au moins un paquet avant de lancer un test.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
+  const out = S.selected.reduce((n,k) => n + DECK[k].items.filter(it => rvOf(DECK[k], it).exclu).length, 0);
+  const total = S.selected.reduce((n,k) => n + DECK[k].items.length, 0) - out;
+  let h = `<button class="back" data-act="nav" data-v="home">← Paquets</button>
+  <p class="fine">${esc(deckLabel(S.selected))} · ${total} questions${out ? ` · ${out} carte${out>1?"s":""} retirée${out>1?"s":""} par la revue` : ""}</p>
+  <p class="lab">Ton niveau</p><div class="opts">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="opt${S.difficulty===k?" on":""}" data-act="diff" data-v="${k}" aria-pressed="${S.difficulty===k}"><span class="opt-e">${d.emoji}</span><span class="opt-main">${d.label}</span><span class="opt-sub">${d.sub}</span></button>`).join("")}</div>
+  <p class="lab">Comment on corrige</p><div class="opts">${Object.entries(MODES).map(([k,m]) => `<button class="opt${S.mode===k?" on":""}" data-act="mode" data-v="${k}" aria-pressed="${S.mode===k}"><span class="opt-e">${m.emoji}</span><span class="opt-main">${m.label}</span><span class="opt-sub">${m.sub}</span></button>`).join("")}</div>`;
+  if (S.frozen){
+    h += `<div class="paper"><b>Version papier prête</b><p class="fine">Ce test est figé : la question N° 12 de la feuille sera la N° 12 à l'écran.</p>
+      <button class="ghost small" data-act="paper" data-v="ex">Feuille d'exercices</button>
+      <button class="ghost small" data-act="paper" data-v="both">Exercices + corrigé en dernière page</button>
+      <button class="ghost small" data-act="paper" data-v="key">Corrigé seul</button>
+      ${S.paperMsg ? `<p class="warn">${esc(S.paperMsg)}</p>` : ""}
+      ${S.paperCopy ? `<textarea class="exportarea" readonly rows="6" id="paper-copy">${esc(S.paperCopy)}</textarea>` : ""}
+      <button class="ghost small" data-act="unfreeze">Annuler et tirer un autre test</button></div>
+      <button class="cta" data-act="start">Commencer ce test à l'écran</button>`;
+  } else {
+    h += `<button class="ghost" data-act="freeze">🖨️ Version papier de ce test</button><button class="cta" data-act="start">Commencer</button>`;
+  }
+  return h + `<p class="fine">Les questions « pourquoi » restent toujours à choix, même au niveau épreuve. En épreuve blanche, tu ne vois aucune réponse avant la fin.</p>`;
+}
+
+/* ---------- quiz ---------- */
+function startQuiz(questions, rattrapage){
+  if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "setup"; render(); window.scrollTo(0,0); return; }
+  S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, start:Date.now(), label: rattrapage ? S.rattrLabel : deckLabel(S.selected) };
+  S.rattrapage = rattrapage; S.lastResult = null; S.storeMsg = ""; S.screen = "quiz"; S.quitAsk = false; S.draftAsk = false;
+  draftSave(); render(); window.scrollTo(0,0);
+}
+function viewQuiz(){
+  if (S.quitAsk) return quitView();
+  const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
+  let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
+  <div class="badges"><span class="num">N° ${q.num}</span><span class="chip">${esc(TAG_LABEL[q.tag] || q.tag)}</span><span class="ref">Exercice ${q.ex}</span></div>
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.src ? `<p class="bsrc" style="margin:-4px 0 0">📖 Où vérifier : ${esc(q.src)}</p>` : ""}`;
+  if (q.type === "mcq"){
+    h += `<div class="opts">` + q.options.map((o, k) => {
+      let c = "choice";
+      if (Q.checked){ c += o === q.answer ? " good" : o === Q.picked ? " bad" : " off"; } else if (o === Q.picked) c += " sel";
+      return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${esc(o)}</button>`;
+    }).join("") + `</div>`;
+  } else {
+    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="Ta réponse…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+  }
+  if (Q.finishing) h += `<p class="fine">J'enregistre ton résultat…</p>`;
+  if (!Q.checked && !Q.finishing){
+    const last = Q.i + 1 >= total;
+    if (q.type === "type") h += `<button class="cta" data-act="validate" id="validate-btn" ${Q.typed.trim()?"":"disabled"}>${instant ? "Vérifier" : last ? "Terminer" : "Valider"}</button>`;
+    else if (!instant) h += `<button class="cta" data-act="validate" ${Q.picked===null?"disabled":""}>${last ? "Terminer" : "Valider"}</button>`;
+    h += `<button class="ghost small" data-act="dontknow">Je ne sais pas</button>`;
+  }
+  if (Q.checked){
+    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? ["✓ Juste !","✓ Bien vu.","✓ Exact.","✓ Tu l'as.","✓ Nickel."][Q.i % 5] : "✗ Presque. Regarde bien :"}</p>
+      ${Q.ok ? "" : `<p>Réponse : <b>${esc(q.answer)}</b></p>`}<p class="fb-x">${esc(q.expl)}</p>
+      ${q.type === "type" && !Q.ok ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
+      <button class="cta" data-act="next">${Q.i+1 >= total ? "Voir mon résultat" : "Suivante"}</button></div>`;
+  }
+  return h;
+}
+function isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnswer(val, q.accept); }
+function validate(val){
+  const Q = S.quiz; if (Q.done) return;
+  const q = Q.questions[Q.i], right = isRight(q, val);
+  if (S.mode !== "exam"){ Q.ok = right; Q.checked = true; draftSave(); render(); }
+  else record(val, right);
+}
+function record(val, correct, typo){
+  const Q = S.quiz; if (Q.done) return;
+  const q = Q.questions[Q.i];
+  Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, ...(typo ? { typo:true } : {}), expl:q.expl, tag:q.tag, question:q });
+  if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
+  else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; draftSave(); render(); }
+}
+async function finishQuiz(){
+  const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
+  const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:BRANCHE, theme:THEME, deck:Q.label,
+    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, rattrapage:S.rattrapage, parent:S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
+  S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
+  try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Note ta note ou copie-la pour le chat." : ""; }
+  catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
+  draftClear(); S.lastResult = att; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; S.screen = "results"; render(); window.scrollTo(0,0);
+}
+
+/* ---------- bilan ---------- */
+function bilanState(id){ return S.bilan[id] || (S.bilan[id] = { busy:false, err:"", copied:false, fallback:"" }); }
+function bilanBlock(att){
+  const b = bilanState(att.id), a = att.analysis;
+  const wrong = att.questions.filter(x => !x.correct), canRetry = wrong.some(x => x.question);
+  let h = `<div class="bilan">`;
+  if (!a && !b.busy && HAS_CLAUDE) h += `<p class="fine">Tu veux savoir ce qui coince vraiment ? Je regarde tes réponses et je te dis quoi relire dans le Dossier.</p><button class="cta" data-act="analyse" data-v="${att.id}">Analyser mes résultats</button>`;
+  if (!a && !HAS_CLAUDE) h += `<p class="fine">Pour savoir ce qui coince vraiment, copie tes résultats et colle-les dans le chat de révisions : on les analyse ensemble.</p>`;
+  if (b.busy) h += `<p class="fine">Je regarde tes réponses une par une…</p>`;
+  if (b.err) h += `<p class="warn">${esc(b.err)}</p>`;
+  if (a){
+    h += `<h3>Ton bilan</h3>`;
+    if (a.points_forts.length) h += `<p class="bilan-lab">Ce qui est acquis</p><ul class="forts">${a.points_forts.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (a.a_travailler.length) h += `<p class="bilan-lab">À travailler</p><ul class="work">${a.a_travailler.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (a.conseil) h += `<p class="bilan-tip">${esc(a.conseil)}</p>`;
+  }
+  if (canRetry) h += `<button class="cta" data-act="retryWrong" data-v="${att.id}">Refaire mes erreurs (${wrong.length})</button>`;
+  const ev = errView(att.id);
+  h += `<div class="${wrong.length?"row":""}">${wrong.length ? `<button class="ghost" data-act="showErr" data-v="${att.id}" aria-pressed="${ev}">${ev ? "Voir toutes les questions" : `Voir mes erreurs (${wrong.length})`}</button>` : ""}<button class="ghost" data-act="copy" data-v="${att.id}">${b.copied ? "Copié — colle-le dans le chat" : "Copier pour le chat"}</button></div>`;
+  if (b.fallback) h += `<p class="fine">La copie automatique est bloquée ici. Le texte est sélectionné : copie-le à la main.</p><textarea class="exportarea" readonly rows="8" id="fb-${att.id}">${esc(b.fallback)}</textarea>`;
+  return h + `</div>`;
+}
+function findAttempt(id){ return (S.lastResult && S.lastResult.id === id) ? S.lastResult : S.attempts.find(a => a.id === id); }
+async function analyse(id){
+  const att = findAttempt(id), b = bilanState(id); b.busy = true; b.err = ""; render();
+  try {
+    const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
+    if (!sample) throw new Error("no sample");
+    const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? "JUSTE" : "FAUX"}`).join("\n");
+    const prompt = `Tu es un enseignant de géographie suisse, bienveillant, qui analyse le test d'un élève de 7e HarmoS (cycle 2, canton de Neuchâtel). Il révise l'introduction « Une Suisse, des Suisses ? » : les trois régions naturelles (Jura, Moyen-Pays, Alpes), leurs caractéristiques et leur place sur la carte, le relief dessiné avec des altitudes, les villes, lacs, rivières et monts, les cinq pays limitrophes avec leur capitale, les notions de frontière naturelle et de pays limitrophe. Parle-lui simplement, avec des phrases courtes. Épreuve : ${DUE.long}.
+
+Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
+Paquets : ${att.deck}
+Niveau : ${att.difficulty} — Mode : ${att.mode}
+
+Étiquettes (le code entre parenthèses est le chapitre du Dossier à relire) : ${DECKS.map(d => d.key + " = " + d.title + " (" + d.code + ")").join(" ; ")}.
+
+Détail :
+${lignes}
+
+Analyse les ERREURS pour trouver ce qui coince vraiment : les dates, les noms des personnages (Cortés / Pizarro, Colomb / Vasco de Gama / Cabral), les définitions, l'ordre chronologique, les points de vue (Las Casas / Sepúlveda), avant / après 1492 ? Cherche le point commun, ne recopie pas la liste. S'il n'y a pas de motif clair, dis-le honnêtement.
+
+Réponds UNIQUEMENT par un objet JSON valide, sans texte autour, exactement dans ce format :
+{"points_forts":["..."],"a_travailler":["..."],"conseil":"..."}
+- "points_forts" : 1 à 3 points courts et concrets.
+- "a_travailler" : 1 à 3 axes de progrès formulés positivement, avec l'exemple précis tiré du test et le chapitre du Dossier à relire (S5, P, D…).
+- "conseil" : 2 phrases maximum, une action à faire ce soir.
+Tu tutoies l'élève. Français de Suisse romande, ton encourageant, pas enfantin.`;
+    const parsed = await sample.json(prompt, { modelTier:"default" });
+    att.analysis = { points_forts: Array.isArray(parsed.points_forts) ? parsed.points_forts : [], a_travailler: Array.isArray(parsed.a_travailler) ? parsed.a_travailler : [], conseil: parsed.conseil || "" };
+    try { await store.save(att); } catch(e){}
+  } catch(e){
+    b.err = "Le bilan n'a pas pu être calculé ici. Le bouton de copie fonctionne quand même : colle tes résultats dans le chat et je les analyse là.";
+  }
+  b.busy = false; render();
+}
+function copyText(att){
+  const a = att.analysis, l = [];
+  l.push("RÉSULTAT — " + SUBJECT_LONG + " — épreuve : " + DUE.short);
+  l.push(`${dateLabel(att.date)} · ${att.deck} · ${att.difficulty} · ${att.mode}${att.rattrapage ? " · RATTRAPAGE (questions ratées rejouées)" : ""}`);
+  l.push(`Score : ${att.score}/${att.total} — note ${fmtNote(att.note)}/6`, "");
+  if (a){ l.push("BILAN"); if (a.points_forts.length) l.push("Acquis : " + a.points_forts.join(" · ")); if (a.a_travailler.length) l.push("À travailler : " + a.a_travailler.join(" · ")); if (a.conseil) l.push("Conseil : " + a.conseil); l.push(""); }
+  const wrong = att.questions.filter(q => !q.correct);
+  l.push(`ERREURS (${wrong.length}/${att.total})`);
+  if (!wrong.length) l.push("Aucune erreur.");
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → j'ai répondu « ${q.user || "rien"} », attendu : ${q.answer}${(q.question && q.question.src) ? " (source : " + q.question.src + ")" : ""}`));
+  return l.join("\n");
+}
+function copyFor(id){
+  const att = findAttempt(id), b = bilanState(id), text = copyText(att);
+  const fail = () => { b.fallback = text; render(); setTimeout(() => { const t = document.getElementById("fb-" + id); if (t){ t.focus(); t.select(); } }, 30); };
+  try { navigator.clipboard.writeText(text).then(() => { b.copied = true; render(); setTimeout(() => { b.copied = false; render(); }, 2500); }, fail); }
+  catch(e){ fail(); }
+}
+function retryWrong(id){
+  const att = findAttempt(id);
+  const qs = att.questions.filter(x => !x.correct && x.question).map(x => x.question);
+  if (!qs.length) return;
+  S.rattrLabel = att.deck; S.rattrParent = att.rattrapage ? (att.parent || parentOf(att) || att.id) : att.id;
+  startQuiz(shuffle(qs), true);
+}
+
+/* ---------- voir mes erreurs : mot par mot, puis lettre par lettre ---------- */
+function dxN(c){ return String(c).toLowerCase().replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,""); }
+function dxW(w){ return dxN(w).replace(/[.,!?;:«»"()…]/g,""); }
+function lev(a, b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,j)=>j); for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
+function lcsOps(A, B, eq){
+  const m=A.length, n=B.length, L=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=m-1;i>=0;i--) for(let j=n-1;j>=0;j--) L[i][j]=eq(A[i],B[j])?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  const ops=[]; let i=0,j=0;
+  while(i<m&&j<n){ if(eq(A[i],B[j])){ ops.push({t:"=",a:A[i],b:B[j]}); i++; j++; } else if(L[i+1][j]>=L[i][j+1]) ops.push({t:"-",a:A[i++]}); else ops.push({t:"+",b:B[j++]}); }
+  while(i<m) ops.push({t:"-",a:A[i++]}); while(j<n) ops.push({t:"+",b:B[j++]});
+  return ops;
+}
+function dxBlocks(ops){ const out=[]; let cur=null; ops.forEach(o=>{ if(o.t==="="){ cur=null; out.push(o); } else { if(!cur){ cur={t:"x",del:[],ins:[]}; out.push(cur); } (o.t==="-"?cur.del:cur.ins).push(o.t==="-"?o.a:o.b); } }); return out; }
+const dxBad = t => `<del class="dx-bad">${esc(t)}</del>`;
+const dxGood = t => `<ins class="dx-good">${esc(t)}</ins>`;
+const dxMiss = `<span class="dx-miss" aria-label="il manque quelque chose ici">?</span>`;
+function dxChars(u, r){
+  let U="", R="";
+  dxBlocks(lcsOps([...u],[...r],(x,y)=>dxN(x)===dxN(y))).forEach(b=>{
+    if(b.t==="="){ U+=esc(b.a); R+=esc(b.b); return; }
+    U += b.del.length ? dxBad(b.del.join("")) : dxMiss;
+    if(b.ins.length) R += dxGood(b.ins.join(""));
+  });
+  return { U, R };
+}
+function dxDiff(user, right){
+  const A=user.trim().split(/\s+/).filter(Boolean), B=right.trim().split(/\s+/).filter(Boolean);
+  const U=[], R=[]; let common=0;
+  dxBlocks(lcsOps(A,B,(x,y)=>dxW(x)===dxW(y))).forEach(b=>{
+    if(b.t==="="){ common++; U.push(esc(b.a)); R.push(esc(b.b)); return; }
+    const k=Math.min(b.del.length,b.ins.length);
+    for(let i=0;i<k;i++){
+      const x=b.del[i], y=b.ins[i], lim=Math.max(1, Math.floor(Math.max(dxW(x).length,dxW(y).length)*0.4));
+      if(lev(dxW(x),dxW(y))<=lim){ const c=dxChars(x,y); U.push(c.U); R.push(c.R); common++; }
+      else { U.push(dxBad(x)); R.push(dxGood(y)); }
+    }
+    b.del.slice(k).forEach(x=>U.push(dxBad(x)));
+    if(b.ins.length>k){ U.push(dxMiss); b.ins.slice(k).forEach(y=>R.push(dxGood(y))); }
+  });
+  return { U:U.join(" "), R:R.join(" "), other: common===0 };
+}
+function dxLegend(){ return `<p class="dx-legend"><span>${dxBad("barré")} = ce qui était faux</span><span>${dxGood("souligné")} = ce qu'il fallait</span><span>${dxMiss} = il manque quelque chose</span></p>`; }
+function errCard(q){
+  const Q = q.question || {}, isMcq = Q.type === "mcq", user = (q.user || "").trim();
+  let right = q.answer, U, R, note = "";
+  if (!user){ U = `<span class="dx-none">rien</span>`; R = dxGood(right); }
+  else if (isMcq){ U = dxBad(user); R = dxGood(right); }
+  else {
+    const cands = (Q.accept && Q.accept.length ? Q.accept : [q.answer]).filter(Boolean);
+    right = cands.reduce((best, c) => lev(dxN(user), dxN(c)) < lev(dxN(user), dxN(best)) ? c : best, cands[0]);
+    if (/^[0-9]/.test(right)){ U = dxBad(user); R = dxGood(right); }
+    else { const d = dxDiff(user, right); U = d.U; R = d.R; if (d.other) note = "Ce n'est pas la même réponse : relis-la en entier."; }
+  }
+  return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
+    <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : "Tu as écrit"}</span><span class="dx-ans">${U}</span></p>
+    <p class="dx-line"><span class="dx-lab">✓ Il fallait</span><span class="dx-ans">${R}</span></p>
+    ${note ? `<p class="dx-note">${note}</p>` : ""}${right !== q.answer ? `<p class="fine">Réponse complète : ${esc(q.answer)}</p>` : ""}
+    <p class="rev-x">${esc(q.expl)}</p></div>`;
+}
+function errView(id){ const b = bilanState(id); return b.errOnly != null ? b.errOnly : S.screen === "results"; }
+function revCard(q, showGood){
+  return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">${q.correct?"✓":"✗"} N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(q.user) : "—"}</p>${(!q.correct || showGood) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(q.answer)}</b></p>` : ""}<p class="rev-x">${esc(q.expl)}</p></div>`;
+}
+function questionList(att){
+  const only = errView(att.id), wrong = att.questions.filter(q => !q.correct), list = only ? wrong : att.questions;
+  return (wrong.length ? dxLegend() : "") + list.map(q => q.correct ? revCard(q, !only) : errCard(q)).join("");
+}
+function viewResults(){
+  const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
+  const msg = pct === 100 ? "Sans faute. Tu maîtrises ce chapitre." : pct >= 80 ? "Solide. Repasse juste sur les quelques ratés." : pct >= 60 ? "La base est là. Refais tes erreurs, tu vas vite grimper." : pct >= 40 ? "Bon début. Relis les chapitres du Dossier concernés, puis refais un tour en Échauffement." : "C'est le moment de relire le Dossier tranquillement, chapitre par chapitre. Ça viendra.";
+  return `<div class="scorebox${att.rattrapage ? " rattr-box" : ""}"><div class="score-n">${att.score}<small>/${att.total}</small></div><span class="score-note">note ${fmtNote(att.note)}</span>${att.rattrapage ? `<span class="rattr">Rattrapage — ${att.total} question${att.total>1?"s":""} ratée${att.total>1?"s":""} rejouée${att.total>1?"s":""}</span>` : ""}</div>
+  <p class="intro">${msg}</p>${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
+  ${bilanBlock(att)}
+  <p class="lab">${!wrong.length ? "Aucune erreur" : errView(att.id) ? `Mes erreurs (${wrong.length})` : `Toutes les questions (${att.total})`}</p>
+  <div class="rev">${questionList(att)}</div>
+  <div class="row"><button class="ghost" data-act="start">Refaire le test</button><button class="ghost" data-act="nav" data-v="home">Paquets</button></div>`;
+}
+function viewScores(){
+  if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
+  const list = S.attempts;
+  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
+  const roots = list.filter(a => !a.rattrapage), base = roots.length ? roots : list;
+  const best = Math.max(...base.map(a => a.note)), avg = base.reduce((s,a) => s + a.note, 0)/base.length;
+  const exportText = list.map(a => `${dateLabel(a.date)} — ${a.deck} (${a.difficulty}, ${a.mode}${a.rattrapage ? ", rattrapage" : ""}) : ${a.score}/${a.total} → note ${fmtNote(a.note)}`).join("\n");
+  let h = `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}
+  ${store.mode === "local" ? `<p class="note">Tes scores sont gardés dans ce navigateur uniquement. Exporte-les de temps en temps.</p>` : ""}
+  <div class="stats"><div class="stat"><b>${roots.length}</b><span>tests</span></div><div class="stat"><b>${fmtNote(best)}</b><span>meilleure (sans aide)</span></div><div class="stat"><b>${fmtNote(avg)}</b><span>moyenne (sans aide)</span></div></div>
+  ${suiviBlock()}<p class="lab">Historique</p>
+  <div class="rev">`;
+  list.forEach(a => {
+    const open = S.scores.open === a.id;
+    h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}${chainTxt(a)}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
+    if (open) h += `<div class="attempt-body">${bilanBlock(a)}${questionList(a)}</div>`;
+    h += `</div>`;
+  });
+  h += `</div><button class="ghost" data-act="exportToggle">${S.scores.exportOpen ? "Cacher la sauvegarde" : "💾 Exporter mes scores"}</button>`;
+  if (S.scores.exportOpen) h += `<p class="fine">Touche le texte, copie-le et colle-le dans une note ou envoie-le à tes parents.</p><textarea class="exportarea" readonly rows="${Math.min(list.length+1, 8)}" id="export-area">${esc(exportText)}</textarea>`;
+  h += S.scores.confirm
+    ? `<div class="confirm"><span>Tout effacer, sans retour possible ?</span><button class="mini yes" data-act="clearYes">Effacer</button><button class="mini" data-act="clearNo">Annuler</button></div>`
+    : `<button class="ghost danger" data-act="clearAsk">🗑️ Effacer tout l'historique</button>`;
+  return h;
+}
+
+/* ---------- version papier ---------- */
+function paperHtml(qs, part){
+  const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
+  const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
+  const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
+    ? `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<span class="sr">Où vérifier : ${esc(q.src || "")}</span><div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
+    : `<div class="q"><b>${q.num}.</b> ${esc(q.word)}<span class="sr">Où vérifier : ${esc(q.src || "")}</span><div class="line"></div></div>`).join("")}</section>`).join("");
+  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b><span class="sr">Source : ${esc(q.src || "")}</span></div>`).join("")}</section>`).join("");
+  const head = `<h1>${esc(SUBJECT_LONG)}</h1><p class="meta">Prénom : Liano · épreuve : ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
+  const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
+  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(THEME)}</title><style>
+@page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
+.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.opts{display:flex;flex-direction:column;gap:3px;margin:4px 0 0 18px}.line{border-bottom:1px solid #444;height:22px;margin:0 0 0 18px}
+.k{font-size:13.5px;margin:3px 0}.sr{display:block;font-size:11.5px;color:#555;margin:1px 0 0 18px}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
+</style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
+}
+async function savePaper(part){
+  const qs = S.frozen; S.paperMsg = ""; S.paperCopy = "";
+  const names = { ex:"exercices", both:"exercices-et-corrige", key:"corrige" };
+  const filename = `${DUE.iso || "2026-10-22"}_${FILE_SLUG}-${names[part]}.html`;
+  try {
+    if (!HAS_CLAUDE){
+      const url = URL.createObjectURL(new Blob([paperHtml(qs, part)], { type:"text/html" }));
+      const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      S.paperMsg = "Fichier téléchargé : ouvre-le, puis touche « Imprimer ».";
+      render(); return;
+    }
+    const dl = await window.claude.use("downloads");
+    if (!dl) throw { code:"unavailable" };
+    await dl.save({ filename, data:paperHtml(qs, part) });
+  } catch(e){
+    if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
+    else {
+      S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
+      S.paperCopy = "#PDF-GEO-UNE-SUISSE\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer} (source : ${q.src || ""})`).join("\n");
+    }
+  }
+  render();
+}
+
+/* ---------- chargement de l'historique ---------- */
+async function loadHistory(){
+  try {
+    await store.init();
+    try { S.review = (await store.getDoc(REVIEW_ID)) || {}; } catch(e){ S.review = {}; }
+    try { S.vidSeen = (await store.getDoc(VIDS_ID)) || {}; } catch(e){ S.vidSeen = {}; }
+    { let dd = null; try { dd = await store.getDoc(DRAFT_ID); } catch(e){} const dl = draftLocalGet(); const d = draftPick(dd, dl); if (!S.quiz) S.draft = d; }
+    if (S.screen === "home" || S.screen === "setup") render();
+    if (S.screen === "dossier") render();
+    if (S.screen === "cards") render();
+    let raw = await store.list();
+    raw.sort((a,b) => b.date - a.date);
+    const cleaned = raw.filter((a, k) => { const prev = raw[k-1]; return !(prev && prev.deck === a.deck && Math.abs(prev.date - a.date) < 3000); });
+    for (const a of raw) if (!cleaned.includes(a)) { try { await store.remove(a.id); } catch(e){} }
+    const known = new Set(S.attempts.map(a => a.id));
+    S.attempts = [...S.attempts, ...cleaned.filter(a => !known.has(a.id))].sort((a,b) => b.date - a.date);
+  } catch(e){
+    S.loadErr = "Je n'arrive pas à lire tes anciens résultats pour l'instant. Les nouveaux tests s'afficheront quand même.";
+  }
+  S.loaded = true;
+  if (S.screen === "scores" || S.screen === "dossier") render();
+}
+
+/* ---------- événements ---------- */
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el || el.disabled) return;
+  const act = el.dataset.act, v = el.dataset.v;
+  const Q = S.quiz;
+  switch(act){
+    case "nav": S.draftBlock = false; S.screen = v; S.scores.confirm = false; S.audOpen = null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
+    case "page": S.screen = "dossier"; S.page = v || null; S.audOpen = null; S.vidOpen = null; S.vidDone = null; render(); window.scrollTo(0,0); break;
+    case "audPlay": S.audOpen = v; S.audPart = 0; S.vidOpen = null; S.vidDone = null; render(); audListen(); if (S.page === "caps"){ const r = document.getElementById("cap-" + v); if (r) r.scrollIntoView({ block:"start" }); } break;
+    case "audPart": { const [aid, k] = v.split("|"); S.audOpen = aid; S.audPart = +k; render(); audListen(); break; }
+    case "audHide": S.audOpen = null; render(); break;
+    case "vidPlay": S.audOpen = null; S.vidOpen = v; S.vidDone = null; render(); vidListen(); if (S.page === "caps"){ const r = document.getElementById("cap-" + v); if (r) r.scrollIntoView({ block:"start" }); } break;
+    case "vidReplay": S.vidOpen = v; S.vidDone = null; render(); vidListen(); break;
+    case "vidFinish": S.vidOpen = v; vidEnded(v); break;
+    case "chapTest": { const [cid, lev] = v.split("|"); S.selected = DECKS.filter(d => d.code === cid).map(d => d.key); S.difficulty = lev; S.mode = "train"; S.frozen = null; S.vidOpen = null; S.vidDone = null; startQuiz(buildTest(S.selected, S.difficulty), false); break; }
+    case "vidHide": S.vidOpen = null; S.vidDone = null; render(); break;
+    case "vidCards": S.selected = DECKS.filter(d => d.code === v).map(d => d.key); S.cards.order = []; S.cards.only = false; S.frozen = null; S.vidOpen = null; S.vidDone = null; S.screen = "cards"; render(); window.scrollTo(0,0); break;
+    case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : DECKS.map(d => d.key).filter(k => k === v || S.selected.includes(k)); S.frozen = null; S.cards.order = []; render(); break;
+    case "allDecks": S.selected = S.selected.length === DECKS.length ? [] : DECKS.map(d => d.key); S.frozen = null; S.cards.order = []; render(); break;
+    case "toCards": S.screen = "cards"; render(); break;
+    case "flip": S.cards.flip = !S.cards.flip; render(); break;
+    case "rvMode": S.revMode = !S.revMode; try { localStorage.setItem(QUIZ_ID + "-revmode", S.revMode ? "1" : "0"); } catch(e){} render(); break;
+    case "rvOnly": S.cards.only = !S.cards.only; S.cards.order = []; render(); break;
+    case "rvCopy": { const t = reviewText(); S.rvCopy = ""; try { navigator.clipboard.writeText(t).then(() => { S.rvCopied = true; render(); setTimeout(() => { S.rvCopied = false; render(); }, 2500); }, () => { S.rvCopy = t; render(); setTimeout(() => { const x = document.getElementById("rv-copy"); if (x){ x.focus(); x.select(); } }, 30); }); } catch(e){ S.rvCopy = t; render(); } break; }
+    case "rvClearAsk": S.rvConfirm = true; render(); break;
+    case "rvClearNo": S.rvConfirm = false; render(); break;
+    case "rvClearYes": S.review = {}; S.rvConfirm = false; S.cards.only = false; S.cards.order = []; saveReview(); render(); break;
+    case "card": { const n = cardItems().length; S.cards.flip = false; S.cards.pos = (S.cards.pos + (+v) + n) % n; render(); break; }
+    case "cardShuffle": S.cards.order = shuffle(S.cards.order); S.cards.pos = 0; S.cards.flip = false; render(); break;
+    case "diff": S.difficulty = v; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
+    case "mode": S.mode = v; render(); break;
+    case "freeze": S.frozen = buildTest(S.selected, S.difficulty); render(); break;
+    case "unfreeze": S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
+    case "paper": savePaper(v); break;
+    case "start": startQuiz(S.frozen || buildTest(S.selected, S.difficulty), false); break;
+    case "quit": S.quitAsk = true; render(); window.scrollTo(0,0); break;
+    case "quitNo": S.quitAsk = false; render(); break;
+    case "quitKeep": draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "quitDrop": draftClear(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "draftResume": draftResume(); break;
+    case "draftAsk": S.draftAsk = true; render(); break;
+    case "draftNo": S.draftAsk = false; render(); break;
+    case "draftDrop": draftClear(); render(); break;
+    case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train") validate(Q.picked); else render(); break; }
+    case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
+    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; draftSave(); render(); } else record("", false); break; }
+    case "typo": record(Q.typed, true, true); break;
+    case "suiviF": sv().f = v; sv().pt = null; render(); break;
+    case "suiviPt": sv().pt = sv().pt === v ? null : v; render(); break;
+    case "redoCards": redoCards(v); break;
+    case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
+    case "showErr": { const b = bilanState(v); b.errOnly = !errView(v); render(); break; }
+    case "analyse": analyse(v); break;
+    case "copy": copyFor(v); break;
+    case "retryWrong": retryWrong(v); break;
+    case "openAttempt": S.scores.open = S.scores.open === v ? null : v; render(); break;
+    case "exportToggle": S.scores.exportOpen = !S.scores.exportOpen; render(); break;
+    case "clearAsk": S.scores.confirm = true; render(); break;
+    case "clearNo": S.scores.confirm = false; render(); break;
+    case "clearYes": (async () => {
+      const ids = S.attempts.map(a => a.id); S.attempts = []; S.scores = { open:null, exportOpen:false, confirm:false }; render();
+      let failed = false; for (const id of ids){ try { await store.remove(id); } catch(e){ failed = true; } }
+      if (failed){ S.loadErr = "L'effacement n'a pas pu être enregistré partout. Recharge la page et réessaie."; render(); }
+    })(); break;
+  }
+});
+document.addEventListener("change", e => {
+  const k = e.target.dataset && e.target.dataset.rvk; if (!k || !S.cards.curId) return;
+  const r = S.review[S.cards.curId] = Object.assign({}, S.review[S.cards.curId], { [k]: e.target.checked });
+  if (!rvMarked(r)) delete S.review[S.cards.curId];
+  saveReview(); render();
+});
+document.addEventListener("input", e => {
+  if (e.target.id === "rv-note" && S.cards.curId){
+    const r = S.review[S.cards.curId] = Object.assign({}, S.review[S.cards.curId], { note: e.target.value });
+    if (!rvMarked(r)) delete S.review[S.cards.curId];
+    saveReview(); return;
+  }
+  if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); }
+});
+document.addEventListener("keydown", e => {
+  if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
+});
+document.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("exportarea")) e.target.select(); });
+
+render();
+loadHistory();
+</script>
+</body></html>
