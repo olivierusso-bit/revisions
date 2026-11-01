@@ -11,11 +11,13 @@ Après l'assemblage, sauf --sans-controles :
   1. node --check sur le script assemblé (syntaxe) ;
   2. controle-outil.py --runtime (fonctions obligatoires, prénom dans les clés, âge jamais en dur, ouverture à 390 px) ;
   3. un test complet dans Chromium : 300 tests générés par script (chaque bonne réponse est dans les choix et acceptée
-     par la correction), puis un test joué de bout en bout, aucune erreur JavaScript.
+     par la correction, identités de cartes uniques et complètes), puis un test joué de bout en bout (toutes les questions, première réponse acceptée tapée), aucune erreur JavaScript.
 Le code de sortie est 0 seulement si tout passe.
 
-Le contenu porte sa palette CSS dans la constante CSS_THEME (gabarit de chaîne, sans accent grave), et ses métadonnées (titre, polices, date) dans OUTIL et DUE, lus avec node.
+Le contenu porte sa palette CSS et ses retouches de style dans la constante CSS_THEME (gabarit de chaîne, sans accent grave), appliquée
+après base.css, et ses métadonnées (titre, polices, date) dans OUTIL et DUE, lus avec node.
 """
+# Versions : 1 (01.11.2026, C1) · 2 (01.11.2026, C2 : identités de cartes uniques et complètes, test joué avec la première réponse acceptée, nombre de questions « toutes »)
 import json, os, re, subprocess, sys, tempfile, datetime
 
 ICI = os.path.dirname(os.path.abspath(__file__))
@@ -101,11 +103,13 @@ def test_navigateur(sortie):
               if (!q.expl) bad.push("sans explication : " + q.prompt);
             });
           }
+          const uniq = new Set(CARDS.map(c => c.k)); if (uniq.size !== CARDS.length) bad.push("identités de cartes en double : " + (CARDS.length - uniq.size));
+          if (CARDS.some(c => /undefined|null/.test(c.k))) bad.push("identité de carte incomplète : " + CARDS.find(c => /undefined|null/.test(c.k)).k);
           return { n, bad: bad.slice(0, 5), nbad: bad.length, cards: CARDS.length };
         }""")
         print(f"questions générées : {gen['n']} ({gen['cards']} cartes) ; problèmes : {gen['nbad']}", gen["bad"] if gen["nbad"] else "")
         # un test joué de bout en bout (Entraînement, Je m'entraîne), réponses justes
-        pg.evaluate("""() => { S.screen = "setup"; S.difficulty = "normal"; S.mode = "train"; render(); }""")
+        pg.evaluate("""() => { S.screen = "setup"; S.difficulty = "normal"; S.mode = "train"; S.count = 0; render(); }""")
         pg.click("[data-act=start]"); pg.wait_for_timeout(200)
         for _ in range(400):
             fini = pg.evaluate("() => S.screen === 'results'")
@@ -113,7 +117,7 @@ def test_navigateur(sortie):
             pg.evaluate("""() => { const Q = S.quiz, q = Q.questions[Q.i];
               if (Q.checked){ document.querySelector('[data-act=next]').click(); return; }
               if (q.type === "mcq"){ const k = q.options.indexOf(q.answer); document.querySelector('[data-act=pick][data-v="'+k+'"]').click(); }
-              else { const inp = document.getElementById("answer-input"); inp.value = q.answer; inp.dispatchEvent(new Event("input", {bubbles:true})); document.getElementById("validate-btn").click(); } }""")
+              else { const inp = document.getElementById("answer-input"); inp.value = (q.accept && q.accept.length) ? q.accept[0] : q.answer; inp.dispatchEvent(new Event("input", {bubbles:true})); document.getElementById("validate-btn").click(); } }""")
             pg.wait_for_timeout(15)
         res = pg.evaluate("() => S.lastResult ? { score:S.lastResult.score, total:S.lastResult.total, note:S.lastResult.note } : null")
         print("test joué :", res)

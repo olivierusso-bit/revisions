@@ -4,11 +4,18 @@
    Assemblé en dernier, après le contenu et la couche, dans un seul <script>.
 
    Ce que le noyau attend du CONTENU : QUIZ_ID, DUE, THEME, VERSION, OUTIL, SOURCES, SOURCES_NOTE, PHOTOS, DECKS, FICHE, TAG_LABEL.
+   Réglages facultatifs d'OUTIL (étape C2) : badgeHtml (remplace le maillot de l'en-tête), comptes ([10,20,30,0] = « Combien de questions »,
+   0 = toutes) et compteDefaut, compte ("cartes" pour compter les cartes au lieu des éléments), umlautsStricts (ä ≠ a à la correction),
+   prefixeIndice (devant l'indice, défaut « petit indice : »), sousNiveaux ({easy, normal, hard}), conseilSetup (phrase sous « Commencer »
+   hors correction en direct), noteAutre (phrase quand la réponse écrite n'a rien à voir).
+   Une section de FICHE peut porter html (chaîne ou fonction qui la rend, déjà échappée) et count, en plus de pairs / tips / astuce.
    Ce qu'il attend de la COUCHE : l'objet COUCHE (rings, allCards, buildTest, isRight, cardFace, liveCands, hasLive).
    Il fournit : stockage (Claude db / navigateur / mémoire), test en cours gardé, suivi graphique (anneaux, courbe,
    jour par jour, cartes qui résistent), Bilan, « Voir mes erreurs », rattrapage, note suisse, version papier,
    onglets et écrans, prompt d'analyse (âge déduit de la classe, jamais écrit en dur).
    Les clés de stockage et le format des historiques sont ceux des outils précédents : rien n'est perdu.
+   Versions : 1 (01.11.2026, C1, né du modèle de français v4) · 2 (01.11.2026, C2 : réglages facultatifs d'OUTIL ci-dessus, Umlaute,
+   nombre de questions, faute de frappe enregistrée, test en cours plus complet, source dans le corrigé et la copie, cartes homonymes distinguées).
    ============================================================ */
 
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
@@ -24,11 +31,15 @@ function ageDeClasse(classe){
 }
 const AGE_ELEVE = ageDeClasse(OUTIL.classe);
 
+const SOUS_NIVEAUX = Object.assign({ easy:"Je choisis parmi des réponses", normal:"Je choisis et j'écris", hard:"J'écris les réponses" }, OUTIL.sousNiveaux || {});
 const DIFFICULTIES = {
-  easy:{ label:"Échauffement", sub:"Je choisis parmi des réponses", emoji:"🟢" },
-  normal:{ label:"Entraînement", sub:"Je choisis et j'écris", emoji:"🔵" },
-  hard:{ label:"Niveau épreuve", sub:"J'écris les réponses", emoji:"🔴" },
+  easy:{ label:"Échauffement", sub:SOUS_NIVEAUX.easy, emoji:"🟢" },
+  normal:{ label:"Entraînement", sub:SOUS_NIVEAUX.normal, emoji:"🔵" },
+  hard:{ label:"Niveau épreuve", sub:SOUS_NIVEAUX.hard, emoji:"🔴" },
 };
+/* nombre de questions par test : liste proposée par l'outil (0 = toutes) ; sans liste, toutes les questions */
+const COUNTS = Array.isArray(OUTIL.comptes) && OUTIL.comptes.length ? OUTIL.comptes : null;
+const UMLAUTS_STRICTS = !!OUTIL.umlautsStricts;
 const LVL_OF_LABEL = { "Échauffement":0, "Entraînement":1, "Niveau épreuve":2 };
 const MODES = COUCHE.hasLive ? {
   train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
@@ -41,16 +52,28 @@ const MODES = COUCHE.hasLive ? {
 
 /* ---------- utilitaires ---------- */
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+/* enlève les accents ; avec umlautsStricts, ä ö ü restent distincts de a o u (c'est ce que la leçon d'allemand fait apprendre) */
+function deAcc(s){
+  s = String(s);
+  if (UMLAUTS_STRICTS) s = s.replace(/ä/g,"\u0001").replace(/ö/g,"\u0002").replace(/ü/g,"\u0003");
+  s = s.normalize("NFD").replace(/[̀-ͯ]/g,"");
+  return UMLAUTS_STRICTS ? s.replace(/\u0001/g,"ä").replace(/\u0002/g,"ö").replace(/\u0003/g,"ü") : s;
+}
 function norm(s, apoMode){
-  return String(s || "").toLowerCase().replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,"")
+  return deAcc(String(s || "").toLowerCase().replace(/ß/g,"ss").normalize("NFC"))
     .replace(/…|\.\.\./g," ").replace(/[’'`]/g, apoMode === "del" ? "" : " ")
-    .replace(/[.!?;,:«»"()\/\-+]/g," ").replace(/\s+/g," ").trim();
+    .replace(/[.!?;,:«»"()\/\-+–]/g," ").replace(/\s+/g," ").trim();
 }
 const stripFr = s => s.replace(/^(le |la |les |l |un |une |des |du |de la |d )/,"").trim();
+const stripDe = s => s.replace(/^(der |die |das )/,"").trim();
+/* article facultatif (sauf keep) : français le/la/les…, allemand der/die/das */
 function matchAnswer(input, accept, lang, keep){
   return ["sp","del"].some(m => {
     const a = norm(input, m); if (!a) return false;
-    return accept.some(raw => { const b = norm(raw, m); if (a === b) return true; if (keep || lang !== "fr") return false; return stripFr(a) === stripFr(b); });
+    return accept.some(raw => { const b = norm(raw, m); if (a === b) return true; if (keep) return false;
+      if (lang === "fr") return stripFr(a) === stripFr(b);
+      if (lang === "de") return stripDe(a) === stripDe(b);
+      return false; });
   });
 }
 function shuffle(arr){ const a = [...arr]; for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
@@ -69,7 +92,9 @@ function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getM
 const CARDS = COUCHE.allCards();
 const CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
 function deckCards(dk){ return CARDS.filter(c => c.dk === dk); }
-function buildTest(deckKeys, difficulty){ return COUCHE.buildTest(deckKeys, difficulty); }
+function buildTest(deckKeys, difficulty, limit){ return COUCHE.buildTest(deckKeys, difficulty, limit || 0); }
+/* ce que l'écran Paquets compte : les éléments des paquets, ou les cartes (OUTIL.compte = "cartes") */
+function compteSel(keys){ const n = keys.reduce((s,k) => s + (OUTIL.compte === "cartes" ? deckCards(k).length : DECK[k].items.length), 0); return { n, mot: OUTIL.compte === "cartes" ? "carte" : "élément" }; }
 
 /* ---------- stockage ---------- */
 const store = {
@@ -114,7 +139,7 @@ const store = {
 const S = {
   screen:"fiche", ficheOpen:0,
   selected: DECKS.map(d => d.key),
-  difficulty:"normal", mode:"train",
+  difficulty:"normal", mode:"train", count: COUNTS ? (OUTIL.compteDefaut != null ? OUTIL.compteDefaut : COUNTS[0]) : 0,
   frozen:null, paperMsg:"", paperCopy:"",
   quiz:null, rattrapage:false, rattrLabel:"", lastResult:null, storeMsg:"",
   attempts:[], loaded:false, loadErr:"",
@@ -281,10 +306,15 @@ function redoCards(v){
 }
 
 /* ----- onglet Scores : courbe, jour par jour, cartes qui résistent ----- */
+/* les 5 cartes les plus ratées (premier passage des tests) */
 function resistant(){
   const m = {};
-  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); m[k] = m[k] || { k, word:x.question.word, ch:x.question.deckKey, tag:x.question.tag, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
-  return Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
+  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); m[k] = m[k] || { k, word:x.question.label || x.question.word, hint:x.question.label ? "" : (x.question.hint || ""), ch:x.question.deckKey, tag:x.question.tag, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
+  const out = Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
+  /* deux cartes de même énoncé : on les distingue par l'étiquette, ou par l'indice si l'étiquette est la même */
+  out.forEach(x => { const twins = out.filter(y => y !== x && y.word === x.word); if (!twins.length) return;
+    if (twins.some(y => y.tag !== x.tag)) x.word += " · " + (TAG_LABEL[x.tag] || x.tag); else if (x.hint) x.word += " (" + x.hint + ")"; });
+  return out;
 }
 function shapeSvg(a, x, y){
   const f = `fill="var(--box)" stroke="var(--sheet)" stroke-width="2"`;
@@ -374,16 +404,16 @@ function draftWrite(obj){
 function draftErrShow(){ const m = document.getElementById("draft-err"); if (m) m.hidden = !S.draftErr; }
 function draftSave(){
   const Q = S.quiz; if (!Q || Q.done) return;
-  const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => x.typo ? { u:x.user, c:x.correct, t:1 } : { u:x.user, c:x.correct }),
-    picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok,
-    label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "",
+  const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => { const o = { u:x.user, c:x.correct }; if (x.typo) o.t = 1; if (x.liveFixed){ o.lf = 1; o.ls = x.liveSnap; } return o; }),
+    picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok, liveFixed:!!Q.liveFixed, errSnap:Q.errSnap || "",
+    label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "", rattrParent:S.rattrParent || null,
     selected:S.selected, difficulty:S.difficulty, mode:S.mode };
   S.draft = d; draftWrite(d);
 }
 function draftDetail(d){
   if (d.detail) return d.detail;
   return (d.answers || []).map((x, k) => { const q = d.questions[k];
-    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), expl:q.expl, tag:q.tag, question:q }; });
+    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!x.lf, liveSnap:x.ls || "", expl:q.expl, tag:q.tag, question:q }; });
 }
 const draftN = d => (d.answers || d.detail || []).length;
 const draftOk = d => !!(d && d.questions && d.questions.length && (d.answers || d.detail));
@@ -392,8 +422,8 @@ function draftClear(){ S.draft = null; S.draftAsk = false; S.draftBlock = false;
 function draftResume(){
   const d = S.draft; if (!d) return;
   S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
-  S.rattrapage = d.rattrapage; S.rattrLabel = d.rattrLabel;
-  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
+  S.rattrapage = d.rattrapage; S.rattrLabel = d.rattrLabel; S.rattrParent = d.rattrParent || null;
+  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, liveFixed:!!d.liveFixed, hadErr:!!d.liveFixed, errSnap:d.errSnap || "", detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
   S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.draftBlock = false; S.screen = "quiz";
   render(); window.scrollTo(0,0);
 }
@@ -429,7 +459,8 @@ function render(){
   if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
 }
 function header(){
-  return `<header class="head"><div class="jersey" aria-hidden="true"><b>${esc(OUTIL.jersey)}</b></div><div><h1>${esc(OUTIL.titre)}</h1><p>${esc(OUTIL.sousTitre)} — à savoir pour le ${esc(DUE.long)}</p></div></header>`;
+  const badge = OUTIL.badgeHtml || `<div class="jersey" aria-hidden="true"><b>${esc(OUTIL.jersey)}</b></div>`;
+  return `<header class="head">${badge}<div><h1>${esc(OUTIL.titre)}</h1><p>${esc(OUTIL.sousTitre)} — à savoir pour le ${esc(DUE.long)}</p></div></header>`;
 }
 function renderTabs(){
   const bar = document.getElementById("tabbar");
@@ -446,10 +477,12 @@ function viewFiche(){
   let h = draftBanner() + `<p class="intro">${esc(OUTIL.introFiche)}</p>`;
   FICHE.forEach((sec, i) => {
     const open = S.ficheOpen === i;
-    h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}"><span class="entry-icon">${sec.icon}</span><span class="entry-title">${esc(sec.titre)}</span>${sec.pairs ? `<span class="entry-count">${sec.pairs.length}</span>` : ""}</button>`;
+    const cnt = sec.count != null ? sec.count : sec.pairs ? sec.pairs.length : 0;
+    h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}"><span class="entry-icon">${sec.icon}</span><span class="entry-title">${esc(sec.titre)}</span>${cnt ? `<span class="entry-count">${cnt}</span>` : ""}</button>`;
     if (open){
       h += `<div class="entry-body">`;
       if (sec.pairs) h += sec.pairs.map(p => `<div class="pair"><span class="pair-de">${esc(p[0])}</span><span>${esc(p[1])}</span></div>`).join("");
+      if (sec.html) h += typeof sec.html === "function" ? sec.html() : sec.html;
       if (sec.tips) h += `<div style="display:flex;flex-direction:column;gap:6px">` + sec.tips.map(t => `<p class="tip">${esc(t)}</p>`).join("") + `</div>`;
       if (sec.astuce) h += `<p class="astuce"><b>Astuce</b>${esc(sec.astuce)}</p>`;
       h += `</div>`;
@@ -473,33 +506,32 @@ function viewFiche(){
 
 function viewHome(){
   const allOn = S.selected.length === DECKS.length;
-  const count = S.selected.reduce((n,k) => n + DECK[k].items.length, 0);
+  const cs = compteSel(S.selected), count = cs.n;
   const hist = S.loaded ? histByCard() : null;
   let h = draftBanner() + globalPastille() + `<p class="intro">Choisis ce que tu veux travailler. Tu peux cocher plusieurs paquets. Les anneaux montrent ta progression.</p>`;
   h += DECKS.map(d => {
     const on = S.selected.includes(d.key);
     const bad = hist ? paqBad(d.key, hist) : [];
-    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-e">${d.emoji}</span><span class="deck-txt"><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastilleDeck(d.key)}</div>` +
+    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-e">${d.emoji}</span><span class="deck-txt"><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}${OUTIL.compte === "cartes" ? ` · ${deckCards(d.key).length} cartes` : ""}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastilleDeck(d.key)}</div>` +
       (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">Refaire mes ${bad.length} carte${bad.length>1?"s":""} à revoir</button></div>` : "");
   }).join("");
   h += `<button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
-  <p class="fine">${count} éléments sélectionnés</p>
+  <p class="fine">${count} ${cs.mot}${count>1?"s":""} sélectionné${cs.mot === "carte" ? "e" : ""}${count>1?"s":""}</p>
   <div class="row"><button class="ghost" data-act="toCards" ${count?"":"disabled"}>🃏 Cartes</button><button class="cta" data-act="nav" data-v="setup" ${count?"":"disabled"}>🎯 Test</button></div>`;
   return h;
 }
 
-function cardEntries(){ return S.selected.flatMap(k => DECK[k].items.map(it => ({ it, d:DECK[k] }))); }
-function cardFace(d, it){ return COUCHE.cardFace(d, it); }
+/* une entrée par face : la couche peut donner plusieurs faces pour un même élément (une par aspect) */
+function cardEntries(){ return S.selected.flatMap(k => DECK[k].items.flatMap(it => { const f = COUCHE.cardFace(DECK[k], it); return (Array.isArray(f) ? f : [f]).map(face => ({ it, d:DECK[k], face })); })); }
 function viewCards(){
   const ents = cardEntries();
   if (!ents.length) return `<p class="intro">Coche au moins un paquet pour voir les cartes.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
   if (S.cards.order.length !== ents.length){ S.cards.order = shuffle(ents.map((_,i) => i)); S.cards.pos = 0; S.cards.flip = false; }
-  const { it, d } = ents[S.cards.order[S.cards.pos]];
-  const f = cardFace(d, it);
+  const f = ents[S.cards.order[S.cards.pos]].face;
   return `<button class="back" data-act="nav" data-v="home">← Paquets</button>
   <p class="fine">${esc(deckLabel(S.selected))} · carte ${S.cards.pos+1} sur ${ents.length}</p>
   <button class="flash${S.cards.flip?" flipped":""}" data-act="flip" aria-label="Retourner la carte">
-    <span class="face f"><span class="face-tag">${esc(f.tagF)}</span><span class="face-word">${esc(f.front)}</span><span class="face-hint">touche la carte</span></span>
+    <span class="face f"><span class="face-tag">${esc(f.tagF)}</span><span class="face-word">${esc(f.front)}</span>${f.frontMini ? `<span class="face-mini">${esc(f.frontMini)}</span>` : ""}<span class="face-hint">touche la carte</span></span>
     <span class="face b"><span class="face-tag">${esc(f.tagB)}</span>${f.backHtml}</span>
   </button>
   <div class="row3"><button class="ghost" data-act="card" data-v="-1">Précédente</button><button class="ghost" data-act="cardShuffle">Mélanger</button><button class="ghost" data-act="card" data-v="1">Suivante</button></div>`;
@@ -507,9 +539,11 @@ function viewCards(){
 
 function viewSetup(){
   if (!S.selected.length) return `<p class="intro">Coche au moins un paquet avant de lancer un test.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
-  const total = S.selected.reduce((n,k) => n + DECK[k].items.length, 0);
+  const cs = compteSel(S.selected), total = cs.n;
   let h = draftBanner() + `<button class="back" data-act="nav" data-v="home">← Paquets</button>
-  <p class="fine">${esc(deckLabel(S.selected))} · ${total} éléments</p>
+  <p class="fine">${esc(deckLabel(S.selected))} · ${total} ${cs.mot}${total>1?"s":""}${cs.mot === "carte" ? " en tout" : ""}</p>
+  ${COUNTS ? `<p class="lab">Combien de questions</p><div class="row4">${COUNTS.map(n => `<button class="ghost small${S.count===n?" on":""}" data-act="count" data-v="${n}" aria-pressed="${S.count===n}">${n ? n : "Toutes"}</button>`).join("")}</div>
+  <p class="fine">Les questions sont tirées dans tous les paquets cochés, à tour de rôle.</p>` : ""}
   <p class="lab">Ton niveau</p><div class="opts">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="opt${S.difficulty===k?" on":""}" data-act="diff" data-v="${k}" aria-pressed="${S.difficulty===k}"><span class="opt-e">${d.emoji}</span><span class="opt-main">${d.label}</span><span class="opt-sub">${d.sub}</span></button>`).join("")}</div>
   <p class="lab">Comment on corrige</p><div class="opts">${Object.entries(MODES).map(([k,m]) => `<button class="opt${S.mode===k?" on":""}" data-act="mode" data-v="${k}" aria-pressed="${S.mode===k}"><span class="opt-e">${m.emoji}</span><span class="opt-main">${m.label}</span><span class="opt-sub">${m.sub}</span></button>`).join("")}</div>`;
   if (S.frozen){
@@ -524,7 +558,7 @@ function viewSetup(){
   } else {
     h += `<button class="ghost" data-act="freeze">🖨️ Version papier de ce test</button><button class="cta" data-act="start">Commencer</button>`;
   }
-  h += `<p class="fine">${S.mode === "live" ? "En correction en direct, une lettre fausse est marquée dès que tu la tapes. Un mot que tu as dû corriger ne compte pas dans la note : il revient dans « Refaire mes erreurs »." : `En épreuve blanche, tu ne vois aucune réponse avant la fin : c'est ce qui ressemble le plus à l'épreuve du ${esc(DUE.long)}.`}</p>`;
+  h += `<p class="fine">${S.mode === "live" ? "En correction en direct, une lettre fausse est marquée dès que tu la tapes. Un mot que tu as dû corriger ne compte pas dans la note : il revient dans « Refaire mes erreurs »." : esc(OUTIL.conseilSetup || `En épreuve blanche, tu ne vois aucune réponse avant la fin : c'est ce qui ressemble le plus à l'épreuve du ${DUE.long}.`)}</p>`;
   return h;
 }
 
@@ -562,8 +596,7 @@ function lvHtml(typed, r){
   let h = "";
   [...typed].forEach((c, i) => {
     if (r.miss.has(i)) h += dxMiss;
-    const t = c === " " ? " " : c;
-    h += r.bad.has(i) ? `<span class="lv-bad">${esc(t)}</span>` : esc(t);
+    h += r.bad.has(i) ? `<span class="lv-bad">${esc(c)}</span>` : esc(c);
   });
   if (r.miss.has(-1)) h += dxMiss;
   return h || `<span class="lv-empty">Tes lettres s'affichent ici</span>`;
@@ -593,7 +626,7 @@ function viewQuiz(){
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
   <div class="badges"><span class="num">N° ${q.num}</span><span class="chip ${q.tag}">${esc(TAG_LABEL[q.tag] || q.tag)}</span><span class="ref">Exercice ${q.ex} · ${esc(q.exTitle)}</span></div>
-  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.hint ? `<p class="qhint">petit indice : ${esc(q.hint)}</p>` : ""}`;
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
   if (q.type === "mcq"){
     h += `<div class="opts">` + q.options.map((o, k) => {
       let c = "choice";
@@ -601,7 +634,8 @@ function viewQuiz(){
       return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${esc(o)}</button>`;
     }).join("") + `</div>`;
   } else {
-    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="Ta réponse…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    if (q.lang === "de" && !Q.checked && !Q.finishing) h += `<div class="umlauts" aria-label="Lettres avec Umlaut">${["ä","ö","ü","Ä","Ö","Ü"].map(u => `<button data-act="uml" data-v="${u}" aria-label="Ajouter ${u}">${u}</button>`).join("")}</div>`;
     if (S.mode === "live" && !Q.checked) h += `<div class="live"><p class="live-lab">Ta réponse, lettre par lettre</p><div class="live-box" id="live-box"></div><p class="live-state" id="live-state" aria-live="polite"></p></div>`;
   }
   if (Q.finishing) h += `<p class="fine">J'enregistre ton résultat…</p>`;
@@ -615,7 +649,7 @@ function viewQuiz(){
     h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? ["Juste !","Bien vu.","Nickel.","Exact.","Tu l'as."][Q.i % 5] : Q.liveFixed ? "✓ Juste à la fin, avec de l'aide." : "Presque. Regarde bien :"}</p>
       ${Q.liveFixed ? `<p>Tu as corrigé des lettres en direct : ce mot ne compte pas dans la note. Il reviendra dans « Refaire mes erreurs ».</p>` : ""}
       ${Q.ok ? "" : `<p>Réponse : <b>${esc(q.answer)}</b></p>`}<p class="fb-x">${esc(q.expl)}</p>
-      ${q.type === "type" && !Q.ok && S.mode === "train" ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
+      ${q.type === "type" && !Q.ok && !Q.liveFixed && S.mode === "train" ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
       <button class="cta" data-act="next">${Q.i+1 >= total ? "Voir mon résultat" : "Suivante"}</button></div>`;
   }
   return h;
@@ -629,11 +663,13 @@ function validate(val){
   if (S.mode !== "exam"){ Q.ok = correct; Q.liveFixed = liveFixed; Q.checked = true; draftSave(); render(); }
   else record(val, correct);
 }
-function record(val, correct){
+function record(val, correct, typo){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i];
   const liveFixed = !!(S.mode === "live" && Q.liveFixed);
-  Q.detail.push({ num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" });
+  const e = { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" };
+  if (typo) e.typo = true;
+  Q.detail.push(e);
   if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
   else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; Q.hadErr = false; Q.errSnap = ""; Q.liveFixed = false; draftSave(); render(); }
 }
@@ -674,7 +710,7 @@ function findAttempt(id){ return (S.lastResult && S.lastResult.id === id) ? S.la
 /* prompt d'analyse : gabarit commun, rempli par OUTIL.analyse ; l'âge vient de la classe (jamais écrit en dur) */
 function analysePrompt(att){
   const A = OUTIL.analyse;
-  const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? "JUSTE" : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
+  const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? (q.typo ? "JUSTE (faute de frappe acceptée)" : "JUSTE") : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
   return `Tu es ${A.role}, bienveillant, qui analyse le test d'un élève de ${AGE_ELEVE} (${OUTIL.classe}, canton de Neuchâtel). Il révise ${A.sujet} pour un test le ${DUE.long}.
 
 Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
@@ -706,6 +742,8 @@ async function analyse(id){
   }
   b.busy = false; render();
 }
+/* la source d'une question : ce qui suit le dernier « — » de l'explication (convention des contenus) */
+const srcOf = q => (q.expl && q.expl.includes(" — ") ? q.expl.split(" — ").pop() : "").replace(/\.$/,"").trim();
 function copyText(att){
   const a = att.analysis, l = [];
   l.push(OUTIL.copie.titre + " (test du " + DUE.short + ")");
@@ -715,7 +753,7 @@ function copyText(att){
   const wrong = att.questions.filter(q => !q.correct);
   l.push(`ERREURS (${wrong.length}/${att.total})`);
   if (!wrong.length) l.push("Aucune erreur.");
-  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → ${q.liveFixed ? `corrigé en direct (j'avais écrit « ${q.liveSnap} », puis « ${q.user} »)` : `j'ai répondu « ${q.user || "rien"} »`}, attendu : ${q.answer}`));
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → ${q.liveFixed ? `corrigé en direct (j'avais écrit « ${q.liveSnap} », puis « ${q.user} »)` : `j'ai répondu « ${q.user || "rien"} »`}, attendu : ${q.answer}${srcOf(q) ? ` (${srcOf(q)})` : ""}`));
   return l.join("\n");
 }
 function copyFor(id){
@@ -733,7 +771,7 @@ function retryWrong(id){
 }
 
 /* ---------- voir mes erreurs (publication-github.md § 8) ---------- */
-function dxN(c){ return String(c).toLowerCase().replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,""); }
+function dxN(c){ return deAcc(String(c).toLowerCase().replace(/ß/g,"ss").normalize("NFC")); }
 function dxW(w){ return dxN(w).replace(/[.,!?;:«»"()…]/g,""); }
 function lev(a, b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,j)=>j); for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
 function lcsOps(A, B, eq){
@@ -783,7 +821,7 @@ function errCard(q){
     const cands = (Q.accept && Q.accept.length ? Q.accept : [q.answer]).filter(Boolean);
     right = cands.reduce((best, c) => lev(dxN(user), dxN(c)) < lev(dxN(user), dxN(best)) ? c : best, cands[0]);
     const d = dxDiff(user, right); U = d.U; R = d.R;
-    if (d.other) note = "Ce n'est pas la même phrase : relis le modèle et réécris-la en entier.";
+    if (d.other) note = OUTIL.noteAutre || "Ce n'est pas la même phrase : relis le modèle et réécris-la en entier.";
   }
   if (q.liveFixed) note = "Corrigé en direct : juste à la fin, mais avec de l'aide. Ce mot ne compte pas dans la note.";
   return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
@@ -798,7 +836,7 @@ function questionList(att){
   return (wrong.length ? dxLegend() : "") + list.map(q => q.correct ? revCard(q, !only) : errCard(q)).join("");
 }
 function revCard(q, showGoodAlways){
-  return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(q.user) : "—"}</p>${(!q.correct || showGoodAlways) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(q.answer)}</b></p>` : ""}<p class="rev-x">${esc(q.expl)}</p></div>`;
+  return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(q.user) : "—"}${q.typo ? " (faute de frappe acceptée)" : ""}</p>${(!q.correct || showGoodAlways) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(q.answer)}</b></p>` : ""}<p class="rev-x">${esc(q.expl)}</p></div>`;
 }
 function viewResults(){
   const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
@@ -848,7 +886,7 @@ function paperHtml(qs, part){
   const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
     ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
     : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
-  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b></div>`).join("")}</section>`).join("");
+  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b>${srcOf(q) ? ` <span class="hint">(${esc(srcOf(q))})</span>` : ""}</div>`).join("")}</section>`).join("");
   const head = `<h1>${esc(P.titre)}</h1><p class="meta">Prénom : ${esc(OUTIL.eleve)} · test du ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.court)} (${esc(DUE.short)})</title><style>
@@ -876,7 +914,7 @@ async function savePaper(part){
     if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
     else {
       S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
-      S.paperCopy = OUTIL.papier.code + "\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
+      S.paperCopy = OUTIL.papier.code + "\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.hint ? " (" + q.hint + ")" : ""}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
     }
   }
   render();
@@ -916,10 +954,12 @@ document.addEventListener("click", e => {
     case "cardShuffle": S.cards.order = shuffle(S.cards.order); S.cards.pos = 0; S.cards.flip = false; render(); break;
     case "diff": S.difficulty = v; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
     case "mode": S.mode = v; render(); break;
-    case "freeze": S.frozen = buildTest(S.selected, S.difficulty); render(); break;
+    case "count": S.count = +v; S.frozen = null; render(); break;
+    case "freeze": S.frozen = buildTest(S.selected, S.difficulty, S.count); render(); break;
     case "unfreeze": S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
     case "paper": savePaper(v); break;
-    case "start": S.rattrParent = null; startQuiz(S.frozen || buildTest(S.selected, S.difficulty), false); break;
+    case "start": S.rattrParent = null; startQuiz(S.frozen || buildTest(S.selected, S.difficulty, S.count), false); break;
+    case "uml": { const inp = document.getElementById("answer-input"); if (!inp || inp.disabled) return; const s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s; inp.value = inp.value.slice(0, s) + v + inp.value.slice(en); Q.typed = inp.value; inp.focus(); inp.setSelectionRange(s + 1, s + 1); const b = document.getElementById("validate-btn"); if (b) b.disabled = !Q.typed.trim(); updateLive(); break; }
     case "quit": S.quitAsk = true; render(); break;
     case "quitKeep": draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
     case "quitDrop": draftClear(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
@@ -931,7 +971,7 @@ document.addEventListener("click", e => {
     case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train" || S.mode === "live") validate(Q.picked); else render(); break; }
     case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
     case "dontknow": { const q = Q.questions[Q.i]; if (S.mode !== "exam"){ Q.ok = false; Q.liveFixed = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; draftSave(); render(); } else record("", false); break; }
-    case "typo": record(Q.typed, true); break;
+    case "typo": record(Q.typed, true, true); break;
     case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
     case "showErr": { const b = bilanState(v); b.errOnly = !errView(v); render(); break; }
     case "analyse": analyse(v); break;
