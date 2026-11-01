@@ -1,0 +1,1231 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"></head><body>
+<title>Puissances et racines TE3 · jeudi 05.11</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Règle logarithmique des puissances de dix : exposants négatifs en magenta, positifs en indigo, 10⁰ au centre.
+   Les calculs sont en chasse fixe, comme au cahier. */
+:root{
+  --paper:#F1F0F6; --sheet:#FFFFFF; --ink:#1A1834; --soft:#5B5878; --rule:#CFCCE0;
+  --pos:#3A3A96; --pos-wash:#E3E3F5; --neg:#A73A72; --neg-wash:#F7E1EC; --mark:#C99A00; --board:#1A1834;
+  --good:#11704B; --good-wash:#DCF1E6; --bad:#B23A26; --bad-wash:#F9E1DB; --on-accent:#FFFFFF;
+  --p-okdark:#0B5A3A; --p-ok:#2E9E62; --p-mid:#D9860B; --p-low:#C6382B; --p-lowsoft:#F2B9B2;
+  --display:'Familjen Grotesk','Arial Narrow',system-ui,sans-serif;
+  --body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F0E1C; --sheet:#1A1930; --ink:#E8E6F4; --soft:#A3A0C0; --rule:#2F2D4A;
+  --pos:#9C9CF2; --pos-wash:#24234A; --neg:#F08CBE; --neg-wash:#3A1D2E; --mark:#E6B82A; --board:#0A0916;
+  --good:#5ED3A0; --good-wash:#173326; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-accent:#0F0E1C;
+  --p-okdark:#3FCB86; --p-ok:#7EDCA8; --p-mid:#F2A93B; --p-low:#FF7A6B; --p-lowsoft:#5A2A26; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F0E1C; --sheet:#1A1930; --ink:#E8E6F4; --soft:#A3A0C0; --rule:#2F2D4A;
+  --pos:#9C9CF2; --pos-wash:#24234A; --neg:#F08CBE; --neg-wash:#3A1D2E; --mark:#E6B82A; --board:#0A0916;
+  --good:#5ED3A0; --good-wash:#173326; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-accent:#0F0E1C;
+  --p-okdark:#3FCB86; --p-ok:#7EDCA8; --p-mid:#F2A93B; --p-low:#FF7A6B; --p-lowsoft:#5A2A26; color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:620px;margin:0 auto;padding-block:18px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+.m{font-family:var(--mono);font-weight:500}
+.head{display:flex;gap:14px;align-items:center}
+.badge{width:60px;height:60px;flex:none;border-radius:50%;background:var(--board);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.badge small{font-size:11px;letter-spacing:1px;font-weight:700;color:var(--mark)}
+.badge b{font-family:var(--display);font-weight:700;font-size:26px}
+.head h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,7.5vw,36px);line-height:1;margin:0;text-wrap:balance}
+.head p{margin:4px 0 0;color:var(--soft);font-size:14px}
+.axis{display:block;width:100%;height:auto;margin:10px 0 16px}
+.screen{display:flex;flex-direction:column;gap:12px}
+.intro{margin:0;font-size:15.5px}
+.lab{font-family:var(--display);font-weight:700;font-size:19px;margin:12px 0 0}
+.fine{font-size:13px;color:var(--soft);margin:0}
+.warn{background:var(--bad-wash);border-left:3px solid var(--bad);padding:10px 12px;font-size:14px;border-radius:0 8px 8px 0;margin:0}
+.note{background:var(--pos-wash);border-radius:8px;padding:10px 12px;font-size:14px;margin:0}
+.back{align-self:flex-start;background:none;border:0;color:var(--pos);font-weight:700;padding:0;cursor:pointer}
+.cta{width:100%;padding:15px;border:0;border-radius:10px;background:var(--pos);color:var(--on-accent);font-family:var(--display);font-weight:700;font-size:18px;cursor:pointer}
+.cta:disabled{opacity:.45;cursor:not-allowed}
+.ghost{width:100%;padding:12px;border:1px solid var(--rule);border-radius:10px;background:var(--sheet);font-weight:700;font-size:14.5px;cursor:pointer}
+.ghost:disabled{opacity:.5;cursor:not-allowed}
+.ghost.small{font-size:13.5px;padding:10px}
+.ghost.danger{color:var(--bad)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+/* fiche */
+.entry{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.entry.open{border-color:var(--pos)}
+.entry-head{width:100%;display:flex;align-items:center;gap:12px;background:none;border:0;padding:14px;text-align:left;cursor:pointer}
+.entry-num{flex:none;min-width:38px;font-family:var(--mono);font-weight:600;font-size:13px;color:var(--pos);border:1px solid var(--pos);border-radius:20px;text-align:center;padding:1px 6px}
+.entry-num.miss{color:var(--neg);border-color:var(--neg)}
+.entry-title{flex:1;font-family:var(--display);font-weight:700;font-size:17px;line-height:1.2;min-width:0}
+.entry-body{padding:0 14px 14px}
+.pair{display:grid;grid-template-columns:1fr;gap:1px;padding:8px 0;border-top:1px solid var(--rule);font-size:15px}
+.pair-k{font-family:var(--mono);font-weight:600;color:var(--pos);overflow-wrap:anywhere}
+.astuce{margin:12px 0 0;padding:10px 12px;border-radius:8px;background:var(--pos-wash);font-size:14px}
+.astuce b{display:block;color:var(--pos);margin-bottom:2px}
+.astuce.neg{background:var(--neg-wash)} .astuce.neg b{color:var(--neg)}
+.tip{margin:0;padding:6px 0 6px 12px;border-left:3px solid var(--mark);font-size:15px}
+.src-date{font-weight:400;color:var(--soft);font-size:13px;font-family:var(--body)}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.photos figure{margin:0}.photos img{width:100%;height:auto;border-radius:6px;border:1px solid var(--rule);display:block}
+.photos .missing span{display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;max-width:100%;border:1px dashed var(--rule);border-radius:6px;color:var(--soft);font-size:13px;text-align:center;padding:8px}
+.photos figcaption{font-size:12.5px;color:var(--soft);margin-top:4px}
+.version{margin:4px 0 0;text-align:center;font-size:12.5px;color:var(--soft)}
+/* paquets */
+.decks{display:flex;flex-direction:column;gap:10px}
+.deck{position:relative;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 12px 12px 44px;cursor:pointer;display:flex;align-items:center;gap:10px;min-width:0}
+.deck.on{border-color:var(--pos);box-shadow:inset 0 0 0 1px var(--pos);background:var(--pos-wash)}
+.deck-box{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--on-accent);font-size:14px}
+.deck.on .deck-box{background:var(--pos);border-color:var(--pos)}
+.deck-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.deck-c{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--pos)}
+.deck-t{font-weight:700;font-size:14.5px;line-height:1.25}
+.deck-n{font-size:12.5px;color:var(--soft)}
+/* pastilles */
+.pst{flex:none;display:flex;flex-direction:column;align-items:center;gap:1px;width:64px}
+.pring{display:block}
+.pst-w{font-size:11px;font-weight:700;color:var(--soft);text-align:center;line-height:1.15}
+.pst-was{font-size:10.5px;color:var(--soft);text-align:center;line-height:1.1}
+.pglob{display:flex;gap:14px;align-items:center;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px}
+.pglob-t{min-width:0;font-size:14px}
+.pglob-t b{display:block;font-family:var(--display);font-size:17px}
+.plegend{font-size:13.5px;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:0 12px}
+.plegend summary{cursor:pointer;padding:10px 0;font-weight:700}
+.plegend p{margin:0 0 8px}
+.pdrop{background:var(--neg-wash);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:8px}
+.pdrop p{margin:0}
+/* cartes */
+.flash{position:relative;height:300px;perspective:1200px;cursor:pointer;border:0;background:none;padding:0;width:100%}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;background:var(--sheet);border:1px solid var(--rule);border-top:6px solid var(--neg);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:22px;transition:transform .45s;text-align:center;overflow:auto}
+.face.b{transform:rotateY(180deg);background:var(--pos-wash);border-color:var(--pos);border-top-color:var(--pos)}
+.flash.flipped .face.f{transform:rotateY(180deg)}
+.flash.flipped .face.b{transform:rotateY(360deg)}
+.face-tag{font-size:12px;font-weight:700;color:var(--soft)}
+.face-word{font-family:var(--mono);font-weight:600;font-size:24px;line-height:1.3;overflow-wrap:anywhere}
+.face-mini{font-size:14px;line-height:1.45}
+.face-hint{font-size:12px;color:var(--soft)}
+/* réglages */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;cursor:pointer}
+.opt.on{border-color:var(--pos);box-shadow:inset 0 0 0 1px var(--pos);background:var(--pos-wash)}
+.opt-e{grid-row:1/3;font-size:20px}
+.opt-main{font-weight:700}
+.opt-sub{font-size:13px;color:var(--soft)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg button{padding:11px 4px;border:1px solid var(--rule);border-radius:10px;background:var(--sheet);font-weight:700;cursor:pointer}
+.seg button.on{border-color:var(--pos);box-shadow:inset 0 0 0 1px var(--pos);background:var(--pos-wash);color:var(--pos)}
+.paper{background:var(--sheet);border:1px dashed var(--pos);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
+/* test en cours */
+.draft{background:var(--sheet);border:2px solid var(--mark);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.draft.alert{border-color:var(--bad)}
+.draft p{margin:0}
+.draft b{font-family:var(--display);font-size:17px}
+/* quiz */
+.qtop{display:flex;align-items:center;gap:10px}
+.quit{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid var(--rule);background:var(--sheet);cursor:pointer;color:var(--soft)}
+.bar{flex:1;height:10px;border-radius:5px;background:var(--sheet);border:1px solid var(--rule);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pos);transition:width .3s}
+.qn{font-size:13px;font-weight:700;color:var(--soft);font-variant-numeric:tabular-nums}
+.badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.num{font-family:var(--mono);font-weight:600;font-size:14px;background:var(--board);color:var(--mark);padding:2px 9px;border-radius:4px;font-variant-numeric:tabular-nums}
+.ref{font-size:12.5px;color:var(--soft)}
+.chg{font-size:12px;font-weight:700;color:var(--neg);border:1px solid var(--neg);border-radius:20px;padding:0 8px}
+.consigne{margin:0;font-size:14.5px;color:var(--soft)}
+.qword{font-family:var(--mono);font-weight:600;font-size:clamp(21px,6vw,28px);line-height:1.35;margin:0;overflow-wrap:anywhere}
+.qword.txt{font-family:var(--body);font-weight:700;font-size:clamp(19px,5.2vw,23px)}
+.qhint{margin:0;font-size:14px;color:var(--soft)}
+.choice{padding:14px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);text-align:left;font-size:16px;font-weight:700;cursor:pointer;line-height:1.35}
+.choice.expr{font-family:var(--mono);font-size:18px}
+.choice.sel{border-color:var(--pos);box-shadow:inset 0 0 0 2px var(--pos)}
+.choice.good{background:var(--good-wash);border-color:var(--good);color:var(--good)}
+.choice.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.choice.off{opacity:.5}
+.tinput{width:100%;padding:14px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);font-family:var(--mono);font-size:19px;font-weight:600;color:var(--ink)}
+.tinput.good{background:var(--good-wash);border-color:var(--good)}
+.tinput.bad{background:var(--bad-wash);border-color:var(--bad)}
+.keys{display:flex;flex-wrap:wrap;gap:6px}
+.keys button{min-width:44px;padding:9px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);font-family:var(--mono);font-weight:600;font-size:16px;cursor:pointer}
+.preview{font-family:var(--mono);font-size:15px;color:var(--soft);margin:0;min-height:1.4em}
+.fb{padding:14px;border-radius:10px;border:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
+.fb.ok{background:var(--good-wash);border-color:var(--good)}
+.fb.no{background:var(--bad-wash);border-color:var(--bad)}
+.fb-t{font-family:var(--display);font-weight:700;font-size:19px;margin:0}
+.fb p{margin:0}
+.fb-x{font-size:14px;color:var(--soft)}
+/* résultats */
+.scorebox{background:var(--board);border-radius:12px;padding:18px;text-align:center;border:4px solid #2F2D4A}
+.scorebox.rattr-box{border-color:var(--neg)}
+.score-n{font-family:var(--display);font-weight:700;font-size:58px;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.score-n small{font-size:30px;color:#A3A0C0}
+.score-note{display:inline-block;margin-top:8px;background:var(--mark);color:#1A1834;font-weight:800;padding:4px 14px;border-radius:4px}
+.rattr{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#F08CBE}
+.rev{display:flex;flex-direction:column;gap:9px}
+.revcard{background:var(--sheet);border:1px solid var(--rule);border-left:4px solid var(--bad);border-radius:8px;padding:11px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.revcard.ok{border-left-color:var(--good)}
+.revcard p{margin:0;font-size:14.5px}
+.rev-q{font-weight:700}
+.rev-good{color:var(--good)}
+.rev-x{font-size:13px!important;color:var(--soft)}
+/* bilan */
+.bilan{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bilan h3{font-family:var(--display);font-size:19px;margin:0}
+.bilan-lab{font-size:13px;font-weight:700;color:var(--soft);margin:4px 0 0}
+.bilan ul{margin:0;padding-left:18px}
+.bilan li{margin-bottom:4px;font-size:14.5px}
+.bilan-tip{background:var(--pos-wash);border-radius:8px;padding:10px 12px;font-size:14.5px;margin:0}
+textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:8px;padding:10px;background:var(--paper);color:var(--ink);font:13px/1.45 var(--mono)}
+/* scores */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:var(--board);border-radius:10px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:28px;line-height:1;color:var(--mark);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:#C9C6E0}
+.suivi{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.suivi select{width:100%;padding:10px;border-radius:8px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);font:inherit}
+.chartbox{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+.chartbox svg{display:block}
+.chartbox .pt{cursor:pointer}
+.ptdetail{font-size:14px;background:var(--paper);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.ptdetail p{margin:0}
+.heat{overflow-x:auto}
+.heat table{border-collapse:separate;border-spacing:3px;font-size:12.5px}
+.heat th{font-weight:700;color:var(--soft);text-align:left;white-space:nowrap;padding:2px 4px}
+.heat td{min-width:46px;text-align:center;border-radius:5px;padding:6px 3px;font-variant-numeric:tabular-nums;font-weight:700}
+.hc-low{background:var(--p-low);color:#fff}.hc-mid{background:var(--p-mid);color:#1A1834}.hc-ok{background:var(--p-ok);color:#08301E}.hc-none{background:transparent;color:var(--soft);font-weight:400}
+.resist{display:flex;flex-direction:column;gap:6px}
+.resist p{margin:0;font-size:14px;padding:6px 0;border-top:1px solid var(--rule)}
+.attempt{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.attempt-head{width:100%;display:flex;gap:10px;align-items:center;background:none;border:0;padding:12px;text-align:left;cursor:pointer}
+.attempt-left{flex:1;min-width:0}
+.attempt-left b{display:block;font-size:14.5px}
+.attempt-left span{display:block;font-size:12px;color:var(--soft)}
+.attempt-left .rattr-tag,.rattr-tag{display:inline-block;background:var(--neg);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px}
+.attempt-note{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:17px;color:var(--on-accent)}
+.attempt-note.good{background:var(--good)} .attempt-note.low{background:var(--bad)}
+.attempt-body{padding:0 12px 12px;display:flex;flex-direction:column;gap:9px}
+.confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;font-size:14px}
+.mini{padding:9px 14px;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);font-weight:700;cursor:pointer}
+.mini.yes{background:var(--bad);border-color:var(--bad);color:#fff}
+/* onglets */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--sheet);border-top:3px solid var(--pos);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabbar-in{max-width:620px;margin:0 auto;display:flex}
+.tab{flex:1;background:none;border:0;padding:8px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;color:var(--soft)}
+.tab-e{font-size:18px} .tab-l{font-size:11px;font-weight:700}
+.tab.on{color:var(--pos);background:var(--pos-wash)}
+/* voir mes erreurs : barré + fond foncé = faux ; souligné + fond clair = ce qu'il fallait */
+.dx-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0;font-size:13px;color:var(--soft)}
+.dx-line{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;align-items:baseline;margin:2px 0!important}
+.dx-lab{font-size:12.5px!important;font-weight:700;color:var(--soft)}
+.dx-ans{font-family:var(--mono);font-size:17px;font-weight:600;overflow-wrap:anywhere;line-height:1.7}
+.dx-ans.txt{font-family:var(--body)}
+.dx-bad{background:#A3241B;color:#fff;text-decoration:line-through;text-decoration-thickness:1px;border-radius:3px;padding:1px 3px}
+.dx-good{background:#D4F0E1;color:#08402A;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;border-radius:3px;padding:1px 3px;font-weight:800}
+.dx-none{font-style:italic;font-weight:400;color:var(--soft);font-family:var(--body)}
+@media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
+</style>
+
+<div class="wrap" id="app"></div>
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+/* ============================================================
+   MATHS — 10CR niveau 2 · TE 3 « NO – Puissances, racines »
+   Outil de révision de Livio — 10e HarmoS. Épreuve : jeudi 5 novembre 2026.
+   Paquets = les 6 objectifs de la feuille « Objectifs TE 3 », dans son ordre (demande du papa, 31.10.2026).
+   ============================================================ */
+const QUIZ_ID = "livio-quiz-maths-te3-puissances";
+const DUE = { iso:"2026-11-05", long:"jeudi 5 novembre", short:"05.11" };
+const HAS_CLAUDE = !!(window.claude && window.claude.use);
+const INDEX_KEY = QUIZ_ID + "-index";
+const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
+const DRAFT_KEY = QUIZ_ID + "-test-en-cours";
+const THEME = "TE3 — Puissances, notation scientifique, racines";
+const VERSION = { n:1, date:"31.10.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé */
+
+/* ---------- SOURCES : d'où vient le contenu ---------- */
+const SOURCES = [
+  { titre:"Photo 1 — feuille « Objectifs TE 3, NO – Puissances, racines »", recue:"31.10.2026", contenu:"Matière (fiches, livre, exercices 1 à 9, théorie) et les 6 objectifs : un paquet par objectif, dans le même ordre." },
+  { titre:"Photo 2 — fiche NO214 « Du Soleil à Pluton », corrigée", recue:"31.10.2026", contenu:"Tableau décimal → scientifique, questions a) et b) : objectifs 4 et 5." },
+  { titre:"Photo 3 — fiche NO215 « Diamètres de corps célestes », corrigée", recue:"31.10.2026", contenu:"Scientifique → décimal, classement, km en m : objectifs 4, 5 et 6." },
+  { titre:"Photo 4 — tableau des puissances de dix et de leurs noms", recue:"31.10.2026", contenu:"De 10⁻²⁴ à 10²⁴ : fiche, section « Noms des puissances de dix »." },
+  { titre:"Photo 5 — fiche « Écris en notation scientifique… » (titre non visible, probablement NO216) et NO218 « D'une notation à l'autre »", recue:"31.10.2026", contenu:"Pas encore corrigées par le maître : réponses calculées et vérifiées par programme. Objectif 5." },
+  { titre:"Photo 6 — théorie « 6. Racines » et exercices corrigés", recue:"31.10.2026", contenu:"Définitions de la racine carrée, cubique, n-ième ; racine d'un nombre négatif : objectif 2 et fiche." },
+  { titre:"Photo 7 — cahier, NO196 p. 66 (réponses corrigées)", recue:"31.10.2026", contenu:"Ses réponses au NO196 : objectifs 2 et 3." },
+  { titre:"Photo 8 — fiche NO210 « Puissances de dix »", recue:"31.10.2026", contenu:"Multiplications et divisions de puissances de dix, pas encore corrigées : objectif 6." },
+  { titre:"Photo 9 — exercice 9 « Calcule » (dossier distribué), corrigé, 13 points", recue:"31.10.2026", contenu:"Calculs avec racines et priorités : objectifs 1, 2 et 3." },
+  { titre:"Photo 10 — livre p. 66, NO196 « Applique-les ! »", recue:"31.10.2026", contenu:"Énoncés du NO196 : objectifs 2 et 3." },
+  { titre:"Photo 11 — théorie « Propriétés des racines » et exercices", recue:"31.10.2026", contenu:"√(a·b) = √a · √b et √(a/b) = √a / √b : objectif 3." },
+  { titre:"Photo 12 — livre, NO205 « Trouver la lettre »", recue:"31.10.2026", contenu:"Énoncés seulement, pas faits : réponses calculées par programme. Objectif 3." },
+  { titre:"Photo 13 — livre p. 68, NO207 « À la racine »", recue:"31.10.2026", contenu:"Énoncés seulement, pas faits : g) et j) (racine d'un nombre négatif) repris dans l'objectif 2." },
+  { titre:"Photo 14 — fiches NO198, NO201, NO202, corrigées", recue:"31.10.2026", contenu:"Puissances de nombres négatifs, racines carrées et cubiques : objectifs 1 et 2." },
+];
+const SOURCES_NOTE = "Chaque question reprend un exercice de ces documents, avec la même consigne et la même façon de faire ; quand c'est marqué « chiffres changés », seuls les nombres ont été remplacés, pour vérifier que tu sais refaire et pas seulement te souvenir. Toutes les réponses ont été calculées et vérifiées par un programme. Pas encore couverts, faute de photo : fiches 189, 190, 197, 199, 204, livre 221, exercices 1 à 8 du dossier distribué. L'objectif 6 (multiplier en notation scientifique) ne s'appuie pour l'instant que sur NO210 et NO215 c). La correction de chaque question indique d'où elle vient.";
+/* Photos : seulement dans la version Claude (privée), jamais sur le site public. */
+const PHOTOS = [
+  { titre:"Objectifs TE 3", url:"/_blob/9a16d79b4e6d67961ef2076ed87b76f6" }, { titre:"NO214", url:"/_blob/da17ef6e30b965a7631726ff1858c163" }, { titre:"NO215", url:"/_blob/c2f153b3284eff2f29d575302e534fd1" }, { titre:"Puissances de dix", url:"/_blob/9758113a5e4bf7f367709144e077e86f" },
+  { titre:"NO216 (?) et NO218", url:"/_blob/0b6a030616024c75e50a2c2842a305db" }, { titre:"6. Racines", url:"/_blob/4129e93527cceac3a4ca0532e5cd4c47" }, { titre:"NO196 au cahier", url:"/_blob/f41da15db151983521db093f69a0972e" }, { titre:"NO210", url:"/_blob/abff3ebe5bdb557dfc25045aeb91c21e" },
+  { titre:"Exercice 9", url:"/_blob/6fe3ceea2f8e6803db9fca68b176695c" }, { titre:"Livre p. 66", url:"/_blob/1c5aadb0706dc1d822cc57633b3d66a0" }, { titre:"Propriétés des racines", url:"/_blob/248a295354e92e6ef7f9357659856243" }, { titre:"NO205", url:"/_blob/d2ef735a5a0a4080e95f388f29b68b9d" },
+  { titre:"Livre p. 68", url:"/_blob/a2c41566368313d5e3cf8d5cd213cce3" }, { titre:"NO198, NO201, NO202", url:"/_blob/4cf19791b3f640c00ca84d0b94598589" },
+];
+
+/* ---------- CONTENU : un paquet par objectif ----------
+   front = énoncé (^ = exposant), back = réponses acceptées (1re = affichée), wrong = erreurs typiques,
+   mcqOnly = toujours à choix, expr = réponse en écriture (puissance, fraction, notation scientifique),
+   chg = chiffres changés par rapport à l'exercice d'origine (src). */
+const DECKS = [
+  { key:"o1", code:"Obj. 1", title:"Maîtriser les livrets (1 à 12)", src:"multiplications de tes exercices", consigne:"Calcule de tête :", items:[
+    { front:"4 · 5", back:["20"], wrong:["9","25","45"], expl:"4 · 5 = 20. C'est le calcul de √16 · √25.", src:"Propriétés des racines, √(16 · 25)" },
+    { front:"9 · 2", back:["18"], wrong:["11","92","81"], expl:"9 · 2 = 18. Dans (3 · √2)², tu calcules 9 · 2.", src:"exercice 9 j)" },
+    { front:"4 · 7", back:["28"], wrong:["11","24","47"], expl:"4 · 7 = 28. Dans (−2 · √7)², tu calcules 4 · 7.", src:"exercice 9 k)" },
+    { front:"3 · 12", back:["36"], wrong:["15","32","312"], expl:"3 · 12 = 36, d'où √3 · √12 = √36 = 6.", src:"Propriétés des racines, √3 · √12" },
+    { front:"3 · 5", back:["15"], wrong:["8","35","53"], expl:"3 · 5 = 15, d'où √(9 · 25) = 3 · 5 = 15.", src:"NO202 i)" },
+    { front:"7 · 7", back:["49"], wrong:["14","42","77"], expl:"7 · 7 = 49, donc √49 = 7.", src:"théorie « 6. Racines »" },
+    { front:"8 · 8", back:["64"], wrong:["16","56","88"], expl:"8 · 8 = 64, donc √8 · √8 = √64 = 8.", src:"Propriétés des racines, √8 · √8" },
+    { front:"9 · 9", back:["81"], wrong:["18","72","99"], expl:"9 · 9 = 81, donc √81 = 9.", src:"exercice 9 h)" },
+    { front:"11 · 11", back:["121"], wrong:["22","111","1111"], expl:"11 · 11 = 121, donc √121 = 11.", src:"NO201 a)" },
+    { front:"12 · 6", back:["72"], wrong:["18","66","62"], chg:true, expl:"12 · 6 = 72. Sur ta feuille de propriétés, 72 : 2 = 36, et 36 = 6 · 6.", src:"Propriétés des racines, √72 / √2" },
+  ]},
+  { key:"o2", code:"Obj. 2", title:"Quatre opérations, puissances, racines, priorités", src:"exercice 9, NO196, NO198, Racines", consigne:"Calcule :", items:[
+    { front:"√36 + √16", back:["10"], wrong:["√52","52","20"], chg:true, expl:"Les racines d'abord : √36 = 6 et √16 = 4. Puis 6 + 4 = 10. Même calcul que √49 + √25 = 12.", src:"exercice 9 a)" },
+    { front:"√(100 − 36)", back:["8"], wrong:["4","64","√64"], chg:true, expl:"Ce qui est sous la racine se calcule d'abord : 100 − 36 = 64, puis √64 = 8. Ce n'est pas 10 − 6.", src:"exercice 9 f)" },
+    { front:"√(64 + 4 · 9)", back:["10"], wrong:["26","20","14"], chg:true, expl:"Sous la racine, la priorité : 4 · 9 = 36, puis 64 + 36 = 100, et √100 = 10.", src:"exercice 9 i)" },
+    { front:"3 · √0,04", back:["0,6"], wrong:["6","0,12","60"], chg:true, expl:"√0,04 = 0,2 car 0,2 · 0,2 = 0,04. Puis 3 · 0,2 = 0,6. Sur ta feuille, 4 · √0,01 = 4 · 0,1 = 0,4.", src:"exercice 9 g)" },
+    { consigne:"Donne la réponse sous la forme d'une puissance si c'est possible ; sinon, effectue :", front:"5^2 + 5^2", back:["50"], wrong:["5^4","100","20"], chg:true, expl:"On ne peut pas additionner des puissances en additionnant les exposants : 5² + 5² = 25 + 25 = 50. Même chose que 3³ + 3³ = 54.", src:"NO196 c)" },
+    { consigne:"Donne la réponse sous la forme d'une puissance si c'est possible ; sinon, effectue :", front:"5^3 − 4^3", back:["61"], wrong:["1","1^3","9"], chg:true, expl:"5³ = 125 et 4³ = 64, puis 125 − 64 = 61. Comme 7³ − 6³ = 343 − 216 = 127.", src:"NO196 f)" },
+    { front:"−6^2", back:["−36"], wrong:["36","−12","12"], chg:true, expl:"Le carré ne touche que le 6 : −6² = −(6 · 6) = −36. Comme −7² = −49.", src:"NO198 f)" },
+    { front:"(−3)^3", back:["−27"], wrong:["27","−9","9"], chg:true, expl:"(−3)³ = (−3) · (−3) · (−3) = −27 : trois facteurs négatifs, le résultat est négatif. Comme (−5)³ = −125.", src:"NO198 g)" },
+    { front:"∛(−8)", back:["−2"], wrong:["2","−4","impossible"], chg:true, expl:"∛(−8) = −2 car (−2)³ = −8. Une racine cubique d'un nombre négatif existe. Comme ∛(−125) = −5.", src:"théorie « 6. Racines »" },
+    { consigne:"Réponds :", front:"√(−49) = ?", back:["impossible : aucun nombre au carré ne donne −49"], wrong:["−7","7","−7 et 7"], mcqOnly:true, chg:true, expl:"Un carré n'est jamais négatif : √(−49) n'existe pas. Sur ta feuille, √−36 = ∅.", src:"théorie « 6. Racines » et NO207 g) j)" },
+  ]},
+  { key:"o3", code:"Obj. 3", title:"Propriétés des puissances et des racines", src:"NO196, NO205, propriétés des racines, exercice 9", consigne:"Donne la réponse sous la forme d'une puissance :", items:[
+    { front:"3^4 · 3^2", back:["3^6"], expr:true, wrong:["3^8","9^6","3^2"], chg:true, expl:"Même base : on additionne les exposants. 4 + 2 = 6, donc 3⁶. Comme 4⁴ · 4² = 4⁶.", src:"NO196 b)" },
+    { front:"10^7 : 10^3", back:["10^4"], expr:true, wrong:["10^10","10^21","1^4"], chg:true, expl:"Même base : on soustrait les exposants. 7 − 3 = 4, donc 10⁴. Comme 10⁶ : 10² = 10⁴.", src:"NO196 j)" },
+    { front:"(10^2)^4", back:["10^8"], expr:true, wrong:["10^6","10^42","10^2"], chg:true, expl:"Puissance d'une puissance : on multiplie les exposants. 2 · 4 = 8, donc 10⁸. Comme (10³)² = 10⁶.", src:"NO196 n)" },
+    { front:"10^2 / 10^5", back:["10^(−3)"], expr:true, wrong:["10^3","10^7","10^(−7)"], chg:true, expl:"On soustrait : 2 − 5 = −3, donc 10⁻³. Comme 10³ / 10⁶ = 10⁻³.", src:"NO196 o)" },
+    { front:"3^2 · 4^2", back:["12^2"], expr:true, wrong:["7^2","12^4","7^4"], chg:true, expl:"Même exposant : on multiplie les bases. 3 · 4 = 12, donc 12². Comme 5² · 2² = 10².", src:"NO196 h)" },
+    { front:"3^2 / 5^2", back:["(3/5)^2"], expr:true, wrong:["(3/5)^4","(5/3)^2","(3/5)^1"], chg:true, expl:"Même exposant au numérateur et au dénominateur : (3/5)². Comme 2²/3² = (2/3)².", src:"NO196 q)" },
+    { consigne:"Remplace la lettre par un nombre pour que l'égalité soit vraie :", front:"2^3 · 2^x = 64", back:["3"], wrong:["8","2","61"], chg:true, expl:"64 = 2⁶. Donc 3 + x = 6 et x = 3. Comme 3³ · 3ˣ = 243 = 3⁵ donne x = 2.", src:"NO205 a)" },
+    { consigne:"Remplace la lettre par un nombre pour que l'égalité soit vraie :", front:"10^5 · 10^x = 10^2", back:["−3"], wrong:["3","7","−7"], chg:true, expl:"5 + x = 2, donc x = −3. Comme 10⁷ · 10ˣ = 10¹ donne x = −6.", src:"NO205 d)" },
+    { consigne:"Calcule :", front:"√50 / √2", back:["5"], wrong:["25","24","√48"], chg:true, expl:"√50 / √2 = √(50/2) = √25 = 5. Comme √72 / √2 = √36 = 6.", src:"Propriétés des racines" },
+    { consigne:"Calcule :", front:"(−2 · √5)^2", back:["20"], wrong:["−20","10","−10"], chg:true, expl:"(−2 · √5)² = (−2)² · (√5)² = 4 · 5 = 20 : le carré d'un nombre négatif est positif. Comme (−2 · √7)² = 28.", src:"exercice 9 k)" },
+  ]},
+  { key:"o4", code:"Obj. 4", title:"Classer des nombres (croissant, décroissant)", src:"NO214 a) b), NO215 b)", consigne:"Choisis :", items:[
+    { front:"Le plus grand de ces nombres :", back:["2,1·10^5"], wrong:["6,3·10^4","9,8·10^4","1,05·10^4"], mcqOnly:true, chg:true, expl:"On compare d'abord les exposants : 10⁵ est le plus grand. Comme pour ranger les diamètres du NO215.", src:"NO215 b)" },
+    { front:"Le plus petit de ces nombres :", back:["2,9·10^3"], wrong:["3,2·10^3","1,1·10^4","8,4·10^3"], mcqOnly:true, chg:true, expl:"Les trois en 10³ sont plus petits que 1,1 · 10⁴. Parmi eux, on compare les nombres devant : 2,9 < 3,2 < 8,4.", src:"NO215 b)" },
+    { front:"Range dans l'ordre croissant : 7,5·10^3 ; 1,2·10^4 ; 9·10^3", back:["7,5·10^3 < 9·10^3 < 1,2·10^4"], wrong:["1,2·10^4 < 7,5·10^3 < 9·10^3","9·10^3 < 7,5·10^3 < 1,2·10^4","7,5·10^3 < 1,2·10^4 < 9·10^3"], mcqOnly:true, chg:true, expl:"Croissant = du plus petit au plus grand. 7 500 < 9 000 < 12 000.", src:"NO215 b)" },
+    { front:"Range dans l'ordre décroissant : 4,1·10^9 ; 3,9·10^8 ; 5·10^9", back:["5·10^9 > 4,1·10^9 > 3,9·10^8"], wrong:["4,1·10^9 > 5·10^9 > 3,9·10^8","3,9·10^8 > 4,1·10^9 > 5·10^9","5·10^9 > 3,9·10^8 > 4,1·10^9"], mcqOnly:true, chg:true, expl:"Décroissant = du plus grand au plus petit. 3,9 · 10⁸ est le seul en 10⁸ : il est le plus petit.", src:"objectif 4 et NO214" },
+    { front:"Quel nombre vaut environ 6·10^8 ?", back:["578 000 000"], wrong:["6 080 000","61 000 000","5 900 000 000"], mcqOnly:true, chg:true, expl:"578 000 000 = 5,78 · 10⁸, donc environ 6 · 10⁸. Comme Mars : 227 940 000 ≈ 2 · 10⁸.", src:"NO214 a)" },
+    { front:"Lequel se situe entre 10^8 et 10^9 ?", back:["4,6·10^8"], wrong:["3,4·10^9","7,2·10^7","1,1·10^10"], mcqOnly:true, chg:true, expl:"Entre 10⁸ et 10⁹, c'est un nombre en « … · 10⁸ ».", src:"NO214 b)" },
+    { front:"Vénus est à 108 190 000 km du Soleil. Se situe-t-elle entre 10^8 et 10^9 km ?", back:["Oui, car 108 190 000 = 1,0819·10^8"], wrong:["Non, car 108 190 000 = 108,19·10^6","Non, elle est avant 10^8"], mcqOnly:true, expl:"108 190 000 = 1,0819 · 10⁸ : c'est plus que 10⁸ (100 000 000). Sur ta feuille, Vénus avait été oubliée.", src:"NO214 b)" },
+    { front:"Le plus grand : 9,9·10^5 ou 1,01·10^6 ?", back:["1,01·10^6"], wrong:["9,9·10^5","ils sont égaux"], mcqOnly:true, chg:true, expl:"On compare d'abord les exposants : 10⁶ > 10⁵. 1 010 000 > 990 000, même si 9,9 > 1,01.", src:"NO215 b) et d)" },
+  ]},
+  { key:"o5", code:"Obj. 5", title:"Notation décimale ↔ notation scientifique", src:"NO214, NO215 a), NO216 (?), NO218", consigne:"Écris en notation scientifique :", items:[
+    { front:"74 000 000", back:["7,4·10^7"], expr:true, wrong:["74·10^6","7,4·10^6","0,74·10^8"], chg:true, expl:"Le nombre devant doit être entre 1 et 10 : 7,4. La virgule recule de 7 rangs : 7,4 · 10⁷. Comme 58 000 000 = 5,8 · 10⁷.", src:"NO214, Mercure" },
+    { front:"213 500 000", back:["2,135·10^8"], expr:true, wrong:["213,5·10^6","2,135·10^7","21,35·10^7"], chg:true, expl:"2,135 · 10⁸ : un seul chiffre avant la virgule. Sur ta feuille, Vénus était écrite 108,19 · 10⁶, il fallait 1,0819 · 10⁸.", src:"NO214, Vénus" },
+    { front:"3,8 milliards", back:["3,8·10^9"], expr:true, wrong:["3,8·10^6","38·10^8","3,8·10^12"], chg:true, expl:"1 milliard = 10⁹, donc 3,8 milliards = 3,8 · 10⁹. Sur ta feuille, 4,5 milliards = 4,5 · 10⁹.", src:"NO216 e) et tableau des puissances de dix" },
+    { front:"250 millions", back:["2,5·10^8"], expr:true, wrong:["250·10^6","2,5·10^6","25·10^7"], chg:true, expl:"250 millions = 250 000 000 = 2,5 · 10⁸. La consigne demande la notation scientifique, pas l'écriture décimale.", src:"NO216 b)" },
+    { front:"0,000032", back:["3,2·10^(−5)"], expr:true, wrong:["3,2·10^5","3,2·10^(−6)","32·10^(−6)"], chg:true, expl:"Nombre plus petit que 1 : l'exposant est négatif. La virgule avance de 5 rangs : 3,2 · 10⁻⁵. Sur ta feuille, le « − » manquait.", src:"NO216 f)" },
+    { front:"0,0048", back:["4,8·10^(−3)"], expr:true, wrong:["4,8·10^3","4,8·10^(−4)","48·10^(−4)"], chg:true, expl:"0,0048 = 4,8 · 10⁻³ (3 rangs). Comme 0,00205 = 2,05 · 10⁻³.", src:"NO216 g) et NO218 e)" },
+    { front:"40 007 000 000", back:["4,0007·10^10"], expr:true, wrong:["4,0007·10^9","4,0007·10^6","40,007·10^9"], chg:true, expl:"Compte les rangs après le 4 : 10 chiffres, donc 4,0007 · 10¹⁰. Sur ta feuille, 60 005 000 000 = 6,0005 · 10¹⁰, et pas 10⁶.", src:"NO218 i)" },
+    { consigne:"Écris en notation décimale :", front:"6,25·10^4", back:["62 500"], wrong:["625 000","6 250","6 250 000"], chg:true, expl:"10⁴ : la virgule avance de 4 rangs. 6,25 → 62 500. Comme 1,2104 · 10⁴ = 12 104.", src:"NO215 a)" },
+    { consigne:"Écris en notation décimale :", front:"2,7·10^9", back:["2 700 000 000"], wrong:["27 000 000 000","270 000 000","2 700 000"], chg:true, expl:"10⁹ = 1 milliard : 2,7 · 10⁹ = 2 700 000 000 (9 rangs après le 2). Sur ta feuille, 3,2 · 10⁹ = 3 200 000 000.", src:"NO218 h)" },
+    { consigne:"Écris en notation décimale :", front:"6,4·10^(−5)", back:["0,000064"], wrong:["0,0000064","0,00064","640 000"], chg:true, expl:"10⁻⁵ : la virgule recule de 5 rangs. 6,4 → 0,000064. Comme 7,5 · 10⁻⁵ = 0,000075.", src:"NO218 f)" },
+  ]},
+  { key:"o6", code:"Obj. 6", title:"Multiplier en notation scientifique", src:"NO210, NO215 c)", consigne:"Écris avec des puissances de dix, puis donne le résultat sous la forme 10ⁿ :", items:[
+    { front:"10 000 · 1000", back:["10^7","10 000 000"], expr:true, wrong:["10^12","10^1","10^4"], chg:true, expl:"10⁴ · 10³ = 10⁴⁺³ = 10⁷ = 10 000 000. Comme 100 000 · 1000 = 10⁸.", src:"NO210 b)" },
+    { front:"100 000 · 0,01", back:["10^3","1000"], expr:true, wrong:["10^(−7)","10^7","10^(−3)"], chg:true, expl:"0,01 = 10⁻². 10⁵ · 10⁻² = 10⁵⁻² = 10³ = 1000.", src:"NO210 c)" },
+    { front:"0,01 · 0,0001", back:["10^(−6)","0,000001"], expr:true, wrong:["10^6","10^(−2)","10^(−8)"], chg:true, expl:"10⁻² · 10⁻⁴ = 10⁻² ⁺ ⁽⁻⁴⁾ = 10⁻⁶ = 0,000001.", src:"NO210 e)" },
+    { front:"0,001 : 100", back:["10^(−5)","0,00001"], expr:true, wrong:["10^(−1)","10^5","10^1"], chg:true, expl:"10⁻³ : 10² = 10⁻³⁻² = 10⁻⁵ = 0,00001. Comme 0,01 : 100 = 10⁻⁴.", src:"NO210 h)" },
+    { front:"10 000 : 0,001", back:["10^7","10 000 000"], expr:true, wrong:["10^1","10","10^(−7)"], chg:true, expl:"10⁴ : 10⁻³ = 10⁴⁻⁽⁻³⁾ = 10⁴⁺³ = 10⁷. Moins un nombre négatif, ça fait plus. Sur ta feuille, 10⁵ : 10⁻² = 10⁷, et pas 10³.", src:"NO210 i)" },
+    { front:"100 : 100 000", back:["10^(−3)","0,001"], expr:true, wrong:["10^3","1000","10^7"], chg:true, expl:"10² : 10⁵ = 10²⁻⁵ = 10⁻³ = 0,001. On divise un petit nombre par un grand : le résultat est plus petit que 1. Sur ta feuille, 10 : 10 000 = 10⁻³.", src:"NO210 j)" },
+    { front:"0,1^3", back:["10^(−3)","0,001"], expr:true, wrong:["10^3","0,3","10^(−4)"], chg:true, expl:"0,1³ = 10⁻¹ · 10⁻¹ · 10⁻¹ = 10⁻³ = 0,001. Comme 0,01³ = 10⁻⁶.", src:"NO210 g)" },
+    { consigne:"Exprime en mètres, en notation scientifique :", front:"3 476 km", back:["3,476·10^6"], expr:true, wrong:["3,476·10^3","3,476·10^9","34,76·10^5"], chg:true, expl:"3 476 km = 3,476 · 10³ km, et 1 km = 10³ m. Donc 3,476 · 10³ · 10³ = 3,476 · 10⁶ m. Comme Mercure : 4,878 · 10⁶ m.", src:"NO215 c)" },
+    { consigne:"Exprime en mètres, en notation scientifique :", front:"1,2·10^5 km", back:["1,2·10^8"], expr:true, wrong:["1,2·10^15","1,2·10^2","1,2·10^5"], chg:true, expl:"On multiplie par 10³ : 1,2 · 10⁵ · 10³ = 1,2 · 10⁵⁺³ = 1,2 · 10⁸ m. Les exposants s'additionnent.", src:"NO215 c)" },
+  ]},
+];
+
+/* références stables (identiques à l'écran, sur la feuille papier, au corrigé et dans l'historique) */
+(function annotate(){
+  DECKS.forEach(d => {
+    d.items.forEach((it, i) => { it.consigne = it.consigne || d.consigne; it.ref = String.fromCharCode(97 + i) + ")"; it.key = d.key + ":" + it.ref; });
+  });
+})();
+const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
+const ALL_KEYS = DECKS.map(d => d.key);
+const ITEM = {}; DECKS.forEach(d => d.items.forEach(it => ITEM[it.key] = { it, d }));
+
+/* ---------- CONTENU : fiche (une section par objectif, avec la théorie des photos) ---------- */
+const FICHE = [
+  { num:"1", titre:"Les livrets de 1 à 12", pairs:[
+    ["Carrés", "1 · 4 · 9 · 16 · 25 · 36 · 49 · 64 · 81 · 100 · 121 · 144"],
+    ["√ et livrets", "√49 = 7 car 7² = 49 · √121 = 11 car 11² = 121"]],
+    astuce:"Toutes les racines de ta fiche reposent sur les livrets : sans eux, pas de √. Récite-les à voix haute, un livret par jour jusqu'à jeudi." },
+  { num:"2", titre:"Opérations, puissances, racines, priorités", pairs:[
+    ["Racine carrée", "La racine carrée de a est le nombre positif dont le carré est égal à a : √a = b ⇔ b² = a"],
+    ["Racine cubique", "∛a = b ⇔ b³ = a. Exemple : ∛64 = 4 car 4³ = 64"],
+    ["En général", "ⁿ√a = b ⇔ bⁿ = a. Par convention, ²√a = √a"],
+    ["√−36", "∅ : aucun nombre au carré ne donne un nombre négatif"],
+    ["∛−125", "= −5 car (−5)³ = −125"],
+    ["−7² et (−8)²", "−7² = −49 ; (−8)² = 64"],
+    ["Priorité", "1) ( ) et ce qui est sous la racine 2) puissances et racines 3) · et : 4) + et −"]],
+    astuceNeg:true, astuce:"Sur l'exercice 9 g) : 4 · √0,01 = 4 · 0,1 = 0,4. √0,01 = 0,1 car 0,1 · 0,1 = 0,01. Et √(100 − 64) se calcule sous la racine d'abord : √36 = 6." },
+  { num:"3", titre:"Propriétés des puissances et des racines", pairs:[
+    ["aᵐ · aⁿ = aᵐ⁺ⁿ", "2² · 2⁵ = 2⁷"],
+    ["aᵐ : aⁿ = aᵐ⁻ⁿ", "10⁶ : 10² = 10⁴ · 10³/10⁶ = 10⁻³"],
+    ["(aᵐ)ⁿ = aᵐ·ⁿ", "(10³)² = 10⁶"],
+    ["aⁿ · bⁿ = (a · b)ⁿ", "5² · 2² = 10² · 2²/3² = (2/3)²"],
+    ["a² + a²", "pas de règle : 3³ + 3³ = 27 + 27 = 54"],
+    ["√(a · b) = √a · √b", "√(16 · 25) = 4 · 5 = 20"],
+    ["√(a/b) = √a / √b", "√(16/9) = 4/3 · √72 / √2 = √36 = 6"],
+    ["(√a)² = a", "(√9)² = 9 · (3 · √2)² = 9 · 2 = 18"]],
+    astuce:"Trouver la lettre (NO205) : écris les deux côtés avec la même base, puis compare les exposants. 3³ · 3ˣ = 243 = 3⁵, donc 3 + x = 5." },
+  { num:"4", titre:"Classer des nombres", pairs:[
+    ["1) les exposants", "1,2 · 10⁵ > 5,12 · 10⁴ : 10⁵ gagne"],
+    ["2) le nombre devant", "même exposant : 4,686 · 10⁴ < 5,12 · 10⁴"],
+    ["Croissant", "du plus petit au plus grand (<)"],
+    ["Décroissant", "du plus grand au plus petit (>)"]],
+    astuce:"NO214 b) : Vénus (1,0819 · 10⁸) est bien entre 10⁸ et 10⁹. Écris chaque nombre en notation scientifique avant de comparer." },
+  { num:"5", titre:"Notation décimale ↔ notation scientifique", pairs:[
+    ["Forme", "a · 10ⁿ, avec a entre 1 et 10 (un seul chiffre avant la virgule)"],
+    ["58 000 000", "= 5,8 · 10⁷"],
+    ["0,00205", "= 2,05 · 10⁻³ : nombre plus petit que 1 → exposant négatif"],
+    ["1,2104 · 10⁴", "= 12 104"],
+    ["7,5 · 10⁻⁵", "= 0,000075"]],
+    astuceNeg:true, astuce:"Sur ta fiche NO216 et NO218 : 0,000015 m = 1,5 · 10⁻⁵ (le « − » manquait) ; 108 190 000 = 1,0819 · 10⁸ (pas 108,19 · 10⁶) ; 3,2 · 10⁹ = 3 200 000 000 ; 60 005 000 000 = 6,0005 · 10¹⁰. Compte les rangs un par un." },
+  { num:"6", titre:"Multiplier en notation scientifique", pairs:[
+    ["10 000 · 100", "= 10⁴ · 10² = 10⁴⁺² = 10⁶ = 1 000 000"],
+    ["10⁴ · 10⁻³", "= 10¹ = 10"],
+    ["10⁵ : 10⁻²", "= 10⁵⁻⁽⁻²⁾ = 10⁷"],
+    ["10 : 10 000", "= 10¹⁻⁴ = 10⁻³ = 0,001"],
+    ["km → m", "12 104 km = 1,2104 · 10⁴ · 10³ m = 1,2104 · 10⁷ m"]],
+    astuceNeg:true, astuce:"Sur NO210 i) et j) : diviser par 10⁻², c'est ajouter 2 à l'exposant (10⁷, pas 10³) ; 10 : 10 000 donne un résultat plus petit que 1 (10⁻³, pas 10³)." },
+  { num:"10ⁿ", titre:"Noms des puissances de dix", pairs:[
+    ["10³ · 10⁶ · 10⁹", "mille · million · milliard"],
+    ["10¹² · 10¹⁵ · 10¹⁸", "billion · billiard · trillion"],
+    ["10⁻¹ · 10⁻² · 10⁻³", "dixième · centième · millième"],
+    ["10⁻⁶ · 10⁻⁹", "millionième · milliardième"]] },
+  { num:"manque", titre:"Pas encore dans l'outil", miss:true, tips:[
+    "Fiches 189, 190, 197, 199, 204, livre 221 et exercices 1 à 8 du dossier : pas encore photographiés.",
+    "Objectif 6 : aucun calcul du type (2 · 10³) · (3 · 10⁴) dans les photos reçues. Il est sans doute dans le livre 221 ou les exercices 1 à 8 : à envoyer pour l'ajouter.",
+    "NO205 et NO207 ne sont pas faits : leurs réponses sont calculées par programme, pas corrigées en classe."] },
+  { num:"05.11", titre:"Le jour de l'épreuve", tips:[
+    "Relis la consigne : « sous la forme d'une puissance » (10⁴) n'est pas « effectue » (10 000).",
+    "Notation scientifique : un seul chiffre avant la virgule, et un exposant négatif pour un nombre plus petit que 1.",
+    "Écris tes étapes : 10⁴ · 10⁻³ = 10⁴⁺⁽⁻³⁾ = 10¹."] },
+];
+
+const DIFFICULTIES = {
+  easy:{ label:"Échauffement", sub:"Je choisis parmi les réponses proposées", emoji:"🟢", shape:"circle" },
+  normal:{ label:"Entraînement", sub:"Je choisis et j'écris", emoji:"🔵", shape:"square" },
+  hard:{ label:"Niveau épreuve", sub:"J'écris toutes les réponses", emoji:"🔴", shape:"diamond" },
+};
+const MODES = {
+  train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
+  exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
+};
+const ORDERS = {
+  paper:{ label:"Comme la feuille papier", sub:"Même ordre et mêmes numéros sur papier et à l'écran", emoji:"📝" },
+  mixed:{ label:"Mélangé", sub:"Pour vérifier que tu ne réponds pas par habitude", emoji:"🔀" },
+};
+const LIMITS = [["3","3"],["5","5"],["8","8"],["all","Tout"]];
+
+/* ---------- utilitaires ---------- */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","+":"⁺","−":"⁻","-":"⁻"};
+function uni(s){ return String(s == null ? "" : s).replace(/\^\(([^)]*)\)|\^(-?[0-9]+)/g, (m, a, b) => [...(a != null ? a : b)].map(c => SUP[c] || c).join("")); }
+const UNSUP = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-","⁺":"+"};
+function normMath(s){
+  let t = String(s || "").toLowerCase().trim();
+  t = t.replace(/^[a-z]\s*=\s*/, "");
+  t = t.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g, m => "^(" + [...m].map(c => UNSUP[c]).join("") + ")");
+  t = t.replace(/[−–—]/g, "-").replace(/[×*∙•]/g, "·").replace(/(\d)\s*x\s*(\d)/g, "$1·$2").replace(/[\s'’]/g, "");
+  t = t.replace(/,/g, ".").replace(/:/g, "/");
+  t = t.replace(/\^\((-?\d+)\)/g, "^$1").replace(/^\+/, "");
+  if (/^-?\d+(\.\d+)?$/.test(t)) t = String(parseFloat(t));
+  return t;
+}
+function matchAnswer(input, q){
+  if (!input || !String(input).trim()) return false;
+  const me = normMath(input);
+  return q.accept.some(a => normMath(a) === me);
+}
+function shuffle(arr){ const a = [...arr]; for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function pickOptions(good, wrong, pool){
+  const seen = new Set([normMath(good)]), out = [];
+  const add = v => { if (v == null || out.length >= 3) return; const k = normMath(v); if (seen.has(k)) return; seen.add(k); out.push(v); };
+  if (wrong && wrong.length){ shuffle(wrong).forEach(add); return shuffle([good, ...out]); }
+  shuffle(pool).forEach(x => add(x.back[0]));
+  return shuffle([good, ...out]);
+}
+const noteFrom = r => Math.round((1 + 5*r)*2)/2;
+const fmtNote = n => Number(n).toFixed(1).replace(".", ",");
+const p2 = x => String(x).padStart(2,"0");
+function dateLabel(ts){ const d = new Date(ts); return `${p2(d.getDate())}.${p2(d.getMonth()+1)}.${d.getFullYear()} · ${p2(d.getHours())}h${p2(d.getMinutes())}`; }
+function dayKey(ts){ const d = new Date(ts); return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`; }
+function dayShort(ts){ const d = new Date(ts); return `${p2(d.getDate())}.${p2(d.getMonth()+1)}`; }
+const isExpr = s => /[\d)]\^|[·:+−\/√∛<>]|^\(/.test(String(s));
+const isText = s => /[a-zà-ÿ]{4}/i.test(String(s));
+
+/* ---------- fabrication du test ---------- */
+function sampleDeck(d, n){
+  const items = d.items.map((it, idx) => ({ it, idx }));
+  if (n === "all" || items.length <= +n) return items.map(x => x.it);
+  const groups = []; let last = null;
+  items.forEach(x => { const c = x.it.consigne; if (c !== last){ groups.push([]); last = c; } groups[groups.length-1].push(x); });
+  const pools = groups.map(g => shuffle(g)), picked = []; let gi = 0;
+  while (picked.length < +n && pools.some(p => p.length)){ const p = pools[gi % pools.length]; if (p.length) picked.push(p.pop()); gi++; }
+  return picked.sort((a,b) => a.idx - b.idx).map(x => x.it);
+}
+function makeQ(it, d, difficulty, i){
+  const asMcq = it.mcqOnly || difficulty === "easy" || (difficulty === "normal" && Math.random() < 0.5);
+  const q = { id:"q"+(i+1), num:i+1, ex:0, exTitle:d.title, deckKey:d.key, tag:d.key, code:d.code, ref:d.code + " " + it.ref, card:it.key, consigne:it.consigne,
+    word:it.front, prompt:`${it.consigne} ${uni(it.front)}`, answer:it.back[0], chg:!!it.chg, mcqOnly:!!it.mcqOnly,
+    expl:it.expl + " — " + (it.chg ? "même exercice que " : "") + it.src + "." , expr:!!it.expr };
+  if (asMcq){ q.type = "mcq"; q.options = pickOptions(it.back[0], it.wrong, d.items); }
+  else { q.type = "type"; q.accept = it.back; }
+  return q;
+}
+function numberQs(list){
+  let ex = 0, lastBlock = null;
+  list.forEach((q, i) => { const block = q.deckKey + "|" + q.consigne; if (block !== lastBlock){ ex++; lastBlock = block; } q.ex = ex; q.num = i + 1; q.id = "q" + (i+1); });
+  return list;
+}
+function buildTest(keys, difficulty, order, limit){
+  let list = [];
+  DECKS.filter(d => keys.includes(d.key)).forEach(d => sampleDeck(d, limit).forEach(it => list.push({ it, d })));
+  if (order === "mixed") list = shuffle(list);
+  return numberQs(list.map(({ it, d }, i) => makeQ(it, d, difficulty, i)));
+}
+function buildFromCards(cardKeys, difficulty){
+  return numberQs(cardKeys.filter(k => ITEM[k]).map((k, i) => makeQ(ITEM[k].it, ITEM[k].d, difficulty, i)));
+}
+
+/* ---------- stockage : db privée de l'utilisateur, sinon navigateur, sinon mémoire ---------- */
+const store = {
+  mode:"memory", col:null, mem:{},
+  async init(){
+    try {
+      if (window.claude && window.claude.use){
+        const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+        if (db && user){ const uid = await user.id(); if (uid){ this.col = db.collection("data/users/" + uid); this.mode = "db"; return; } }
+      }
+    } catch(e){}
+    try { localStorage.setItem(QUIZ_ID + "-probe","1"); localStorage.removeItem(QUIZ_ID + "-probe"); this.mode = "local"; } catch(e){ this.mode = "memory"; }
+  },
+  async list(){
+    if (this.mode === "db"){ const snap = await this.col.limit(1000).get(); return snap.docs.filter(d => d.id.startsWith(ATTEMPT_PREFIX)).map(d => d.data()).filter(Boolean); }
+    if (this.mode === "local"){ const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); return idx.map(id => { try { return JSON.parse(localStorage.getItem(ATTEMPT_PREFIX + id)); } catch(e){ return null; } }).filter(Boolean); }
+    return Object.values(this.mem);
+  },
+  async save(att){
+    if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + att.id).set(att); return; }
+    if (this.mode === "local"){
+      localStorage.setItem(ATTEMPT_PREFIX + att.id, JSON.stringify(att));
+      const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); if (!idx.includes(att.id)) idx.unshift(att.id);
+      localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return;
+    }
+    this.mem[att.id] = att;
+  },
+  async remove(id){
+    if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + id).delete(); return; }
+    if (this.mode === "local"){ localStorage.removeItem(ATTEMPT_PREFIX + id); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]").filter(x => x !== id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return; }
+    delete this.mem[id];
+  },
+};
+
+/* ---------- état ---------- */
+const S = {
+  screen:"fiche", ficheOpen:-1,
+  selected:[...ALL_KEYS],
+  difficulty:"normal", mode:"train", order:"paper", limit:"all",
+  frozen:null, paperMsg:"", paperCopy:"",
+  quiz:null, rattrapage:false, rattrLabel:"", rattrParent:null, lastResult:null, storeMsg:"",
+  attempts:[], loaded:false, loadErr:"",
+  cards:{ order:[], key:"", pos:0, flip:false },
+  scores:{ open:null, exportOpen:false, confirm:false, chap:"all", filter:"all", point:null },
+  bilan:{}, draft:null, draftAlert:false, draftAsk:false, draftErr:"", quitAsk:false,
+};
+function deckLabel(keys){
+  if (keys.length === ALL_KEYS.length) return "Tout le TE3";
+  if (keys.length > 3) return keys.length + " objectifs";
+  return keys.map(k => DECK[k].code).join(" + ");
+}
+
+/* ---------- test en cours gardé (appareil + Claude) ---------- */
+function draftDetail(Q){ return Q.detail.map(x => ({ u:x.user, c:x.correct, t:!!x.typo })); }
+function draftPayload(){
+  const Q = S.quiz;
+  return { saved:Date.now(), questions:Q.questions, i:Q.i, picked:Q.picked, typed:Q.typed, checked:Q.checked, ok:Q.ok, answers:draftDetail(Q),
+    label:Q.label, keys:Q.keys, difficulty:S.difficulty, mode:S.mode, order:S.order, rattrapage:S.rattrapage, parent:S.rattrParent };
+}
+let draftChain = Promise.resolve();
+function draftWrite(obj){
+  let ok = false;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(obj)); ok = true; } catch(e){}
+  if (store.mode === "db"){ ok = true; draftChain = draftChain.then(() => store.col.doc(DRAFT_KEY).set(obj)).catch(() => {}); }
+  if (store.mode === "memory" && !ok) S.draftErr = "Je n'arrive pas à garder ce test sur cet appareil : ne ferme pas la page avant la fin.";
+  else S.draftErr = "";
+}
+function draftSave(){ if (S.quiz && !S.quiz.done) draftWrite(draftPayload()); }
+function draftClear(){ S.draft = null; draftWrite({ vide:true, saved:Date.now() }); }
+async function draftPick(){
+  let a = null, b = null;
+  try { a = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch(e){}
+  if (store.mode === "db"){ try { const doc = await store.col.doc(DRAFT_KEY).get(); b = doc && doc.exists !== false ? (typeof doc.data === "function" ? doc.data() : doc) : null; } catch(e){} }
+  const best = [a, b].filter(x => x && x.saved).sort((x,y) => y.saved - x.saved)[0];
+  S.draft = best && !best.vide && best.questions ? best : null;
+}
+function draftResume(){
+  const d = S.draft; if (!d) return;
+  S.difficulty = d.difficulty; S.mode = d.mode; S.order = d.order || "paper";
+  S.rattrapage = !!d.rattrapage; S.rattrParent = d.parent || null;
+  const detail = d.answers.map((a, k) => { const q = d.questions[k]; return { num:q.num, ex:q.ex, ref:q.ref, prompt:q.prompt, user:a.u, answer:q.answer, correct:a.c, typo:a.t, expl:q.expl, tag:q.tag, card:q.card, qtype:q.type, question:q }; });
+  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, detail, finishing:false, done:false, label:d.label, keys:d.keys || [] };
+  S.lastResult = null; S.storeMsg = ""; S.screen = "quiz"; S.quitAsk = false; S.draftAlert = false;
+  render(); window.scrollTo(0,0);
+}
+function draftBanner(){
+  const d = S.draft; if (!d || S.screen === "quiz") return "";
+  return `<div class="draft${S.draftAlert ? " alert" : ""}">${S.draftAlert ? `<p class="warn">Un seul test à la fois : reprends ce test ou abandonne-le avant d'en lancer un autre.</p>` : ""}
+    <b>⏸ Tu as un test en cours</b><p class="fine">${esc(d.label)} · ${esc(DIFFICULTIES[d.difficulty].label)} · ${esc(MODES[d.mode].label)}${d.rattrapage ? " · rattrapage" : ""} · ${d.answers.length} sur ${d.questions.length} répondues · ${dateLabel(d.saved)}</p>
+    <button class="cta" data-act="draftResume">Reprendre mon test</button>
+    ${S.draftAsk ? `<div class="confirm"><span>Abandonner ce test ? Les réponses seront effacées.</span><button class="mini yes" data-act="draftDrop">Abandonner</button><button class="mini" data-act="draftKeep">Non</button></div>` : `<button class="ghost small" data-act="draftAsk">Abandonner</button>`}</div>`;
+}
+function guardStart(fn){ if (S.draft){ S.draftAlert = true; if (["quiz","results"].includes(S.screen)) S.screen = "home"; render(); window.scrollTo(0,0); return; } fn(); }
+
+/* ---------- suivi graphique (un anneau par objectif, « écrit ») ---------- */
+const tests = () => S.attempts.filter(a => !a.rattrapage).sort((a,b) => a.date - b.date);
+function rattrOf(att){ return S.attempts.filter(r => r.rattrapage && r.parent === att.id).sort((a,b) => a.date - b.date); }
+function testScore(att){
+  const total = att.total, base = att.questions.filter(q => q.correct).length, wrongCards = new Set(att.questions.filter(q => !q.correct).map(q => q.card));
+  const fixed = new Set(), steps = [];
+  rattrOf(att).forEach(r => { r.questions.forEach(q => { if (q.correct && wrongCards.has(q.card)) fixed.add(q.card); }); steps.push({ att:r, right:r.score, total:r.total, note:noteFrom((base + fixed.size)/total) }); });
+  return { note:att.note, base, total, steps, final: steps.length ? steps[steps.length-1].note : att.note };
+}
+function cardHist(list){
+  const h = {};
+  list.forEach(a => a.questions.forEach(q => { if (!q.card) return; (h[q.card] = h[q.card] || []).push({ date:a.date, ok:q.correct, wrote:q.qtype === "type" || (q.question && q.question.mcqOnly) }); }));
+  return h;
+}
+function cardState(hs){
+  if (!hs || !hs.length) return "none";
+  const last = hs[hs.length-1]; if (!last.ok) return "bad";
+  if (!last.wrote) return "route";
+  for (let k = hs.length - 2; k >= 0; k--){ if (!hs[k].ok) break; if (hs[k].wrote && dayKey(hs[k].date) !== dayKey(last.date)) return "acq"; }
+  return "route";
+}
+function lvlOf(right, acq, total, posed){
+  if (!posed) return "start";
+  const r = right/total, n = noteFrom(r);
+  if (noteFrom(acq/total) >= 5) return "okdark";
+  return n >= 5 ? "ok" : n >= 4 ? "mid" : "low";
+}
+const LVL_WORD = { start:"à commencer", low:"à revoir", mid:"en route", ok:"réussi", okdark:"OK ✓" };
+const LVL_RANK = { start:0, low:1, mid:2, ok:3, okdark:3 };
+function chapSummary(key, list){
+  const h = cardHist(list || tests()), items = DECK[key].items;
+  let acq = 0, route = 0, bad = 0, none = 0;
+  items.forEach(it => { const s = cardState(h[it.key]); if (s === "acq") acq++; else if (s === "route") route++; else if (s === "bad") bad++; else none++; });
+  const total = items.length, right = acq + route, posed = total - none;
+  return { key, acq, route, bad, none, total, right, posed, state:lvlOf(right, acq, total, posed), note: posed ? noteFrom(right/total) : null };
+}
+function prevSummary(key){
+  const t = tests(), touching = t.filter(a => a.questions.some(q => q.tag === key));
+  if (touching.length < 2) return null;
+  const lastId = touching[touching.length-1].id;
+  return { sum:chapSummary(key, t.filter(a => a.id !== lastId)), date:touching[touching.length-2].date };
+}
+function dropOf(key){
+  const now = chapSummary(key), prev = prevSummary(key); if (!prev) return null;
+  const trend = now.right > prev.sum.right ? "↗" : now.right < prev.sum.right ? "↘" : "";
+  const drop = LVL_RANK[now.state] < LVL_RANK[prev.sum.state] ? prev.sum : null;
+  let lost = [];
+  if (drop){ const hNow = cardHist(tests()), hPrev = cardHist(tests().filter(a => a.date <= prev.date)); lost = DECK[key].items.filter(it => { const a = cardState(hPrev[it.key]), b = cardState(hNow[it.key]); return (a === "acq" || a === "route") && b === "bad"; }).map(it => it.key); }
+  return { trend, drop, lost, prevDate:prev.date };
+}
+function pColor(state){ return { low:"var(--p-low)", mid:"var(--p-mid)", ok:"var(--p-ok)", okdark:"var(--p-okdark)" }[state] || "var(--rule)"; }
+function ringSvg(sum, size){
+  const r = size/2 - 6, w = 7, C = 2*Math.PI*r, cx = size/2;
+  let arcs = "";
+  if (sum.state === "start") arcs = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke-width="${w}" stroke-dasharray="3 3" stroke="var(--rule)"/>`;
+  else {
+    arcs = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke-width="${w}" stroke="var(--rule)"/>`;
+    let off = 0;
+    [[sum.acq, "var(--p-okdark)"], [sum.route, pColor(sum.state === "okdark" ? "ok" : sum.state)], [sum.bad, "var(--p-lowsoft)"]].forEach(([n, c]) => {
+      if (!n) return; const len = C*n/sum.total;
+      arcs += `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke-width="${w}" stroke="${c}" stroke-dasharray="${len.toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cx})"/>`;
+      off += len;
+    });
+  }
+  const label = sum.state === "start" ? "" : (sum.pct != null ? sum.pct + "%" : sum.right + "/" + sum.total);
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${esc(label || "pas encore testé")}">${arcs}<text x="${cx}" y="${cx+4}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-weight="600" font-size="${size > 70 ? 15 : 12}" fill="var(--ink)">${label}</text></svg>`;
+}
+function pastille(key){
+  const sum = chapSummary(key), d = dropOf(key);
+  return `<span class="pst">${ringSvg(sum, 52)}<span class="pst-w">${LVL_WORD[sum.state]}${d && d.trend ? " " + d.trend : ""}</span>${d && d.drop ? `<span class="pst-was">avant : ${LVL_WORD[d.drop.state]}</span>` : ""}</span>`;
+}
+function globalPastille(){
+  const sums = ALL_KEYS.map(k => chapSummary(k)), t = k => sums.reduce((n, s) => n + s[k], 0);
+  const total = t("total"), right = t("right"), acq = t("acq"), bad = t("bad"), none = t("none"), posed = total - none;
+  const g = { acq, route:t("route"), bad, none, total, right, state:lvlOf(right, acq, total, posed), pct: posed ? Math.round(right/total*100) : null };
+  const nOk = sums.filter(s => s.state === "okdark").length, nRe = sums.filter(s => s.state === "ok").length;
+  return `<div class="pglob">${ringSvg(g, 84)}<div class="pglob-t"><b>Avancement général · ${LVL_WORD[g.state]}</b>${right} cartes justes au dernier test sur ${total}, dont ${acq} acquises · ${bad} à revoir · ${none} pas encore posées<br>${nOk} objectifs OK · ${nRe} réussis, à confirmer · sur ${ALL_KEYS.length}</div></div>
+  <details class="plegend"><summary>Comment se lit la pastille ?</summary>
+  <p>Le chiffre au centre : les questions de l'objectif réussies au dernier test où chacune est tombée, sur toutes ses questions. Seul le premier passage d'un test compte, pas les rattrapages.</p>
+  <p>Mots et couleurs suivent la note : sous 4 « à revoir » (rouge), 4 à 4,5 « en route » (orange), 5 et plus « réussi » (vert), réussi à nouveau un autre jour « OK ✓ » (vert foncé). Gris en pointillé : pas encore testé.</p>
+  <p>Dans l'anneau : vert foncé = acquis (écrit juste deux jours différents), couleur du niveau = juste au dernier test, rouge pâle = raté, gris = pas encore posé. Un calcul n'est acquis que s'il a été écrit, pas seulement choisi.</p></details>`;
+}
+function chapStatus(key){
+  const sum = chapSummary(key), d = dropOf(key);
+  let h = `<p class="fine"><b>Cet objectif : ${LVL_WORD[sum.state]}</b>${sum.posed ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.acq} acquises · ${sum.bad} à revoir · ${sum.none} pas encore posées` : ""}${sum.state === "ok" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
+  if (d && d.drop && d.lost.length) h += `<div class="pdrop"><p>↘ Le ${dayShort(d.prevDate)}, cet objectif était à « ${LVL_WORD[d.drop.state]} » (note ${fmtNote(d.drop.note)}). ${d.lost.length} question${d.lost.length>1?"s":""} réussie${d.lost.length>1?"s":""} avant ${d.lost.length>1?"sont ratées":"est ratée"} au dernier test : ce sont elles à reprendre.</p><button class="ghost small" data-act="redoCards" data-v="${d.lost.join(",")}">Refaire ces ${d.lost.length} questions</button></div>`;
+  else { const bad = DECK[key].items.filter(it => cardState(cardHist(tests())[it.key]) === "bad").map(it => it.key); if (bad.length) h += `<button class="ghost small" data-act="redoCards" data-v="${bad.join(",")}">Refaire mes ${bad.length} questions à revoir</button>`; }
+  return h;
+}
+
+/* ---------- rendu ---------- */
+const app = document.getElementById("app");
+function render(){
+  const v = { fiche:viewFiche, home:viewHome, cards:viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
+  app.innerHTML = header() + `<div class="screen">${["fiche","home","setup"].includes(S.screen) ? draftBanner() : ""}${v()}</div>`;
+  renderTabs();
+  if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled){ inp.focus(); const n = inp.value.length; try { inp.setSelectionRange(n, n); } catch(e){} } }
+}
+function axisSvg(){
+  /* règle des puissances de dix, de 10⁻⁶ à 10⁹ : chaque graduation vaut dix fois la précédente */
+  let t = "";
+  for (let k = -6; k <= 9; k++){
+    const x = 16 + (k + 6) * 24.5, col = k < 0 ? "var(--neg)" : k > 0 ? "var(--pos)" : "var(--ink)";
+    t += `<line x1="${x}" y1="${k===0?6:12}" x2="${x}" y2="${k===0?30:24}" stroke="${col}" stroke-width="${k===0?3:1.5}"/>`;
+    if (k % 3 === 0) t += `<text x="${x}" y="46" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="${k===0?600:500}" fill="${col}">10${uni("^(" + (k<0?"−":"") + Math.abs(k) + ")")}</text>`;
+  }
+  return `<svg class="axis" viewBox="0 0 400 52" role="img" aria-label="Règle des puissances de dix, de 10 puissance moins 6 à 10 puissance 9"><line x1="16" y1="18" x2="163" y2="18" stroke="var(--neg)" stroke-width="2"/><line x1="163" y1="18" x2="384" y2="18" stroke="var(--pos)" stroke-width="2"/>${t}</svg>`;
+}
+function header(){
+  return `<header class="head"><div class="badge" aria-hidden="true"><small>TE</small><b>3</b></div><div><h1>Puissances et racines</h1><p>Maths 10CR niveau 2 · à savoir pour le ${DUE.long}</p></div></header>${S.screen === "quiz" ? "" : axisSvg()}`;
+}
+function renderTabs(){
+  const bar = document.getElementById("tabbar");
+  if (S.screen === "quiz"){ bar.hidden = true; return; }
+  bar.hidden = false;
+  const tabs = [["fiche","📚","Fiche"],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
+  bar.innerHTML = `<div class="tabbar-in">` + tabs.map(([k,e,l]) => {
+    const on = S.screen === k || (k === "setup" && S.screen === "results");
+    return `<button class="tab${on?" on":""}" data-act="nav" data-v="${k}" aria-current="${on?"page":"false"}"><span class="tab-e">${e}</span><span class="tab-l">${l}</span></button>`;
+  }).join("") + `</div>`;
+}
+
+function viewFiche(){
+  let h = `<p class="intro">Une section par objectif de ta feuille, dans le même ordre, avec la théorie et tes propres exercices. Relis, puis va te tester.</p>`;
+  FICHE.forEach((sec, i) => {
+    const open = S.ficheOpen === i, dk = DECK["o" + sec.num];
+    h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}"><span class="entry-num${sec.miss?" miss":""}">${esc(sec.num)}</span><span class="entry-title">${dk ? esc(dk.title) : esc(sec.titre)}</span>${dk ? pastille(dk.key) : ""}</button>`;
+    if (open){
+      h += `<div class="entry-body">`;
+      if (sec.pairs) h += sec.pairs.map(p => `<div class="pair"><span class="pair-k">${esc(p[0])}</span>${p[1] ? `<span>${esc(p[1])}</span>` : ""}</div>`).join("");
+      if (sec.tips) h += `<div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">` + sec.tips.map(t => `<p class="tip">${esc(t)}</p>`).join("") + `</div>`;
+      if (sec.astuce) h += `<p class="astuce${sec.astuceNeg?" neg":""}"><b>${sec.astuceNeg ? "Attention, vu sur tes feuilles" : "Astuce"}</b>${esc(sec.astuce)}</p>`;
+      if (dk) h += `<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">${chapStatus(dk.key)}<button class="ghost small" data-act="testDeck" data-v="${dk.key}">🎯 Teste-toi sur cet objectif (${dk.items.length} questions, Je m'entraîne)</button></div>`;
+      h += `</div>`;
+    }
+    h += `</section>`;
+  });
+  const openS = S.ficheOpen === FICHE.length;
+  h += `<section class="entry${openS?" open":""}"><button class="entry-head" data-act="fiche" data-v="${FICHE.length}" aria-expanded="${openS}"><span class="entry-num">src</span><span class="entry-title">D'où viennent les questions</span></button>`;
+  if (openS){
+    h += `<div class="entry-body">` + SOURCES.map(x => `<div class="pair"><span class="pair-k" style="font-family:var(--body)">${esc(x.titre)} <span class="src-date">reçue le ${esc(x.recue)}</span></span><span>${esc(x.contenu)}</span></div>`).join("") + `<p class="astuce"><b>Contrôle</b>${esc(SOURCES_NOTE)}</p>`;
+    if (HAS_CLAUDE){
+      h += `<div class="photos">` + PHOTOS.map(ph => ph.url
+        ? `<figure><a href="${esc(ph.url)}" target="_blank" rel="noopener"><img src="${esc(ph.url)}" alt="${esc(ph.titre)}" loading="lazy"></a><figcaption>${esc(ph.titre)}</figcaption></figure>`
+        : `<figure class="missing"><span>Photo à renvoyer dans le chat</span><figcaption>${esc(ph.titre)}</figcaption></figure>`).join("") + `</div>`;
+    }
+    h += `</div>`;
+  }
+  h += `</section>`;
+  return h + `<button class="cta" data-act="nav" data-v="home">Je passe à l'entraînement</button><p class="version">Version ${VERSION.n} · mise à jour le ${VERSION.date}</p>`;
+}
+
+function deckBtn(d){
+  const on = S.selected.includes(d.key), nChg = d.items.filter(it => it.chg).length;
+  return `<button class="deck${on?" on":""}" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-box">${on?"✓":""}</span><span class="deck-main"><span class="deck-c">${esc(d.code)}</span><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} questions · ${esc(d.src)}${nChg ? ` · ${nChg} aux chiffres changés` : ""}</span></span>${pastille(d.key)}</button>`;
+}
+function viewHome(){
+  const allOn = ALL_KEYS.every(k => S.selected.includes(k));
+  const count = S.selected.reduce((n,k) => n + DECK[k].items.length, 0);
+  return `${globalPastille()}<p class="intro">Un paquet par objectif de ta feuille. Chaque question reprend un exercice de tes fiches, souvent avec d'autres nombres.</p>
+  <div class="decks">${DECKS.map(deckBtn).join("")}</div>
+  <button class="ghost" data-act="allBase">${allOn ? "Tout décocher" : "Tout cocher"}</button>
+  <p class="fine">${count} questions sélectionnées</p>
+  <div class="row"><button class="ghost" data-act="toCards" ${count?"":"disabled"}>🃏 Cartes</button><button class="cta" data-act="nav" data-v="setup" ${count?"":"disabled"}>🎯 Test</button></div>`;
+}
+
+function cardItems(){ return DECKS.filter(d => S.selected.includes(d.key)).flatMap(d => d.items.map(it => ({ it, d }))); }
+function viewCards(){
+  const items = cardItems();
+  if (!items.length) return `<p class="intro">Coche au moins un objectif pour voir les cartes.</p><button class="cta" data-act="nav" data-v="home">Choisir des objectifs</button>`;
+  const key = S.selected.join(",");
+  if (S.cards.key !== key){ S.cards.key = key; S.cards.order = shuffle(items.map((_,i) => i)); S.cards.pos = 0; S.cards.flip = false; }
+  const { it, d } = items[S.cards.order[S.cards.pos]];
+  return `<button class="back" data-act="nav" data-v="home">← Paquets</button>
+  <p class="fine">${esc(deckLabel(S.selected))} · carte ${S.cards.pos+1} sur ${items.length}</p>
+  <button class="flash${S.cards.flip?" flipped":""}" data-act="flip" aria-label="Retourner la carte">
+    <span class="face f"><span class="face-tag">${esc(d.code)} ${esc(it.ref)} · ${esc(it.consigne)}</span><span class="face-word"${isText(it.front) ? ` style="font-family:var(--body);font-size:20px"` : ""}>${esc(uni(it.front))}</span><span class="face-hint">touche la carte · 📖 ${esc(it.src)}</span></span>
+    <span class="face b"><span class="face-tag">Réponse</span><span class="face-word"${isText(it.back[0]) ? ` style="font-family:var(--body);font-size:19px"` : ""}>${esc(uni(it.back[0]))}</span><span class="face-mini">${esc(uni(it.expl))}</span><span class="face-hint">📖 ${it.chg ? "même exercice que " : ""}${esc(it.src)}</span></span>
+  </button>
+  <div class="row3"><button class="ghost" data-act="card" data-v="-1">Précédente</button><button class="ghost" data-act="cardShuffle">Mélanger</button><button class="ghost" data-act="card" data-v="1">Suivante</button></div>`;
+}
+
+function viewSetup(){
+  if (!S.selected.length) return `<p class="intro">Coche au moins un objectif avant de lancer un test.</p><button class="cta" data-act="nav" data-v="home">Choisir des objectifs</button>`;
+  const total = DECKS.filter(d => S.selected.includes(d.key)).reduce((n,d) => n + (S.limit === "all" ? d.items.length : Math.min(d.items.length, +S.limit)), 0);
+  let h = `<button class="back" data-act="nav" data-v="home">← Paquets</button>
+  <p class="fine">${esc(deckLabel(S.selected))} · ${total} questions avec ce réglage</p>
+  <p class="lab">Combien de questions par objectif</p>
+  <div class="seg">${LIMITS.map(([k,l]) => `<button class="${S.limit===k?"on":""}" data-act="limit" data-v="${k}" aria-pressed="${S.limit===k}">${l}</button>`).join("")}</div>
+  <p class="lab">Ton niveau</p><div class="opts">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="opt${S.difficulty===k?" on":""}" data-act="diff" data-v="${k}" aria-pressed="${S.difficulty===k}"><span class="opt-e">${d.emoji}</span><span class="opt-main">${d.label}</span><span class="opt-sub">${d.sub}</span></button>`).join("")}</div>
+  <p class="lab">Comment on corrige</p><div class="opts">${Object.entries(MODES).map(([k,m]) => `<button class="opt${S.mode===k?" on":""}" data-act="mode" data-v="${k}" aria-pressed="${S.mode===k}"><span class="opt-e">${m.emoji}</span><span class="opt-main">${m.label}</span><span class="opt-sub">${m.sub}</span></button>`).join("")}</div>
+  <p class="lab">Ordre des questions</p><div class="opts">${Object.entries(ORDERS).map(([k,o]) => `<button class="opt${S.order===k?" on":""}" data-act="order" data-v="${k}" aria-pressed="${S.order===k}"><span class="opt-e">${o.emoji}</span><span class="opt-main">${o.label}</span><span class="opt-sub">${o.sub}</span></button>`).join("")}</div>`;
+  if (S.frozen){
+    h += `<div class="paper"><b>Version papier prête</b><p class="fine">Ce test est figé : la question N° 12 de la feuille sera la N° 12 à l'écran.</p>
+      <button class="ghost small" data-act="paper" data-v="ex">Feuille d'exercices</button>
+      <button class="ghost small" data-act="paper" data-v="both">Exercices + corrigé en dernière page</button>
+      <button class="ghost small" data-act="paper" data-v="key">Corrigé seul</button>
+      ${S.paperMsg ? `<p class="warn">${esc(S.paperMsg)}</p>` : ""}
+      ${S.paperCopy ? `<textarea class="exportarea" readonly rows="6" id="paper-copy">${esc(S.paperCopy)}</textarea>` : ""}
+      <button class="ghost small" data-act="unfreeze">Annuler et tirer un autre test</button></div>
+      <button class="cta" data-act="start">Commencer ce test à l'écran</button>`;
+  } else h += `<button class="ghost" data-act="freeze">🖨️ Version papier de ce test</button><button class="cta" data-act="start">Commencer</button>`;
+  return h + `<p class="fine">Pour un exposant, tape ^ : 10^7 pour 10⁷, 10^-3 pour 10⁻³. Notation scientifique : 4,8·10^-3 (le point · est sur le clavier sous la question). Les classements restent à choix, même au niveau épreuve.</p>`;
+}
+
+/* ---------- quiz ---------- */
+function startQuiz(questions, rattrapage, parent, label){
+  guardStart(() => {
+    S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, label: label || (rattrapage ? S.rattrLabel : deckLabel(S.selected)), keys:[...new Set(questions.map(q => q.deckKey))] };
+    S.rattrapage = rattrapage; S.rattrParent = parent || null; S.lastResult = null; S.storeMsg = ""; S.screen = "quiz"; S.quitAsk = false;
+    draftSave(); render(); window.scrollTo(0,0);
+  });
+}
+function typeHint(q){
+  if (q.expr && /·10\^/.test(q.answer)) return "Tape 4,8·10^-3 (le · avec la touche ci-dessous, ou *).";
+  if (q.expr && /^\(.*\/.*\)\^/.test(q.answer)) return "Tape la fraction entre parenthèses : (2/3)^2";
+  if (q.expr && /\^/.test(q.answer)) return "Tape l'exposant avec ^ : 10^7, 10^-3";
+  if (/^\d{1,3}( \d{3})+$/.test(q.answer)) return "Les espaces ou les apostrophes entre les milliers sont acceptés.";
+  return "";
+}
+function keysFor(q){
+  const k = ["−", ","];
+  if (q.expr){ k.push("^", "·", "(", ")"); if (/\//.test(q.answer)) k.push("/"); }
+  return k;
+}
+function viewQuiz(){
+  const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode === "train";
+  if (S.quitAsk) return `<p class="lab">Tu veux arrêter ce test ?</p><p class="fine">${Q.detail.length} sur ${total} répondues.</p>
+    <button class="cta" data-act="quitKeep">Garder pour plus tard</button><button class="ghost danger" data-act="quitDrop">Abandonner ce test</button><button class="ghost" data-act="quitNo">← Continuer le test</button>`;
+  let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Arrêter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>
+  ${S.draftErr ? `<p class="warn">${esc(S.draftErr)}</p>` : ""}
+  <div class="badges"><span class="num">N° ${q.num}</span><span class="ref">Exercice ${q.ex} · ${esc(q.ref)}</span>${q.chg ? `<span class="chg">chiffres changés</span>` : ""}</div>
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword${isText(q.word) ? " txt" : ""}">${esc(uni(q.word))}</p>`;
+  if (q.type === "mcq"){
+    h += `<div class="opts">` + q.options.map((o, k) => {
+      let c = "choice" + (isExpr(o) && !isText(o) ? " expr" : "");
+      if (Q.checked){ c += o === q.answer ? " good" : o === Q.picked ? " bad" : " off"; } else if (o === Q.picked) c += " sel";
+      return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${Q.checked && o === q.answer ? "✓ " : Q.checked && o === Q.picked ? "✗ " : ""}${esc(uni(o))}</button>`;
+    }).join("") + `</div>`;
+  } else {
+    const hint = typeHint(q);
+    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="Ta réponse…" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    if (!Q.checked && !Q.finishing) h += `<div class="keys">${keysFor(q).map(k => `<button data-act="key" data-v="${esc(k)}" aria-label="Ajouter ${esc(k)}">${esc(k)}</button>`).join("")}</div>`;
+    h += `<p class="preview" id="preview">${Q.typed ? "Tu as écrit : " + esc(uni(Q.typed)) : ""}</p>`;
+    if (hint && !Q.checked) h += `<p class="qhint">${esc(hint)}</p>`;
+  }
+  if (Q.finishing) h += `<p class="fine">J'enregistre ton résultat…</p>`;
+  if (!Q.checked && !Q.finishing){
+    const last = Q.i + 1 >= total;
+    if (q.type === "type") h += `<button class="cta" data-act="validate" id="validate-btn" ${Q.typed.trim()?"":"disabled"}>${instant ? "Vérifier" : last ? "Terminer" : "Valider"}</button>`;
+    else if (!instant) h += `<button class="cta" data-act="validate" ${Q.picked===null?"disabled":""}>${last ? "Terminer" : "Valider"}</button>`;
+    h += `<button class="ghost small" data-act="dontknow">Je ne sais pas</button>`;
+  }
+  if (Q.checked){
+    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? "✓ " + ["Juste !","Bien vu.","Nickel.","Exact.","Tu l'as."][Q.i % 5] : "✗ Presque. Regarde bien :"}</p>
+      ${Q.ok ? "" : `<p>Réponse : <b class="m">${esc(uni(q.answer))}</b></p>`}<p class="fb-x">${esc(uni(q.expl))}</p>
+      ${q.type === "type" && !Q.ok ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
+      <button class="cta" data-act="next">${Q.i+1 >= total ? "Voir mon résultat" : "Suivante"}</button></div>`;
+  }
+  return h;
+}
+function isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnswer(val, q); }
+function validate(val){
+  const Q = S.quiz; if (Q.done) return;
+  const q = Q.questions[Q.i], correct = isRight(q, val);
+  if (S.mode === "train"){ Q.ok = correct; Q.checked = true; draftSave(); render(); }
+  else record(val, correct);
+}
+function record(val, correct, typo){
+  const Q = S.quiz; if (Q.done) return;
+  const q = Q.questions[Q.i];
+  Q.detail.push({ num:q.num, ex:q.ex, ref:q.ref, prompt:q.prompt, user:val || "", answer:q.answer, correct, typo:!!typo, expl:q.expl, tag:q.tag, card:q.card, qtype:q.type, question:q });
+  if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
+  else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; draftSave(); render(); window.scrollTo(0,0); }
+}
+async function finishQuiz(){
+  const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
+  const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:"Mathématiques", theme:THEME, deck:Q.label, keys:Q.keys, diffKey:S.difficulty, modeKey:S.mode,
+    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, order:ORDERS[S.order].label, rattrapage:S.rattrapage, parent:S.rattrapage ? S.rattrParent : null,
+    score, total, note:noteFrom(score/total), questions:Q.detail };
+  S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
+  draftClear();
+  try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Note ta note ou copie-la pour le chat." : ""; }
+  catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
+  S.lastResult = att; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; S.screen = "results"; render(); window.scrollTo(0,0);
+}
+
+/* ---------- bilan ---------- */
+function bilanState(id){ return S.bilan[id] || (S.bilan[id] = { busy:false, err:"", copied:false, fallback:"" }); }
+function bilanBlock(att){
+  const b = bilanState(att.id), a = att.analysis;
+  const wrong = att.questions.filter(x => !x.correct), canRetry = wrong.some(x => x.question);
+  let h = `<div class="bilan">`;
+  if (!a && !b.busy && HAS_CLAUDE) h += `<p class="fine">Tu veux savoir ce qui coince vraiment ? Je relis tes réponses et je te dis quoi travailler.</p><button class="cta" data-act="analyse" data-v="${att.id}">Analyser mes résultats</button>`;
+  if (!a && !HAS_CLAUDE) h += `<p class="fine">Pour savoir ce qui coince vraiment, copie tes résultats et colle-les dans le chat de révisions : on les analyse ensemble.</p>`;
+  if (b.busy) h += `<p class="fine">Je regarde tes réponses une par une…</p>`;
+  if (b.err) h += `<p class="warn">${esc(b.err)}</p>`;
+  if (a){
+    h += `<h3>Ton bilan</h3>`;
+    if (a.points_forts.length) h += `<p class="bilan-lab">Ce qui est acquis</p><ul>${a.points_forts.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (a.a_travailler.length) h += `<p class="bilan-lab">À travailler</p><ul>${a.a_travailler.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (a.conseil) h += `<p class="bilan-tip">${esc(a.conseil)}</p>`;
+  }
+  if (canRetry) h += `<button class="cta" data-act="retryWrong" data-v="${att.id}">Refaire mes erreurs (${wrong.length})</button>`;
+  const ev = errView(att.id);
+  h += `<div class="${wrong.length?"row":""}">${wrong.length ? `<button class="ghost" data-act="showErr" data-v="${att.id}" aria-pressed="${ev}">${ev ? "Voir toutes les questions" : `Voir mes erreurs (${wrong.length})`}</button>` : ""}<button class="ghost" data-act="copy" data-v="${att.id}">${b.copied ? "Copié — colle-le dans le chat" : "Copier pour le chat"}</button></div>`;
+  if (b.fallback) h += `<p class="fine">La copie automatique est bloquée ici. Le texte est sélectionné : copie-le à la main.</p><textarea class="exportarea" readonly rows="8" id="fb-${att.id}">${esc(b.fallback)}</textarea>`;
+  return h + `</div>`;
+}
+function findAttempt(id){ return (S.lastResult && S.lastResult.id === id) ? S.lastResult : S.attempts.find(a => a.id === id); }
+const TAG_DESC = "o1 = livrets de 1 à 12 ; o2 = calculs avec racines, puissances, priorité des opérations, puissances de nombres négatifs, racine d'un nombre négatif ; o3 = propriétés des puissances (même base, puissance de puissance, même exposant, trouver l'exposant) et des racines ; o4 = classer des nombres en notation scientifique ; o5 = passer de la notation décimale à la notation scientifique et inversement, y compris exposants négatifs ; o6 = multiplier et diviser des puissances de dix, km en m en notation scientifique";
+async function analyse(id){
+  const att = findAttempt(id), b = bilanState(id); b.busy = true; b.err = ""; render();
+  try {
+    const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
+    if (!sample) throw new Error("no sample");
+    const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${uni(q.answer)} | ${q.correct ? "JUSTE" : "FAUX"}`).join("\n");
+    const prompt = `Tu es un professeur de mathématiques suisse, bienveillant, qui analyse le test d'un élève de 10e HarmoS (niveau 2, canton de Neuchâtel). Il prépare le TE 3 « Puissances, racines » pour le ${DUE.long} : puissances, notation scientifique, racines.
+
+Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
+Objectifs : ${att.deck}
+Niveau : ${att.difficulty} — Mode : ${att.mode}
+
+Étiquettes : ${TAG_DESC}.
+Dans les réponses, ^ note un exposant (10^-3 = 10⁻³).
+
+Détail :
+${lignes}
+
+Analyse les ERREURS pour trouver ce qui coince vraiment : signe de l'exposant oublié pour un nombre plus petit que 1, nombre devant la puissance de dix pas entre 1 et 10, rangs mal comptés, exposants additionnés au lieu de soustraits, division par une puissance négative, carré d'un nombre négatif, racine calculée avant l'opération sous la racine ? Cherche le point commun, ne recopie pas la liste. S'il n'y a pas de motif clair, dis-le honnêtement.
+
+Réponds UNIQUEMENT par un objet JSON valide, sans texte autour, exactement dans ce format :
+{"points_forts":["..."],"a_travailler":["..."],"conseil":"..."}
+- "points_forts" : 1 à 3 points courts et concrets.
+- "a_travailler" : 1 à 3 axes de progrès formulés positivement, avec l'exemple précis tiré du test.
+- "conseil" : 2 phrases maximum, une action à faire ce soir.
+Tu tutoies l'élève. Français de Suisse romande, ton encourageant, pas enfantin.`;
+    const parsed = await sample.json(prompt, { modelTier:"default" });
+    att.analysis = { points_forts: Array.isArray(parsed.points_forts) ? parsed.points_forts : [], a_travailler: Array.isArray(parsed.a_travailler) ? parsed.a_travailler : [], conseil: parsed.conseil || "" };
+    try { await store.save(att); } catch(e){}
+  } catch(e){
+    b.err = "Le bilan n'a pas pu être calculé ici. Le bouton de copie fonctionne quand même : colle tes résultats dans le chat et je les analyse là.";
+  }
+  b.busy = false; render();
+}
+function copyText(att){
+  const a = att.analysis, l = [];
+  l.push((att.rattrapage ? "RATTRAPAGE — " : "RÉSULTAT — ") + "Maths, TE 3 « Puissances, racines » (épreuve du " + DUE.short + ")");
+  l.push(`${dateLabel(att.date)} · ${att.deck} · ${att.difficulty} · ${att.mode}`);
+  l.push(`Score : ${att.score}/${att.total} — note ${fmtNote(att.note)}/6`, "");
+  if (a){ l.push("BILAN"); if (a.points_forts.length) l.push("Acquis : " + a.points_forts.join(" · ")); if (a.a_travailler.length) l.push("À travailler : " + a.a_travailler.join(" · ")); if (a.conseil) l.push("Conseil : " + a.conseil); l.push(""); }
+  const wrong = att.questions.filter(q => !q.correct);
+  l.push(`ERREURS (${wrong.length}/${att.total})`);
+  if (!wrong.length) l.push("Aucune erreur.");
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.ref}] ${q.prompt} → j'ai répondu « ${uni(q.user) || "rien"} », attendu : ${uni(q.answer)}`));
+  return l.join("\n");
+}
+function copyFor(id){
+  const att = findAttempt(id), b = bilanState(id), text = copyText(att);
+  const fail = () => { b.fallback = text; render(); setTimeout(() => { const t = document.getElementById("fb-" + id); if (t){ t.focus(); t.select(); } }, 30); };
+  try { navigator.clipboard.writeText(text).then(() => { b.copied = true; render(); setTimeout(() => { b.copied = false; render(); }, 2500); }, fail); }
+  catch(e){ fail(); }
+}
+function retryWrong(id){
+  const att = findAttempt(id);
+  const qs = att.questions.filter(x => !x.correct && x.question).map(x => x.question);
+  if (!qs.length) return;
+  S.rattrLabel = att.deck;
+  startQuiz(shuffle(qs), true, att.rattrapage ? (att.parent || att.id) : att.id, att.deck);
+}
+
+/* ---------- voir mes erreurs : réponse fausse marquée en entier (couche Maths) ---------- */
+const dxBad = t => `<del class="dx-bad">${esc(t)}</del>`;
+const dxGood = t => `<ins class="dx-good">${esc(t)}</ins>`;
+function dxLegend(){ return `<p class="dx-legend"><span>✗ ${dxBad("barré")} = ce qui était faux</span><span>✓ ${dxGood("souligné")} = la bonne réponse</span></p>`; }
+function errCard(q){
+  const Q = q.question || {}, isMcq = Q.type === "mcq", user = (q.user || "").trim();
+  const U = user ? dxBad(uni(user)) : `<span class="dx-none">rien</span>`;
+  return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
+    <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : "Tu as écrit"}</span><span class="dx-ans${isText(user) ? " txt" : ""}">${U}</span></p>
+    <p class="dx-line"><span class="dx-lab">✓ Il fallait</span><span class="dx-ans${isText(q.answer) ? " txt" : ""}">${dxGood(uni(q.answer))}</span></p>
+    <p class="rev-x">${esc(uni(q.expl))}</p></div>`;
+}
+function revCard(q){
+  return `<div class="revcard ok"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p class="rev-good">✓ Ta réponse : <b class="m">${esc(uni(q.user))}</b>${q.typo ? " (faute de frappe acceptée)" : ""}</p><p class="rev-x">${esc(uni(q.expl))}</p></div>`;
+}
+function errView(id){ const b = bilanState(id); return b.errOnly != null ? b.errOnly : S.screen === "results"; }
+function questionList(att){
+  const only = errView(att.id), wrong = att.questions.filter(q => !q.correct), list = only ? wrong : att.questions;
+  return (wrong.length ? dxLegend() : "") + list.map(q => q.correct ? revCard(q) : errCard(q)).join("");
+}
+function viewResults(){
+  const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
+  const msg = pct === 100 ? "Sans faute. Tu peux aborder jeudi tranquille." : pct >= 80 ? "Solide. Repasse juste sur les quelques ratés." : pct >= 60 ? "La base est là. Refais tes erreurs, tu vas vite grimper." : pct >= 40 ? "Bon début. Relis la fiche de l'objectif, puis refais un tour en Échauffement." : "C'est le moment de relire la fiche tranquillement, objectif par objectif. Ça viendra.";
+  let up = "";
+  if (att.rattrapage){ const p = S.attempts.find(a => a.id === att.parent); if (p){ const ts = testScore(p); up = `<p class="note">Ton test du ${dateLabel(p.date)} remonte : ${fmtNote(ts.note)} → ${fmtNote(ts.final)} après ${ts.steps.length} rattrapage${ts.steps.length>1?"s":""}.</p>`; } }
+  return `<div class="scorebox${att.rattrapage ? " rattr-box" : ""}"><div class="score-n">${att.score}<small>/${att.total}</small></div><span class="score-note">note ${fmtNote(att.note)}</span>${att.rattrapage ? `<span class="rattr">Rattrapage — ${att.total} question${att.total>1?"s":""} ratée${att.total>1?"s":""} rejouée${att.total>1?"s":""}</span>` : ""}</div>
+  <p class="intro">${msg}</p>${up}${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
+  ${bilanBlock(att)}
+  <p class="lab">${!wrong.length ? "Aucune erreur" : errView(att.id) ? `Mes erreurs (${wrong.length})` : `Toutes les questions (${att.total})`}</p>
+  <div class="rev">${questionList(att)}</div>
+  <div class="row"><button class="ghost" data-act="start">Refaire le test</button><button class="ghost" data-act="nav" data-v="home">Paquets</button></div>`;
+}
+
+/* ---------- scores : courbe, jour par jour, questions qui résistent, historique ---------- */
+function chapScore(att, key){
+  if (key === "all") return testScore(att);
+  const qs = att.questions.filter(q => q.tag === key); if (!qs.length) return null;
+  const base = qs.filter(q => q.correct).length, wrongCards = new Set(qs.filter(q => !q.correct).map(q => q.card)), fixed = new Set(), steps = [];
+  rattrOf(att).forEach(r => { r.questions.forEach(q => { if (q.correct && wrongCards.has(q.card)) fixed.add(q.card); }); steps.push({ att:r, note:noteFrom((base + fixed.size)/qs.length) }); });
+  return { note:noteFrom(base/qs.length), base, total:qs.length, steps, final: steps.length ? steps[steps.length-1].note : noteFrom(base/qs.length) };
+}
+function suiviChart(){
+  const key = S.scores.chap, flt = S.scores.filter;
+  const pts = tests().filter(a => flt === "all" || a.diffKey === "hard" || a.modeKey === "exam").map(a => ({ a, s:chapScore(a, key) })).filter(p => p.s);
+  if (!pts.length) return `<p class="fine">Pas encore de test avec ce réglage.</p>`;
+  const W = Math.max(300, 60 + pts.length * 52), H = 224, y = n => 32 + (6 - n) * 30, x = i => 46 + i * 52;
+  let g = "";
+  for (let n = 1; n <= 6; n++) g += `<line x1="34" x2="${W-8}" y1="${y(n)}" y2="${y(n)}" stroke="var(--rule)" stroke-width="1"${n===4?' stroke-dasharray="4 3"':""}/><text x="26" y="${y(n)+4}" text-anchor="end" font-size="11" fill="var(--soft)">${n}</text>`;
+  g += `<text x="38" y="${y(4)-4}" text-anchor="start" font-size="10.5" fill="var(--soft)">4 suffisant</text>`;
+  g += `<polyline fill="none" stroke="var(--pos)" stroke-width="2" points="${pts.map((p,i) => x(i)+","+y(p.s.note)).join(" ")}"/>`;
+  pts.forEach((p, i) => {
+    const cx = x(i), cy = y(p.s.note);
+    if (p.s.steps.length){ const fy = y(p.s.final); g += `<line x1="${cx}" x2="${cx}" y1="${cy}" y2="${fy}" stroke="var(--p-ok)" stroke-width="2" stroke-dasharray="3 3"/>`; p.s.steps.forEach(st => g += `<circle cx="${cx}" cy="${y(st.note)}" r="4" fill="var(--sheet)" stroke="var(--p-ok)" stroke-width="2"/>`); g += `<text x="${cx}" y="${fy-8}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--p-ok)">${fmtNote(p.s.final)}</text>`; }
+    const shape = p.a.modeKey === "exam" ? "star" : DIFFICULTIES[p.a.diffKey || "normal"].shape;
+    const sel = S.scores.point === p.a.id ? ' stroke="var(--mark)" stroke-width="3"' : ' stroke="var(--sheet)" stroke-width="1.5"';
+    const mark = shape === "circle" ? `<circle cx="${cx}" cy="${cy}" r="7" fill="var(--pos)"${sel}/>` : shape === "square" ? `<rect x="${cx-6}" y="${cy-6}" width="12" height="12" fill="var(--pos)"${sel}/>` : shape === "diamond" ? `<path d="M${cx} ${cy-8} L${cx+8} ${cy} L${cx} ${cy+8} L${cx-8} ${cy} Z" fill="var(--pos)"${sel}/>` : `<path d="M${cx} ${cy-9} L${cx+2.6} ${cy-3} L${cx+9} ${cy-3} L${cx+4} ${cy+1.5} L${cx+6} ${cy+8} L${cx} ${cy+4} L${cx-6} ${cy+8} L${cx-4} ${cy+1.5} L${cx-9} ${cy-3} L${cx-2.6} ${cy-3} Z" fill="var(--pos)"${sel}/>`;
+    g += `<g class="pt" data-act="point" data-v="${p.a.id}" tabindex="0" role="button" aria-label="Test du ${dayShort(p.a.date)}, note ${fmtNote(p.s.note)}">${mark}<circle cx="${cx}" cy="${cy}" r="14" fill="transparent"/></g><text x="${cx}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="var(--soft)">${dayShort(p.a.date)}</text>`;
+  });
+  let h = `<div class="chartbox"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des notes sans aide">${g}</svg></div><p class="fine">○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche · pointillé vert : remontée après rattrapage · épreuve le ${DUE.short}</p>`;
+  const sp = pts.find(p => p.a.id === S.scores.point);
+  if (sp){ const a = sp.a, s = sp.s;
+    h += `<div class="ptdetail"><p><b>${dateLabel(a.date)}</b> · ${esc(a.difficulty)} · ${esc(a.mode)} · ${esc(a.deck)}</p><p>Sans aide : ${s.base} justes sur ${s.total} → note ${fmtNote(s.note)}</p>${a.questions.filter(q => q.typo).length ? `<p>Fautes de frappe acceptées : ${a.questions.filter(q => q.typo).length}</p>` : ""}${s.steps.map((st, k) => `<p>${k+1}${k?"e":"er"} rattrapage : ${st.att.score} sur ${st.att.total} → note ${fmtNote(st.note)}</p>`).join("")}<button class="ghost small" data-act="openAttemptGo" data-v="${a.id}">Voir les questions de ce test</button></div>`; }
+  return h;
+}
+function suiviHeat(){
+  const t = tests(), days = [...new Set(t.map(a => dayKey(a.date)))].slice(-6);
+  const keys = ALL_KEYS.filter(k => t.some(a => a.questions.some(q => q.tag === k)));
+  if (!keys.length) return `<p class="fine">Pas encore de test.</p>`;
+  let h = `<div class="heat"><table><tr><th></th>${days.map(d => `<th>${d.slice(8)}.${d.slice(5,7)}</th>`).join("")}</tr>`;
+  keys.forEach(k => {
+    h += `<tr><th>${esc(DECK[k].code)}</th>` + days.map(d => {
+      const qs = t.filter(a => dayKey(a.date) === d).flatMap(a => a.questions.filter(q => q.tag === k));
+      if (!qs.length) return `<td class="hc-none">—</td>`;
+      const r = qs.filter(q => q.correct).length/qs.length, n = noteFrom(r);
+      return `<td class="${n >= 5 ? "hc-ok" : n >= 4 ? "hc-mid" : "hc-low"}">${Math.round(r*100)}%${n >= 5 ? " ✓" : ""}</td>`;
+    }).join("") + `</tr>`;
+  });
+  h += `</table></div>`;
+  const notYet = ALL_KEYS.filter(k => !keys.includes(k));
+  if (notYet.length) h += `<p class="fine">Pas encore testés : ${notYet.map(k => DECK[k].code).join(", ")}</p>`;
+  return h;
+}
+function resistant(){
+  const h = cardHist(tests()), rows = Object.entries(h).map(([k, hs]) => ({ k, miss:hs.filter(x => !x.ok).length, n:hs.length })).filter(r => r.miss && ITEM[r.k]).sort((a,b) => b.miss - a.miss || b.n - a.n).slice(0, 5);
+  if (!rows.length) return `<p class="fine">Aucune question ratée pour l'instant.</p>`;
+  return `<div class="resist">${rows.map(r => `<p><b>${esc(ITEM[r.k].d.code)} ${esc(ITEM[r.k].it.ref)}</b> <span class="m">${esc(uni(ITEM[r.k].it.front))}</span> — ratée ${r.miss} fois sur ${r.n}</p>`).join("")}</div><button class="ghost small" data-act="redoCards" data-v="${rows.map(r => r.k).join(",")}">Refaire ces questions</button>`;
+}
+function chainTxt(a){ if (a.rattrapage) return ""; const s = testScore(a); return s.steps.length ? ` · ${fmtNote(s.note)} → ${fmtNote(s.final)} après ${s.steps.length} rattrapage${s.steps.length>1?"s":""}` : ""; }
+function viewScores(){
+  if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
+  const list = S.attempts, t = tests();
+  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
+  const best = t.length ? Math.max(...t.map(a => a.note)) : 0, avg = t.length ? t.reduce((s,a) => s + a.note, 0)/t.length : 0;
+  const exportText = list.map(a => `${dateLabel(a.date)} — ${a.rattrapage ? "RATTRAPAGE · " : ""}${a.deck} (${a.difficulty}, ${a.mode}) : ${a.score}/${a.total} → note ${fmtNote(a.note)}`).join("\n");
+  let h = `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}
+  ${store.mode === "local" ? `<p class="note">Tes scores sont gardés dans ce navigateur uniquement. Exporte-les de temps en temps.</p>` : ""}
+  <div class="stats"><div class="stat"><b>${t.length}</b><span>tests</span></div><div class="stat"><b>${t.length ? fmtNote(best) : "–"}</b><span>meilleure sans aide</span></div><div class="stat"><b>${t.length ? fmtNote(avg) : "–"}</b><span>moyenne sans aide</span></div></div>
+  <div class="suivi"><p class="lab" style="margin:0">Ma courbe de notes</p>
+    <label class="fine" for="chap-sel">Objectif</label><select id="chap-sel" data-act-change="chap"><option value="all"${S.scores.chap==="all"?" selected":""}>Tous les objectifs</option>${DECKS.map(d => `<option value="${d.key}"${S.scores.chap===d.key?" selected":""}>${esc(d.code)} — ${esc(d.title)}</option>`).join("")}</select>
+    <label class="fine" for="flt-sel">Tests</label><select id="flt-sel" data-act-change="flt"><option value="all"${S.scores.filter==="all"?" selected":""}>Tous les tests</option><option value="hard"${S.scores.filter==="hard"?" selected":""}>Niveau épreuve et épreuve blanche</option></select>
+    ${suiviChart()}</div>
+  <div class="suivi"><p class="lab" style="margin:0">Mes objectifs jour après jour</p>${suiviHeat()}</div>
+  <div class="suivi"><p class="lab" style="margin:0">Les questions qui résistent</p>${resistant()}</div>
+  <p class="lab">Historique</p><div class="rev">`;
+  list.forEach(a => {
+    const open = S.scores.open === a.id;
+    h += `<div class="attempt" id="att-${a.id}"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}${chainTxt(a)}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
+    if (open) h += `<div class="attempt-body">${bilanBlock(a)}${questionList(a)}</div>`;
+    h += `</div>`;
+  });
+  h += `</div><button class="ghost" data-act="exportToggle">${S.scores.exportOpen ? "Cacher la sauvegarde" : "💾 Exporter mes scores"}</button>`;
+  if (S.scores.exportOpen) h += `<p class="fine">Touche le texte, copie-le et colle-le dans une note ou envoie-le à tes parents.</p><textarea class="exportarea" readonly rows="${Math.min(list.length+1, 8)}" id="export-area">${esc(exportText)}</textarea>`;
+  h += S.scores.confirm
+    ? `<div class="confirm"><span>Tout effacer, sans retour possible ?</span><button class="mini yes" data-act="clearYes">Effacer</button><button class="mini" data-act="clearNo">Annuler</button></div>`
+    : `<button class="ghost danger" data-act="clearAsk">🗑️ Effacer tout l'historique</button>`;
+  return h;
+}
+
+/* ---------- version papier ---------- */
+function paperHtml(qs, part){
+  const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
+  const meta = `${deckLabel([...new Set(qs.map(q => q.deckKey))])} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
+  const line = q => `<b>${q.num}.</b> <span class="t">${esc(uni(q.word))}</span> <span class="ref">${esc(q.ref)}</span>`;
+  const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
+    ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(uni(o))}</span>`).join("")}</div></div>`
+    : `<div class="q">${line(q)}<div class="box"></div></div>`).join("")}</section>`).join("");
+  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> <span class="t">${esc(uni(q.word))}</span> → <b class="t">${esc(uni(q.answer))}</b><div class="x">${esc(uni(q.expl))}</div></div>`).join("")}</section>`).join("");
+  const head = `<h1>Mathématiques 10CR niveau 2 — TE 3 « Puissances, racines »</h1><p class="meta">Prénom : Livio · épreuve du ${DUE.long} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
+  const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
+  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Maths TE3 — ${DUE.short}</title><style>
+@page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
+h1{font-size:19px;margin:0 0 4px}h2{font-size:14.5px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:12.5px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
+.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.t{font-family:Menlo,Consolas,monospace}.ref{color:#777;font-size:11px}
+.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}
+.box{height:16mm;margin:4px 0 0 18px;border:1px solid #999;background-image:linear-gradient(#DDD 1px,transparent 1px),linear-gradient(90deg,#DDD 1px,transparent 1px);background-size:3mm 3mm}
+.k{font-size:13.5px;margin:4px 0;break-inside:avoid}.x{font-size:11.5px;color:#555;margin-left:18px}.pb{break-before:page}
+.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
+</style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
+}
+async function savePaper(part){
+  const qs = S.frozen; S.paperMsg = ""; S.paperCopy = "";
+  const names = { ex:"exercices", both:"exercices-et-corrige", key:"corrige" };
+  const filename = `${DUE.iso}_maths-te3-livio-${names[part]}.html`;
+  try {
+    if (!HAS_CLAUDE){
+      const url = URL.createObjectURL(new Blob([paperHtml(qs, part)], { type:"text/html" }));
+      const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      S.paperMsg = "Fichier téléchargé : ouvre-le, puis touche « Imprimer ».";
+      render(); return;
+    }
+    const dl = await window.claude.use("downloads");
+    if (!dl) throw { code:"unavailable" };
+    await dl.save({ filename, data:paperHtml(qs, part) });
+  } catch(e){
+    if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
+    else {
+      S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
+      S.paperCopy = "#PDF-MATHS-TE3\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.ref} — ${q.consigne}] ${uni(q.word)}${q.options ? " | " + q.options.map(uni).join(" / ") : ""} → ${uni(q.answer)}`).join("\n");
+    }
+  }
+  render();
+}
+
+/* ---------- chargement ---------- */
+async function loadHistory(){
+  try {
+    await store.init();
+    let raw = await store.list();
+    raw.sort((a,b) => b.date - a.date);
+    const cleaned = raw.filter((a, k) => { const prev = raw[k-1]; return !(prev && prev.deck === a.deck && !!prev.rattrapage === !!a.rattrapage && prev.total === a.total && Math.abs(prev.date - a.date) < 3000); });
+    for (const a of raw) if (!cleaned.includes(a)) { try { await store.remove(a.id); } catch(e){} }
+    /* ancien rattrapage sans parent : rattaché au dernier test du même jour qui le précède */
+    cleaned.forEach(r => { if (r.rattrapage && !r.parent){ const p = cleaned.filter(a => !a.rattrapage && a.date < r.date && dayKey(a.date) === dayKey(r.date)).sort((a,b) => b.date - a.date)[0]; if (p) r.parent = p.id; } });
+    const known = new Set(S.attempts.map(a => a.id));
+    S.attempts = [...S.attempts, ...cleaned.filter(a => !known.has(a.id))].sort((a,b) => b.date - a.date);
+  } catch(e){
+    S.loadErr = "Je n'arrive pas à lire tes anciens résultats pour l'instant. Les nouveaux tests s'afficheront quand même.";
+  }
+  try { await draftPick(); } catch(e){}
+  S.loaded = true;
+  if (S.screen !== "quiz") render();
+}
+
+/* ---------- événements ---------- */
+function resetFrozen(){ S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; }
+function setTyped(v){
+  const Q = S.quiz; Q.typed = v;
+  const b = document.getElementById("validate-btn"); if (b) b.disabled = !v.trim();
+  const p = document.getElementById("preview"); if (p) p.innerHTML = v ? "Tu as écrit : " + esc(uni(v)) : "";
+}
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el || el.disabled) return;
+  const act = el.dataset.act, v = el.dataset.v, Q = S.quiz;
+  switch(act){
+    case "nav": S.screen = v; S.scores.confirm = false; S.draftAlert = false; render(); window.scrollTo(0,0); break;
+    case "fiche": S.ficheOpen = S.ficheOpen === +v ? -1 : +v; render(); break;
+    case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : ALL_KEYS.filter(k => k === v || S.selected.includes(k)); resetFrozen(); render(); break;
+    case "allBase": S.selected = ALL_KEYS.every(k => S.selected.includes(k)) ? [] : [...ALL_KEYS]; resetFrozen(); render(); break;
+    case "toCards": S.screen = "cards"; render(); break;
+    case "flip": S.cards.flip = !S.cards.flip; render(); break;
+    case "card": { const n = cardItems().length; S.cards.flip = false; S.cards.pos = (S.cards.pos + (+v) + n) % n; render(); break; }
+    case "cardShuffle": S.cards.order = shuffle(S.cards.order); S.cards.pos = 0; S.cards.flip = false; render(); break;
+    case "limit": S.limit = v; resetFrozen(); render(); break;
+    case "diff": S.difficulty = v; resetFrozen(); render(); break;
+    case "order": S.order = v; resetFrozen(); render(); break;
+    case "mode": S.mode = v; render(); break;
+    case "freeze": S.frozen = buildTest(S.selected, S.difficulty, S.order, S.limit); render(); break;
+    case "unfreeze": resetFrozen(); render(); break;
+    case "paper": savePaper(v); break;
+    case "start": startQuiz(S.frozen || buildTest(S.selected, S.difficulty, S.order, S.limit), false); break;
+    case "testDeck": guardStart(() => { S.mode = "train"; startQuiz(buildTest([v], S.difficulty, "paper", "all"), false, null, DECK[v].code); }); break;
+    case "redoCards": guardStart(() => { S.mode = "train"; S.difficulty = "hard"; const keys = v.split(","); startQuiz(buildFromCards(keys, "hard"), false, null, keys.length + " questions à reprendre"); }); break;
+    case "draftResume": draftResume(); break;
+    case "draftAsk": S.draftAsk = true; render(); break;
+    case "draftKeep": S.draftAsk = false; render(); break;
+    case "draftDrop": draftClear(); S.draftAsk = false; S.draftAlert = false; render(); break;
+    case "quit": S.quitAsk = true; render(); break;
+    case "quitNo": S.quitAsk = false; render(); break;
+    case "quitKeep": draftSave(); S.draft = draftPayload(); S.quitAsk = false; S.quiz = null; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "quitDrop": draftClear(); S.quitAsk = false; S.quiz = null; S.screen = "home"; render(); break;
+    case "pick": { if (Q.checked || Q.done) return; const q = Q.questions[Q.i]; Q.picked = q.options[+v]; if (S.mode === "train") validate(Q.picked); else { draftSave(); render(); } break; }
+    case "key": { const inp = document.getElementById("answer-input"); if (!inp) break;
+      const s = inp.selectionStart != null ? inp.selectionStart : inp.value.length, en = inp.selectionEnd != null ? inp.selectionEnd : s;
+      inp.value = inp.value.slice(0, s) + v + inp.value.slice(en); setTyped(inp.value); inp.focus(); try { inp.setSelectionRange(s + v.length, s + v.length); } catch(err){} break; }
+    case "validate": { const q = Q.questions[Q.i]; if (q.type === "type"){ const inp = document.getElementById("answer-input"); Q.typed = inp ? inp.value : Q.typed; if (Q.typed.trim()) validate(Q.typed); } else if (Q.picked !== null) validate(Q.picked); break; }
+    case "dontknow": { const q = Q.questions[Q.i]; if (S.mode === "train"){ Q.ok = false; Q.checked = true; if (q.type === "mcq") Q.picked = null; else Q.typed = ""; draftSave(); render(); } else record("", false); break; }
+    case "typo": record(Q.typed, true, true); break;
+    case "next": { const q = Q.questions[Q.i]; record(q.type === "mcq" ? Q.picked : Q.typed, Q.ok); break; }
+    case "showErr": { const b = bilanState(v); b.errOnly = !errView(v); render(); break; }
+    case "analyse": analyse(v); break;
+    case "copy": copyFor(v); break;
+    case "retryWrong": retryWrong(v); break;
+    case "point": S.scores.point = S.scores.point === v ? null : v; render(); break;
+    case "openAttempt": S.scores.open = S.scores.open === v ? null : v; render(); break;
+    case "openAttemptGo": S.scores.open = v; render(); { const n = document.getElementById("att-" + v); if (n) n.scrollIntoView({ block:"start" }); } break;
+    case "exportToggle": S.scores.exportOpen = !S.scores.exportOpen; render(); break;
+    case "clearAsk": S.scores.confirm = true; render(); break;
+    case "clearNo": S.scores.confirm = false; render(); break;
+    case "clearYes": (async () => {
+      const ids = S.attempts.map(a => a.id); S.attempts = []; S.scores = { open:null, exportOpen:false, confirm:false, chap:"all", filter:"all", point:null }; render();
+      let failed = false; for (const id of ids){ try { await store.remove(id); } catch(err){ failed = true; } }
+      if (failed){ S.loadErr = "L'effacement n'a pas pu être enregistré partout. Recharge la page et réessaie."; render(); }
+    })(); break;
+  }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "chap-sel"){ S.scores.chap = e.target.value; S.scores.point = null; render(); }
+  if (e.target.id === "flt-sel"){ S.scores.filter = e.target.value; S.scores.point = null; render(); }
+});
+document.addEventListener("input", e => { if (e.target.id === "answer-input" && S.quiz) setTyped(e.target.value); });
+document.addEventListener("keydown", e => {
+  if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
+  if (e.key === "Enter" && e.target.closest && e.target.closest(".pt")){ const g = e.target.closest(".pt"); S.scores.point = g.dataset.v; render(); }
+});
+document.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("exportarea")) e.target.select(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden) draftSave(); });
+window.addEventListener("pagehide", () => draftSave());
+
+render();
+loadHistory();
+</script>
+
+</body></html>

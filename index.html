@@ -1,4 +1,50 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=livio/"><title>Redirection</title></head>
-<body><p><a href="livio/">La page des devoirs de Livio a changé d'adresse : l'ouvrir</a></p></body></html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Devoirs - Révisions</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,700;7..72,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Accueil : deux portes, une par élève. Même palette que les pages des devoirs. */
+:root{--paper:#F2F4F7;--sheet:#fff;--ink:#18202E;--soft:#5A6577;--rule:#D5DBE4;--cobalt:#2546B5;--marker:#F6D94A;--marker-ink:#3A2F00;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--paper:#11151D;--sheet:#1A2030;--ink:#E7EBF2;--soft:#9AA5B8;--rule:#2C3446;--cobalt:#8EA6FF;--marker:#E8C93A;--marker-ink:#2A2200;color-scheme:dark}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 'Atkinson Hyperlegible',system-ui,sans-serif}
+main{max-width:620px;margin:0 auto;min-height:100dvh;box-sizing:border-box;display:flex;flex-direction:column;padding-block:max(28px,env(safe-area-inset-top,0px)) 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-family:'Literata',Georgia,serif;font-weight:800;font-size:clamp(26px,8vw,32px);line-height:1.1;margin:0;border-bottom:2px solid var(--ink);padding-bottom:12px;text-wrap:balance}
+.sub{color:var(--soft);margin:8px 0 0}
+.doors{display:grid;gap:14px;margin-top:28px}
+@media (min-width:480px){.doors{grid-template-columns:1fr 1fr}}
+a.door{display:block;background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:22px 20px;color:var(--ink);text-decoration:none;min-height:120px;box-sizing:border-box}
+a.door:hover,a.door:focus-visible{border-color:var(--cobalt);outline:none}
+a.door:focus-visible{box-shadow:0 0 0 3px var(--cobalt)}
+a.door b{display:block;font-family:'Literata',Georgia,serif;font-weight:800;font-size:28px;line-height:1.1}
+a.door small{display:block;color:var(--soft);font-size:13.5px;margin-top:6px}
+a.door .go{display:inline-block;margin-top:14px;background:var(--marker);color:var(--marker-ink);font-weight:700;font-size:13.5px;padding:3px 10px;border-radius:20px}
+.maj{margin:auto 0 0;padding-top:28px;color:var(--soft);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+<h1>Devoirs - Révisions</h1>
+<p class="sub">Choisis ta page : tes devoirs, tes tests et tes outils de révision.</p>
+<nav class="doors" aria-label="Choix de l'élève">
+  <a class="door" href="livio/"><b>Livio</b><small>10e HarmoS</small><span class="go">Mes devoirs →</span></a>
+  <a class="door" href="liano/"><b>Liano</b><small>7e HarmoS</small><span class="go">Mes devoirs →</span></a>
+</nav>
+<p class="maj" id="maj"></p>
+</main>
+<script id="version" type="application/json">{ "version": 1, "maj": "2026-11-01T12:52" }</script>
+<script>
+(function(){
+  try{
+    const v=JSON.parse(document.getElementById("version").textContent);
+    const d=new Date(v.maj);
+    const txt=d.toLocaleDateString("fr-CH",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).replace(/,/g,"")+" à "+String(d.getHours()).padStart(2,"0")+"h"+String(d.getMinutes()).padStart(2,"0");
+    document.getElementById("maj").textContent="Version "+v.version+" · mise à jour le "+txt;
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

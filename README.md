@@ -1,10 +1,10 @@
-# Devoirs - Révisions (Livio)
+# Devoirs - Révisions (Livio et Liano)
 
-Révisions de la semaine, publiées avec GitHub Pages.
+Révisions publiées avec GitHub Pages : https://olivierusso-bit.github.io/revisions/
 
-- Accueil de Livio : https://olivierusso-bit.github.io/revisions/livio/ (l'ancienne adresse /revisions/ y redirige)
-- Accueil de Liano : https://olivierusso-bit.github.io/revisions/liano/
-- Anglais, Unit 1 « Learning languages » (pour le jeudi 22.10) : https://olivierusso-bit.github.io/revisions/2026-10-22_Livio_Anglais_Unit-1-Learning-languages.html
-- Géographie, L'industrie chapitres A, B, E (pour le vendredi 30.10) : https://olivierusso-bit.github.io/revisions/2026-10-30_Livio_Geographie_L-industrie-chapitres-A-B-E.html
+- Accueil : choix de l'élève, à la racine.
+- Page des devoirs de Livio : `livio/` — ses outils sont dans le même dossier.
+- Page des devoirs de Liano : `liano/` — idem.
+- Les anciennes adresses des outils de Livio (à la racine) redirigent vers `livio/`.
 
-Les scores sont gardés dans le navigateur de chaque appareil.
+Un outil de révision = un fichier HTML autonome. Les scores sont gardés dans le navigateur de chaque appareil.
