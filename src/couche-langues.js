@@ -17,7 +17,10 @@
      COUCHE.hasLive         : le mode « Correction en direct » existe (langues : oui)
    Les utilitaires (esc, norm, matchAnswer, shuffle, pickOptions, dxN…) viennent du noyau.
    Versions : 1 (01.11.2026, C1) · 2 (01.11.2026, C2 : limite de questions équilibrée entre paquets, label/lang/prompt/consigne posés par fill,
-   plusieurs faces par élément, article allemand facultatif en correction en direct).
+   plusieurs faces par élément, article allemand facultatif en correction en direct)
+   · 3 (01.11.2026, D6 : cards() peut donner k (identité de carte d'un ancien outil, à reprendre telle quelle dans q.card par fill)
+   et label (libellé de la carte pour « les cartes qui résistent » quand la question enregistrée n'a pas de label) ; le contenu peut aussi fournir COUCHE_CONTENU, ajouté à COUCHE (accroches
+   facultatives du noyau ou remplacement d'une fonction de la couche) ; sans eux, rien ne change).
 
    Ce que fill(q, kind, it, d, pool) peut poser sur la question (étape C2) :
      q.word, q.options | q.accept, q.answer, q.expl, q.hint, q.keep (défaut true)
@@ -42,7 +45,7 @@ const COUCHE = {
     DECKS.forEach(d => d.items.forEach(it => {
       const g = GENS[d.gen]; if (!g) throw new Error("Générateur inconnu : " + d.gen);
       const front = itemFront(g, d, it);
-      g.cards(d, it).forEach(c => out.push({ dk:d.key, word:front, aspect:c.aspect, mcqOnly:!!c.mcqOnly, levels:c.levels, k:cardKey(d.key, front, c.aspect) }));
+      g.cards(d, it).forEach(c => out.push({ dk:d.key, word:front, aspect:c.aspect, mcqOnly:!!c.mcqOnly, levels:c.levels, k:c.k || cardKey(d.key, front, c.aspect), ...(c.label ? { label:c.label } : {}) }));
     }));
     return out;
   },
@@ -101,3 +104,6 @@ const COUCHE = {
     return [...out].map(v => [...v].map(lvUnit).join("")).filter(Boolean);
   },
 };
+
+/* réglages propres à un outil (version 3) : le contenu peut déclarer COUCHE_CONTENU = { … } (ex. charger, isRight, liveCands, allCards) */
+if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU);

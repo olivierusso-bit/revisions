@@ -19,7 +19,11 @@
    · 3 (01.11.2026, C3 : moteur à un anneau (maths, Dossier), réglages par paquet et ordre des questions, accroches de la couche Maths)
    · 4 (01.11.2026, D4 : synchronisation des scores et du test en cours entre appareils, sur le site seulement — voir SYNC)
    · 5 (01.11.2026, D4 : bouton « Entrer mon code » dans l'onglet Scores, état de la synchronisation affiché aussi quand l'historique est vide)
-   · 6 (01.11.2026, C4 : accroches de la couche Dossier, sans changement pour les langues et les maths).
+   · 6 (01.11.2026, C4 : accroches de la couche Dossier, sans changement pour les langues et les maths)
+   · 7 (01.11.2026, D6 : réglages facultatifs OUTIL.paquetsCoches (paquets cochés à l'ouverture) et OUTIL.introPaquets (html de l'intro
+   de l'écran Paquets) ; « les cartes qui résistent » prennent le label de la carte (couche) si la question enregistrée n'en a pas ;
+   un test en cours gardé avec liveFixed en { l, s } (ancien format) est relu ; accroche facultative de la couche
+   COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -280,7 +284,7 @@ function majSyncLigne(){ const el = document.getElementById("sync-ligne"); if (e
 /* ---------- état ---------- */
 const S = {
   screen:"fiche", ficheOpen: OUTIL.ficheOuverte != null ? OUTIL.ficheOuverte : 0, order: ORDRES ? Object.keys(ORDRES)[0] : "",
-  selected: DECKS.map(d => d.key),
+  selected: Array.isArray(OUTIL.paquetsCoches) ? DECKS.map(d => d.key).filter(k => OUTIL.paquetsCoches.includes(k)) : DECKS.map(d => d.key),
   difficulty:"normal", mode:"train", count: COUNTS ? (OUTIL.compteDefaut != null ? OUTIL.compteDefaut : COUNTS[0]) : 0,
   frozen:null, paperMsg:"", paperCopy:"",
   quiz:null, rattrapage:false, rattrLabel:"", lastResult:null, storeMsg:"",
@@ -528,7 +532,7 @@ function redoCards(v){
 /* les 5 cartes les plus ratées (premier passage des tests) */
 function resistant(){
   const m = {};
-  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); m[k] = m[k] || { k, word:x.question.label || x.question.word, hint:x.question.label ? "" : (x.question.hint || ""), ch:x.question.deckKey, tag:x.question.tag, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
+  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x), lab = x.question.label || (CARD[k] && CARD[k].label); m[k] = m[k] || { k, word:lab || x.question.word, hint:lab ? "" : (x.question.hint || ""), ch:x.question.deckKey, tag:x.question.tag, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
   const out = Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
   /* deux cartes de même énoncé : on les distingue par l'étiquette, ou par l'indice si l'étiquette est la même */
   out.forEach(x => { const twins = out.filter(y => y !== x && y.word === x.word); if (!twins.length) return;
@@ -635,7 +639,7 @@ function draftSave(){
 function draftDetail(d){
   if (d.detail) return d.detail;
   return (d.answers || []).map((x, k) => { const q = d.questions[k];
-    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!x.lf, liveSnap:x.ls || "", expl:q.expl, tag:q.tag, question:q }; });
+    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!(x.lf || x.l), liveSnap:x.ls || x.s || "", expl:q.expl, tag:q.tag, question:q }; });
 }
 const draftN = d => (d.answers || d.detail || []).length;
 const draftOk = d => !!(d && d.questions && d.questions.length && (d.answers || d.detail));
@@ -735,7 +739,7 @@ function viewHome(){
   const allOn = S.selected.length === DECKS.length;
   const cs = compteSel(S.selected), count = cs.n;
   const hist = S.loaded ? histByCard() : null;
-  let h = draftBanner() + globalPastille() + `<p class="intro">Choisis ce que tu veux travailler. Tu peux cocher plusieurs paquets. Les anneaux montrent ta progression.</p>`;
+  let h = draftBanner() + globalPastille() + `<p class="intro">${OUTIL.introPaquets || "Choisis ce que tu veux travailler. Tu peux cocher plusieurs paquets. Les anneaux montrent ta progression."}</p>`;
   h += DECKS.map(d => {
     const on = S.selected.includes(d.key);
     const bad = hist ? paqBad(d.key, hist) : [];
@@ -862,7 +866,7 @@ function viewQuiz(){
       return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${Q.checked && o === q.answer ? "✓ " : Q.checked && o === Q.picked ? "✗ " : ""}${esc(AFF(o))}</button>`;
     }).join("") + `</div>`;
   } else {
-    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" ${COUCHE.clavier ? ` inputmode="${COUCHE.clavier(q)}"` : ""} autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
     if (q.lang === "de" && !Q.checked && !Q.finishing) h += `<div class="umlauts" aria-label="Lettres avec Umlaut">${["ä","ö","ü","Ä","Ö","Ü"].map(u => `<button data-act="uml" data-v="${u}" aria-label="Ajouter ${u}">${u}</button>`).join("")}</div>`;
     if (COUCHE.saisie) h += COUCHE.saisie(q, Q);
     if (S.mode === "live" && !Q.checked) h += `<div class="live"><p class="live-lab">Ta réponse, lettre par lettre</p><div class="live-box" id="live-box"></div><p class="live-state" id="live-state" aria-live="polite"></p></div>`;
