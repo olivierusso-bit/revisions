@@ -266,7 +266,7 @@ const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const THEME = "Um sieben Uhr stehe ich auf — 1.7 + 1.8";
-const VERSION = { n:1, date:"31.10.2026" };   /* v1 : 31.10.2026, première version (1.7 violet pour l'épreuve du 05.11, 1.8 bleu pour plus tard, conjugaisons du manuel) */
+const VERSION = { n:2, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (1.7 violet pour l'épreuve du 05.11, 1.8 bleu pour plus tard, conjugaisons du manuel) · v2 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) */
 
 /* ---------- SOURCES : d'où vient le contenu ----------
    Photo 1 — manuel, chapitre 4 « Um sieben Uhr stehe ich auf. » (reçue le 31.10.2026).
@@ -1009,8 +1009,8 @@ async function savePaper(part){
 /* ===== Suivi graphique (§ 6 quater) — couche Langues : trois anneaux par paquet =====
    Anneaux, de l'intérieur vers l'extérieur : Échauffement, Entraînement, Niveau épreuve.
    Chaque anneau prend une seule couleur, celle de sa propre note ; la part juste en plein, le reste en clair.
-   Seul le premier passage des tests compte (jamais les rattrapages). Une réussite à un niveau compte aussi
-   pour les niveaux plus faciles. « Acquise », « OK ✓ » et la baisse de niveau viennent de l'anneau extérieur. */
+   Seul le premier passage des tests compte (jamais les rattrapages). Un anneau = un niveau : chaque anneau
+   ne compte que les tests faits à son niveau (fiche v21). « Acquise », « OK ✓ » et la baisse de niveau viennent de l'anneau extérieur. */
 const LEVELS = ["easy","normal","hard"];
 const LEVEL_LABEL = { easy:"Échauffement", normal:"Entraînement", hard:"Niveau épreuve" };
 function rankOf(a){
@@ -1062,7 +1062,6 @@ function cardStates(exceptId){
       const h = hist[qKey(x)] = hist[qKey(x)] || [[],[],[]];
       for (let L = 0; L <= 2; L++){
         if (L === r) h[L].push({ ok:x.correct, typed:x.question.type === "type", day });
-        else if (L < r && x.correct) h[L].push({ ok:true, typed:true, day });
       }
     });
   });
@@ -1143,7 +1142,7 @@ function globalPastille(){
   return `<div class="pglob">${ring3Svg(s3, 96, sum ? sum.right + "/" + sum.total : "")}<div class="pglob-x"><b>Avancement général · ${sum ? P_LABEL[sum.state] : P_LABEL.start}</b>${lines}</div></div>
   <details class="plegend"><summary>Comment se lit la pastille ?</summary>
   <p>Trois anneaux, de l'intérieur vers l'extérieur : <b>Échauffement</b> (je choisis), <b>Entraînement</b> (je choisis et j'écris), <b>Niveau épreuve</b> (j'écris tout). L'anneau du dehors est le plus important : c'est comme à l'épreuve.</p>
-  <p>Chaque anneau a la couleur de sa note : <b>rouge · à revoir</b> sous 4, <b>orange · en route</b> 4 à 4,5, <b>vert · réussi</b> 5 et plus, <b>vert foncé · OK ✓</b> réussi au niveau épreuve et confirmé un autre jour. La partie pleine = les cartes justes ; la partie claire = celles qui manquent. En pointillé gris : pas encore testé.</p>
+  <p>Chaque anneau a la couleur de sa note : <b>rouge · à revoir</b> sous 4, <b>orange · en route</b> 4 à 4,5, <b>vert · réussi</b> 5 et plus, <b>vert foncé · OK ✓</b> réussi au niveau épreuve et confirmé un autre jour. La partie pleine = les cartes justes ; la partie claire = celles qui manquent. En pointillé gris : pas encore testé. Chaque anneau ne compte que les tests faits à son niveau : si tu n'as fait que le Niveau épreuve, les deux anneaux intérieurs restent gris en pointillé.</p>
   <p>Au centre : tes cartes justes au niveau le plus difficile que tu as déjà testé. Seul le premier passage d'un test compte : refaire tes erreurs t'aide à apprendre, mais ne change pas la pastille.</p></details>`;
 }
 function deckStatus(ch){

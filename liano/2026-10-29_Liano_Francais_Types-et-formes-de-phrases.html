@@ -297,7 +297,7 @@ const INDEX_KEY = QUIZ_ID + "-index";
 const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
 const DRAFT_ID = QUIZ_ID + "-test-en-cours";
 const THEME = "Types et formes de phrases";
-const VERSION = { n:3, date:"26.10.2026" };   /* v1 : 26.10.2026, première version · v2 : 26.10.2026, suivi 3 anneaux + courbe + jour par jour + cartes qui résistent + test en cours gardé · v3 : 26.10.2026, anneaux colorés selon leur note (plein/clair), au centre réussies/total du niveau le plus difficile testé */
+const VERSION = { n:4, date:"01.11.2026" };   /* v1 : 26.10.2026, première version · v2 : 26.10.2026, suivi 3 anneaux + courbe + jour par jour + cartes qui résistent + test en cours gardé · v3 : 26.10.2026, anneaux colorés selon leur note (plein/clair), au centre réussies/total du niveau le plus difficile testé · v4 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) */
 
 /* ---------- SOURCES ---------- */
 const SOURCES = [
@@ -658,9 +658,9 @@ function histByCard(exceptId){
   Object.values(h).forEach(arr => arr.sort((a, b) => a.date - b.date));
   return h;
 }
-/* état d'une carte pour l'anneau du niveau ringLvl : une réussite à un niveau plus élevé compte aussi */
+/* état d'une carte pour l'anneau du niveau ringLvl : un anneau = un niveau (fiche v21) */
 function ringState(entries, ringLvl){
-  const es = entries.filter(e => e.lvl >= ringLvl);
+  const es = entries.filter(e => e.lvl === ringLvl);
   if (!es.length) return "new";
   return es[es.length - 1].ok ? "ok" : "bad";
 }
@@ -745,7 +745,7 @@ function globalPastille(){
   const nWin = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "win").length;
   return `<div class="pglob">${ring1Svg(sum, 66, sum.state === "start" ? "—" : sum.pct + " %")}<div class="pglob-x"><b>Avancement général (niveau épreuve) · ${P_LABEL[sum.state]}</b><span>${sum.right} cartes justes au niveau épreuve sur ${sum.total}, dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} paquet${nOk>1?"s":""} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
   <details class="plegend"><summary>Comment se lisent les 3 anneaux ?</summary>
-  <p>Chaque paquet a <b>trois anneaux</b> : à l'intérieur l'Échauffement, au milieu l'Entraînement, à l'extérieur le Niveau épreuve. Tu montes en compétence du « je choisis » vers « j'écris tout » : une carte réussie au niveau épreuve remplit aussi les anneaux plus faciles.</p>
+  <p>Chaque paquet a <b>trois anneaux</b> : à l'intérieur l'Échauffement, au milieu l'Entraînement, à l'extérieur le Niveau épreuve. Tu montes en compétence du « je choisis » vers « j'écris tout » : chaque anneau ne compte que les tests faits à son niveau : si tu n'as fait que le Niveau épreuve, les deux anneaux intérieurs restent gris en pointillé.</p>
   <p>Dans chaque anneau, la partie en couleur pleine, ce sont tes cartes justes ; la partie claire, celles qu'il te reste. Un anneau gris en pointillé n'a pas encore été testé. Au centre : tes cartes justes sur le total, au niveau le plus difficile que tu as déjà fait.</p>
   <p>Couleur de chaque anneau selon la note : <b>rouge</b> à revoir (moins de 4), <b>orange</b> en route (4–4,5), <b>vert</b> réussi (5 et plus), <b>vert foncé</b> OK ✓ (réussi au niveau épreuve et confirmé un autre jour).</p>
   <p>Seul le premier passage d'un test compte ; refaire ses erreurs aide à apprendre mais ne change pas les anneaux.</p></details>`;

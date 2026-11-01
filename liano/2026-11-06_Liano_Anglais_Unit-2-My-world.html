@@ -170,12 +170,13 @@ a{color:var(--accent)}
 /* ===== Environnement ===== */
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
 const QUIZ_ID = "liano-quiz-anglais-unit2nombres";
-const VERSION = { n:5, date:"31.10.2026" };
+const VERSION = { n:6, date:"01.11.2026" };
 /* v1 : 26.10.2026, première version — couche Langues (anglais), suivi à 3 anneaux et test en cours gardé.
    v2 : 26.10.2026, barre du bas resserrée au centre sur grand écran, comme les autres outils.
    v3 : 27.10.2026, pastille : chaque anneau lit son propre niveau ; une erreur en Niveau épreuve ne fait plus baisser l'Échauffement ni l'Entraînement.
    v4 : 27.10.2026, « OK ✓ » vert foncé sur l'anneau extérieur quand le Niveau épreuve est réussi deux jours différents (cartes acquises).
-   v5 : 31.10.2026, ajout des groupes 2.3 (famille), 2.4 (mots et phrases) et 2.5 (phrases), pour le vendredi 6 novembre. */
+   v5 : 31.10.2026, ajout des groupes 2.3 (famille), 2.4 (mots et phrases) et 2.5 (phrases), pour le vendredi 6 novembre.
+   v6 : 01.11.2026, un anneau = un niveau : seuls les tests faits à ce niveau remplissent l'anneau (un niveau jamais testé reste gris en pointillé). */
 const DUE = "vendredi 6 novembre";
 const FILE = "2026-11-06_Liano_Anglais_Unit-2-My-world";
 
@@ -834,19 +835,18 @@ function levelRank(lv){ return {echauff:0,entrain:1,epreuve:2}[lv]??0; }
 // nb cartes justes à un niveau donné (dernier test de ce niveau où la carte tombe), par paquet
 function deckRingLevel(deckKey,lv){
   const items=deckOf(deckKey).items;
-  // Chaque anneau = son propre niveau. Pour une carte : juste si son dernier résultat À CE NIVEAU est juste,
-  // ou si son dernier résultat à un niveau PLUS DIFFICILE est juste (une réussite compte pour les niveaux plus faciles).
-  // Une erreur à un niveau plus difficile ne fait jamais baisser l'anneau d'un niveau plus facile.
+  // Un anneau = un niveau (fiche v21) : une carte est juste si son dernier résultat À CE NIVEAU est juste.
+  // Les tests faits à un autre niveau ne touchent jamais cet anneau (ni pour le remplir, ni pour le faire baisser).
   const tests=firstPassAnswers();
   const lastAt=(cardKey,level)=>{ for(let i=tests.length-1;i>=0;i--){ if(tests[i].level!==level) continue; const a=tests[i].answers.find(x=>x.cardKey===cardKey); if(a) return a; } return null; };
-  const levels=["echauff","entrain","epreuve"].filter(l=>levelRank(l)>=levelRank(lv));
+  const levels=[lv];
   let right=0, tested=false;
   items.forEach(it=>{
     const res=levels.map(l=>lastAt(it.cardKey,l)).filter(Boolean);
     if(res.length){ tested=true; if(res.some(a=>a.c)) right++; }
   });
   const total=items.length;
-  const anyTested=firstPassAnswers().some(t=>levelRank(t.level)>=levelRank(lv) && t.answers.some(a=>items.find(it=>it.cardKey===a.cardKey)));
+  const anyTested=firstPassAnswers().some(t=>t.level===lv && t.answers.some(a=>items.find(it=>it.cardKey===a.cardKey)));
   let state=anyTested?lvlInfo(right,total).key:"start";
   // « OK ✓ » (anneau extérieur seulement) : cartes ACQUISES = justes au dernier Niveau épreuve
   // et déjà justes à un Niveau épreuve d'un AUTRE JOUR, sans erreur entre les deux. Note sur les acquises ≥ 5 → vert foncé.
