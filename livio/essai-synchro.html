@@ -1778,7 +1778,7 @@ function viewResults(){
 function viewScores(){
   if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
   const list = S.attempts;
-  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
+  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}${store.mode === "local" ? `<p class="note" id="sync-ligne">${syncTexte()}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
   const roots = rootTests();
   const best = roots.length ? Math.max(...roots.map(a => a.note)) : 0, avg = roots.length ? roots.reduce((s,a) => s + a.note, 0)/roots.length : 0;
   const sorted = [...list].sort((a,b) => b.date - a.date);
