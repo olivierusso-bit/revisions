@@ -18,7 +18,14 @@
    nombre de questions, faute de frappe enregistrée, test en cours plus complet, source dans le corrigé et la copie, cartes homonymes distinguées)
    · 3 (01.11.2026, C3 : moteur à un anneau (maths, Dossier), réglages par paquet et ordre des questions, accroches de la couche Maths)
    · 4 (01.11.2026, D4 : synchronisation des scores et du test en cours entre appareils, sur le site seulement — voir SYNC)
-   · 5 (01.11.2026, D4 : bouton « Entrer mon code » dans l'onglet Scores, état de la synchronisation affiché aussi quand l'historique est vide).
+   · 5 (01.11.2026, D4 : bouton « Entrer mon code » dans l'onglet Scores, état de la synchronisation affiché aussi quand l'historique est vide)
+   · 6 (01.11.2026, C4 : accroches de la couche Dossier, sans changement pour les langues et les maths).
+   Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
+   COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
+   COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
+   COUCHE.onInput(e) ; COUCHE.sousQuestion(q) (html sous l'énoncé pendant le test) ; COUCHE.carteDe(question) (carte d'une question
+   enregistrée sans champ card) ; COUCHE.acquisAvantLibre (une carte est acquise si la dernière réponse est écrite, même si la précédente
+   était à choix) ; refreshCards() recalcule les cartes (cartes retirées des tests). OUTIL.cePaquet (« Ce chapitre ») dans l'état d'un paquet.
    Réglages facultatifs ajoutés à C3 : comptesParPaquet (le nombre de questions vaut pour chaque paquet), compteLabel, ordres
    ({clé:{label, sub, emoji}} = « Ordre des questions »), sousEntete (html ou fonction, sous l'en-tête hors du quiz), ficheOuverte,
    titreAstuceNeg, motPaquets (pluriel). Un paquet peut porter code (« Obj. 1 ») et detail ; une section de FICHE num, deck, miss, astuceNeg.
@@ -100,8 +107,10 @@ function dateLabel(ts){ const d = new Date(ts), p = x => String(x).padStart(2,"0
 function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
 
 /* ---------- cartes ---------- */
-const CARDS = COUCHE.allCards();
-const CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
+let CARDS = COUCHE.allCards();
+let CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
+/* la couche peut changer ses cartes après le chargement (couche Dossier : cartes retirées des tests par la revue) */
+function refreshCards(){ CARDS = COUCHE.allCards(); CARD = Object.fromEntries(CARDS.map(c => [c.k, c])); }
 function deckCards(dk){ return CARDS.filter(c => c.dk === dk); }
 function buildTest(deckKeys, difficulty, limit, order){ return COUCHE.buildTest(deckKeys, difficulty, limit || 0, order || (ORDRES ? Object.keys(ORDRES)[0] : "")); }
 /* ce que l'écran Paquets compte : les éléments des paquets, ou les cartes (OUTIL.compte = "cartes") */
@@ -283,6 +292,7 @@ const S = {
   bilan:{},
   draft:null, draftAsk:false, draftBlock:false, draftErr:false, quitAsk:false,
 };
+if (COUCHE.etat) Object.assign(S, COUCHE.etat);
 const deckLabel = keys => keys.length === DECKS.length ? OUTIL.labelTout
   : DECKS[0].code ? (keys.length > 3 ? keys.length + " " + MOT_PAQUETS : keys.map(k => DECK[k].code).join(" + "))
   : keys.map(k => DECK[k].title).join(" + ");
@@ -299,7 +309,7 @@ function parentOf(a){
 function isExam(a){ return a.mode === MODES.exam.label; }
 function chapOfQ(x){ return x.question ? x.question.deckKey : null; }
 function inChap(ch){ return x => ch === "all" || chapOfQ(x) === ch; }
-function qCardKey(x){ return x.question ? x.question.card : ("p|" + x.prompt); }
+function qCardKey(x){ return x.question ? (x.question.card || (COUCHE.carteDe ? COUCHE.carteDe(x.question) : undefined)) : ("p|" + x.prompt); }
 
 /* note sans aide d'un test (éventuellement limitée à un paquet) et remontée après chaque rattrapage */
 function testScore(root, ch){
@@ -389,7 +399,7 @@ function state1(es){
   if (!es || !es.length) return "new";
   const last = es[es.length - 1]; if (!last.ok) return "bad";
   if (!last.wrote) return "mid";
-  for (let k = es.length - 2; k >= 0; k--){ if (!es[k].ok) break; if (es[k].wrote && es[k].day !== last.day) return "ok"; }
+  for (let k = es.length - 2; k >= 0; k--){ if (!es[k].ok) break; if ((es[k].wrote || COUCHE.acquisAvantLibre) && es[k].day !== last.day) return "ok"; }
   return "mid";
 }
 function summary1(cards, hist){
@@ -434,7 +444,7 @@ function pastille1(dk){
 function paqStatus(dk){
   if (!S.loaded) return "";
   const hist = histByCard(), sum = paqSum(dk, hist), dr = dropOf(dk, hist), m = OUTIL.motPaquet.toLowerCase();
-  let h = `<p class="fine"><b>Cet ${m === "objectif" ? "objectif" : m} : ${P_LABEL[sum.state]}</b>${sum.state !== "start" ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
+  let h = `<p class="fine"><b>${OUTIL.cePaquet || "Cet " + m} : ${P_LABEL[sum.state]}</b>${sum.state !== "start" ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
   if (dr && dr.lost.length) h += `<div class="pdrop"><p>↘ Le ${dayShort(dr.date)}, c'était « ${P_LABEL[dr.prev.state]} » (note ${fmtNote(dr.prev.note)}). ${dr.lost.length} question${dr.lost.length>1?"s":""} réussie${dr.lost.length>1?"s":""} avant ${dr.lost.length>1?"sont ratées":"est ratée"} au dernier test : ce sont elles à reprendre.</p><button class="ghost small" data-act="redoCards" data-v="lost:${dk}">Refaire ces ${dr.lost.length} questions</button></div>`;
   else { const bad = paqBad(dk, hist); if (bad.length) h += `<button class="ghost small" data-act="redoCards" data-v="${dk}">${bad.length > 1 ? `Refaire mes ${bad.length} questions à revoir` : "Refaire ma question à revoir"}</button>`; }
   return h;
@@ -666,7 +676,7 @@ const app = document.getElementById("app");
 function render(){
   if (S.screen === "quiz" && !S.quiz) S.screen = "fiche";
   if (S.screen === "results" && !S.lastResult) S.screen = "home";
-  const v = { fiche:viewFiche, home:viewHome, cards:viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
+  const v = { fiche:COUCHE.vueFiche || viewFiche, home:viewHome, cards:COUCHE.vueCartes || viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
   app.innerHTML = header() + `<div class="screen">${v()}</div>`;
   renderTabs();
   if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
@@ -680,7 +690,7 @@ function renderTabs(){
   const bar = document.getElementById("tabbar");
   if (S.screen === "quiz"){ bar.hidden = true; return; }
   bar.hidden = false;
-  const tabs = [["fiche","📚","Fiche"],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
+  const tabs = [["fiche", ...(OUTIL.ongletFiche || ["📚","Fiche"])],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
   bar.innerHTML = `<div class="tabbar-in">` + tabs.map(([k,e,l]) => {
     const on = S.screen === k || (k === "setup" && S.screen === "results");
     return `<button class="tab${on?" on":""}" data-act="nav" data-v="${k}" aria-current="${on?"page":"false"}"><span class="tab-e">${e}</span><span class="tab-l">${l}</span></button>`;
@@ -844,7 +854,7 @@ function viewQuiz(){
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
   <div class="badges"><span class="num">N° ${q.num}</span>${TAG_LABEL[q.tag] ? `<span class="chip ${q.tag}">${esc(TAG_LABEL[q.tag])}</span>` : ""}<span class="ref">Exercice ${q.ex} · ${esc(q.ref || q.exTitle)}</span>${COUCHE.badges ? COUCHE.badges(q) : ""}</div>
-  <p class="consigne">${esc(q.consigne)}</p><p class="qword${COUCHE.classeMot ? " " + COUCHE.classeMot(q) : ""}">${esc(AFF(q.word))}</p>${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword${COUCHE.classeMot ? " " + COUCHE.classeMot(q) : ""}">${esc(AFF(q.word))}</p>${COUCHE.sousQuestion ? COUCHE.sousQuestion(q) : ""}${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
   if (q.type === "mcq"){
     h += `<div class="opts">` + q.options.map((o, k) => {
       let c = "choice" + (COUCHE.classeChoix ? " " + COUCHE.classeChoix(o) : "");
@@ -1143,6 +1153,7 @@ async function savePaper(part){
 async function loadHistory(){
   try {
     await store.init();
+    if (COUCHE.charger){ try { await COUCHE.charger(); } catch(e){} }
     SYNC.init();
     S.syncDoc = null;
     if (SYNC.on){
@@ -1182,7 +1193,7 @@ document.addEventListener("click", e => {
   const act = el.dataset.act, v = el.dataset.v;
   const Q = S.quiz;
   switch(act){
-    case "nav": S.draftBlock = false; S.screen = v; S.scores.confirm = false; render(); window.scrollTo(0,0); break;
+    case "nav": S.draftBlock = false; S.screen = v; S.scores.confirm = false; if (COUCHE.surNav) COUCHE.surNav(); render(); window.scrollTo(0,0); break;
     case "fiche": S.ficheOpen = S.ficheOpen === +v ? -1 : +v; render(); break;
     case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : DECKS.map(d => d.key).filter(k => k === v || S.selected.includes(k)); S.frozen = null; S.cards.order = []; render(); break;
     case "allDecks": S.selected = S.selected.length === DECKS.length ? [] : DECKS.map(d => d.key); S.frozen = null; S.cards.order = []; render(); break;
@@ -1233,10 +1244,12 @@ document.addEventListener("click", e => {
       let failed = false; for (const id of ids){ try { await store.remove(id); } catch(e){ failed = true; } }
       if (failed){ S.loadErr = "L'effacement n'a pas pu être enregistré partout. Recharge la page et réessaie."; render(); }
     })(); break;
+    default: if (COUCHE.action) COUCHE.action(act, v, el);
   }
 });
-document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ S.suivi.ch = e.target.value; S.suivi.pt = null; render(); } });
+document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ S.suivi.ch = e.target.value; S.suivi.pt = null; render(); return; } if (COUCHE.onChange) COUCHE.onChange(e); });
 document.addEventListener("input", e => {
+  if (COUCHE.onInput && COUCHE.onInput(e)) return;
   if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); if (COUCHE.onSaisie) COUCHE.onSaisie(S.quiz); }
 });
 document.addEventListener("keydown", e => {

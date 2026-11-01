@@ -6,6 +6,7 @@ Un outil = contenu + couche + noyau, assemblés en un seul fichier HTML autonome
 |---|---|
 | `noyau-quiz.js` | code commun à tous les outils (stockage, test en cours, anneaux, courbe, Bilan, erreurs, papier, écrans) |
 | `couche-maths.js` | ce qui est propre aux maths (correction numérique, exposants, clavier, un anneau, réglages par objectif et ordre) |
+| `couche-dossier.js` | ce qui est propre au Dossier (géographie, histoire, sciences : sommaire, chapitres, capsules vidéo et audio, « Teste-toi », revue des cartes, un anneau) |
 | `couche-langues.js` | ce qui est propre aux langues et au français (questions, correction, correction en direct, 3 anneaux) |
 | `gabarit.html`, `base.css` | squelette HTML et CSS de base |
 | `<outil>.contenu.js` | tout ce qui est propre à un outil (élève, paquets, fiche, sources, palette) |
