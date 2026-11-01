@@ -1,7 +1,10 @@
 /* base.css — CSS commune des outils de révision (noyau). Versions : 1 (01.11.2026, C1) · 2 (01.11.2026, C2 : rayons et couleurs
-   d'appoint en variables, .row4 et .umlauts, marge du body à zéro, titre et sous-titre de paquet sur deux lignes).
+   d'appoint en variables, .row4 et .umlauts, marge du body à zéro, titre et sous-titre de paquet sur deux lignes)
+   · 3 (01.11.2026, C3 : code de paquet, numéro de section de fiche, astuce « attention », état du paquet dans la fiche,
+   clavier et aperçu de saisie, badge « chiffres changés », variable --mono ; étiquette « Rattrapage » de l'historique
+   corrigée : elle s'affichait en barre pleine sans texte lisible).
    Rayons et couleurs d'appoint réglables par le thème de l'outil (CSS_THEME est appliqué après ce fichier) */
-:root{ --r-xl:16px; --r-l:14px; --r:12px; --r-m:10px; --r-s:8px; --r-xs:5px; --focus:var(--court); --scorebox-border:#35406A; }
+:root{ --r-xl:16px; --r-l:14px; --r:12px; --r-m:10px; --r-s:8px; --r-xs:5px; --focus:var(--court); --scorebox-border:#35406A; --mono:ui-monospace,Menlo,Consolas,monospace; }
 /* CSS de base commune à tous les outils (noyau). La palette (:root, mode sombre) et les couleurs des étiquettes (.chip.<tag>) viennent du contenu. */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin:0}
@@ -163,7 +166,7 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:var(--
 .attempt-left{flex:1;min-width:0}
 .attempt-left b{display:block;font-size:14.5px}
 .attempt-left span{display:block;font-size:12px;color:var(--soft)}
-.rattr-tag{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:var(--r-xs);margin-right:6px}
+.rattr-tag,.attempt-left .rattr-tag{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:var(--r-xs);margin-right:6px}
 .attempt-note{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:18px;color:var(--on-court)}
 .attempt-note.good{background:var(--good)} .attempt-note.low{background:var(--bad)}
 .attempt-body{padding:0 12px 12px;display:flex;flex-direction:column;gap:9px}
@@ -240,3 +243,17 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:var(--
 .tab.on{color:var(--court);background:var(--court-wash)}
 
 @media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
+
+/* C3 — paquets à code, fiche liée aux paquets, saisie mathématique */
+.deck-c{display:block;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--court)}
+.entry-num{flex:none;min-width:38px;font-family:var(--mono);font-weight:600;font-size:13px;color:var(--court);border:1px solid var(--court);border-radius:20px;text-align:center;padding:1px 6px}
+.entry-num.miss{color:var(--bad);border-color:var(--bad)}
+.entry-head .deck-pst{padding:0}
+.astuce.neg{background:var(--bad-wash)} .astuce.neg b{color:var(--bad)}
+.fiche-paq{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.pdrop{background:var(--bad-wash);border-radius:var(--r-s);padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:8px}
+.pdrop p{margin:0}
+.keys{display:flex;flex-wrap:wrap;gap:6px}
+.keys button{min-width:44px;padding:9px 10px;border:1px solid var(--rule);border-radius:var(--r-s);background:var(--sheet);font-family:var(--mono);font-weight:600;font-size:16px;cursor:pointer}
+.preview{font-family:var(--mono);font-size:15px;color:var(--soft);margin:0;min-height:1.4em}
+.chg{font-size:12px;font-weight:700;color:var(--bad);border:1px solid var(--bad);border-radius:20px;padding:0 8px}

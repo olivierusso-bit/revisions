@@ -19,6 +19,9 @@ Niveaux : OK · MANQUE (bloquant) · AVERTISSEMENT (à regarder) · SANS OBJET (
 Les outils n'utilisent pas tous les mêmes noms de fonctions : chaque fonctionnalité est donc
 reconnue par plusieurs écritures (alias). Une écriture inconnue donne « MANQUE » à tort ; dans ce cas,
 ajouter l'alias dans ALIAS plutôt que d'ignorer l'écart.
+
+Versions : 1 (01.11.2026, B1) · 2 (01.11.2026, C3 : pour un outil assemblé sur le noyau commun, le nombre d'anneaux et la
+correction en direct se lisent dans ce que la couche déclare, pas dans le code du noyau).
 """
 import json, os, re, subprocess, sys, tempfile
 
@@ -184,7 +187,20 @@ def controle(chemin, runtime=False):
     r.test(a_une(src, "couleurs_pastille"), "couleurs", "variables de couleur des pastilles (--p-okdark…)", "variables --p-* absentes")
 
     # 10. Anneaux selon la famille
-    if fam == "langues":
+    # Outil assemblé (noyau commun, refonte 2026) : le noyau contient les deux moteurs ; ce qui compte est ce que la couche déclare.
+    m_rings = re.search(r"const COUCHE = \{\s*rings:\s*(\d)", src)
+    if m_rings:
+        n_rings = int(m_rings.group(1)); live = bool(re.search(r"const COUCHE = \{[^}]*?hasLive:\s*true", src, re.S))
+        if fam == "langues":
+            r.test(n_rings == 3, "anneaux", "pastille à trois anneaux (langues et français)", "la couche déclare %d anneau(x)" % n_rings)
+            r.ok("anneau_niveau", "un anneau = un niveau (noyau commun)")
+            r.test(live, "correction_direct", "mode « Correction en direct »", "la couche ne déclare pas la correction en direct")
+        else:
+            r.test(n_rings == 1, "anneaux", "un seul anneau (Dossier et maths)", "la couche déclare %d anneaux" % n_rings)
+            r.sans("anneau_niveau", "un anneau = un niveau (langues seulement)")
+            r.test(not live, "correction_direct", "pas de « Correction en direct » (langues seulement)",
+                   "la couche déclare la correction en direct", niveau="AVERTISSEMENT")
+    elif fam == "langues":
         r.test(a_une(src, "trois_anneaux"), "anneaux", "pastille à trois anneaux (langues et français)", "pas de rendu à trois anneaux")
         # un anneau = un niveau (v21 de la fiche construction)
         if re.search(r"lvl\s*===\s*ringLvl|Un anneau\s*=\s*un niveau|const\s+levels\s*=\s*\[\s*lv\s*\]", src):

@@ -15,7 +15,13 @@
    onglets et écrans, prompt d'analyse (âge déduit de la classe, jamais écrit en dur).
    Les clés de stockage et le format des historiques sont ceux des outils précédents : rien n'est perdu.
    Versions : 1 (01.11.2026, C1, né du modèle de français v4) · 2 (01.11.2026, C2 : réglages facultatifs d'OUTIL ci-dessus, Umlaute,
-   nombre de questions, faute de frappe enregistrée, test en cours plus complet, source dans le corrigé et la copie, cartes homonymes distinguées).
+   nombre de questions, faute de frappe enregistrée, test en cours plus complet, source dans le corrigé et la copie, cartes homonymes distinguées)
+   · 3 (01.11.2026, C3 : moteur à un anneau (maths, Dossier), réglages par paquet et ordre des questions, accroches de la couche Maths).
+   Réglages facultatifs ajoutés à C3 : comptesParPaquet (le nombre de questions vaut pour chaque paquet), compteLabel, ordres
+   ({clé:{label, sub, emoji}} = « Ordre des questions »), sousEntete (html ou fonction, sous l'en-tête hors du quiz), ficheOuverte,
+   titreAstuceNeg, motPaquets (pluriel). Un paquet peut porter code (« Obj. 1 ») et detail ; une section de FICHE num, deck, miss, astuceNeg.
+   Accroches facultatives de la COUCHE : affiche(s) (écriture affichée, ex. 10^7 → 10⁷), classeMot(q), classeChoix(o), badges(q),
+   saisie(q, Q) (html sous le champ), onSaisie(Q), diffEntiere (réponse fausse barrée en entier), wrote(question) (pour un anneau).
    ============================================================ */
 
 const HAS_CLAUDE = !!(window.claude && window.claude.use);
@@ -40,6 +46,9 @@ const DIFFICULTIES = {
 /* nombre de questions par test : liste proposée par l'outil (0 = toutes) ; sans liste, toutes les questions */
 const COUNTS = Array.isArray(OUTIL.comptes) && OUTIL.comptes.length ? OUTIL.comptes : null;
 const UMLAUTS_STRICTS = !!OUTIL.umlautsStricts;
+const ORDRES = OUTIL.ordres || null;
+const AFF = s => COUCHE.affiche ? COUCHE.affiche(s == null ? "" : String(s)) : (s == null ? "" : String(s));
+const MOT_PAQUETS = OUTIL.motPaquets || (OUTIL.motPaquet.toLowerCase() + "s");
 const LVL_OF_LABEL = { "Échauffement":0, "Entraînement":1, "Niveau épreuve":2 };
 const MODES = COUCHE.hasLive ? {
   train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
@@ -92,9 +101,9 @@ function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getM
 const CARDS = COUCHE.allCards();
 const CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
 function deckCards(dk){ return CARDS.filter(c => c.dk === dk); }
-function buildTest(deckKeys, difficulty, limit){ return COUCHE.buildTest(deckKeys, difficulty, limit || 0); }
+function buildTest(deckKeys, difficulty, limit, order){ return COUCHE.buildTest(deckKeys, difficulty, limit || 0, order || (ORDRES ? Object.keys(ORDRES)[0] : "")); }
 /* ce que l'écran Paquets compte : les éléments des paquets, ou les cartes (OUTIL.compte = "cartes") */
-function compteSel(keys){ const n = keys.reduce((s,k) => s + (OUTIL.compte === "cartes" ? deckCards(k).length : DECK[k].items.length), 0); return { n, mot: OUTIL.compte === "cartes" ? "carte" : "élément" }; }
+function compteSel(keys){ const n = keys.reduce((s,k) => s + (OUTIL.compte === "cartes" ? deckCards(k).length : DECK[k].items.length), 0); return { n, mot: OUTIL.compte === "cartes" ? "carte" : OUTIL.compte === "questions" ? "question" : "élément" }; }
 
 /* ---------- stockage ---------- */
 const store = {
@@ -137,7 +146,7 @@ const store = {
 
 /* ---------- état ---------- */
 const S = {
-  screen:"fiche", ficheOpen:0,
+  screen:"fiche", ficheOpen: OUTIL.ficheOuverte != null ? OUTIL.ficheOuverte : 0, order: ORDRES ? Object.keys(ORDRES)[0] : "",
   selected: DECKS.map(d => d.key),
   difficulty:"normal", mode:"train", count: COUNTS ? (OUTIL.compteDefaut != null ? OUTIL.compteDefaut : COUNTS[0]) : 0,
   frozen:null, paperMsg:"", paperCopy:"",
@@ -150,7 +159,9 @@ const S = {
   bilan:{},
   draft:null, draftAsk:false, draftBlock:false, draftErr:false, quitAsk:false,
 };
-const deckLabel = keys => keys.length === DECKS.length ? OUTIL.labelTout : keys.map(k => DECK[k].title).join(" + ");
+const deckLabel = keys => keys.length === DECKS.length ? OUTIL.labelTout
+  : DECKS[0].code ? (keys.length > 3 ? keys.length + " " + MOT_PAQUETS : keys.map(k => DECK[k].code).join(" + "))
+  : keys.map(k => DECK[k].title).join(" + ");
 
 /* ============================================================
    SUIVI GRAPHIQUE (§ 6 quater) — anneaux par paquet (3 pour les langues, § 11.4)
@@ -180,12 +191,14 @@ function testScore(root, ch){
   return { score, total, note:noteFrom(score / total), typos:qs.filter(x => x.typo).length, steps };
 }
 
+/* une réponse compte comme « écrite » (pour un anneau) si elle a été tapée, ou si la question n'existe qu'à choix */
+function wroteOf(q){ return COUCHE.wrote ? COUCHE.wrote(q) : (q.type === "type" || !!q.mcqOnly); }
 /* historique des cartes au premier passage des tests (jamais les rattrapages) */
 function histByCard(exceptId){
   const h = {};
   rootTests().filter(a => a.id !== exceptId).forEach(a => {
     const lvl = LVL_OF_LABEL[a.difficulty]; if (lvl == null) return;
-    a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); (h[k] = h[k] || []).push({ ok:x.correct, lvl, day:dayOf(a.date), date:a.date }); });
+    a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); (h[k] = h[k] || []).push({ ok:x.correct, lvl, day:dayOf(a.date), date:a.date, wrote:wroteOf(x.question) }); });
   });
   Object.values(h).forEach(arr => arr.sort((a, b) => a.date - b.date));
   return h;
@@ -245,6 +258,65 @@ function ring1Svg(sum, size, centerText){
   return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true">${ringArc(sum, r, w)}<text x="0" y="6" text-anchor="middle" class="pring-t" style="font-size:16px">${centerText}</text></svg>`;
 }
 
+/* ---------- UN ANNEAU (maths, Dossier) : tous les niveaux comptent ----------
+   État d'une carte : son dernier passage. Juste et écrit deux jours différents de suite = acquise (vert foncé) ;
+   juste = en route (couleur du niveau) ; fausse = à revoir (rouge pâle) ; jamais posée = gris. */
+function state1(es){
+  if (!es || !es.length) return "new";
+  const last = es[es.length - 1]; if (!last.ok) return "bad";
+  if (!last.wrote) return "mid";
+  for (let k = es.length - 2; k >= 0; k--){ if (!es[k].ok) break; if (es[k].wrote && es[k].day !== last.day) return "ok"; }
+  return "mid";
+}
+function summary1(cards, hist){
+  const c = { ok:0, mid:0, bad:0, new:0 }, total = cards.length;
+  cards.forEach(card => c[state1(hist[card.k])]++);
+  const right = c.ok + c.mid, posed = total - c.new, pct = total ? Math.round(right / total * 100) : 0;
+  const note = total ? noteFrom(right / total) : 0, noteAcq = total ? noteFrom(c.ok / total) : 0;
+  const state = !posed ? "start" : noteAcq >= 5 ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
+  return { ...c, total, right, posed, pct, note, state };
+}
+/* résumé de référence d'un paquet : un anneau, ou l'anneau Niveau épreuve */
+function paqSum(dk, hist){ return COUCHE.rings === 1 ? summary1(deckCards(dk), hist) : paquetRings(dk, hist)[2]; }
+/* anneau segmenté : acquises (vert foncé), justes (couleur du niveau), à revoir (rouge pâle), pas posées (gris) */
+function ringSegSvg(sum, size, centerText){
+  const h = size / 2, r = h - 6, w = 7, C = 2 * Math.PI * r;
+  let arcs;
+  if (sum.state === "start") arcs = `<circle r="${r}" fill="none" stroke-width="${w}" stroke-dasharray="3 3" style="stroke:var(--rule)"/>`;
+  else {
+    arcs = `<circle r="${r}" fill="none" stroke-width="${w}" style="stroke:var(--rule)"/>`;
+    let off = 0;
+    [[sum.ok, "var(--p-okdark)"], [sum.mid, pColor(sum.state === "ok" ? "win" : sum.state)], [sum.bad, "var(--p-lowsoft)"]].forEach(([n, col]) => {
+      if (!n) return; const len = C * n / sum.total;
+      arcs += `<circle r="${r}" fill="none" stroke-width="${w}" stroke="${col}" stroke-dasharray="${len.toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90)"/>`;
+      off += len;
+    });
+  }
+  const fs = size > 70 ? 15 : 12;
+  return `<svg class="pring" width="${size}" height="${size}" viewBox="${-h} ${-h} ${size} ${size}" aria-hidden="true">${arcs}<text x="0" y="${(fs/3).toFixed(1)}" text-anchor="middle" class="pring-t" style="font-size:${fs}px">${centerText}</text></svg>`;
+}
+function trend1(dk, hist){
+  const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return "";
+  const now = summary1(deckCards(dk), hist), prev = summary1(deckCards(dk), histByCard(tests[tests.length - 1].id));
+  return now.right > prev.right ? " ↗" : now.right < prev.right ? " ↘" : "";
+}
+function pastille1(dk){
+  if (!S.loaded) return "";
+  const hist = histByCard(), sum = summary1(deckCards(dk), hist), dr = dropOf(dk, hist);
+  const label = sum.state === "start" ? "Pas encore testé" : `${sum.right} sur ${sum.total}, ${P_LABEL[sum.state]}${dr ? ", avant : " + P_LABEL[dr.prev.state] : ""}`;
+  return `<div class="deck-pst" aria-label="${label}">${ringSegSvg(sum, 52, sum.state === "start" ? "" : sum.right + "/" + sum.total)}<span class="pst-l pst-${sum.state}">${P_LABEL[sum.state]}${sum.state === "start" ? "" : trend1(dk, hist)}</span>${dr ? `<span class="pst-notes">avant : ${P_LABEL[dr.prev.state]}</span>` : ""}</div>`;
+}
+/* état d'un paquet en toutes lettres + boutons (section de la fiche liée à un paquet) */
+function paqStatus(dk){
+  if (!S.loaded) return "";
+  const hist = histByCard(), sum = paqSum(dk, hist), dr = dropOf(dk, hist), m = OUTIL.motPaquet.toLowerCase();
+  let h = `<p class="fine"><b>Cet ${m === "objectif" ? "objectif" : m} : ${P_LABEL[sum.state]}</b>${sum.state !== "start" ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
+  if (dr && dr.lost.length) h += `<div class="pdrop"><p>↘ Le ${dayShort(dr.date)}, c'était « ${P_LABEL[dr.prev.state]} » (note ${fmtNote(dr.prev.note)}). ${dr.lost.length} question${dr.lost.length>1?"s":""} réussie${dr.lost.length>1?"s":""} avant ${dr.lost.length>1?"sont ratées":"est ratée"} au dernier test : ce sont elles à reprendre.</p><button class="ghost small" data-act="redoCards" data-v="lost:${dk}">Refaire ces ${dr.lost.length} questions</button></div>`;
+  else { const bad = paqBad(dk, hist); if (bad.length) h += `<button class="ghost small" data-act="redoCards" data-v="${dk}">${bad.length > 1 ? `Refaire mes ${bad.length} questions à revoir` : "Refaire ma question à revoir"}</button>`; }
+  return h;
+}
+function dayShort(t){ const d = new Date(t); return String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0"); }
+
 function trendOf(dk, hist, lvl = 2){
   const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return "";
   const now = paquetRings(dk, hist)[lvl];
@@ -255,6 +327,12 @@ function trendOf(dk, hist, lvl = 2){
 function dropOf(dk, hist, lvl = 2){
   const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return null;
   const last = tests[tests.length - 1];
+  if (COUCHE.rings === 1){
+    const prevHist = histByCard(last.id), now = summary1(deckCards(dk), hist), prev = summary1(deckCards(dk), prevHist);
+    if (lvlOf(now) < 0 || lvlOf(prev) <= lvlOf(now)) return null;
+    const lost = deckCards(dk).filter(c => { const ps = state1(prevHist[c.k]), ns = state1(hist[c.k]); return (ps === "ok" || ps === "mid") && ns === "bad"; });
+    return { prev, lost, date:tests[tests.length - 2].date };
+  }
   const now = paquetRings(dk, hist)[lvl], prevHist = histByCard(last.id), prev = ringSummary(deckCards(dk), lvl, prevHist);
   if (lvlOf(now) < 0 || lvlOf(prev) <= lvlOf(now)) return null;
   const lost = deckCards(dk).filter(c => c.levels.includes(lvl)).filter(c => { const ps = ringState(prevHist[c.k] || [], lvl), ns = ringState(hist[c.k] || [], lvl); return (ps === "ok") && ns === "bad"; });
@@ -271,12 +349,10 @@ function pastille3(dk){
   return `<div class="deck-pst" aria-label="${label}">${ring3Svg(rings, 84, top < 0 ? "" : ref.right + "/" + ref.total)}<span class="pst-l pst-${ref.state}">${P_LABEL[ref.state]}${top < 0 ? "" : trendOf(dk, hist, top)}</span>${dr ? `<span class="pst-notes">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</div>`;
 }
 /* pastille d'un paquet selon la couche (1 anneau : à écrire à l'étape C3, maths et Dossier) */
-function pastilleDeck(dk){
-  if (COUCHE.rings === 3) return pastille3(dk);
-  throw new Error("pastille à un anneau : pas encore dans le noyau (étape C3)");
-}
+function pastilleDeck(dk){ return COUCHE.rings === 1 ? pastille1(dk) : pastille3(dk); }
 function globalPastille(){
   if (!S.loaded || !rootTests().length) return "";
+  if (COUCHE.rings === 1) return globalPastille1();
   const hist = histByCard(), sum = ringSummary(CARDS, 2, hist);
   const nOk = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "ok").length;
   const nWin = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "win").length;
@@ -287,7 +363,16 @@ function globalPastille(){
   <p>Couleur de chaque anneau selon la note : <b>rouge</b> à revoir (moins de 4), <b>orange</b> en route (4–4,5), <b>vert</b> réussi (5 et plus), <b>vert foncé</b> OK ✓ (réussi au niveau épreuve et confirmé un autre jour).</p>
   <p>Seul le premier passage d'un test compte ; refaire ses erreurs aide à apprendre mais ne change pas les anneaux.</p></details>`;
 }
-function paqBad(dk, hist){ return deckCards(dk).filter(c => ringState((hist || histByCard())[c.k] || [], 2) === "bad"); }
+function paqBad(dk, hist){ const h = hist || histByCard(); return deckCards(dk).filter(c => COUCHE.rings === 1 ? state1(h[c.k]) === "bad" : ringState(h[c.k] || [], 2) === "bad"); }
+function globalPastille1(){
+  const hist = histByCard(), g = summary1(CARDS, hist), sums = DECKS.map(d => summary1(deckCards(d.key), hist));
+  const nOk = sums.filter(x => x.state === "ok").length, nWin = sums.filter(x => x.state === "win").length;
+  return `<div class="pglob">${ringSegSvg(g, 84, g.state === "start" ? "—" : g.pct + "%")}<div class="pglob-x"><b>Avancement général · ${P_LABEL[g.state]}</b><span>${g.right} cartes justes au dernier test sur ${g.total}, dont ${g.ok} acquises · ${g.bad} à revoir · ${g.new} pas encore posées</span><span>${nOk} ${esc(MOT_PAQUETS)} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
+  <details class="plegend"><summary>Comment se lit la pastille ?</summary>
+  <p>Le chiffre au centre : les questions du ${esc(OUTIL.motPaquet.toLowerCase())} réussies au dernier test où chacune est tombée, sur toutes ses questions. Seul le premier passage d'un test compte, pas les rattrapages.</p>
+  <p>Mots et couleurs suivent la note : sous 4 « à revoir » (rouge), 4 à 4,5 « en route » (orange), 5 et plus « réussi » (vert), réussi à nouveau un autre jour « OK ✓ » (vert foncé). Gris en pointillé : pas encore testé.</p>
+  <p>Dans l'anneau : vert foncé = acquis (écrit juste deux jours différents), couleur du niveau = juste au dernier test, rouge pâle = raté, gris = pas encore posé. Une question n'est acquise que si elle a été écrite, pas seulement choisie.</p></details>`;
+}
 
 /* lancer un test sur des cartes précises (refaire à revoir / cartes qui résistent / perdues) */
 function redoCards(v){
@@ -297,8 +382,8 @@ function redoCards(v){
   else if (v.startsWith("lost:")){ const dk = v.slice(5), dr = dropOf(dk, hist); keys = new Set(dr ? dr.lost.map(c => c.k) : []); }
   else keys = new Set(paqBad(v, hist).map(c => c.k));
   if (!keys.size) return;
-  const decks = [...new Set([...keys].map(k => k.split("|")[0]))];
-  const qs = buildTest(decks, "hard").filter(q => keys.has(q.card));
+  const decks = DECKS.map(d => d.key).filter(dk => [...keys].some(k => CARD[k] && CARD[k].dk === dk));
+  const qs = buildTest(decks, "hard", 0, ORDRES ? Object.keys(ORDRES)[0] : "").filter(q => keys.has(q.card));
   if (!qs.length) return;
   let n = 0; qs.forEach(q => { q.num = ++n; });
   S.selected = decks; S.difficulty = "hard"; S.mode = "train"; S.frozen = null;
@@ -380,7 +465,7 @@ function suiviBlock(){
   <div class="row"><button class="ghost small${s.f==="all"?" on":""}" data-act="suiviF" data-v="all" aria-pressed="${s.f==="all"}">Tous les tests</button><button class="ghost small${s.f==="exam"?" on":""}" data-act="suiviF" data-v="exam" aria-pressed="${s.f==="exam"}">Niveau épreuve et épreuve blanche</button></div></div>
   ${suiviChart()}
   <h3>Mes ${esc(OUTIL.motPaquet.toLowerCase())}s jour après jour</h3>${suiviHeat()}
-  ${res.length ? `<h3>Les cartes qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${esc(DECK[x.ch].title)}</span> ${esc(x.word)} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} cartes</button>` : ""}
+  ${res.length ? `<h3>Les ${OUTIL.compte === "questions" ? "questions" : "cartes"} qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${esc(DECK[x.ch].code || DECK[x.ch].title)}</span> ${esc(AFF(x.word))} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} ${OUTIL.compte === "questions" ? "questions" : "cartes"}</button>` : ""}
   </section>`;
 }
 function chainTxt(a){
@@ -407,7 +492,7 @@ function draftSave(){
   const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => { const o = { u:x.user, c:x.correct }; if (x.typo) o.t = 1; if (x.liveFixed){ o.lf = 1; o.ls = x.liveSnap; } return o; }),
     picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok, liveFixed:!!Q.liveFixed, errSnap:Q.errSnap || "",
     label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "", rattrParent:S.rattrParent || null,
-    selected:S.selected, difficulty:S.difficulty, mode:S.mode };
+    selected:S.selected, difficulty:S.difficulty, mode:S.mode, order:S.order };
   S.draft = d; draftWrite(d);
 }
 function draftDetail(d){
@@ -421,8 +506,9 @@ function draftPick(a, b){ const ta = a ? a.saved || 0 : -1, tb = b ? b.saved || 
 function draftClear(){ S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
 function draftResume(){
   const d = S.draft; if (!d) return;
-  S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
-  S.rattrapage = d.rattrapage; S.rattrLabel = d.rattrLabel; S.rattrParent = d.rattrParent || null;
+  S.selected = (d.selected || d.keys || DECKS.map(x => x.key)).filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
+  if (ORDRES && d.order && ORDRES[d.order]) S.order = d.order;
+  S.rattrapage = !!d.rattrapage; S.rattrLabel = d.rattrLabel || d.label || ""; S.rattrParent = d.rattrParent || d.parent || null;
   S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, liveFixed:!!d.liveFixed, hadErr:!!d.liveFixed, errSnap:d.errSnap || "", detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
   S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.draftBlock = false; S.screen = "quiz";
   render(); window.scrollTo(0,0);
@@ -460,7 +546,8 @@ function render(){
 }
 function header(){
   const badge = OUTIL.badgeHtml || `<div class="jersey" aria-hidden="true"><b>${esc(OUTIL.jersey)}</b></div>`;
-  return `<header class="head">${badge}<div><h1>${esc(OUTIL.titre)}</h1><p>${esc(OUTIL.sousTitre)} — à savoir pour le ${esc(DUE.long)}</p></div></header>`;
+  const sous = S.screen === "quiz" ? "" : typeof OUTIL.sousEntete === "function" ? OUTIL.sousEntete() : (OUTIL.sousEntete || "");
+  return `<header class="head">${badge}<div><h1>${esc(OUTIL.titre)}</h1><p>${esc(OUTIL.sousTitre)} — à savoir pour le ${esc(DUE.long)}</p></div></header>${sous}`;
 }
 function renderTabs(){
   const bar = document.getElementById("tabbar");
@@ -478,13 +565,16 @@ function viewFiche(){
   FICHE.forEach((sec, i) => {
     const open = S.ficheOpen === i;
     const cnt = sec.count != null ? sec.count : sec.pairs ? sec.pairs.length : 0;
-    h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}"><span class="entry-icon">${sec.icon}</span><span class="entry-title">${esc(sec.titre)}</span>${cnt ? `<span class="entry-count">${cnt}</span>` : ""}</button>`;
+    const dk = sec.deck && DECK[sec.deck] ? DECK[sec.deck] : null;
+    const tete = sec.num != null ? `<span class="entry-num${sec.miss ? " miss" : ""}">${esc(sec.num)}</span>` : `<span class="entry-icon">${sec.icon}</span>`;
+    h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}">${tete}<span class="entry-title">${esc(dk ? dk.title : sec.titre)}</span>${dk ? pastilleDeck(dk.key) : cnt ? `<span class="entry-count">${cnt}</span>` : ""}</button>`;
     if (open){
       h += `<div class="entry-body">`;
       if (sec.pairs) h += sec.pairs.map(p => `<div class="pair"><span class="pair-de">${esc(p[0])}</span><span>${esc(p[1])}</span></div>`).join("");
       if (sec.html) h += typeof sec.html === "function" ? sec.html() : sec.html;
       if (sec.tips) h += `<div style="display:flex;flex-direction:column;gap:6px">` + sec.tips.map(t => `<p class="tip">${esc(t)}</p>`).join("") + `</div>`;
-      if (sec.astuce) h += `<p class="astuce"><b>Astuce</b>${esc(sec.astuce)}</p>`;
+      if (sec.astuce) h += `<p class="astuce${sec.astuceNeg ? " neg" : ""}"><b>${sec.astuceNeg ? esc(OUTIL.titreAstuceNeg || "Attention") : "Astuce"}</b>${esc(sec.astuce)}</p>`;
+      if (dk) h += `<div class="fiche-paq">${paqStatus(dk.key)}<button class="ghost small" data-act="testDeck" data-v="${dk.key}">🎯 Teste-toi sur cet ${esc(OUTIL.motPaquet.toLowerCase())} (${dk.items.length} questions, Je m'entraîne)</button></div>`;
       h += `</div>`;
     }
     h += `</section>`;
@@ -512,8 +602,8 @@ function viewHome(){
   h += DECKS.map(d => {
     const on = S.selected.includes(d.key);
     const bad = hist ? paqBad(d.key, hist) : [];
-    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-e">${d.emoji}</span><span class="deck-txt"><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}${OUTIL.compte === "cartes" ? ` · ${deckCards(d.key).length} cartes` : ""}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastilleDeck(d.key)}</div>` +
-      (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">Refaire mes ${bad.length} carte${bad.length>1?"s":""} à revoir</button></div>` : "");
+    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}">${d.emoji ? `<span class="deck-e">${d.emoji}</span>` : ""}<span class="deck-txt">${d.code ? `<span class="deck-c">${esc(d.code)}</span>` : ""}<span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}${OUTIL.compte === "cartes" ? ` · ${deckCards(d.key).length} cartes` : ""}${d.detail ? " · " + esc(d.detail) : ""}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastilleDeck(d.key)}</div>` +
+      (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">${(() => { const m = OUTIL.compte === "questions" ? "question" : "carte"; return bad.length > 1 ? `Refaire mes ${bad.length} ${m}s à revoir` : `Refaire ma ${m} à revoir`; })()}</button></div>` : "");
   }).join("");
   h += `<button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
   <p class="fine">${count} ${cs.mot}${count>1?"s":""} sélectionné${cs.mot === "carte" ? "e" : ""}${count>1?"s":""}</p>
@@ -531,7 +621,7 @@ function viewCards(){
   return `<button class="back" data-act="nav" data-v="home">← Paquets</button>
   <p class="fine">${esc(deckLabel(S.selected))} · carte ${S.cards.pos+1} sur ${ents.length}</p>
   <button class="flash${S.cards.flip?" flipped":""}" data-act="flip" aria-label="Retourner la carte">
-    <span class="face f"><span class="face-tag">${esc(f.tagF)}</span><span class="face-word">${esc(f.front)}</span>${f.frontMini ? `<span class="face-mini">${esc(f.frontMini)}</span>` : ""}<span class="face-hint">touche la carte</span></span>
+    <span class="face f"><span class="face-tag">${esc(f.tagF)}</span><span class="face-word${f.frontClass ? " " + f.frontClass : ""}">${esc(f.front)}</span>${f.frontMini ? `<span class="face-mini">${esc(f.frontMini)}</span>` : ""}<span class="face-hint">${f.hintF ? esc(f.hintF) : "touche la carte"}</span></span>
     <span class="face b"><span class="face-tag">${esc(f.tagB)}</span>${f.backHtml}</span>
   </button>
   <div class="row3"><button class="ghost" data-act="card" data-v="-1">Précédente</button><button class="ghost" data-act="cardShuffle">Mélanger</button><button class="ghost" data-act="card" data-v="1">Suivante</button></div>`;
@@ -542,10 +632,11 @@ function viewSetup(){
   const cs = compteSel(S.selected), total = cs.n;
   let h = draftBanner() + `<button class="back" data-act="nav" data-v="home">← Paquets</button>
   <p class="fine">${esc(deckLabel(S.selected))} · ${total} ${cs.mot}${total>1?"s":""}${cs.mot === "carte" ? " en tout" : ""}</p>
-  ${COUNTS ? `<p class="lab">Combien de questions</p><div class="row4">${COUNTS.map(n => `<button class="ghost small${S.count===n?" on":""}" data-act="count" data-v="${n}" aria-pressed="${S.count===n}">${n ? n : "Toutes"}</button>`).join("")}</div>
-  <p class="fine">Les questions sont tirées dans tous les paquets cochés, à tour de rôle.</p>` : ""}
+  ${COUNTS ? `<p class="lab">${esc(OUTIL.compteLabel || "Combien de questions")}</p><div class="row4">${COUNTS.map(n => `<button class="ghost small${S.count===n?" on":""}" data-act="count" data-v="${n}" aria-pressed="${S.count===n}">${n ? n : (OUTIL.comptesParPaquet ? "Tout" : "Toutes")}</button>`).join("")}</div>
+  <p class="fine">${OUTIL.comptesParPaquet ? `${DECKS.filter(d => S.selected.includes(d.key)).reduce((n, d) => n + (S.count ? Math.min(d.items.length, S.count) : d.items.length), 0)} questions avec ce réglage.` : "Les questions sont tirées dans tous les paquets cochés, à tour de rôle."}</p>` : ""}
   <p class="lab">Ton niveau</p><div class="opts">${Object.entries(DIFFICULTIES).map(([k,d]) => `<button class="opt${S.difficulty===k?" on":""}" data-act="diff" data-v="${k}" aria-pressed="${S.difficulty===k}"><span class="opt-e">${d.emoji}</span><span class="opt-main">${d.label}</span><span class="opt-sub">${d.sub}</span></button>`).join("")}</div>
   <p class="lab">Comment on corrige</p><div class="opts">${Object.entries(MODES).map(([k,m]) => `<button class="opt${S.mode===k?" on":""}" data-act="mode" data-v="${k}" aria-pressed="${S.mode===k}"><span class="opt-e">${m.emoji}</span><span class="opt-main">${m.label}</span><span class="opt-sub">${m.sub}</span></button>`).join("")}</div>`;
+  if (ORDRES) h += `<p class="lab">Ordre des questions</p><div class="opts">${Object.entries(ORDRES).map(([k,o]) => `<button class="opt${S.order===k?" on":""}" data-act="order" data-v="${k}" aria-pressed="${S.order===k}"><span class="opt-e">${o.emoji}</span><span class="opt-main">${o.label}</span><span class="opt-sub">${o.sub}</span></button>`).join("")}</div>`;
   if (S.frozen){
     h += `<div class="paper"><b>Version papier prête</b><p class="fine">Ce test est figé : la question N° 5 de la feuille sera la N° 5 à l'écran.</p>
       <button class="ghost small" data-act="paper" data-v="ex">Feuille d'exercices</button>
@@ -625,17 +716,18 @@ function viewQuiz(){
   if (S.quitAsk) return quitView();
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
-  <div class="badges"><span class="num">N° ${q.num}</span><span class="chip ${q.tag}">${esc(TAG_LABEL[q.tag] || q.tag)}</span><span class="ref">Exercice ${q.ex} · ${esc(q.exTitle)}</span></div>
-  <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
+  <div class="badges"><span class="num">N° ${q.num}</span>${TAG_LABEL[q.tag] ? `<span class="chip ${q.tag}">${esc(TAG_LABEL[q.tag])}</span>` : ""}<span class="ref">Exercice ${q.ex} · ${esc(q.ref || q.exTitle)}</span>${COUCHE.badges ? COUCHE.badges(q) : ""}</div>
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword${COUCHE.classeMot ? " " + COUCHE.classeMot(q) : ""}">${esc(AFF(q.word))}</p>${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
   if (q.type === "mcq"){
     h += `<div class="opts">` + q.options.map((o, k) => {
-      let c = "choice";
+      let c = "choice" + (COUCHE.classeChoix ? " " + COUCHE.classeChoix(o) : "");
       if (Q.checked){ c += o === q.answer ? " good" : o === Q.picked ? " bad" : " off"; } else if (o === Q.picked) c += " sel";
-      return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${esc(o)}</button>`;
+      return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${Q.checked && o === q.answer ? "✓ " : Q.checked && o === Q.picked ? "✗ " : ""}${esc(AFF(o))}</button>`;
     }).join("") + `</div>`;
   } else {
     h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
     if (q.lang === "de" && !Q.checked && !Q.finishing) h += `<div class="umlauts" aria-label="Lettres avec Umlaut">${["ä","ö","ü","Ä","Ö","Ü"].map(u => `<button data-act="uml" data-v="${u}" aria-label="Ajouter ${u}">${u}</button>`).join("")}</div>`;
+    if (COUCHE.saisie) h += COUCHE.saisie(q, Q);
     if (S.mode === "live" && !Q.checked) h += `<div class="live"><p class="live-lab">Ta réponse, lettre par lettre</p><div class="live-box" id="live-box"></div><p class="live-state" id="live-state" aria-live="polite"></p></div>`;
   }
   if (Q.finishing) h += `<p class="fine">J'enregistre ton résultat…</p>`;
@@ -646,9 +738,9 @@ function viewQuiz(){
     h += `<button class="ghost small" data-act="dontknow">Je ne sais pas</button>`;
   }
   if (Q.checked){
-    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? ["Juste !","Bien vu.","Nickel.","Exact.","Tu l'as."][Q.i % 5] : Q.liveFixed ? "✓ Juste à la fin, avec de l'aide." : "Presque. Regarde bien :"}</p>
+    h += `<div class="fb ${Q.ok?"ok":"no"}"><p class="fb-t">${Q.ok ? "✓ " + ["Juste !","Bien vu.","Nickel.","Exact.","Tu l'as."][Q.i % 5] : Q.liveFixed ? "✓ Juste à la fin, avec de l'aide." : "✗ Presque. Regarde bien :"}</p>
       ${Q.liveFixed ? `<p>Tu as corrigé des lettres en direct : ce mot ne compte pas dans la note. Il reviendra dans « Refaire mes erreurs ».</p>` : ""}
-      ${Q.ok ? "" : `<p>Réponse : <b>${esc(q.answer)}</b></p>`}<p class="fb-x">${esc(q.expl)}</p>
+      ${Q.ok ? "" : `<p>Réponse : <b>${esc(AFF(q.answer))}</b></p>`}<p class="fb-x">${esc(AFF(q.expl))}</p>
       ${q.type === "type" && !Q.ok && !Q.liveFixed && S.mode === "train" ? `<button class="ghost small" data-act="typo">C'était juste, j'ai fait une faute de frappe</button>` : ""}
       <button class="cta" data-act="next">${Q.i+1 >= total ? "Voir mon résultat" : "Suivante"}</button></div>`;
   }
@@ -667,7 +759,7 @@ function record(val, correct, typo){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i];
   const liveFixed = !!(S.mode === "live" && Q.liveFixed);
-  const e = { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" };
+  const e = { num:q.num, ex:q.ex, ref:q.ref || q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" };
   if (typo) e.typo = true;
   Q.detail.push(e);
   if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
@@ -676,7 +768,7 @@ function record(val, correct, typo){
 async function finishQuiz(){
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
   const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:OUTIL.branche, theme:THEME, deck:Q.label,
-    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
+    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, ...(ORDRES && ORDRES[S.order] ? { order:ORDRES[S.order].label } : {}), rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
   S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
   try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Pense à noter ta note ou à l'exporter." : ""; }
   catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
@@ -710,7 +802,7 @@ function findAttempt(id){ return (S.lastResult && S.lastResult.id === id) ? S.la
 /* prompt d'analyse : gabarit commun, rempli par OUTIL.analyse ; l'âge vient de la classe (jamais écrit en dur) */
 function analysePrompt(att){
   const A = OUTIL.analyse;
-  const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? (q.typo ? "JUSTE (faute de frappe acceptée)" : "JUSTE") : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
+  const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${AFF(q.answer)} | ${q.correct ? (q.typo ? "JUSTE (faute de frappe acceptée)" : "JUSTE") : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
   return `Tu es ${A.role}, bienveillant, qui analyse le test d'un élève de ${AGE_ELEVE} (${OUTIL.classe}, canton de Neuchâtel). Il révise ${A.sujet} pour un test le ${DUE.long}.
 
 Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
@@ -753,7 +845,7 @@ function copyText(att){
   const wrong = att.questions.filter(q => !q.correct);
   l.push(`ERREURS (${wrong.length}/${att.total})`);
   if (!wrong.length) l.push("Aucune erreur.");
-  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → ${q.liveFixed ? `corrigé en direct (j'avais écrit « ${q.liveSnap} », puis « ${q.user} »)` : `j'ai répondu « ${q.user || "rien"} »`}, attendu : ${q.answer}${srcOf(q) ? ` (${srcOf(q)})` : ""}`));
+  wrong.forEach(q => l.push(`- N° ${q.num} [${q.tag}] ${q.prompt} → ${q.liveFixed ? `corrigé en direct (j'avais écrit « ${q.liveSnap} », puis « ${q.user} »)` : `j'ai répondu « ${AFF(q.user) || "rien"} »`}, attendu : ${AFF(q.answer)}${srcOf(q) ? ` (${srcOf(q)})` : ""}`));
   return l.join("\n");
 }
 function copyFor(id){
@@ -815,8 +907,8 @@ function dxLegend(){ return `<p class="dx-legend"><span>${dxBad("barré")} = ce 
 function errCard(q){
   const Q = q.question || {}, isMcq = Q.type === "mcq", user = ((q.liveFixed && q.liveSnap) ? q.liveSnap : (q.user || "")).trim();
   let right = q.answer, U, R, note = "";
-  if (!user){ U = `<span class="dx-none">rien</span>`; R = dxGood(right); }
-  else if (isMcq){ U = dxBad(user); R = dxGood(right); }
+  if (!user){ U = `<span class="dx-none">rien</span>`; R = dxGood(AFF(right)); }
+  else if (isMcq || COUCHE.diffEntiere){ U = dxBad(AFF(user)); R = dxGood(AFF(right)); }
   else {
     const cands = (Q.accept && Q.accept.length ? Q.accept : [q.answer]).filter(Boolean);
     right = cands.reduce((best, c) => lev(dxN(user), dxN(c)) < lev(dxN(user), dxN(best)) ? c : best, cands[0]);
@@ -827,8 +919,8 @@ function errCard(q){
   return `<div class="revcard"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p>
     <p class="dx-line"><span class="dx-lab">✗ ${isMcq ? "Tu as choisi" : q.liveFixed ? "Tu avais écrit" : "Tu as écrit"}</span><span class="dx-ans">${U}</span></p>
     <p class="dx-line"><span class="dx-lab">✓ Il fallait</span><span class="dx-ans">${R}</span></p>
-    ${note ? `<p class="dx-note">${note}</p>` : ""}${right !== q.answer ? `<p class="fine">Réponse complète : ${esc(q.answer)}</p>` : ""}
-    <p class="rev-x">${esc(q.expl)}</p></div>`;
+    ${note ? `<p class="dx-note">${note}</p>` : ""}${right !== q.answer ? `<p class="fine">Réponse complète : ${esc(AFF(q.answer))}</p>` : ""}
+    <p class="rev-x">${esc(AFF(q.expl))}</p></div>`;
 }
 function errView(id){ const b = bilanState(id); return b.errOnly != null ? b.errOnly : S.screen === "results"; }
 function questionList(att){
@@ -836,13 +928,13 @@ function questionList(att){
   return (wrong.length ? dxLegend() : "") + list.map(q => q.correct ? revCard(q, !only) : errCard(q)).join("");
 }
 function revCard(q, showGoodAlways){
-  return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(q.user) : "—"}${q.typo ? " (faute de frappe acceptée)" : ""}</p>${(!q.correct || showGoodAlways) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(q.answer)}</b></p>` : ""}<p class="rev-x">${esc(q.expl)}</p></div>`;
+  return `<div class="revcard${q.correct?" ok":""}"><p class="rev-q">N° ${q.num} · ${esc(q.prompt)}</p><p>Ta réponse : ${q.user ? esc(AFF(q.user)) : "—"}${q.typo ? " (faute de frappe acceptée)" : ""}</p>${(!q.correct || showGoodAlways) ? `<p class="${q.correct?"rev-good":""}">Réponse : <b>${esc(AFF(q.answer))}</b></p>` : ""}<p class="rev-x">${esc(AFF(q.expl))}</p></div>`;
 }
 function viewResults(){
   const att = S.lastResult, pct = Math.round(att.score/att.total*100), wrong = att.questions.filter(q => !q.correct);
   const msg = pct === 100 ? `Sans faute. Tu es prêt pour ${DUE.long}.` : pct >= 80 ? "Solide. Repasse juste sur les quelques ratés." : pct >= 60 ? "La base est là. Refais tes erreurs, tu vas vite grimper." : pct >= 40 ? "Bon début. Relis la fiche, puis refais un tour en Échauffement." : "C'est le moment de relire la fiche tranquillement. Ça va venir.";
   return `<div class="scorebox${att.rattrapage ? " rattr-box" : ""}"><div class="score-n">${att.score}<small>/${att.total}</small></div><span class="score-note">note ${fmtNote(att.note)}</span>${att.rattrapage ? `<span class="rattr">Rattrapage — ${att.total} question${att.total>1?"s":""} ratée${att.total>1?"s":""} rejouée${att.total>1?"s":""}</span>` : ""}</div>
-  <p class="intro">${msg}</p>${(() => { const lf = att.questions.filter(q => q.liveFixed).length; return lf ? `<p class="fine">Dont ${lf} mot${lf>1?"s":""} juste${lf>1?"s":""} après correction en direct : ${lf>1?"ils ne comptent":"il ne compte"} pas dans la note.</p>` : ""; })()}${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
+  <p class="intro">${msg}</p>${(() => { if (!att.rattrapage) return ""; const p = S.attempts.find(a => a.id === att.parent); const sc = p && testScore(p, "all"); return sc && sc.steps.length ? `<p class="note">Ton test du ${dateLabel(p.date)} remonte : ${fmtNote(sc.note)} → ${fmtNote(sc.steps[sc.steps.length-1].note)} après ${sc.steps.length} rattrapage${sc.steps.length>1?"s":""}.</p>` : ""; })()}${(() => { const lf = att.questions.filter(q => q.liveFixed).length; return lf ? `<p class="fine">Dont ${lf} mot${lf>1?"s":""} juste${lf>1?"s":""} après correction en direct : ${lf>1?"ils ne comptent":"il ne compte"} pas dans la note.</p>` : ""; })()}${S.storeMsg ? `<p class="warn">${esc(S.storeMsg)}</p>` : ""}
   ${bilanBlock(att)}
   <p class="lab">${!wrong.length ? "Aucune erreur" : errView(att.id) ? `Mes erreurs (${wrong.length})` : `Toutes les questions (${att.total})`}</p>
   <div class="rev">${questionList(att)}</div>
@@ -882,11 +974,11 @@ function paperHtml(qs, part){
   const P = OUTIL.papier;
   const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
   const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
-  const line = q => `<b>${q.num}.</b> ${esc(q.word)}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}`;
+  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}`;
   const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
-    ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
+    ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(AFF(o))}</span>`).join("")}</div></div>`
     : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
-  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b>${srcOf(q) ? ` <span class="hint">(${esc(srcOf(q))})</span>` : ""}</div>`).join("")}</section>`).join("");
+  const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(AFF(q.word))} → <b>${esc(AFF(q.answer))}</b>${srcOf(q) ? ` <span class="hint">(${esc(srcOf(q))})</span>` : ""}</div>`).join("")}</section>`).join("");
   const head = `<h1>${esc(P.titre)}</h1><p class="meta">Prénom : ${esc(OUTIL.eleve)} · test du ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.court)} (${esc(DUE.short)})</title><style>
@@ -914,7 +1006,7 @@ async function savePaper(part){
     if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
     else {
       S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
-      S.paperCopy = OUTIL.papier.code + "\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.hint ? " (" + q.hint + ")" : ""}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
+      S.paperCopy = OUTIL.papier.code + "\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${AFF(q.word)}${q.hint ? " (" + q.hint + ")" : ""}${q.options ? " | " + q.options.map(AFF).join(" / ") : ""} → ${AFF(q.answer)}`).join("\n");
     }
   }
   render();
@@ -926,7 +1018,7 @@ async function loadHistory(){
     await store.init();
     let raw = await store.list();
     raw.sort((a,b) => b.date - a.date);
-    const cleaned = raw.filter((a, k) => { const prev = raw[k-1]; return !(prev && prev.deck === a.deck && Math.abs(prev.date - a.date) < 3000); });
+    const cleaned = raw.filter((a, k) => { const prev = raw[k-1]; return !(prev && prev.deck === a.deck && !!prev.rattrapage === !!a.rattrapage && prev.total === a.total && Math.abs(prev.date - a.date) < 3000); });
     for (const a of raw) if (!cleaned.includes(a)) { try { await store.remove(a.id); } catch(e){} }
     const known = new Set(S.attempts.map(a => a.id));
     S.attempts = [...S.attempts, ...cleaned.filter(a => !known.has(a.id))].sort((a,b) => b.date - a.date);
@@ -955,11 +1047,13 @@ document.addEventListener("click", e => {
     case "diff": S.difficulty = v; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
     case "mode": S.mode = v; render(); break;
     case "count": S.count = +v; S.frozen = null; render(); break;
-    case "freeze": S.frozen = buildTest(S.selected, S.difficulty, S.count); render(); break;
+    case "order": S.order = v; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
+    case "testDeck": if (S.draft){ S.draftBlock = true; S.screen = "home"; render(); window.scrollTo(0,0); break; } S.mode = "train"; S.rattrParent = null; S.selected = [v]; startQuiz(buildTest([v], S.difficulty, 0, ORDRES ? Object.keys(ORDRES)[0] : ""), false); break;
+    case "freeze": S.frozen = buildTest(S.selected, S.difficulty, S.count, S.order); render(); break;
     case "unfreeze": S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; render(); break;
     case "paper": savePaper(v); break;
-    case "start": S.rattrParent = null; startQuiz(S.frozen || buildTest(S.selected, S.difficulty, S.count), false); break;
-    case "uml": { const inp = document.getElementById("answer-input"); if (!inp || inp.disabled) return; const s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s; inp.value = inp.value.slice(0, s) + v + inp.value.slice(en); Q.typed = inp.value; inp.focus(); inp.setSelectionRange(s + 1, s + 1); const b = document.getElementById("validate-btn"); if (b) b.disabled = !Q.typed.trim(); updateLive(); break; }
+    case "start": S.rattrParent = null; startQuiz(S.frozen || buildTest(S.selected, S.difficulty, S.count, S.order), false); break;
+    case "uml": case "key": { const inp = document.getElementById("answer-input"); if (!inp || inp.disabled) return; const s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s; inp.value = inp.value.slice(0, s) + v + inp.value.slice(en); Q.typed = inp.value; inp.focus(); inp.setSelectionRange(s + v.length, s + v.length); const b = document.getElementById("validate-btn"); if (b) b.disabled = !Q.typed.trim(); updateLive(); if (COUCHE.onSaisie) COUCHE.onSaisie(Q); break; }
     case "quit": S.quitAsk = true; render(); break;
     case "quitKeep": draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
     case "quitDrop": draftClear(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
@@ -994,13 +1088,17 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ S.suivi.ch = e.target.value; S.suivi.pt = null; render(); } });
 document.addEventListener("input", e => {
-  if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); }
+  if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); if (COUCHE.onSaisie) COUCHE.onSaisie(S.quiz); }
 });
 document.addEventListener("keydown", e => {
   if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
   if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("ch-pt")){ e.preventDefault(); const v = e.target.dataset.v; S.suivi.pt = S.suivi.pt === v ? null : v; render(); }
 });
 document.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("exportarea")) e.target.select(); });
+
+/* le test en cours est aussi gardé quand la page passe en arrière-plan */
+document.addEventListener("visibilitychange", () => { if (document.hidden) draftSave(); });
+window.addEventListener("pagehide", () => draftSave());
 
 render();
 loadHistory();

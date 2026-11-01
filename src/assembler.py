@@ -18,6 +18,7 @@ Le contenu porte sa palette CSS et ses retouches de style dans la constante CSS_
 après base.css, et ses métadonnées (titre, polices, date) dans OUTIL et DUE, lus avec node.
 """
 # Versions : 1 (01.11.2026, C1) · 2 (01.11.2026, C2 : identités de cartes uniques et complètes, test joué avec la première réponse acceptée, nombre de questions « toutes »)
+# · 3 (01.11.2026, C3 : couche maths, buildTest reçoit aussi l'ordre)
 import json, os, re, subprocess, sys, tempfile, datetime
 
 ICI = os.path.dirname(os.path.abspath(__file__))
@@ -95,7 +96,7 @@ def test_navigateur(sortie):
           const keys = DECKS.map(d => d.key);
           for (let t = 0; t < 300; t++){
             const diff = ["easy","normal","hard"][t % 3];
-            const qs = buildTest(keys, diff);
+            const qs = buildTest(keys, diff, 0, ORDRES ? Object.keys(ORDRES)[t % 2] : "");
             qs.forEach(q => { n++;
               if (q.type === "mcq"){ if (!q.options.includes(q.answer)) bad.push("choix sans la réponse : " + q.prompt); if (!isRight(q, q.answer)) bad.push("réponse refusée : " + q.prompt); }
               else { const acc = q.accept || [q.answer]; if (!acc.some(a => isRight(q, a))) bad.push("réponse écrite refusée : " + q.prompt); }
