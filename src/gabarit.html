@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>{{TITRE}} · à savoir pour le {{DUE_LONG}}</title>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="{{POLICES}}">
+<style>
+{{CSS_CONTENU}}
+{{CSS_BASE}}
+</style>
+
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+/* Outil assemblé par claude/assembler.py le {{DATE_ASSEMBLAGE}} : contenu ({{FICHIER_CONTENU}}) + {{FICHIER_COUCHE}} + noyau-quiz.js.
+   Pour le modifier, on change le fichier de contenu (ou le noyau / la couche sur « go fiches ») et on réassemble ; jamais ce fichier à la main. */
+{{JS_CONTENU}}
+
+{{JS_COUCHE}}
+
+{{JS_NOYAU}}
+</script>
+
+</body>
+</html>

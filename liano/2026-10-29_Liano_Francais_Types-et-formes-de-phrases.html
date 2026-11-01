@@ -10,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
-/* Thème « les signaux de la phrase » : chaque phrase finit par un signal — . ? ! — comme un panneau. Violet encre, corail et ambre. */
 :root{
   --paper:#EEF1F8; --sheet:#FFFFFF; --ink:#20264B; --soft:#6B7390; --rule:#D5DAE8;
   --court:#5A42C9; --court-wash:#ECE8FB; --jersey:#F26A4B; --score:#FFC24B; --board:#20264B;
@@ -32,6 +31,13 @@
   --good:#5ED3A0; --good-wash:#15362A; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-court:#0C0F1D;
   --p-okdark:#3FB488; --p-ok:#5ED3A0; --p-mid:#E8A24D; --p-low:#FF8A7D; --p-lowsoft:#5A2A25;
   --box:#9D8CFF; --crane:#FF8A6B; color-scheme:dark}
+.chip.type{background:#E6E0FB;color:#4A34B4}
+.chip.forme{background:#FBEBC0;color:#7A5806}
+.chip.ponct{background:#DDEFF7;color:#1C5A77}
+.chip.reperer{background:#E7F3E6;color:#2C6E34}
+.chip.verbe{background:#F7E2DC;color:#9A3C27}
+.chip.transfo{background:#EFE0F2;color:#6E3A7C}
+/* CSS de base commune à tous les outils (noyau). La palette (:root, mode sombre) et les couleurs des étiquettes (.chip.<tag>) viennent du contenu. */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 .wrap{max-width:620px;margin:0 auto;padding-block:18px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -134,12 +140,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .num{font-family:var(--display);font-weight:700;font-size:15px;background:var(--board);color:var(--score);padding:2px 9px;border-radius:5px;font-variant-numeric:tabular-nums}
 .chip{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--court-wash);color:var(--court)}
-.chip.type{background:#E6E0FB;color:#4A34B4}
-.chip.forme{background:#FBEBC0;color:#7A5806}
-.chip.ponct{background:#DDEFF7;color:#1C5A77}
-.chip.reperer{background:#E7F3E6;color:#2C6E34}
-.chip.verbe{background:#F7E2DC;color:#9A3C27}
-.chip.transfo{background:#EFE0F2;color:#6E3A7C}
 .ref{font-size:12px;color:var(--soft)}
 .consigne{margin:0;font-size:14.5px;color:var(--soft)}
 .qword{font-family:var(--display);font-weight:600;font-size:clamp(22px,6vw,28px);line-height:1.2;margin:0;overflow-wrap:anywhere}
@@ -229,7 +229,6 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:10px;p
 .heat td.hc-ok{background:var(--good-wash);color:var(--good);font-weight:700}
 .heat td.hc-mid{background:#FBF0D8;color:#7A5806;font-weight:700}
 .heat td.hc-low{background:var(--bad-wash);color:var(--bad);font-weight:700}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .heat td.hc-mid{background:#3A3016;color:#E8C27A}}
 :root[data-theme="dark"] .heat td.hc-mid{background:#3A3016;color:#E8C27A}
 .resist{display:flex;flex-direction:column;gap:6px}
 .resist p{margin:0;font-size:14px}
@@ -273,6 +272,7 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:10px;p
 .tab.on{color:var(--court);background:var(--court-wash)}
 
 @media (prefers-reduced-motion: reduce){.face,.bar i{transition:none}}
+
 </style>
 
 </head>
@@ -281,23 +281,72 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:10px;p
 <nav class="tabbar" id="tabbar"></nav>
 
 <script>
+/* Outil assemblé par claude/assembler.py le 01.11.2026 : contenu (2026-10-29_Liano_Francais_Types-et-formes-de-phrases.contenu.js) + couche-langues.js + noyau-quiz.js.
+   Pour le modifier, on change le fichier de contenu (ou le noyau / la couche sur « go fiches ») et on réassemble ; jamais ce fichier à la main. */
 /* ============================================================
-   FRANÇAIS — Module 1, Grammaire : Types et formes de phrases
-   Outil de révision de Liano — 7e HarmoS
-   Contenu : cours (Module 1) + exercices 1 à 5 (énoncés imprimés). Test : jeudi 29 octobre 2026.
+   CONTENU — Français, Module 1 : Types et formes de phrases
+   Outil de révision de Liano — 7e HarmoS. Test : jeudi 29 octobre 2026.
+   Ce fichier est la seule partie propre à cet outil. Il est assemblé avec
+   claude/couche-langues.js et claude/noyau-quiz.js par claude/assembler.py.
+   Contenu : cours (Module 1) + exercices 1 à 5 (énoncés imprimés).
    Les réponses manuscrites de l'élève ne sont pas utilisées.
-   v2 : suivi graphique à 3 anneaux par paquet (langues/français, prompt-artefact-revision.md § 6 quater et § 11.4),
-        courbe des notes, jour par jour, cartes qui résistent, et test en cours gardé (§ 2).
    ============================================================ */
+
+/* Thème « les signaux de la phrase » : chaque phrase finit par un signal — . ? ! — comme un panneau. Violet encre, corail et ambre.
+   Palette et couleurs des étiquettes (.chip.<tag>) de cet outil ; la CSS de base vient du noyau (base.css). */
+const CSS_THEME = `
+:root{
+  --paper:#EEF1F8; --sheet:#FFFFFF; --ink:#20264B; --soft:#6B7390; --rule:#D5DAE8;
+  --court:#5A42C9; --court-wash:#ECE8FB; --jersey:#F26A4B; --score:#FFC24B; --board:#20264B;
+  --good:#2E8B6F; --good-wash:#DEF3EB; --bad:#C63B2A; --bad-wash:#FBE4DF; --on-court:#FFFFFF;
+  --p-okdark:#1B6B4F; --p-ok:#2E8B6F; --p-mid:#D9822B; --p-low:#C63B2A; --p-lowsoft:#F0C7C0;
+  --box:#5A42C9; --crane:#F26A4B;
+  --display:'Fredoka','Trebuchet MS',sans-serif;
+  --body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#121523; --sheet:#1B2036; --ink:#E7EAF5; --soft:#9AA3C0; --rule:#2E3454;
+  --court:#9D8CFF; --court-wash:#231E47; --jersey:#FF8A6B; --score:#FFC24B; --board:#0C0F1D;
+  --good:#5ED3A0; --good-wash:#15362A; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-court:#0C0F1D;
+  --p-okdark:#3FB488; --p-ok:#5ED3A0; --p-mid:#E8A24D; --p-low:#FF8A7D; --p-lowsoft:#5A2A25;
+  --box:#9D8CFF; --crane:#FF8A6B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#121523; --sheet:#1B2036; --ink:#E7EAF5; --soft:#9AA3C0; --rule:#2E3454;
+  --court:#9D8CFF; --court-wash:#231E47; --jersey:#FF8A6B; --score:#FFC24B; --board:#0C0F1D;
+  --good:#5ED3A0; --good-wash:#15362A; --bad:#FF8A7D; --bad-wash:#3A1E1B; --on-court:#0C0F1D;
+  --p-okdark:#3FB488; --p-ok:#5ED3A0; --p-mid:#E8A24D; --p-low:#FF8A7D; --p-lowsoft:#5A2A25;
+  --box:#9D8CFF; --crane:#FF8A6B; color-scheme:dark}
+.chip.type{background:#E6E0FB;color:#4A34B4}
+.chip.forme{background:#FBEBC0;color:#7A5806}
+.chip.ponct{background:#DDEFF7;color:#1C5A77}
+.chip.reperer{background:#E7F3E6;color:#2C6E34}
+.chip.verbe{background:#F7E2DC;color:#9A3C27}
+.chip.transfo{background:#EFE0F2;color:#6E3A7C}
+`;
 
 const QUIZ_ID = "liano-quiz-francais-types-formes";
 const DUE = { iso:"2026-10-29", long:"jeudi 29 octobre", short:"29.10" };
-const HAS_CLAUDE = !!(window.claude && window.claude.use);
-const INDEX_KEY = QUIZ_ID + "-index";
-const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
-const DRAFT_ID = QUIZ_ID + "-test-en-cours";
 const THEME = "Types et formes de phrases";
-const VERSION = { n:4, date:"01.11.2026" };   /* v1 : 26.10.2026, première version · v2 : 26.10.2026, suivi 3 anneaux + courbe + jour par jour + cartes qui résistent + test en cours gardé · v3 : 26.10.2026, anneaux colorés selon leur note (plein/clair), au centre réussies/total du niveau le plus difficile testé · v4 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) */
+const VERSION = { n:5, date:"01.11.2026" };   /* v1 : 26.10.2026, première version · v2 : 26.10.2026, suivi 3 anneaux + courbe + jour par jour + cartes qui résistent + test en cours gardé · v3 : 26.10.2026, anneaux colorés selon leur note (plein/clair), au centre réussies/total du niveau le plus difficile testé · v4 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) · v5 : 01.11.2026, reconstruit sur le noyau commun (refonte C1), même comportement */
+
+/* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
+const OUTIL = {
+  eleve:"Liano", classe:"7e HarmoS", branche:"Français",
+  titre:"Types et formes de phrases", sousTitre:"Français · Module 1",
+  jersey:". ? !",
+  polices:"https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap",
+  introFiche:"Toute la leçon est ici : les 4 types, les 2 formes, la ponctuation, et comment transformer une phrase. Ouvre une section, lis-la à voix haute, puis passe aux cartes ou au test.",
+  labelTout:"Tout le module",
+  motPaquet:"Paquet",
+  papier:{ titre:"Français — Types et formes de phrases", court:"Français — Types et formes", fichier:"francais-types-formes-liano", code:"#PDF-FR-TYPES" },
+  copie:{ titre:"RÉSULTAT — Français, Types et formes de phrases" },
+  analyse:{
+    role:"un professeur de français suisse",
+    sujet:"la grammaire « Types et formes de phrases » (les 4 types : déclaratif, interrogatif, impératif, exclamatif ; la ponctuation ; les 2 formes : positive et négative ; transformer à l'impératif ; varier une phrase exclamative)",
+    etiquettes:"type = reconnaître le type de phrase, forme = positive/négative, ponct = ponctuation, reperer = repérer une phrase impérative, verbe = le verbe à l'impératif, transfo = transformer une phrase",
+    pistes:"la confusion entre deux types (par exemple impératif pris pour exclamatif à cause du point d'exclamation), la forme négative pas repérée, la ponctuation, la conjugaison à l'impératif (le « s » à « tu », les possessifs ton/nos/vos), la construction de l'exclamation",
+  },
+};
 
 /* ---------- SOURCES ---------- */
 const SOURCES = [
@@ -383,21 +432,6 @@ const DECKS = [
       { front:"« Minuscules, ces fourmis ! » → récris avec QUE", answer:"Que ces fourmis sont minuscules !", accept:["Que ces fourmis sont minuscules !","Que ces fourmis sont minuscules"], expl:"Construction avec « que » : Que + sujet + verbe + adjectif (au pluriel : « sont »). — Exercice 4" },
     ]},
 ];
-const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
-
-const TYPES = ["déclaratif","interrogatif","impératif","exclamatif"];
-const TYPE_REASON = {
-  "déclaratif":"elle donne une information et se termine par un point",
-  "interrogatif":"elle pose une question et se termine par un point d'interrogation",
-  "impératif":"elle donne un ordre ou un conseil, le verbe est à l'impératif et il n'y a pas de sujet",
-  "exclamatif":"elle exprime un sentiment ou une émotion (souvent avec que, quel ou comme) et se termine par un point d'exclamation",
-};
-const FORME_REASON = { "positive":"il n'y a pas de négation", "négative":"il y a une négation (ne… pas, ne… jamais, ne… plus, ne… rien)" };
-const TYPE_ACCEPT = {
-  "déclaratif":["déclaratif","déclarative"], "interrogatif":["interrogatif","interrogative"],
-  "impératif":["impératif","impérative"], "exclamatif":["exclamatif","exclamative"],
-};
-const FORME_ACCEPT = { "positive":["positive","affirmative"], "négative":["négative","negative"] };
 
 /* ---------- fiche ---------- */
 const FICHE = [
@@ -435,17 +469,10 @@ const FICHE = [
     "À l'impératif, pas de sujet et pas de « s » à « tu » pour les verbes en -er. Relis tes transformations à voix haute."] },
 ];
 
-const DIFFICULTIES = {
-  easy:{ label:"Échauffement", sub:"Je choisis parmi des réponses", emoji:"🟢" },
-  normal:{ label:"Entraînement", sub:"Je choisis et j'écris", emoji:"🔵" },
-  hard:{ label:"Niveau épreuve", sub:"J'écris les réponses", emoji:"🔴" },
-};
-const LVL_OF_LABEL = { "Échauffement":0, "Entraînement":1, "Niveau épreuve":2 };
-const MODES = {
-  train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
-  live:{ label:"Correction en direct", sub:"Chaque lettre fausse est marquée pendant que tu écris", emoji:"✍️" },
-  exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
-};
+/* ---------- types de questions propres à cet outil ---------- */
+/* Chaque générateur (gen) d'un paquet est décrit ici : KINDS (types de questions), ordre, étiquettes,
+   et dans GENS les fonctions cartes / kinds / fill / face. La couche Langues fournit le reste
+   (buildTest, correction, correction en direct, cartes, trois anneaux). */
 const KINDS = {
   mcq_type:{ type:"mcq", tag:"type", aspect:"type", consigne:"Quel est le type de cette phrase ?" },
   type_type:{ type:"type", tag:"type", aspect:"type", consigne:"Écris le type de la phrase." },
@@ -459,6 +486,198 @@ const KINDS = {
 };
 const KIND_ORDER = ["mcq_type","type_type","mcq_forme","type_forme","mcq_ponct","mcq_imp","type_verbe","mcq_transfo","type_transfo"];
 const TAG_LABEL = { type:"type de phrase", forme:"forme", ponct:"ponctuation", reperer:"impérative ?", verbe:"verbe à l'impératif", transfo:"transformation" };
+
+const TYPES = ["déclaratif","interrogatif","impératif","exclamatif"];
+const TYPE_REASON = {
+  "déclaratif":"elle donne une information et se termine par un point",
+  "interrogatif":"elle pose une question et se termine par un point d'interrogation",
+  "impératif":"elle donne un ordre ou un conseil, le verbe est à l'impératif et il n'y a pas de sujet",
+  "exclamatif":"elle exprime un sentiment ou une émotion (souvent avec que, quel ou comme) et se termine par un point d'exclamation",
+};
+const FORME_REASON = { "positive":"il n'y a pas de négation", "négative":"il y a une négation (ne… pas, ne… jamais, ne… plus, ne… rien)" };
+const TYPE_ACCEPT = {
+  "déclaratif":["déclaratif","déclarative"], "interrogatif":["interrogatif","interrogative"],
+  "impératif":["impératif","impérative"], "exclamatif":["exclamatif","exclamative"],
+};
+const FORME_ACCEPT = { "positive":["positive","affirmative"], "négative":["négative","negative"] };
+
+const explType = it => `« ${it.front} » est une phrase ${it.type} : ${TYPE_REASON[it.type]}. — ${it.src}`;
+const explForme = it => `« ${it.front} » est à la forme ${it.forme} : ${FORME_REASON[it.forme]}. — ${it.src}`;
+const explImp = it => it.imperative
+  ? `Oui : le verbe « ${it.verbe} » est à l'impératif et il n'y a pas de sujet. — ${it.src}`
+  : `Non : ${it.why}. — ${it.src}`;
+
+/* GENS : un générateur par valeur de `gen` dans DECKS.
+   cards(d,it)        → les cartes d'un item : { aspect, mcqOnly, levels }
+   kinds(d,it,diff)   → les types de questions à poser pour cet item au niveau diff (easy / normal / hard)
+   fill(q,kind,it,d,pool) → remplit q.word, q.options ou q.accept, q.answer, q.expl, q.hint, q.keep
+   pool(d)            → réservoir de distracteurs du paquet (facultatif)
+   face(d,it)         → recto / verso de la carte à retourner */
+const GENS = {
+  typeforme:{
+    cards:(d, it) => [{ aspect:"type", mcqOnly:false, levels:[0,1,2] }, { aspect:"forme", mcqOnly:false, levels:[0,1,2] }],
+    kinds:(d, it, diff) => {
+      const kt = diff === "easy" ? "mcq_type" : diff === "hard" ? "type_type" : (Math.random() < 0.5 ? "mcq_type" : "type_type");
+      const kf = diff === "easy" ? "mcq_forme" : diff === "hard" ? "type_forme" : (Math.random() < 0.5 ? "mcq_forme" : "type_forme");
+      return [kt, kf];
+    },
+    fill:(q, kind, it) => {
+      switch(kind){
+        case "mcq_type": q.word = it.front; q.options = shuffle(TYPES.slice()); q.answer = it.type; q.expl = explType(it); break;
+        case "type_type": q.word = it.front; q.accept = TYPE_ACCEPT[it.type]; q.answer = it.type; q.keep = false; q.hint = "déclaratif, interrogatif, impératif ou exclamatif"; q.expl = explType(it); break;
+        case "mcq_forme": q.word = it.front; q.options = ["positive","négative"]; q.answer = it.forme; q.expl = explForme(it); break;
+        case "type_forme": q.word = it.front; q.accept = FORME_ACCEPT[it.forme]; q.answer = it.forme; q.keep = false; q.hint = "positive ou négative"; q.expl = explForme(it); break;
+      }
+    },
+    face:(d, it) => ({ tagF:"La phrase", front:it.front, tagB:"Type et forme", backHtml:`<span class="face-word">${esc(it.type)}</span><span class="face-mini">forme : ${esc(it.forme)}</span>` }),
+  },
+  regle:{
+    cards:() => [{ aspect:"ponct", mcqOnly:true, levels:[0,1,2] }],
+    kinds:() => ["mcq_ponct"],
+    fill:(q, kind, it) => { q.word = it.front; q.options = it.options.slice(); q.answer = it.back; q.expl = it.expl; },
+    face:(d, it) => ({ tagF:"Question", front:it.front, tagB:"Réponse", backHtml:`<span class="face-word">${esc(it.back)}</span>` }),
+  },
+  imperative:{
+    cards:(d, it) => { const out = [{ aspect:"rep", mcqOnly:true, levels:[0,1,2] }]; if (it.imperative) out.push({ aspect:"verbe", mcqOnly:false, levels:[1,2] }); return out; },
+    kinds:(d, it, diff) => { const out = ["mcq_imp"]; if (it.imperative && diff !== "easy") out.push("type_verbe"); return out; },
+    fill:(q, kind, it) => {
+      if (kind === "mcq_imp"){ q.word = it.front; q.options = ["Oui","Non"]; q.answer = it.imperative ? "Oui" : "Non"; q.expl = explImp(it); }
+      else { q.word = it.front; q.hint = "le verbe qui donne l'ordre"; q.accept = [it.verbe]; q.answer = it.verbe; q.expl = explImp(it); }
+    },
+    face:(d, it) => ({ tagF:"La phrase", front:it.front, tagB:"Alors ?", backHtml: it.imperative ? `<span class="face-word">Impérative</span><span class="face-mini">verbe : ${esc(it.verbe)}</span>` : `<span class="face-word">Pas impérative</span>` }),
+  },
+  transfo:{
+    cards:() => [{ aspect:"transfo", mcqOnly:false, levels:[0,1,2] }],
+    kinds:(d, it, diff) => [diff === "easy" ? "mcq_transfo" : "type_transfo"],
+    pool:d => d.items.map(x => ({ a:x.answer })),
+    fill:(q, kind, it, d, pool) => {
+      if (kind === "mcq_transfo"){ q.word = it.front; q.options = pickOptions(it.answer, pool, pool, x => x.a); q.answer = it.answer; q.expl = it.expl; }
+      else { q.word = it.front; q.accept = it.accept.slice(); q.answer = it.answer; q.keep = true; q.expl = it.expl; }
+    },
+    face:(d, it) => ({ tagF:"À transformer", front:it.front, tagB:"Une réponse possible", backHtml:`<span class="face-word">${esc(it.answer)}</span>${(it.accept && it.accept.length > 2) ? `<span class="face-mini">(d'autres formulations sont possibles)</span>` : ""}` }),
+  },
+};
+
+
+/* ============================================================
+   COUCHE LANGUES — allemand, anglais, français de grammaire
+   (prompt-artefact-revision.md § 11.4). Assemblée entre le contenu et le noyau.
+
+   Ce que la couche attend du CONTENU :
+     DECKS[]  : paquets { key, title, emoji, unit, gen, src, items[] }
+     GENS     : un générateur par valeur de `gen` : { cards, kinds, fill, pool?, face }
+     KINDS    : types de questions { type:"mcq"|"type", tag, aspect, consigne }
+     KIND_ORDER, TAG_LABEL
+   Ce que la couche fournit au NOYAU (contrat COUCHE) :
+     COUCHE.rings      : 3 (Échauffement / Entraînement / Niveau épreuve)
+     COUCHE.allCards() : toutes les cartes { dk, word, aspect, mcqOnly, levels, k }
+     COUCHE.buildTest(deckKeys, difficulty) : les questions d'un test
+     COUCHE.isRight(q, val) : correction d'une réponse
+     COUCHE.cardFace(d, it) : recto / verso d'une carte
+     COUCHE.liveCands(q)    : candidats pour la correction en direct
+     COUCHE.hasLive         : le mode « Correction en direct » existe (langues : oui)
+   Les utilitaires (esc, norm, matchAnswer, shuffle, pickOptions, dxN…) viennent du noyau.
+   ============================================================ */
+
+/* cartes : identité stable = paquet | énoncé | aspect ; une phrase peut donner deux cartes (type / forme) */
+function cardKey(dk, word, aspect){ return dk + "|" + word + "|" + aspect; }
+
+const COUCHE = {
+  rings: 3,
+  hasLive: true,
+
+  allCards(){
+    const out = [];
+    DECKS.forEach(d => d.items.forEach(it => {
+      const g = GENS[d.gen]; if (!g) throw new Error("Générateur inconnu : " + d.gen);
+      g.cards(d, it).forEach(c => out.push({ dk:d.key, word:it.front, aspect:c.aspect, mcqOnly:!!c.mcqOnly, levels:c.levels, k:cardKey(d.key, it.front, c.aspect) }));
+    }));
+    return out;
+  },
+
+  /* un exercice par paquet et par type de question, dans l'ordre de KIND_ORDER ; numéros uniques (§ 11.6) */
+  buildTest(deckKeys, difficulty){
+    const sel = DECKS.filter(d => deckKeys.includes(d.key));
+    const qs = []; let num = 0, ex = 0;
+    sel.forEach(d => {
+      const g = GENS[d.gen];
+      const buckets = {}; KIND_ORDER.forEach(k => buckets[k] = []);
+      shuffle(d.items).forEach(it => g.kinds(d, it, difficulty).forEach(k => buckets[k].push(it)));
+      const pool = g.pool ? g.pool(d) : [];
+      KIND_ORDER.forEach(kind => {
+        const items = buckets[kind]; if (!items.length) return;
+        ex++; const K = KINDS[kind];
+        items.forEach(it => {
+          num++;
+          const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:K.tag, aspect:K.aspect, lang:"fr", consigne:K.consigne, keep:true, hint:"" };
+          g.fill(q, kind, it, d, pool);
+          q.card = cardKey(d.key, q.word, K.aspect);
+          q.prompt = `${K.consigne} « ${q.word} »`;
+          qs.push(q);
+        });
+      });
+    });
+    return qs;
+  },
+
+  isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnswer(val, q.accept, q.lang, q.keep); },
+
+  cardFace(d, it){ return GENS[d.gen].face(d, it); },
+
+  /* candidats de la correction en direct : réponses acceptées, sans parenthèses, article français facultatif */
+  liveCands(q){
+    const out = new Set();
+    (q.accept || [q.answer]).forEach(a => {
+      [a, a.replace(/\s*\([^)]*\)\s*/g, " "), a.replace(/[()]/g, "")].forEach(v => {
+        out.add(v);
+        if (q.lang === "fr" && !q.keep) out.add(v.trim().replace(/^(le |la |les |l'|l’|un |une |des |du |de la |d'|d’)/i, ""));
+      });
+    });
+    return [...out].map(v => [...v].map(lvUnit).join("")).filter(Boolean);
+  },
+};
+
+
+/* ============================================================
+   NOYAU QUIZ — code commun à tous les outils de révision
+   (prompt-artefact-revision.md § 2 à § 10 ; refonte 2026, étape C1).
+   Assemblé en dernier, après le contenu et la couche, dans un seul <script>.
+
+   Ce que le noyau attend du CONTENU : QUIZ_ID, DUE, THEME, VERSION, OUTIL, SOURCES, SOURCES_NOTE, PHOTOS, DECKS, FICHE, TAG_LABEL.
+   Ce qu'il attend de la COUCHE : l'objet COUCHE (rings, allCards, buildTest, isRight, cardFace, liveCands, hasLive).
+   Il fournit : stockage (Claude db / navigateur / mémoire), test en cours gardé, suivi graphique (anneaux, courbe,
+   jour par jour, cartes qui résistent), Bilan, « Voir mes erreurs », rattrapage, note suisse, version papier,
+   onglets et écrans, prompt d'analyse (âge déduit de la classe, jamais écrit en dur).
+   Les clés de stockage et le format des historiques sont ceux des outils précédents : rien n'est perdu.
+   ============================================================ */
+
+const HAS_CLAUDE = !!(window.claude && window.claude.use);
+const INDEX_KEY = QUIZ_ID + "-index";
+const ATTEMPT_PREFIX = QUIZ_ID + "-attempt-";
+const DRAFT_ID = QUIZ_ID + "-test-en-cours";
+const DECK = Object.fromEntries(DECKS.map(d => [d.key, d]));
+
+/* âge approximatif déduit de la classe HarmoS (socle, table_harmos) : 5e → 8-9 ans … 10e → 13-14 ans */
+function ageDeClasse(classe){
+  const m = /(\d+)\s*e/.exec(classe || ""); if (!m) return "";
+  const n = +m[1], a = n + 3; return `${a} à ${a + 1} ans`;
+}
+const AGE_ELEVE = ageDeClasse(OUTIL.classe);
+
+const DIFFICULTIES = {
+  easy:{ label:"Échauffement", sub:"Je choisis parmi des réponses", emoji:"🟢" },
+  normal:{ label:"Entraînement", sub:"Je choisis et j'écris", emoji:"🔵" },
+  hard:{ label:"Niveau épreuve", sub:"J'écris les réponses", emoji:"🔴" },
+};
+const LVL_OF_LABEL = { "Échauffement":0, "Entraînement":1, "Niveau épreuve":2 };
+const MODES = COUCHE.hasLive ? {
+  train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
+  live:{ label:"Correction en direct", sub:"Chaque lettre fausse est marquée pendant que tu écris", emoji:"✍️" },
+  exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
+} : {
+  train:{ label:"Je m'entraîne", sub:"Correction après chaque question", emoji:"🃏" },
+  exam:{ label:"Épreuve blanche", sub:"Correction seulement à la fin", emoji:"⏱️" },
+};
 
 /* ---------- utilitaires ---------- */
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -486,83 +705,11 @@ const fmtNote = n => Number(n).toFixed(1).replace(".", ",");
 function dateLabel(ts){ const d = new Date(ts), p = x => String(x).padStart(2,"0"); return `${p(d.getDate())}.${p(d.getMonth()+1)}.${d.getFullYear()} · ${p(d.getHours())}h${p(d.getMinutes())}`; }
 function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
 
-/* ---------- explications ---------- */
-const explType = it => `« ${it.front} » est une phrase ${it.type} : ${TYPE_REASON[it.type]}. — ${it.src}`;
-const explForme = it => `« ${it.front} » est à la forme ${it.forme} : ${FORME_REASON[it.forme]}. — ${it.src}`;
-const explImp = it => it.imperative
-  ? `Oui : le verbe « ${it.verbe} » est à l'impératif et il n'y a pas de sujet. — ${it.src}`
-  : `Non : ${it.why}. — ${it.src}`;
-
-/* ---------- cartes (identité stable : paquet | énoncé | aspect) ---------- */
-function cardKey(dk, word, aspect){ return dk + "|" + word + "|" + aspect; }
-/* niveaux où une carte peut tomber : 0 Échauffement, 1 Entraînement, 2 Niveau épreuve */
-function allCards(){
-  const out = [];
-  DECKS.forEach(d => d.items.forEach(it => {
-    if (d.gen === "typeforme"){
-      out.push({ dk:d.key, word:it.front, aspect:"type", mcqOnly:false, levels:[0,1,2], k:cardKey(d.key,it.front,"type") });
-      out.push({ dk:d.key, word:it.front, aspect:"forme", mcqOnly:false, levels:[0,1,2], k:cardKey(d.key,it.front,"forme") });
-    } else if (d.gen === "regle"){
-      out.push({ dk:d.key, word:it.front, aspect:"ponct", mcqOnly:true, levels:[0,1,2], k:cardKey(d.key,it.front,"ponct") });
-    } else if (d.gen === "imperative"){
-      out.push({ dk:d.key, word:it.front, aspect:"rep", mcqOnly:true, levels:[0,1,2], k:cardKey(d.key,it.front,"rep") });
-      if (it.imperative) out.push({ dk:d.key, word:it.front, aspect:"verbe", mcqOnly:false, levels:[1,2], k:cardKey(d.key,it.front,"verbe") });
-    } else {
-      out.push({ dk:d.key, word:it.front, aspect:"transfo", mcqOnly:false, levels:[0,1,2], k:cardKey(d.key,it.front,"transfo") });
-    }
-  }));
-  return out;
-}
-const CARDS = allCards();
+/* ---------- cartes ---------- */
+const CARDS = COUCHE.allCards();
 const CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
 function deckCards(dk){ return CARDS.filter(c => c.dk === dk); }
-
-/* ---------- quels types de questions pour un item ---------- */
-function genKinds(d, it, diff){
-  if (d.gen === "typeforme"){
-    const kt = diff === "easy" ? "mcq_type" : diff === "hard" ? "type_type" : (Math.random() < 0.5 ? "mcq_type" : "type_type");
-    const kf = diff === "easy" ? "mcq_forme" : diff === "hard" ? "type_forme" : (Math.random() < 0.5 ? "mcq_forme" : "type_forme");
-    return [kt, kf];
-  }
-  if (d.gen === "regle") return ["mcq_ponct"];
-  if (d.gen === "imperative"){ const out = ["mcq_imp"]; if (it.imperative && diff !== "easy") out.push("type_verbe"); return out; }
-  return [diff === "easy" ? "mcq_transfo" : "type_transfo"];
-}
-function fillQ(q, kind, it, d, pool){
-  switch(kind){
-    case "mcq_type": q.word = it.front; q.options = shuffle(TYPES.slice()); q.answer = it.type; q.expl = explType(it); break;
-    case "type_type": q.word = it.front; q.accept = TYPE_ACCEPT[it.type]; q.answer = it.type; q.keep = false; q.hint = "déclaratif, interrogatif, impératif ou exclamatif"; q.expl = explType(it); break;
-    case "mcq_forme": q.word = it.front; q.options = ["positive","négative"]; q.answer = it.forme; q.expl = explForme(it); break;
-    case "type_forme": q.word = it.front; q.accept = FORME_ACCEPT[it.forme]; q.answer = it.forme; q.keep = false; q.hint = "positive ou négative"; q.expl = explForme(it); break;
-    case "mcq_ponct": q.word = it.front; q.options = it.options.slice(); q.answer = it.back; q.expl = it.expl; break;
-    case "mcq_imp": q.word = it.front; q.options = ["Oui","Non"]; q.answer = it.imperative ? "Oui" : "Non"; q.expl = explImp(it); break;
-    case "type_verbe": q.word = it.front; q.hint = "le verbe qui donne l'ordre"; q.accept = [it.verbe]; q.answer = it.verbe; q.expl = explImp(it); break;
-    case "mcq_transfo": q.word = it.front; q.options = pickOptions(it.answer, pool, pool, x => x.a); q.answer = it.answer; q.expl = it.expl; break;
-    case "type_transfo": q.word = it.front; q.accept = it.accept.slice(); q.answer = it.answer; q.keep = true; q.expl = it.expl; break;
-  }
-}
-function buildTest(deckKeys, difficulty){
-  const sel = DECKS.filter(d => deckKeys.includes(d.key));
-  const qs = []; let num = 0, ex = 0;
-  sel.forEach(d => {
-    const buckets = {}; KIND_ORDER.forEach(k => buckets[k] = []);
-    shuffle(d.items).forEach(it => genKinds(d, it, difficulty).forEach(k => buckets[k].push(it)));
-    const pool = d.gen === "transfo" ? d.items.map(x => ({ a:x.answer })) : [];
-    KIND_ORDER.forEach(kind => {
-      const items = buckets[kind]; if (!items.length) return;
-      ex++; const K = KINDS[kind];
-      items.forEach(it => {
-        num++;
-        const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:K.tag, aspect:K.aspect, lang:"fr", consigne:K.consigne, keep:true, hint:"" };
-        fillQ(q, kind, it, d, pool);
-        q.card = cardKey(d.key, q.word, K.aspect);
-        q.prompt = `${K.consigne} « ${q.word} »`;
-        qs.push(q);
-      });
-    });
-  });
-  return qs;
-}
+function buildTest(deckKeys, difficulty){ return COUCHE.buildTest(deckKeys, difficulty); }
 
 /* ---------- stockage ---------- */
 const store = {
@@ -618,10 +765,10 @@ const S = {
   bilan:{},
   draft:null, draftAsk:false, draftBlock:false, draftErr:false, quitAsk:false,
 };
-const deckLabel = keys => keys.length === DECKS.length ? "Tout le module" : keys.map(k => DECK[k].title).join(" + ");
+const deckLabel = keys => keys.length === DECKS.length ? OUTIL.labelTout : keys.map(k => DECK[k].title).join(" + ");
 
 /* ============================================================
-   SUIVI GRAPHIQUE (§ 6 quater) — 3 anneaux par paquet (§ 11.4)
+   SUIVI GRAPHIQUE (§ 6 quater) — anneaux par paquet (3 pour les langues, § 11.4)
    ============================================================ */
 function rootTests(){ return S.attempts.filter(a => !a.rattrapage).sort((a, b) => a.date - b.date); }
 function parentOf(a){
@@ -738,6 +885,11 @@ function pastille3(dk){
   const label = top < 0 ? "Pas encore testé" : `${NIV[top]} : ${ref.right} sur ${ref.total}, ${P_LABEL[ref.state]}${dr ? ", avant : " + LVL_LABEL[lvlOf(dr.prev)] : ""}`;
   return `<div class="deck-pst" aria-label="${label}">${ring3Svg(rings, 84, top < 0 ? "" : ref.right + "/" + ref.total)}<span class="pst-l pst-${ref.state}">${P_LABEL[ref.state]}${top < 0 ? "" : trendOf(dk, hist, top)}</span>${dr ? `<span class="pst-notes">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</div>`;
 }
+/* pastille d'un paquet selon la couche (1 anneau : à écrire à l'étape C3, maths et Dossier) */
+function pastilleDeck(dk){
+  if (COUCHE.rings === 3) return pastille3(dk);
+  throw new Error("pastille à un anneau : pas encore dans le noyau (étape C3)");
+}
 function globalPastille(){
   if (!S.loaded || !rootTests().length) return "";
   const hist = histByCard(), sum = ringSummary(CARDS, 2, hist);
@@ -818,7 +970,7 @@ function suiviHeat(){
   const tested = new Set(tests.flatMap(a => a.questions.map(chapOfQ)));
   const chs = DECKS.filter(d => tested.has(d.key)), rest = DECKS.filter(d => !tested.has(d.key));
   const lab = d => { const [y, m, j] = d.split("-"); return j.padStart(2,"0") + "." + m.padStart(2,"0"); };
-  let h = `<div class="tbl heat"><table><thead><tr><th>Paquet</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`;
+  let h = `<div class="tbl heat"><table><thead><tr><th>${esc(OUTIL.motPaquet)}</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`;
   chs.forEach(d => {
     h += `<tr><td class="k">${esc(d.emoji)} ${esc(d.title)}</td>` + days.map(day => {
       const qs = tests.filter(a => dayOf(a.date) === day).flatMap(a => a.questions.filter(inChap(d.key)));
@@ -827,17 +979,17 @@ function suiviHeat(){
       return `<td class="${n>=5?"hc-ok":n>=4?"hc-mid":"hc-low"}">${pc}${n>=5?" ✓":""}</td>`;
     }).join("") + `</tr>`;
   });
-  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par paquet et par jour (6 derniers jours). Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
+  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par ${esc(OUTIL.motPaquet.toLowerCase())} et par jour (6 derniers jours). Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
 }
 function suiviBlock(){
   const s = S.suivi;
   if (!rootTests().length) return "";
   const res = resistant();
   return `<section class="suivi"><h3>Ma courbe de notes</h3>
-  <div class="suivi-ctl"><label class="fine" for="suivi-ch">Paquet</label><select id="suivi-ch" class="suivi-sel"><option value="all"${s.ch==="all"?" selected":""}>Tout le module</option>${DECKS.map(d => `<option value="${d.key}"${s.ch===d.key?" selected":""}>${esc(d.title)}</option>`).join("")}</select>
+  <div class="suivi-ctl"><label class="fine" for="suivi-ch">${esc(OUTIL.motPaquet)}</label><select id="suivi-ch" class="suivi-sel"><option value="all"${s.ch==="all"?" selected":""}>${esc(OUTIL.labelTout)}</option>${DECKS.map(d => `<option value="${d.key}"${s.ch===d.key?" selected":""}>${esc(d.title)}</option>`).join("")}</select>
   <div class="row"><button class="ghost small${s.f==="all"?" on":""}" data-act="suiviF" data-v="all" aria-pressed="${s.f==="all"}">Tous les tests</button><button class="ghost small${s.f==="exam"?" on":""}" data-act="suiviF" data-v="exam" aria-pressed="${s.f==="exam"}">Niveau épreuve et épreuve blanche</button></div></div>
   ${suiviChart()}
-  <h3>Mes paquets jour après jour</h3>${suiviHeat()}
+  <h3>Mes ${esc(OUTIL.motPaquet.toLowerCase())}s jour après jour</h3>${suiviHeat()}
   ${res.length ? `<h3>Les cartes qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${esc(DECK[x.ch].title)}</span> ${esc(x.word)} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} cartes</button>` : ""}
   </section>`;
 }
@@ -879,13 +1031,13 @@ function draftPick(a, b){ const ta = a ? a.saved || 0 : -1, tb = b ? b.saved || 
 function draftClear(){ S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
 function draftResume(){
   const d = S.draft; if (!d) return;
-  S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = d.mode; S.frozen = null;
+  S.selected = d.selected.filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
   S.rattrapage = d.rattrapage; S.rattrLabel = d.rattrLabel;
   S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
   S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.draftBlock = false; S.screen = "quiz";
   render(); window.scrollTo(0,0);
 }
-function draftWhat(d){ return d.rattrapage ? "Rattrapage" : DIFFICULTIES[d.difficulty].label + " · " + MODES[d.mode].label; }
+function draftWhat(d){ return d.rattrapage ? "Rattrapage" : DIFFICULTIES[d.difficulty].label + " · " + (MODES[d.mode] || MODES.train).label; }
 function draftBanner(){
   const d = S.draft; if (!d) return "";
   const n = draftN(d), tot = d.questions.length;
@@ -917,7 +1069,7 @@ function render(){
   if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
 }
 function header(){
-  return `<header class="head"><div class="jersey" aria-hidden="true"><b>. ? !</b></div><div><h1>Types et formes de phrases</h1><p>Français · Module 1 — à savoir pour le ${DUE.long}</p></div></header>`;
+  return `<header class="head"><div class="jersey" aria-hidden="true"><b>${esc(OUTIL.jersey)}</b></div><div><h1>${esc(OUTIL.titre)}</h1><p>${esc(OUTIL.sousTitre)} — à savoir pour le ${esc(DUE.long)}</p></div></header>`;
 }
 function renderTabs(){
   const bar = document.getElementById("tabbar");
@@ -931,7 +1083,7 @@ function renderTabs(){
 }
 
 function viewFiche(){
-  let h = draftBanner() + `<p class="intro">Toute la leçon est ici : les 4 types, les 2 formes, la ponctuation, et comment transformer une phrase. Ouvre une section, lis-la à voix haute, puis passe aux cartes ou au test.</p>`;
+  let h = draftBanner() + `<p class="intro">${esc(OUTIL.introFiche)}</p>`;
   FICHE.forEach((sec, i) => {
     const open = S.ficheOpen === i;
     h += `<section class="entry${open?" open":""}"><button class="entry-head" data-act="fiche" data-v="${i}" aria-expanded="${open}"><span class="entry-icon">${sec.icon}</span><span class="entry-title">${esc(sec.titre)}</span>${sec.pairs ? `<span class="entry-count">${sec.pairs.length}</span>` : ""}</button>`;
@@ -967,7 +1119,7 @@ function viewHome(){
   h += DECKS.map(d => {
     const on = S.selected.includes(d.key);
     const bad = hist ? paqBad(d.key, hist) : [];
-    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-e">${d.emoji}</span><span class="deck-txt"><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastille3(d.key)}</div>` +
+    return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}"><span class="deck-e">${d.emoji}</span><span class="deck-txt"><span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastilleDeck(d.key)}</div>` +
       (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">Refaire mes ${bad.length} carte${bad.length>1?"s":""} à revoir</button></div>` : "");
   }).join("");
   h += `<button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
@@ -977,12 +1129,7 @@ function viewHome(){
 }
 
 function cardEntries(){ return S.selected.flatMap(k => DECK[k].items.map(it => ({ it, d:DECK[k] }))); }
-function cardFace(d, it){
-  if (d.gen === "typeforme") return { tagF:"La phrase", front:it.front, tagB:"Type et forme", backHtml:`<span class="face-word">${esc(it.type)}</span><span class="face-mini">forme : ${esc(it.forme)}</span>` };
-  if (d.gen === "regle") return { tagF:"Question", front:it.front, tagB:"Réponse", backHtml:`<span class="face-word">${esc(it.back)}</span>` };
-  if (d.gen === "imperative") return { tagF:"La phrase", front:it.front, tagB:"Alors ?", backHtml: it.imperative ? `<span class="face-word">Impérative</span><span class="face-mini">verbe : ${esc(it.verbe)}</span>` : `<span class="face-word">Pas impérative</span>` };
-  return { tagF:"À transformer", front:it.front, tagB:"Une réponse possible", backHtml:`<span class="face-word">${esc(it.answer)}</span>${(it.accept && it.accept.length > 2) ? `<span class="face-mini">(d'autres formulations sont possibles)</span>` : ""}` };
-}
+function cardFace(d, it){ return COUCHE.cardFace(d, it); }
 function viewCards(){
   const ents = cardEntries();
   if (!ents.length) return `<p class="intro">Coche au moins un paquet pour voir les cartes.</p><button class="cta" data-act="nav" data-v="home">Choisir des paquets</button>`;
@@ -1017,22 +1164,13 @@ function viewSetup(){
   } else {
     h += `<button class="ghost" data-act="freeze">🖨️ Version papier de ce test</button><button class="cta" data-act="start">Commencer</button>`;
   }
-  h += `<p class="fine">${S.mode === "live" ? "En correction en direct, une lettre fausse est marquée dès que tu la tapes. Un mot que tu as dû corriger ne compte pas dans la note : il revient dans « Refaire mes erreurs »." : "En épreuve blanche, tu ne vois aucune réponse avant la fin : c'est ce qui ressemble le plus au test de jeudi."}</p>`;
+  h += `<p class="fine">${S.mode === "live" ? "En correction en direct, une lettre fausse est marquée dès que tu la tapes. Un mot que tu as dû corriger ne compte pas dans la note : il revient dans « Refaire mes erreurs »." : `En épreuve blanche, tu ne vois aucune réponse avant la fin : c'est ce qui ressemble le plus à l'épreuve du ${esc(DUE.long)}.`}</p>`;
   return h;
 }
 
-/* ---------- correction en direct ---------- */
+/* ---------- correction en direct (publication-github.md § 9) ---------- */
 function lvUnit(c){ return /[\p{L}\p{N}]/u.test(c) ? dxN(c) : ""; }
-function lvCands(q){
-  const out = new Set();
-  (q.accept || [q.answer]).forEach(a => {
-    [a, a.replace(/\s*\([^)]*\)\s*/g, " "), a.replace(/[()]/g, "")].forEach(v => {
-      out.add(v);
-      if (q.lang === "fr" && !q.keep) out.add(v.trim().replace(/^(le |la |les |l'|l’|un |une |des |du |de la |d'|d’)/i, ""));
-    });
-  });
-  return [...out].map(v => [...v].map(lvUnit).join("")).filter(Boolean);
-}
+function lvCands(q){ return COUCHE.liveCands(q); }
 function lvCheck(typed, cands){
   const chars = [...typed], T = [];
   chars.forEach((c, i) => { for (const u of lvUnit(c)) T.push({ ch:u, i }); });
@@ -1094,7 +1232,7 @@ function viewQuiz(){
   if (S.quitAsk) return quitView();
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
-  <div class="badges"><span class="num">N° ${q.num}</span><span class="chip ${q.tag}">${TAG_LABEL[q.tag]}</span><span class="ref">Exercice ${q.ex} · ${esc(q.exTitle)}</span></div>
+  <div class="badges"><span class="num">N° ${q.num}</span><span class="chip ${q.tag}">${esc(TAG_LABEL[q.tag] || q.tag)}</span><span class="ref">Exercice ${q.ex} · ${esc(q.exTitle)}</span></div>
   <p class="consigne">${esc(q.consigne)}</p><p class="qword">${esc(q.word)}</p>${q.hint ? `<p class="qhint">petit indice : ${esc(q.hint)}</p>` : ""}`;
   if (q.type === "mcq"){
     h += `<div class="opts">` + q.options.map((o, k) => {
@@ -1122,7 +1260,7 @@ function viewQuiz(){
   }
   return h;
 }
-function isRight(q, val){ return q.type === "mcq" ? val === q.answer : matchAnswer(val, q.accept, q.lang, q.keep); }
+function isRight(q, val){ return COUCHE.isRight(q, val); }
 function validate(val){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i], right = isRight(q, val);
@@ -1141,7 +1279,7 @@ function record(val, correct){
 }
 async function finishQuiz(){
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
-  const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:"Français", theme:THEME, deck:Q.label,
+  const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:OUTIL.branche, theme:THEME, deck:Q.label,
     difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
   S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
   try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Pense à noter ta note ou à l'exporter." : ""; }
@@ -1150,7 +1288,7 @@ async function finishQuiz(){
   S.lastResult = att; S.frozen = null; S.paperMsg = ""; S.paperCopy = ""; S.screen = "results"; render(); window.scrollTo(0,0);
 }
 
-/* ---------- bilan ---------- */
+/* ---------- bilan (§ 6 bis) ---------- */
 function bilanState(id){ return S.bilan[id] || (S.bilan[id] = { busy:false, err:"", copied:false, fallback:"" }); }
 function bilanBlock(att){
   const b = bilanState(att.id), a = att.analysis;
@@ -1173,30 +1311,34 @@ function bilanBlock(att){
   return h + `</div>`;
 }
 function findAttempt(id){ return (S.lastResult && S.lastResult.id === id) ? S.lastResult : S.attempts.find(a => a.id === id); }
-async function analyse(id){
-  const att = findAttempt(id), b = bilanState(id); b.busy = true; b.err = ""; render();
-  try {
-    const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
-    if (!sample) throw new Error("no sample");
-    const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? "JUSTE" : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
-    const prompt = `Tu es un professeur de français suisse, bienveillant, qui analyse le test d'un élève de 10 ans (7e HarmoS, canton de Neuchâtel). Il révise la grammaire « Types et formes de phrases » (les 4 types : déclaratif, interrogatif, impératif, exclamatif ; la ponctuation ; les 2 formes : positive et négative ; transformer à l'impératif ; varier une phrase exclamative) pour un test le ${DUE.long}.
+/* prompt d'analyse : gabarit commun, rempli par OUTIL.analyse ; l'âge vient de la classe (jamais écrit en dur) */
+function analysePrompt(att){
+  const A = OUTIL.analyse;
+  const lignes = att.questions.map(q => `N° ${q.num}. [${q.tag}] (${q.ref}) ${q.prompt} | réponse de l'élève : ${q.user || "(rien)"} | attendu : ${q.answer} | ${q.correct ? "JUSTE" : q.liveFixed ? `JUSTE APRÈS CORRECTION EN DIRECT, compté faux (avait d'abord écrit : ${q.liveSnap})` : "FAUX"}`).join("\n");
+  return `Tu es ${A.role}, bienveillant, qui analyse le test d'un élève de ${AGE_ELEVE} (${OUTIL.classe}, canton de Neuchâtel). Il révise ${A.sujet} pour un test le ${DUE.long}.
 
 Score : ${att.score}/${att.total} (note suisse ${fmtNote(att.note)}/6)${att.rattrapage ? " — RATTRAPAGE : seules les questions ratées d'un test précédent ont été rejouées" : ""}
 Paquets : ${att.deck}
 Niveau : ${att.difficulty} — Mode : ${att.mode}
 
-Détail (l'étiquette entre crochets donne le type de question : type = reconnaître le type de phrase, forme = positive/négative, ponct = ponctuation, reperer = repérer une phrase impérative, verbe = le verbe à l'impératif, transfo = transformer une phrase) :
+Détail (l'étiquette entre crochets donne le type de question : ${A.etiquettes}) :
 ${lignes}
 
-Analyse les ERREURS pour trouver ce qui coince vraiment : la confusion entre deux types (par exemple impératif pris pour exclamatif à cause du point d'exclamation), la forme négative pas repérée, la ponctuation, la conjugaison à l'impératif (le « s » à « tu », les possessifs ton/nos/vos), la construction de l'exclamation ? Cherche le point commun, ne recopie pas la liste. S'il n'y a pas de motif clair, dis-le honnêtement.
+Analyse les ERREURS pour trouver ce qui coince vraiment : ${A.pistes} ? Cherche le point commun, ne recopie pas la liste. S'il n'y a pas de motif clair, dis-le honnêtement.
 
 Réponds UNIQUEMENT par un objet JSON valide, sans texte autour, exactement dans ce format :
 {"points_forts":["..."],"a_travailler":["..."],"conseil":"..."}
 - "points_forts" : 1 à 3 points courts et concrets.
 - "a_travailler" : 1 à 3 axes de progrès formulés positivement, avec l'exemple précis tiré du test.
 - "conseil" : 2 phrases maximum, une action à faire ce soir.
-Tu tutoies l'élève. Français de Suisse romande, ton encourageant, simple pour un enfant de 10 ans, pas bébé.`;
-    const parsed = await sample.json(prompt, { modelTier:"default" });
+Tu tutoies l'élève. Français de Suisse romande, ton encourageant, simple pour un élève de ${AGE_ELEVE}, pas bébé.`;
+}
+async function analyse(id){
+  const att = findAttempt(id), b = bilanState(id); b.busy = true; b.err = ""; render();
+  try {
+    const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
+    if (!sample) throw new Error("no sample");
+    const parsed = await sample.json(analysePrompt(att), { modelTier:"default" });
     att.analysis = { points_forts: Array.isArray(parsed.points_forts) ? parsed.points_forts : [], a_travailler: Array.isArray(parsed.a_travailler) ? parsed.a_travailler : [], conseil: parsed.conseil || "" };
     try { await store.save(att); } catch(e){}
   } catch(e){
@@ -1206,7 +1348,7 @@ Tu tutoies l'élève. Français de Suisse romande, ton encourageant, simple pour
 }
 function copyText(att){
   const a = att.analysis, l = [];
-  l.push("RÉSULTAT — Français, Types et formes de phrases (test du " + DUE.short + ")");
+  l.push(OUTIL.copie.titre + " (test du " + DUE.short + ")");
   l.push(`${dateLabel(att.date)} · ${att.deck} · ${att.difficulty} · ${att.mode}${att.rattrapage ? " · RATTRAPAGE (questions ratées rejouées)" : ""}`);
   l.push(`Score : ${att.score}/${att.total} — note ${fmtNote(att.note)}/6`, "");
   if (a){ l.push("BILAN"); if (a.points_forts.length) l.push("Acquis : " + a.points_forts.join(" · ")); if (a.a_travailler.length) l.push("À travailler : " + a.a_travailler.join(" · ")); if (a.conseil) l.push("Conseil : " + a.conseil); l.push(""); }
@@ -1230,7 +1372,7 @@ function retryWrong(id){
   startQuiz(shuffle(qs), true);
 }
 
-/* ---------- voir mes erreurs ---------- */
+/* ---------- voir mes erreurs (publication-github.md § 8) ---------- */
 function dxN(c){ return String(c).toLowerCase().replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,""); }
 function dxW(w){ return dxN(w).replace(/[.,!?;:«»"()…]/g,""); }
 function lev(a, b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,j)=>j); for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
@@ -1337,8 +1479,9 @@ function viewScores(){
   return h;
 }
 
-/* ---------- version papier ---------- */
+/* ---------- version papier (§ 11.6) ---------- */
 function paperHtml(qs, part){
+  const P = OUTIL.papier;
   const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
   const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
   const line = q => `<b>${q.num}.</b> ${esc(q.word)}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}`;
@@ -1346,9 +1489,9 @@ function paperHtml(qs, part){
     ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(o)}</span>`).join("")}</div></div>`
     : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
   const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(q.word)} → <b>${esc(q.answer)}</b></div>`).join("")}</section>`).join("");
-  const head = `<h1>Français — Types et formes de phrases</h1><p class="meta">Prénom : Liano · test du ${DUE.long} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
+  const head = `<h1>${esc(P.titre)}</h1><p class="meta">Prénom : ${esc(OUTIL.eleve)} · test du ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
-  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Français — Types et formes (${DUE.short})</title><style>
+  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.court)} (${esc(DUE.short)})</title><style>
 @page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
 .ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}
@@ -1358,7 +1501,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bott
 async function savePaper(part){
   const qs = S.frozen; S.paperMsg = ""; S.paperCopy = "";
   const names = { ex:"exercices", both:"exercices-et-corrige", key:"corrige" };
-  const filename = `${DUE.iso}_francais-types-formes-liano-${names[part]}.html`;
+  const filename = `${DUE.iso}_${OUTIL.papier.fichier}-${names[part]}.html`;
   try {
     if (!HAS_CLAUDE){
       const url = URL.createObjectURL(new Blob([paperHtml(qs, part)], { type:"text/html" }));
@@ -1373,7 +1516,7 @@ async function savePaper(part){
     if (e && e.code === "declined"){ S.paperMsg = "Téléchargement annulé."; }
     else {
       S.paperMsg = "Le téléchargement ne passe pas ici. Copie le texte ci-dessous et colle-le dans le chat : je t'envoie la feuille de ce test exact.";
-      S.paperCopy = "#PDF-FR-TYPES\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
+      S.paperCopy = OUTIL.papier.code + "\n" + qs.map(q => `${q.num}. [Ex ${q.ex} ${q.exTitle} — ${q.consigne}] ${q.word}${q.options ? " | " + q.options.join(" / ") : ""} → ${q.answer}`).join("\n");
     }
   }
   render();
@@ -1461,6 +1604,7 @@ document.addEventListener("focusin", e => { if (e.target.classList && e.target.c
 
 render();
 loadHistory();
+
 </script>
 
 </body>
