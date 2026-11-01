@@ -12,6 +12,10 @@ Après l'assemblage, sauf --sans-controles :
   2. controle-outil.py --runtime (fonctions obligatoires, prénom dans les clés, âge jamais en dur, ouverture à 390 px) ;
   3. un test complet dans Chromium : 300 tests générés par script (chaque bonne réponse est dans les choix et acceptée
      par la correction, identités de cartes uniques et complètes), puis un test joué de bout en bout (toutes les questions, première réponse acceptée tapée), aucune erreur JavaScript.
+  4. Dossier seulement : chaque carte a une explication écrite (ans ou expl, jamais le texte de secours de la couche) et un recto
+     qui se termine par « ? » (éventuellement suivi d'un guillemet fermant).
+  5. Taille : un test sur tous les paquets, terminé, et le test en cours correspondant, mesurés en JSON (limite d'un document
+     Claude : 256 Kio) ; erreur au-delà de 248 Kio (marge pour le bilan), avertissement dès 224 Kio.
 Le code de sortie est 0 seulement si tout passe.
 
 Le contenu porte sa palette CSS et ses retouches de style dans la constante CSS_THEME (gabarit de chaîne, sans accent grave), appliquée
@@ -19,6 +23,8 @@ après base.css, et ses métadonnées (titre, polices, date) dans OUTIL et DUE, 
 """
 # Versions : 1 (01.11.2026, C1) · 2 (01.11.2026, C2 : identités de cartes uniques et complètes, test joué avec la première réponse acceptée, nombre de questions « toutes »)
 # · 3 (01.11.2026, C3 : couche maths, buildTest reçoit aussi l'ordre)
+# · 4 (01.11.2026, contrôle qualité : cartes du Dossier vérifiées (explication au verso, recto terminé par « ? ») ; taille d'un test
+#   complet mesurée contre la limite de 256 Kio d'un document Claude (erreur au-delà de 248 Kio, avertissement dès 224 Kio))
 import json, os, re, subprocess, sys, tempfile, datetime
 
 ICI = os.path.dirname(os.path.abspath(__file__))
@@ -109,6 +115,40 @@ def test_navigateur(sortie):
           return { n, bad: bad.slice(0, 5), nbad: bad.length, cards: CARDS.length };
         }""")
         print(f"questions générées : {gen['n']} ({gen['cards']} cartes) ; problèmes : {gen['nbad']}", gen["bad"] if gen["nbad"] else "")
+        dos = pg.evaluate("""() => {
+          if (typeof dExplain !== "function") return null;   /* pas un Dossier */
+          const sans = [], recto = [];
+          DECKS.forEach(d => d.items.forEach(it => {
+            const ex = String(it.ans || it.expl || "").trim();
+            if (!ex) sans.push(d.key + " : " + String(it.front).slice(0, 70));
+            if (!/\\?\\s*[»"”']?\\s*$/.test(String(it.front))) recto.push(d.key + " : " + String(it.front).slice(0, 70));
+          }));
+          return { n: DECKS.reduce((s, d) => s + d.items.length, 0), sans, recto };
+        }""")
+        dos_ok = True
+        if dos is not None:
+            dos_ok = not dos["sans"] and not dos["recto"]
+            print(f"cartes du Dossier : {dos['n']} ; sans explication : {len(dos['sans'])} ; recto sans « ? » : {len(dos['recto'])}",
+                  (dos["sans"][:5] + dos["recto"][:5]) if not dos_ok else "")
+        taille = pg.evaluate("""() => {
+          const keys = DECKS.map(d => d.key), tailles = [];
+          ["easy","normal","hard"].forEach(diff => {
+            const qs = buildTest(keys, diff, 0, ORDRES ? Object.keys(ORDRES)[0] : "");
+            const detail = qs.map(q => ({ num:q.num, ex:q.ex, ref:q.ref || q.exTitle, prompt:q.prompt, user:q.answer, answer:q.answer,
+              correct:false, expl:q.expl, tag:q.tag, question:q, liveFixed:false, liveSnap:"" }));
+            const att = { id:String(Date.now()), quiz:QUIZ_ID, date:Date.now(), branche:OUTIL.branche, theme:THEME, deck:OUTIL.labelTout,
+              difficulty:"Niveau épreuve", mode:"Épreuve blanche", rattrapage:false, parent:null, score:0, total:qs.length, note:1, questions:detail };
+            const draft = { v:2, questions:qs, i:qs.length - 1, answers:qs.map(q => ({ u:q.answer, c:false })), picked:null, typed:"", checked:false,
+              ok:false, liveFixed:false, errSnap:"", label:OUTIL.labelTout, start:Date.now(), saved:Date.now(), rattrapage:false, rattrLabel:"",
+              rattrParent:null, selected:keys, difficulty:diff, mode:"exam", order:"" };
+            tailles.push({ diff, essai:new Blob([JSON.stringify(att)]).size, encours:new Blob([JSON.stringify(draft)]).size });
+          });
+          return tailles;
+        }""")
+        maxi = max(max(t["essai"], t["encours"]) for t in taille)
+        print("taille d'un test complet (Kio) :", " · ".join(f"{t['diff']} essai {t['essai']/1024:.0f} / en cours {t['encours']/1024:.0f}" for t in taille),
+              "→ TROP GROS (limite 256 Kio, marge 8 Kio)" if maxi > 248*1024 else ("→ attention, proche de la limite de 256 Kio" if maxi > 224*1024 else "→ OK"))
+        taille_ok = maxi <= 248*1024
         # un test joué de bout en bout (Entraînement, Je m'entraîne), réponses justes
         pg.evaluate("""() => { S.screen = "setup"; S.difficulty = "normal"; S.mode = "train"; S.count = 0; render(); }""")
         pg.click("[data-act=start]"); pg.wait_for_timeout(200)
@@ -128,7 +168,7 @@ def test_navigateur(sortie):
         b.close()
     erreurs = [e for e in erreurs if "Failed to load" not in e]
     print("erreurs JavaScript :", erreurs or "aucune")
-    return gen["nbad"] == 0 and bool(res) and res["score"] == res["total"] and not erreurs
+    return gen["nbad"] == 0 and dos_ok and taille_ok and bool(res) and res["score"] == res["total"] and not erreurs
 
 def main(argv):
     args = [a for a in argv if not a.startswith("--")]

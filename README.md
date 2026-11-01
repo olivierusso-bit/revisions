@@ -7,4 +7,4 @@ Révisions publiées avec GitHub Pages : https://olivierusso-bit.github.io/revis
 - Page des devoirs de Liano : `liano/` — idem.
 - Les anciennes adresses des outils de Livio (à la racine) redirigent vers `livio/`.
 
-Un outil de révision = un fichier HTML autonome. Les scores sont gardés dans le navigateur de chaque appareil.
+Un outil de révision = un fichier HTML autonome. Les scores sont gardés dans le navigateur de l'appareil et, une fois le code de l'élève entré sur cet appareil, synchronisés entre ses appareils (intermédiaire Google Apps Script, sources dans `src/`).

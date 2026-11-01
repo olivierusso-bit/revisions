@@ -23,7 +23,9 @@
    · 7 (01.11.2026, D6 : réglages facultatifs OUTIL.paquetsCoches (paquets cochés à l'ouverture) et OUTIL.introPaquets (html de l'intro
    de l'écran Paquets) ; « les cartes qui résistent » prennent le label de la carte (couche) si la question enregistrée n'en a pas ;
    un test en cours gardé avec liveFixed en { l, s } (ancien format) est relu ; accroche facultative de la couche
-   COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change).
+   COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change)
+   · 8 (01.11.2026, contrôle qualité : version papier réglée par la couche — COUCHE.papierGrille (cadre quadrillé de 3 mm sous chaque
+   réponse à écrire, maths) et COUCHE.papierSource (source de la question sous chaque question, Dossier) ; sans ces réglages, rien ne change).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -1115,17 +1117,17 @@ function paperHtml(qs, part){
   const P = OUTIL.papier;
   const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
   const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
-  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}`;
+  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}${COUCHE.papierSource && (q.src || srcOf(q)) ? `<span class="qsrc">📖 Où vérifier : ${esc(q.src || srcOf(q))}</span>` : ""}`;
   const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
     ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(AFF(o))}</span>`).join("")}</div></div>`
-    : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
+    : `<div class="q">${line(q)}${COUCHE.papierGrille ? `<div class="qgrid"></div>` : `<div class="qline"></div>`}</div>`).join("")}</section>`).join("");
   const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(AFF(q.word))} → <b>${esc(AFF(q.answer))}</b>${srcOf(q) ? ` <span class="hint">(${esc(srcOf(q))})</span>` : ""}</div>`).join("")}</section>`).join("");
   const head = `<h1>${esc(P.titre)}</h1><p class="meta">Prénom : ${esc(OUTIL.eleve)} · test du ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.court)} (${esc(DUE.short)})</title><style>
 @page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
-.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}
+.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}.qgrid{height:15mm;margin:6px 0 0 18px;border:1px solid #888;background-image:linear-gradient(#ccc 1px,transparent 1px),linear-gradient(90deg,#ccc 1px,transparent 1px);background-size:3mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}.qsrc{display:block;color:#555;font-size:11.5px;margin:2px 0 0 18px}
 .k{font-size:13.5px;margin:3px 0}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
 </style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
 }

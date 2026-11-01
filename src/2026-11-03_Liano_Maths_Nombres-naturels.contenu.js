@@ -75,7 +75,7 @@ const CSS_THEME = `
 const QUIZ_ID = "liano-quiz-maths-nombres-naturels";
 const DUE = { iso:"2026-11-03", long:"mardi 3 novembre", short:"03.11" };
 const THEME = "Nombres naturels";
-const VERSION = { n:2, date:"01.11.2026" };   /* v2 : 01.11.2026, outil reconstruit sur le noyau commun : mêmes contenus et même suivi, scores synchronisés entre appareils sur le site · v1 : 31.10.2026, première version (6 paquets de variantes, suivi à 1 anneau, test en cours gardé) */
+const VERSION = { n:3, date:"01.11.2026" };   /* v3 : 01.11.2026, outil réglé sur 5 questions par objectif à l'ouverture (« Combien de questions », on peut choisir 3 ou tout) ; version papier avec un cadre quadrillé sous chaque calcul · v2 : 01.11.2026, outil reconstruit sur le noyau commun : mêmes contenus et même suivi, scores synchronisés entre appareils sur le site · v1 : 31.10.2026, première version (6 paquets de variantes, suivi à 1 anneau, test en cours gardé) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -101,7 +101,7 @@ const OUTIL = {
   labelTout:"Tous les objectifs",
   motPaquet:"Objectif", motPaquets:"objectifs",
   compte:"questions",
-  comptes:[3, 5, 0], compteDefaut:0, comptesParPaquet:true, compteLabel:"Combien de questions par objectif",
+  comptes:[3, 5, 0], compteDefaut:5, comptesParPaquet:true, compteLabel:"Combien de questions par objectif",
   ordres:{
     paper:{ label:"Comme la feuille papier", sub:"Même ordre et mêmes numéros sur papier et à l'écran", emoji:"📝" },
     mixed:{ label:"Mélangé", sub:"Pour vérifier que tu ne réponds pas par habitude", emoji:"🔀" },

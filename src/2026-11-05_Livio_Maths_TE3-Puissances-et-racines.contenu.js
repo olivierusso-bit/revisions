@@ -58,7 +58,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-maths-te3-puissances";
 const DUE = { iso:"2026-11-05", long:"jeudi 5 novembre", short:"05.11" };
 const THEME = "TE3 — Puissances, notation scientifique, racines";
-const VERSION = { n:3, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique · v3 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
+const VERSION = { n:4, date:"01.11.2026" };   /* v4 : 01.11.2026, outil réglé sur 5 questions par objectif à l'ouverture (« Combien de questions », on peut choisir 3, 8 ou tout) ; version papier avec un cadre quadrillé sous chaque calcul · v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique · v3 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -83,7 +83,7 @@ const OUTIL = {
   labelTout:"Tout le TE3",
   motPaquet:"Objectif", motPaquets:"objectifs",
   compte:"questions",
-  comptes:[3, 5, 8, 0], compteDefaut:0, comptesParPaquet:true, compteLabel:"Combien de questions par objectif",
+  comptes:[3, 5, 8, 0], compteDefaut:5, comptesParPaquet:true, compteLabel:"Combien de questions par objectif",
   ordres:{
     paper:{ label:"Comme la feuille papier", sub:"Même ordre et mêmes numéros sur papier et à l'écran", emoji:"📝" },
     mixed:{ label:"Mélangé", sub:"Pour vérifier que tu ne réponds pas par habitude", emoji:"🔀" },

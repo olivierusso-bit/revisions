@@ -129,7 +129,7 @@ def controle(chemin, runtime=False):
            "cle_api", "aucune clé d'API dans la page", "clé d'API possible : le site est public", )
     r.test(bool(re.search(r"<meta[^>]+name=[\"']viewport", src)) or "<title>" in src, "titre", "balise <title> présente", "pas de <title>")
 
-    # 3. Prénom et clés de stockage (publication § 2 / construction § 2)
+    # 3. Prénom et clés de stockage (fiche construction, « Règles techniques » ; ancien construction § 2)
     m = re.search(r"\bQUIZ_ID\s*=\s*[\"']([^\"']+)[\"']", src)
     if not m:
         r.manque("cle_prenom", "clé de stockage QUIZ_ID présente", "QUIZ_ID introuvable")

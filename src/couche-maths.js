@@ -1,7 +1,9 @@
 /* ============================================================
    COUCHE MATHS — calculs, puissances, notation scientifique, racines
-   (prompt-artefact-revision.md § 11.3). Assemblée entre le contenu et le noyau.
-   Versions : 1 (01.11.2026, C3, née du modèle de maths TE3 « Puissances et racines » v1).
+   (prompt-artefact-revision.md, « Couche Maths » ; ancien § 11.5). Assemblée entre le contenu et le noyau.
+   Versions : 1 (01.11.2026, C3, née du modèle de maths TE3 « Puissances et racines » v1)
+   · 2 (01.11.2026, contrôle qualité : le contenu peut fournir COUCHE_CONTENU, ajouté à COUCHE ; sans lui, rien ne change)
+   · 3 (01.11.2026, contrôle qualité : papierGrille, cadre quadrillé de 3 mm sous chaque calcul à écrire sur la version papier).
 
    Ce que la couche attend du CONTENU :
      DECKS[] : paquets { key, code, title, src, consigne, unit, items[] } ; un paquet par objectif de la feuille.
@@ -134,4 +136,9 @@ const COUCHE = {
   },
   onSaisie(Q){ const p = document.getElementById("preview"); if (p) p.innerHTML = Q.typed ? "Tu as écrit : " + esc(uni(Q.typed)) : ""; },
   diffEntiere: true,
+  papierGrille: true,
 };
+
+/* réglages propres à un outil (version 2) : le contenu peut déclarer COUCHE_CONTENU = { … } (accroches facultatives du noyau ou
+   remplacement d'une fonction de la couche) ; sans COUCHE_CONTENU, rien ne change. Même mécanisme que la couche Langues v3. */
+if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU);

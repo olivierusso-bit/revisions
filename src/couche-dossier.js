@@ -1,7 +1,9 @@
 /* ============================================================
    COUCHE DOSSIER — géographie, histoire, sciences
    (prompt-artefact-revision.md § 11.8). Assemblée entre le contenu et le noyau.
-   Versions : 1 (01.11.2026, C4, née de l'outil d'histoire « L'Europe à la rencontre du monde » v10).
+   Versions : 1 (01.11.2026, C4, née de l'outil d'histoire « L'Europe à la rencontre du monde » v10)
+   · 2 (01.11.2026, contrôle qualité : le contenu peut fournir COUCHE_CONTENU, ajouté à COUCHE ; sans lui, rien ne change)
+   · 3 (01.11.2026, contrôle qualité : papierSource, la source de chaque question est imprimée sous la question sur la version papier).
 
    Ce que la couche attend du CONTENU (les mêmes constantes que l'outil d'origine, que lit aussi export-dossier.py) :
      CHAPTERS[] { key, titre, sous, objLabel? } · PAGES[] { id, ch, titre, court, obj, pre?, blocks[], blank? } (id = code du chapitre)
@@ -338,6 +340,7 @@ function dReset(){ S.audOpen = null; S.vidOpen = null; S.vidDone = null; }
 
 const COUCHE = {
   rings: 1,
+  papierSource: true,
   hasLive: false,
   acquisAvantLibre: true,
 
@@ -435,3 +438,7 @@ const COUCHE = {
     saveReview(); return true;
   },
 };
+
+/* réglages propres à un outil (version 2) : le contenu peut déclarer COUCHE_CONTENU = { … } (accroches facultatives du noyau ou
+   remplacement d'une fonction de la couche) ; sans COUCHE_CONTENU, rien ne change. Même mécanisme que la couche Langues v3. */
+if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU);

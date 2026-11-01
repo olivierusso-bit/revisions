@@ -386,7 +386,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-maths-te3-puissances";
 const DUE = { iso:"2026-11-05", long:"jeudi 5 novembre", short:"05.11" };
 const THEME = "TE3 — Puissances, notation scientifique, racines";
-const VERSION = { n:3, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique · v3 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
+const VERSION = { n:4, date:"01.11.2026" };   /* v4 : 01.11.2026, outil réglé sur 5 questions par objectif à l'ouverture (« Combien de questions », on peut choisir 3, 8 ou tout) ; version papier avec un cadre quadrillé sous chaque calcul · v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique · v3 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -411,7 +411,7 @@ const OUTIL = {
   labelTout:"Tout le TE3",
   motPaquet:"Objectif", motPaquets:"objectifs",
   compte:"questions",
-  comptes:[3, 5, 8, 0], compteDefaut:0, comptesParPaquet:true, compteLabel:"Combien de questions par objectif",
+  comptes:[3, 5, 8, 0], compteDefaut:5, comptesParPaquet:true, compteLabel:"Combien de questions par objectif",
   ordres:{
     paper:{ label:"Comme la feuille papier", sub:"Même ordre et mêmes numéros sur papier et à l'écran", emoji:"📝" },
     mixed:{ label:"Mélangé", sub:"Pour vérifier que tu ne réponds pas par habitude", emoji:"🔀" },
@@ -607,8 +607,10 @@ const TAG_LABEL = {};
 
 /* ============================================================
    COUCHE MATHS — calculs, puissances, notation scientifique, racines
-   (prompt-artefact-revision.md § 11.3). Assemblée entre le contenu et le noyau.
-   Versions : 1 (01.11.2026, C3, née du modèle de maths TE3 « Puissances et racines » v1).
+   (prompt-artefact-revision.md, « Couche Maths » ; ancien § 11.5). Assemblée entre le contenu et le noyau.
+   Versions : 1 (01.11.2026, C3, née du modèle de maths TE3 « Puissances et racines » v1)
+   · 2 (01.11.2026, contrôle qualité : le contenu peut fournir COUCHE_CONTENU, ajouté à COUCHE ; sans lui, rien ne change)
+   · 3 (01.11.2026, contrôle qualité : papierGrille, cadre quadrillé de 3 mm sous chaque calcul à écrire sur la version papier).
 
    Ce que la couche attend du CONTENU :
      DECKS[] : paquets { key, code, title, src, consigne, unit, items[] } ; un paquet par objectif de la feuille.
@@ -741,7 +743,12 @@ const COUCHE = {
   },
   onSaisie(Q){ const p = document.getElementById("preview"); if (p) p.innerHTML = Q.typed ? "Tu as écrit : " + esc(uni(Q.typed)) : ""; },
   diffEntiere: true,
+  papierGrille: true,
 };
+
+/* réglages propres à un outil (version 2) : le contenu peut déclarer COUCHE_CONTENU = { … } (accroches facultatives du noyau ou
+   remplacement d'une fonction de la couche) ; sans COUCHE_CONTENU, rien ne change. Même mécanisme que la couche Langues v3. */
+if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU);
 
 
 /* ============================================================
@@ -764,7 +771,20 @@ const COUCHE = {
    nombre de questions, faute de frappe enregistrée, test en cours plus complet, source dans le corrigé et la copie, cartes homonymes distinguées)
    · 3 (01.11.2026, C3 : moteur à un anneau (maths, Dossier), réglages par paquet et ordre des questions, accroches de la couche Maths)
    · 4 (01.11.2026, D4 : synchronisation des scores et du test en cours entre appareils, sur le site seulement — voir SYNC)
-   · 5 (01.11.2026, D4 : bouton « Entrer mon code » dans l'onglet Scores, état de la synchronisation affiché aussi quand l'historique est vide).
+   · 5 (01.11.2026, D4 : bouton « Entrer mon code » dans l'onglet Scores, état de la synchronisation affiché aussi quand l'historique est vide)
+   · 6 (01.11.2026, C4 : accroches de la couche Dossier, sans changement pour les langues et les maths)
+   · 7 (01.11.2026, D6 : réglages facultatifs OUTIL.paquetsCoches (paquets cochés à l'ouverture) et OUTIL.introPaquets (html de l'intro
+   de l'écran Paquets) ; « les cartes qui résistent » prennent le label de la carte (couche) si la question enregistrée n'en a pas ;
+   un test en cours gardé avec liveFixed en { l, s } (ancien format) est relu ; accroche facultative de la couche
+   COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change)
+   · 8 (01.11.2026, contrôle qualité : version papier réglée par la couche — COUCHE.papierGrille (cadre quadrillé de 3 mm sous chaque
+   réponse à écrire, maths) et COUCHE.papierSource (source de la question sous chaque question, Dossier) ; sans ces réglages, rien ne change).
+   Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
+   COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
+   COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
+   COUCHE.onInput(e) ; COUCHE.sousQuestion(q) (html sous l'énoncé pendant le test) ; COUCHE.carteDe(question) (carte d'une question
+   enregistrée sans champ card) ; COUCHE.acquisAvantLibre (une carte est acquise si la dernière réponse est écrite, même si la précédente
+   était à choix) ; refreshCards() recalcule les cartes (cartes retirées des tests). OUTIL.cePaquet (« Ce chapitre ») dans l'état d'un paquet.
    Réglages facultatifs ajoutés à C3 : comptesParPaquet (le nombre de questions vaut pour chaque paquet), compteLabel, ordres
    ({clé:{label, sub, emoji}} = « Ordre des questions »), sousEntete (html ou fonction, sous l'en-tête hors du quiz), ficheOuverte,
    titreAstuceNeg, motPaquets (pluriel). Un paquet peut porter code (« Obj. 1 ») et detail ; une section de FICHE num, deck, miss, astuceNeg.
@@ -846,8 +866,10 @@ function dateLabel(ts){ const d = new Date(ts), p = x => String(x).padStart(2,"0
 function dayOf(t){ const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
 
 /* ---------- cartes ---------- */
-const CARDS = COUCHE.allCards();
-const CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
+let CARDS = COUCHE.allCards();
+let CARD = Object.fromEntries(CARDS.map(c => [c.k, c]));
+/* la couche peut changer ses cartes après le chargement (couche Dossier : cartes retirées des tests par la revue) */
+function refreshCards(){ CARDS = COUCHE.allCards(); CARD = Object.fromEntries(CARDS.map(c => [c.k, c])); }
 function deckCards(dk){ return CARDS.filter(c => c.dk === dk); }
 function buildTest(deckKeys, difficulty, limit, order){ return COUCHE.buildTest(deckKeys, difficulty, limit || 0, order || (ORDRES ? Object.keys(ORDRES)[0] : "")); }
 /* ce que l'écran Paquets compte : les éléments des paquets, ou les cartes (OUTIL.compte = "cartes") */
@@ -1017,7 +1039,7 @@ function majSyncLigne(){ const el = document.getElementById("sync-ligne"); if (e
 /* ---------- état ---------- */
 const S = {
   screen:"fiche", ficheOpen: OUTIL.ficheOuverte != null ? OUTIL.ficheOuverte : 0, order: ORDRES ? Object.keys(ORDRES)[0] : "",
-  selected: DECKS.map(d => d.key),
+  selected: Array.isArray(OUTIL.paquetsCoches) ? DECKS.map(d => d.key).filter(k => OUTIL.paquetsCoches.includes(k)) : DECKS.map(d => d.key),
   difficulty:"normal", mode:"train", count: COUNTS ? (OUTIL.compteDefaut != null ? OUTIL.compteDefaut : COUNTS[0]) : 0,
   frozen:null, paperMsg:"", paperCopy:"",
   quiz:null, rattrapage:false, rattrLabel:"", lastResult:null, storeMsg:"",
@@ -1029,6 +1051,7 @@ const S = {
   bilan:{},
   draft:null, draftAsk:false, draftBlock:false, draftErr:false, quitAsk:false,
 };
+if (COUCHE.etat) Object.assign(S, COUCHE.etat);
 const deckLabel = keys => keys.length === DECKS.length ? OUTIL.labelTout
   : DECKS[0].code ? (keys.length > 3 ? keys.length + " " + MOT_PAQUETS : keys.map(k => DECK[k].code).join(" + "))
   : keys.map(k => DECK[k].title).join(" + ");
@@ -1045,7 +1068,7 @@ function parentOf(a){
 function isExam(a){ return a.mode === MODES.exam.label; }
 function chapOfQ(x){ return x.question ? x.question.deckKey : null; }
 function inChap(ch){ return x => ch === "all" || chapOfQ(x) === ch; }
-function qCardKey(x){ return x.question ? x.question.card : ("p|" + x.prompt); }
+function qCardKey(x){ return x.question ? (x.question.card || (COUCHE.carteDe ? COUCHE.carteDe(x.question) : undefined)) : ("p|" + x.prompt); }
 
 /* note sans aide d'un test (éventuellement limitée à un paquet) et remontée après chaque rattrapage */
 function testScore(root, ch){
@@ -1135,7 +1158,7 @@ function state1(es){
   if (!es || !es.length) return "new";
   const last = es[es.length - 1]; if (!last.ok) return "bad";
   if (!last.wrote) return "mid";
-  for (let k = es.length - 2; k >= 0; k--){ if (!es[k].ok) break; if (es[k].wrote && es[k].day !== last.day) return "ok"; }
+  for (let k = es.length - 2; k >= 0; k--){ if (!es[k].ok) break; if ((es[k].wrote || COUCHE.acquisAvantLibre) && es[k].day !== last.day) return "ok"; }
   return "mid";
 }
 function summary1(cards, hist){
@@ -1180,7 +1203,7 @@ function pastille1(dk){
 function paqStatus(dk){
   if (!S.loaded) return "";
   const hist = histByCard(), sum = paqSum(dk, hist), dr = dropOf(dk, hist), m = OUTIL.motPaquet.toLowerCase();
-  let h = `<p class="fine"><b>Cet ${m === "objectif" ? "objectif" : m} : ${P_LABEL[sum.state]}</b>${sum.state !== "start" ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
+  let h = `<p class="fine"><b>${OUTIL.cePaquet || "Cet " + m} : ${P_LABEL[sum.state]}</b>${sum.state !== "start" ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
   if (dr && dr.lost.length) h += `<div class="pdrop"><p>↘ Le ${dayShort(dr.date)}, c'était « ${P_LABEL[dr.prev.state]} » (note ${fmtNote(dr.prev.note)}). ${dr.lost.length} question${dr.lost.length>1?"s":""} réussie${dr.lost.length>1?"s":""} avant ${dr.lost.length>1?"sont ratées":"est ratée"} au dernier test : ce sont elles à reprendre.</p><button class="ghost small" data-act="redoCards" data-v="lost:${dk}">Refaire ces ${dr.lost.length} questions</button></div>`;
   else { const bad = paqBad(dk, hist); if (bad.length) h += `<button class="ghost small" data-act="redoCards" data-v="${dk}">${bad.length > 1 ? `Refaire mes ${bad.length} questions à revoir` : "Refaire ma question à revoir"}</button>`; }
   return h;
@@ -1264,7 +1287,7 @@ function redoCards(v){
 /* les 5 cartes les plus ratées (premier passage des tests) */
 function resistant(){
   const m = {};
-  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x); m[k] = m[k] || { k, word:x.question.label || x.question.word, hint:x.question.label ? "" : (x.question.hint || ""), ch:x.question.deckKey, tag:x.question.tag, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
+  rootTests().forEach(a => a.questions.forEach(x => { if (!x.question) return; const k = qCardKey(x), lab = x.question.label || (CARD[k] && CARD[k].label); m[k] = m[k] || { k, word:lab || x.question.word, hint:lab ? "" : (x.question.hint || ""), ch:x.question.deckKey, tag:x.question.tag, n:0, miss:0 }; m[k].n++; if (!x.correct) m[k].miss++; }));
   const out = Object.values(m).filter(x => x.miss).sort((a, b) => b.miss - a.miss || b.miss / b.n - a.miss / a.n).slice(0, 5);
   /* deux cartes de même énoncé : on les distingue par l'étiquette, ou par l'indice si l'étiquette est la même */
   out.forEach(x => { const twins = out.filter(y => y !== x && y.word === x.word); if (!twins.length) return;
@@ -1371,7 +1394,7 @@ function draftSave(){
 function draftDetail(d){
   if (d.detail) return d.detail;
   return (d.answers || []).map((x, k) => { const q = d.questions[k];
-    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!x.lf, liveSnap:x.ls || "", expl:q.expl, tag:q.tag, question:q }; });
+    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!(x.lf || x.l), liveSnap:x.ls || x.s || "", expl:q.expl, tag:q.tag, question:q }; });
 }
 const draftN = d => (d.answers || d.detail || []).length;
 const draftOk = d => !!(d && d.questions && d.questions.length && (d.answers || d.detail));
@@ -1412,7 +1435,7 @@ const app = document.getElementById("app");
 function render(){
   if (S.screen === "quiz" && !S.quiz) S.screen = "fiche";
   if (S.screen === "results" && !S.lastResult) S.screen = "home";
-  const v = { fiche:viewFiche, home:viewHome, cards:viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
+  const v = { fiche:COUCHE.vueFiche || viewFiche, home:viewHome, cards:COUCHE.vueCartes || viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
   app.innerHTML = header() + `<div class="screen">${v()}</div>`;
   renderTabs();
   if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
@@ -1426,7 +1449,7 @@ function renderTabs(){
   const bar = document.getElementById("tabbar");
   if (S.screen === "quiz"){ bar.hidden = true; return; }
   bar.hidden = false;
-  const tabs = [["fiche","📚","Fiche"],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
+  const tabs = [["fiche", ...(OUTIL.ongletFiche || ["📚","Fiche"])],["home","🏠","Paquets"],["cards","🃏","Cartes"],["setup","🎯","Test"],["scores","📊","Scores"]];
   bar.innerHTML = `<div class="tabbar-in">` + tabs.map(([k,e,l]) => {
     const on = S.screen === k || (k === "setup" && S.screen === "results");
     return `<button class="tab${on?" on":""}" data-act="nav" data-v="${k}" aria-current="${on?"page":"false"}"><span class="tab-e">${e}</span><span class="tab-l">${l}</span></button>`;
@@ -1471,7 +1494,7 @@ function viewHome(){
   const allOn = S.selected.length === DECKS.length;
   const cs = compteSel(S.selected), count = cs.n;
   const hist = S.loaded ? histByCard() : null;
-  let h = draftBanner() + globalPastille() + `<p class="intro">Choisis ce que tu veux travailler. Tu peux cocher plusieurs paquets. Les anneaux montrent ta progression.</p>`;
+  let h = draftBanner() + globalPastille() + `<p class="intro">${OUTIL.introPaquets || "Choisis ce que tu veux travailler. Tu peux cocher plusieurs paquets. Les anneaux montrent ta progression."}</p>`;
   h += DECKS.map(d => {
     const on = S.selected.includes(d.key);
     const bad = hist ? paqBad(d.key, hist) : [];
@@ -1590,7 +1613,7 @@ function viewQuiz(){
   const Q = S.quiz, q = Q.questions[Q.i], total = Q.questions.length, instant = S.mode !== "exam";
   let h = `<div class="qtop"><button class="quit" data-act="quit" aria-label="Quitter le test">✕</button><div class="bar"><i style="width:${Math.round(Q.i/total*100)}%"></i></div><span class="qn">${Q.i+1}/${total}</span></div>${draftErrLine()}
   <div class="badges"><span class="num">N° ${q.num}</span>${TAG_LABEL[q.tag] ? `<span class="chip ${q.tag}">${esc(TAG_LABEL[q.tag])}</span>` : ""}<span class="ref">Exercice ${q.ex} · ${esc(q.ref || q.exTitle)}</span>${COUCHE.badges ? COUCHE.badges(q) : ""}</div>
-  <p class="consigne">${esc(q.consigne)}</p><p class="qword${COUCHE.classeMot ? " " + COUCHE.classeMot(q) : ""}">${esc(AFF(q.word))}</p>${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
+  <p class="consigne">${esc(q.consigne)}</p><p class="qword${COUCHE.classeMot ? " " + COUCHE.classeMot(q) : ""}">${esc(AFF(q.word))}</p>${COUCHE.sousQuestion ? COUCHE.sousQuestion(q) : ""}${q.hint ? `<p class="qhint">${esc(OUTIL.prefixeIndice != null ? OUTIL.prefixeIndice : "petit indice : ")}${esc(q.hint)}</p>` : ""}`;
   if (q.type === "mcq"){
     h += `<div class="opts">` + q.options.map((o, k) => {
       let c = "choice" + (COUCHE.classeChoix ? " " + COUCHE.classeChoix(o) : "");
@@ -1598,7 +1621,7 @@ function viewQuiz(){
       return `<button class="${c}" data-act="pick" data-v="${k}" ${Q.checked||Q.finishing?"disabled":""}>${Q.checked && o === q.answer ? "✓ " : Q.checked && o === Q.picked ? "✗ " : ""}${esc(AFF(o))}</button>`;
     }).join("") + `</div>`;
   } else {
-    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
+    h += `<input id="answer-input" class="tinput${Q.checked?(Q.ok?" good":" bad"):""}" value="${esc(Q.typed)}" placeholder="${q.lang === "de" ? "Deine Antwort…" : "Ta réponse…"}" ${COUCHE.clavier ? ` inputmode="${COUCHE.clavier(q)}"` : ""} autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${Q.checked||Q.finishing?"disabled":""}>`;
     if (q.lang === "de" && !Q.checked && !Q.finishing) h += `<div class="umlauts" aria-label="Lettres avec Umlaut">${["ä","ö","ü","Ä","Ö","Ü"].map(u => `<button data-act="uml" data-v="${u}" aria-label="Ajouter ${u}">${u}</button>`).join("")}</div>`;
     if (COUCHE.saisie) h += COUCHE.saisie(q, Q);
     if (S.mode === "live" && !Q.checked) h += `<div class="live"><p class="live-lab">Ta réponse, lettre par lettre</p><div class="live-box" id="live-box"></div><p class="live-state" id="live-state" aria-live="polite"></p></div>`;
@@ -1847,17 +1870,17 @@ function paperHtml(qs, part){
   const P = OUTIL.papier;
   const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
   const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
-  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}`;
+  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}${COUCHE.papierSource && (q.src || srcOf(q)) ? `<span class="qsrc">📖 Où vérifier : ${esc(q.src || srcOf(q))}</span>` : ""}`;
   const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
     ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(AFF(o))}</span>`).join("")}</div></div>`
-    : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
+    : `<div class="q">${line(q)}${COUCHE.papierGrille ? `<div class="qgrid"></div>` : `<div class="qline"></div>`}</div>`).join("")}</section>`).join("");
   const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(AFF(q.word))} → <b>${esc(AFF(q.answer))}</b>${srcOf(q) ? ` <span class="hint">(${esc(srcOf(q))})</span>` : ""}</div>`).join("")}</section>`).join("");
   const head = `<h1>${esc(P.titre)}</h1><p class="meta">Prénom : ${esc(OUTIL.eleve)} · test du ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.court)} (${esc(DUE.short)})</title><style>
 @page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
-.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}
+.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}.qgrid{height:15mm;margin:6px 0 0 18px;border:1px solid #888;background-image:linear-gradient(#ccc 1px,transparent 1px),linear-gradient(90deg,#ccc 1px,transparent 1px);background-size:3mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}.qsrc{display:block;color:#555;font-size:11.5px;margin:2px 0 0 18px}
 .k{font-size:13.5px;margin:3px 0}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
 </style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
 }
@@ -1889,6 +1912,7 @@ async function savePaper(part){
 async function loadHistory(){
   try {
     await store.init();
+    if (COUCHE.charger){ try { await COUCHE.charger(); } catch(e){} }
     SYNC.init();
     S.syncDoc = null;
     if (SYNC.on){
@@ -1928,7 +1952,7 @@ document.addEventListener("click", e => {
   const act = el.dataset.act, v = el.dataset.v;
   const Q = S.quiz;
   switch(act){
-    case "nav": S.draftBlock = false; S.screen = v; S.scores.confirm = false; render(); window.scrollTo(0,0); break;
+    case "nav": S.draftBlock = false; S.screen = v; S.scores.confirm = false; if (COUCHE.surNav) COUCHE.surNav(); render(); window.scrollTo(0,0); break;
     case "fiche": S.ficheOpen = S.ficheOpen === +v ? -1 : +v; render(); break;
     case "toggle": S.selected = S.selected.includes(v) ? S.selected.filter(x => x !== v) : DECKS.map(d => d.key).filter(k => k === v || S.selected.includes(k)); S.frozen = null; S.cards.order = []; render(); break;
     case "allDecks": S.selected = S.selected.length === DECKS.length ? [] : DECKS.map(d => d.key); S.frozen = null; S.cards.order = []; render(); break;
@@ -1979,10 +2003,12 @@ document.addEventListener("click", e => {
       let failed = false; for (const id of ids){ try { await store.remove(id); } catch(e){ failed = true; } }
       if (failed){ S.loadErr = "L'effacement n'a pas pu être enregistré partout. Recharge la page et réessaie."; render(); }
     })(); break;
+    default: if (COUCHE.action) COUCHE.action(act, v, el);
   }
 });
-document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ S.suivi.ch = e.target.value; S.suivi.pt = null; render(); } });
+document.addEventListener("change", e => { if (e.target && e.target.id === "suivi-ch"){ S.suivi.ch = e.target.value; S.suivi.pt = null; render(); return; } if (COUCHE.onChange) COUCHE.onChange(e); });
 document.addEventListener("input", e => {
+  if (COUCHE.onInput && COUCHE.onInput(e)) return;
   if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); if (COUCHE.onSaisie) COUCHE.onSaisie(S.quiz); }
 });
 document.addEventListener("keydown", e => {
