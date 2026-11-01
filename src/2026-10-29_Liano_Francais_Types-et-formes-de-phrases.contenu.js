@@ -42,7 +42,7 @@ const CSS_THEME = `
 const QUIZ_ID = "liano-quiz-francais-types-formes";
 const DUE = { iso:"2026-10-29", long:"jeudi 29 octobre", short:"29.10" };
 const THEME = "Types et formes de phrases";
-const VERSION = { n:5, date:"01.11.2026" };   /* v1 : 26.10.2026, première version · v2 : 26.10.2026, suivi 3 anneaux + courbe + jour par jour + cartes qui résistent + test en cours gardé · v3 : 26.10.2026, anneaux colorés selon leur note (plein/clair), au centre réussies/total du niveau le plus difficile testé · v4 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) · v5 : 01.11.2026, reconstruit sur le noyau commun (refonte C1), même comportement */
+const VERSION = { n:6, date:"01.11.2026" };   /* v1 : 26.10.2026, première version · v2 : 26.10.2026, suivi 3 anneaux + courbe + jour par jour + cartes qui résistent + test en cours gardé · v3 : 26.10.2026, anneaux colorés selon leur note (plein/clair), au centre réussies/total du niveau le plus difficile testé · v4 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) · v5 : 01.11.2026, reconstruit sur le noyau commun (refonte C1), même comportement · v6 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {

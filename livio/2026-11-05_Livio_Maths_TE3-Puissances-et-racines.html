@@ -386,7 +386,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-maths-te3-puissances";
 const DUE = { iso:"2026-11-05", long:"jeudi 5 novembre", short:"05.11" };
 const THEME = "TE3 — Puissances, notation scientifique, racines";
-const VERSION = { n:2, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique */
+const VERSION = { n:3, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique · v3 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -762,7 +762,9 @@ const COUCHE = {
    Les clés de stockage et le format des historiques sont ceux des outils précédents : rien n'est perdu.
    Versions : 1 (01.11.2026, C1, né du modèle de français v4) · 2 (01.11.2026, C2 : réglages facultatifs d'OUTIL ci-dessus, Umlaute,
    nombre de questions, faute de frappe enregistrée, test en cours plus complet, source dans le corrigé et la copie, cartes homonymes distinguées)
-   · 3 (01.11.2026, C3 : moteur à un anneau (maths, Dossier), réglages par paquet et ordre des questions, accroches de la couche Maths).
+   · 3 (01.11.2026, C3 : moteur à un anneau (maths, Dossier), réglages par paquet et ordre des questions, accroches de la couche Maths)
+   · 4 (01.11.2026, D4 : synchronisation des scores et du test en cours entre appareils, sur le site seulement — voir SYNC)
+   · 5 (01.11.2026, D4 : bouton « Entrer mon code » dans l'onglet Scores, état de la synchronisation affiché aussi quand l'historique est vide).
    Réglages facultatifs ajoutés à C3 : comptesParPaquet (le nombre de questions vaut pour chaque paquet), compteLabel, ordres
    ({clé:{label, sub, emoji}} = « Ordre des questions »), sousEntete (html ou fonction, sous l'en-tête hors du quiz), ficheOuverte,
    titreAstuceNeg, motPaquets (pluriel). Un paquet peut porter code (« Obj. 1 ») et detail ; une section de FICHE num, deck, miss, astuceNeg.
@@ -870,12 +872,14 @@ const store = {
   },
   async save(att){
     if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + att.id).set(att); return; }
-    if (this.mode === "local"){ localStorage.setItem(ATTEMPT_PREFIX + att.id, JSON.stringify(att)); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); if (!idx.includes(att.id)) idx.unshift(att.id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return; }
+    if (this.mode === "local"){ this.saveLocal(att); SYNC.sauver(att); return; }
     this.mem[att.id] = att;
   },
+  saveLocal(att){ localStorage.setItem(ATTEMPT_PREFIX + att.id, JSON.stringify(att)); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]"); if (!idx.includes(att.id)) idx.unshift(att.id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); },
+  removeLocal(id){ localStorage.removeItem(ATTEMPT_PREFIX + id); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]").filter(x => x !== id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); },
   async remove(id){
     if (this.mode === "db"){ await this.col.doc(ATTEMPT_PREFIX + id).delete(); return; }
-    if (this.mode === "local"){ localStorage.removeItem(ATTEMPT_PREFIX + id); const idx = JSON.parse(localStorage.getItem(INDEX_KEY) || "[]").filter(x => x !== id); localStorage.setItem(INDEX_KEY, JSON.stringify(idx)); return; }
+    if (this.mode === "local"){ this.removeLocal(id); SYNC.effacer(id); return; }
     delete this.mem[id];
   },
   async getDoc(id){
@@ -889,6 +893,126 @@ const store = {
     this.memDocs[id] = obj;
   },
 };
+
+/* ---------- synchronisation entre appareils (refonte D4) ----------
+   Sur le site seulement (navigateur, pas dans Claude). L'accueil du site enregistre sur l'appareil, sous la clé
+   « revisions-appareil », l'adresse de l'intermédiaire Google et le code de chaque élève :
+       { url, eleves:{ Livio:{ code }, Liano:{ code } } }
+   L'outil garde toujours sa copie dans le navigateur (il marche hors ligne) et envoie chaque test à l'intermédiaire,
+   qui le range dans la feuille « Révisions – scores ». Ce qui n'a pas pu partir attend dans une file sur l'appareil
+   et repart au chargement suivant ou au retour du réseau. Au chargement, les tests faits sur un autre appareil
+   sont ajoutés ; un test effacé laisse une marque « suppr » pour ne pas revenir d'un autre appareil. */
+const SYNC_CONF = "revisions-appareil";
+/* adresse de l'intermédiaire, la même que la constante INTERMEDIAIRE de l'accueil du site (publication-github.md § 11) :
+   sert au bouton « Entrer mon code » de l'onglet Scores, quand l'appareil n'a pas encore de code pour cet élève */
+const SYNC_URL_SITE = "https://script.google.com/macros/s/AKfycbzUVgqKYNSQaLeKAOk4kCGdYNF0weB5xKBLmZMSWCfmoSVoVf2R9Y6WKwQqh9CON-1K/exec";
+const SYNC = {
+  on:false, url:"", code:"", etat:"", derniere:0, file:[], occupe:false, minuterie:null, echeance:0,
+  cleFile: QUIZ_ID + "-sync-file", cleSuppr: QUIZ_ID + "-sync-suppr",
+  init(){
+    this.on = false;
+    if (store.mode !== "local") return;
+    try {
+      const c = JSON.parse(localStorage.getItem(SYNC_CONF) || "null");
+      const e = c && c.eleves && c.eleves[OUTIL.eleve];
+      if (c && c.url && e && e.code){ this.url = c.url; this.code = e.code; this.on = true; }
+      this.file = JSON.parse(localStorage.getItem(this.cleFile) || "[]");
+    } catch(e){ this.on = false; }
+  },
+  garderFile(){ try { localStorage.setItem(this.cleFile, JSON.stringify(this.file)); } catch(e){} },
+  supprimes(){ try { return new Set(JSON.parse(localStorage.getItem(this.cleSuppr) || "[]")); } catch(e){ return new Set(); } },
+  noterSuppr(id){ const s = this.supprimes(); s.add(id); try { localStorage.setItem(this.cleSuppr, JSON.stringify([...s].slice(-500))); } catch(e){} },
+  async appel(corps){
+    const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const t = ctrl ? setTimeout(() => ctrl.abort(), 20000) : null;
+    try {
+      const r = await fetch(this.url, { method:"POST", body:JSON.stringify({ eleve:OUTIL.eleve, code:this.code, ...corps }), signal: ctrl ? ctrl.signal : undefined });
+      const j = await r.json();
+      if (!j.ok){ const err = new Error(j.erreur || "erreur"); err.code = j.erreur || "erreur"; throw err; }
+      return j;
+    } finally { if (t) clearTimeout(t); }
+  },
+  /* une opération en attente remplace la précédente sur le même enregistrement */
+  ajouter(op){
+    if (!this.on) return;
+    op.quiz = QUIZ_ID;
+    this.file = this.file.filter(x => x.id !== op.id); this.file.push(op); this.garderFile();
+    /* un test part tout de suite ; le test en cours attend 2,5 s (il change à chaque réponse) ; un envoi déjà prévu plus tôt est gardé */
+    const due = Date.now() + (op.type === "doc" ? 2500 : 50);
+    if (this.minuterie && this.echeance <= due) return;
+    clearTimeout(this.minuterie); this.echeance = due;
+    this.minuterie = setTimeout(() => { this.minuterie = null; this.envoyer(); }, due - Date.now());
+  },
+  async envoyer(){
+    if (!this.on || this.occupe || !this.file.length) return;
+    this.occupe = true;
+    try {
+      while (this.file.length){
+        const lot = this.file.slice(0, 20);
+        await this.appel({ action:"batch", ops:lot });
+        const ids = new Set(lot.map(x => x.id + "|" + (x.maj || 0)));
+        this.file = this.file.filter(x => !ids.has(x.id + "|" + (x.maj || 0))); this.garderFile();
+      }
+      this.etat = "ok"; this.derniere = Date.now();
+    } catch(e){ this.etat = e.code === "code" || e.code === "bloque" ? "code" : "hors-ligne"; }
+    this.occupe = false;
+    if (this.file.length && this.etat === "ok" && !this.minuterie) this.minuterie = setTimeout(() => { this.minuterie = null; this.envoyer(); }, 2500);
+    majSyncLigne();
+  },
+  /* tests et test en cours de l'autre appareil ; null si l'intermédiaire ne répond pas */
+  async recevoir(){
+    if (!this.on) return null;
+    try { const j = await this.appel({ action:"list", quiz:QUIZ_ID }); this.etat = "ok"; this.derniere = Date.now(); return j.items || []; }
+    catch(e){ this.etat = e.code === "code" || e.code === "bloque" ? "code" : "hors-ligne"; return null; }
+  },
+  sauver(att){ this.ajouter({ op:"put", id:att.id, type:"test", date:att.date, data:att, maj:Date.now() }); },
+  effacer(id){ this.noterSuppr(id); this.ajouter({ op:"put", id, type:"suppr", date:0, data:null, maj:Date.now() }); },
+  doc(id, obj){ this.ajouter({ op:"put", id, type:"doc", date:obj && obj.saved || 0, data:obj, maj:Date.now() }); },
+};
+function syncTexte(){
+  if (store.mode !== "local") return "";
+  if (!SYNC.on) return /^https?:/.test(location.protocol) ? `Tes scores sont gardés dans ce navigateur uniquement. Pour les retrouver sur tous tes appareils, passe une fois par <a href="../">l'accueil du site</a> et entre ton code.` : "Tes scores sont gardés dans ce navigateur uniquement. Exporte-les de temps en temps.";
+  const n = SYNC.file.filter(x => x.type !== "doc").length;
+  if (SYNC.etat === "code") return `Le code enregistré sur cet appareil n'est plus accepté : repasse par <a href="../">l'accueil du site</a> pour l'entrer à nouveau. Tes scores restent gardés ici en attendant.`;
+  if (SYNC.etat === "hors-ligne" || n) return `🔄 Synchronisation en attente${n ? ` : ${n} enregistrement${n>1?"s":""} partira${n>1?"ont":""} dès que le réseau revient` : ""}. Tes scores sont gardés sur cet appareil en attendant.`;
+  return `☁️ Tes scores sont synchronisés entre tes appareils${SYNC.derniere ? ` (dernière fois à ${String(new Date(SYNC.derniere).getHours()).padStart(2,"0")}h${String(new Date(SYNC.derniere).getMinutes()).padStart(2,"0")})` : ""}.`;
+}
+/* ligne d'état de la synchronisation (onglet Scores) ; sans code sur le site : bouton et petit formulaire pour l'entrer ici */
+function syncBloc(){
+  if (store.mode !== "local") return "";
+  let h = `<p class="note" id="sync-ligne">${syncTexte()}</p>`;
+  const surSite = /^https?:/.test(location.protocol) && SYNC_URL_SITE;
+  if (surSite && (!SYNC.on || SYNC.etat === "code")){
+    if (!S.syncForm) h += `<button class="ghost small" data-act="syncCode">🔑 Entrer mon code</button>`;
+    else h += `<div class="synccode" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><label class="fine" for="sync-code-in">Ton code, ${esc(OUTIL.eleve)}</label>
+      <input id="sync-code-in" class="tinput" type="password" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false">
+      ${S.syncErr ? `<p class="warn">${esc(S.syncErr)}</p>` : ""}
+      <div class="row"><button class="ghost small" data-act="syncNo">Plus tard</button><button class="cta" data-act="syncOk"${S.syncBusy ? " disabled" : ""}>${S.syncBusy ? "Vérification…" : "Valider"}</button></div></div>`;
+  }
+  return h;
+}
+async function syncValider(){
+  const inp = document.getElementById("sync-code-in"), code = inp ? inp.value.trim() : "";
+  if (!code || S.syncBusy) return;
+  S.syncBusy = true; S.syncErr = ""; render();
+  let rep = null;
+  try { const r = await fetch(SYNC_URL_SITE, { method:"POST", body:JSON.stringify({ eleve:OUTIL.eleve, code, action:"ping" }) }); rep = await r.json(); } catch(e){ rep = { ok:false, erreur:"reseau" }; }
+  S.syncBusy = false;
+  if (rep && rep.ok){
+    try {
+      const c = JSON.parse(localStorage.getItem(SYNC_CONF) || "null") || { eleves:{} };
+      c.url = SYNC_URL_SITE; c.eleves = c.eleves || {}; c.eleves[OUTIL.eleve] = { code };
+      localStorage.setItem(SYNC_CONF, JSON.stringify(c));
+    } catch(e){}
+    location.reload(); return;
+  }
+  S.syncErr = rep && rep.erreur === "code" ? "Ce code n'est pas le bon. Réessaie, ou demande à ton papa."
+    : rep && rep.erreur === "bloque" ? "Trop d'essais : attends un quart d'heure avant de réessayer."
+    : "Pas de réseau pour vérifier le code. Réessaie plus tard : tes scores restent gardés ici.";
+  render();
+  const i2 = document.getElementById("sync-code-in"); if (i2) i2.focus();
+}
+function majSyncLigne(){ const el = document.getElementById("sync-ligne"); if (el) el.innerHTML = syncTexte(); }
 
 /* ---------- état ---------- */
 const S = {
@@ -1225,10 +1349,12 @@ function chainTxt(a){
    TEST EN COURS GARDÉ (§ 2)
    ============================================================ */
 let draftChain = Promise.resolve();
+let draftSig = "";   /* dernier état gardé : on ne réécrit pas un test en cours qui n'a pas changé (sinon une page restée ouverte sur un autre appareil le rajeunirait en se fermant) */
 function draftLocalSet(obj){ try { localStorage.setItem(DRAFT_ID, JSON.stringify(obj)); return true; } catch(e){ return false; } }
 function draftLocalGet(){ try { const v = localStorage.getItem(DRAFT_ID); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
 function draftWrite(obj){
   const okLocal = draftLocalSet(obj);
+  if (store.mode === "local") SYNC.doc(DRAFT_ID, obj);
   if (store.mode === "db") draftChain = draftChain.then(() => store.setDoc(DRAFT_ID, obj)).then(() => { S.draftErr = false; }, () => { S.draftErr = !okLocal; draftErrShow(); });
   else if (store.mode === "memory"){ store.setDoc(DRAFT_ID, obj); S.draftErr = !okLocal; draftErrShow(); }
 }
@@ -1239,6 +1365,7 @@ function draftSave(){
     picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok, liveFixed:!!Q.liveFixed, errSnap:Q.errSnap || "",
     label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "", rattrParent:S.rattrParent || null,
     selected:S.selected, difficulty:S.difficulty, mode:S.mode, order:S.order };
+  const sig = JSON.stringify({ ...d, saved:0 }); if (sig === draftSig) return; draftSig = sig;
   S.draft = d; draftWrite(d);
 }
 function draftDetail(d){
@@ -1249,7 +1376,7 @@ function draftDetail(d){
 const draftN = d => (d.answers || d.detail || []).length;
 const draftOk = d => !!(d && d.questions && d.questions.length && (d.answers || d.detail));
 function draftPick(a, b){ const ta = a ? a.saved || 0 : -1, tb = b ? b.saved || 0 : -1; const w = ta >= tb ? a : b; return draftOk(w) ? w : null; }
-function draftClear(){ S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
+function draftClear(){ draftSig = ""; S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
 function draftResume(){
   const d = S.draft; if (!d) return;
   S.selected = (d.selected || d.keys || DECKS.map(x => x.key)).filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
@@ -1690,13 +1817,13 @@ function viewResults(){
 function viewScores(){
   if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
   const list = S.attempts;
-  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
+  if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}${syncBloc()}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
   const roots = rootTests();
   const best = roots.length ? Math.max(...roots.map(a => a.note)) : 0, avg = roots.length ? roots.reduce((s,a) => s + a.note, 0)/roots.length : 0;
   const sorted = [...list].sort((a,b) => b.date - a.date);
   const exportText = sorted.map(a => `${dateLabel(a.date)} — ${a.deck} (${a.difficulty}, ${a.mode}${a.rattrapage ? ", rattrapage" : ""}) : ${a.score}/${a.total} → note ${fmtNote(a.note)}`).join("\n");
   let h = `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}
-  ${store.mode === "local" ? `<p class="note">Tes scores sont gardés dans ce navigateur uniquement. Exporte-les de temps en temps.</p>` : ""}
+  ${syncBloc()}
   <div class="stats"><div class="stat"><b>${roots.length}</b><span>tests</span></div><div class="stat"><b>${roots.length?fmtNote(best):"—"}</b><span>meilleure</span></div><div class="stat"><b>${roots.length?fmtNote(avg):"—"}</b><span>moyenne</span></div></div>
   ${suiviBlock()}
   <p class="lab">Historique</p>
@@ -1762,6 +1889,25 @@ async function savePaper(part){
 async function loadHistory(){
   try {
     await store.init();
+    SYNC.init();
+    S.syncDoc = null;
+    if (SYNC.on){
+      const items = await SYNC.recevoir();
+      if (items){
+        const enFile = new Set(SYNC.file.map(x => x.id)), supprLoc = SYNC.supprimes();
+        const ici = new Set((await store.list()).map(a => a.id)), distants = new Set();
+        items.forEach(it => {
+          if (it.type === "suppr"){ distants.add(it.id); if (ici.has(it.id) && !enFile.has(it.id)) store.removeLocal(it.id); SYNC.noterSuppr(it.id); return; }
+          if (it.type === "doc"){ if (it.id === DRAFT_ID && !enFile.has(DRAFT_ID)) S.syncDoc = it.data; return; }
+          distants.add(it.id);
+          if (it.data && !ici.has(it.id) && !supprLoc.has(it.id)) store.saveLocal(it.data);
+        });
+        /* tests de cet appareil jamais envoyés (avant la synchro, ou envoi perdu) : on les envoie */
+        (await store.list()).forEach(a => { if (!distants.has(a.id) && !enFile.has(a.id)) SYNC.sauver(a); });
+      }
+      SYNC.envoyer();
+      window.addEventListener("online", () => SYNC.envoyer());
+    }
     let raw = await store.list();
     raw.sort((a,b) => b.date - a.date);
     const cleaned = raw.filter((a, k) => { const prev = raw[k-1]; return !(prev && prev.deck === a.deck && !!prev.rattrapage === !!a.rattrapage && prev.total === a.total && Math.abs(prev.date - a.date) < 3000); });
@@ -1771,7 +1917,7 @@ async function loadHistory(){
   } catch(e){
     S.loadErr = "Je n'arrive pas à lire tes anciens résultats pour l'instant. Les nouveaux tests s'afficheront quand même.";
   }
-  try { let dd = null; try { dd = await store.getDoc(DRAFT_ID); } catch(e){} const dl = draftLocalGet(); const d = draftPick(dd, dl); if (!S.quiz) S.draft = d; } catch(e){}
+  try { let dd = null; try { dd = store.mode === "local" ? S.syncDoc : await store.getDoc(DRAFT_ID); } catch(e){} const dl = draftLocalGet(); const d = draftPick(dd, dl); if (!S.quiz) S.draft = d; } catch(e){}
   S.loaded = true;
   render();
 }
@@ -1824,6 +1970,9 @@ document.addEventListener("click", e => {
     case "openAttempt": S.scores.open = S.scores.open === v ? null : v; render(); break;
     case "exportToggle": S.scores.exportOpen = !S.scores.exportOpen; render(); break;
     case "clearAsk": S.scores.confirm = true; render(); break;
+    case "syncCode": S.syncForm = true; S.syncErr = ""; render(); { const i = document.getElementById("sync-code-in"); if (i) i.focus(); } break;
+    case "syncNo": S.syncForm = false; S.syncErr = ""; render(); break;
+    case "syncOk": syncValider(); break;
     case "clearNo": S.scores.confirm = false; render(); break;
     case "clearYes": (async () => {
       const ids = S.attempts.map(a => a.id); S.attempts = []; S.scores = { open:null, exportOpen:false, confirm:false }; render();
@@ -1837,14 +1986,17 @@ document.addEventListener("input", e => {
   if (e.target.id === "answer-input" && S.quiz){ S.quiz.typed = e.target.value; const b = document.getElementById("validate-btn"); if (b) b.disabled = !S.quiz.typed.trim(); updateLive(); if (COUCHE.onSaisie) COUCHE.onSaisie(S.quiz); }
 });
 document.addEventListener("keydown", e => {
+  if (e.target.id === "sync-code-in" && e.key === "Enter"){ e.preventDefault(); syncValider(); return; }
   if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
   if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("ch-pt")){ e.preventDefault(); const v = e.target.dataset.v; S.suivi.pt = S.suivi.pt === v ? null : v; render(); }
 });
 document.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("exportarea")) e.target.select(); });
 
 /* le test en cours est aussi gardé quand la page passe en arrière-plan */
-document.addEventListener("visibilitychange", () => { if (document.hidden) draftSave(); });
-window.addEventListener("pagehide", () => draftSave());
+/* … et ce qui attend d'être synchronisé part tout de suite (les envois répétés ne créent pas de doublon) */
+function syncAuDepart(){ if (!SYNC.on || !SYNC.file.length || !navigator.sendBeacon) return; try { navigator.sendBeacon(SYNC.url, JSON.stringify({ eleve:OUTIL.eleve, code:SYNC.code, action:"batch", ops:SYNC.file.slice(0, 20) })); } catch(e){} }
+document.addEventListener("visibilitychange", () => { if (document.hidden){ draftSave(); syncAuDepart(); } });
+window.addEventListener("pagehide", () => { draftSave(); syncAuDepart(); });
 
 render();
 loadHistory();

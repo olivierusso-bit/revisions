@@ -83,7 +83,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-allemand-sequenz2-komparativ";
 const DUE = { iso:"2026-11-03", long:"mardi 3 novembre", short:"03.11" };
 const THEME = "Sequenz 2 — Komparativ und Superlativ";
-const VERSION = { n:3, date:"01.11.2026" };   /* v1 : 31.10.2026, première version · v2 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) · v3 : 01.11.2026, reconstruit sur le noyau commun (refonte C2), même comportement */
+const VERSION = { n:4, date:"01.11.2026" };   /* v1 : 31.10.2026, première version · v2 : 01.11.2026, un anneau = un niveau (seuls les tests faits à ce niveau le remplissent) · v3 : 01.11.2026, reconstruit sur le noyau commun (refonte C2), même comportement · v4 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {

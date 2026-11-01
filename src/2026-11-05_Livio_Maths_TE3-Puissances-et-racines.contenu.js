@@ -58,7 +58,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-maths-te3-puissances";
 const DUE = { iso:"2026-11-05", long:"jeudi 5 novembre", short:"05.11" };
 const THEME = "TE3 — Puissances, notation scientifique, racines";
-const VERSION = { n:2, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique */
+const VERSION = { n:3, date:"01.11.2026" };   /* v1 : 31.10.2026, première version (dans Claude), photos dans l'espace privé · v2 : 01.11.2026, reconstruit sur le noyau commun (refonte C3), même contenu et même historique · v3 : 01.11.2026, scores synchronisés entre appareils sur le site (refonte D4) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
