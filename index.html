@@ -23,6 +23,19 @@ a.door b{display:block;font-family:'Literata',Georgia,serif;font-weight:800;font
 a.door small{display:block;color:var(--soft);font-size:13.5px;margin-top:6px}
 a.door .go{display:inline-block;margin-top:14px;background:var(--marker);color:var(--marker-ink);font-weight:700;font-size:13.5px;padding:3px 10px;border-radius:20px}
 .maj{margin:auto 0 0;padding-top:28px;color:var(--soft);font-size:13px}
+a.door .sync{display:block;margin-top:8px;color:var(--soft);font-size:12.5px}
+/* code de l'élève (une fois par appareil) */
+.code{margin-top:22px;background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:18px 18px 20px}
+.code h2{font-family:'Literata',Georgia,serif;font-weight:800;font-size:22px;margin:0 0 4px}
+.code p{margin:0 0 12px;color:var(--soft);font-size:14px}
+.code input{width:100%;box-sizing:border-box;font:inherit;font-size:20px;letter-spacing:2px;padding:12px;border:1px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink)}
+.code .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.code button{font:inherit;font-weight:700;padding:12px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.code button.ok{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.code button:focus-visible,.code input:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+.code .err{color:#B23A26;font-weight:700;margin:10px 0 0}
+.oubli{margin-top:14px;font-size:13px}
+.oubli button{font:inherit;background:none;border:0;color:var(--cobalt);text-decoration:underline;cursor:pointer;padding:0}
 </style>
 </head>
 <body>
@@ -30,12 +43,68 @@ a.door .go{display:inline-block;margin-top:14px;background:var(--marker);color:v
 <h1>Devoirs - Révisions</h1>
 <p class="sub">Choisis ta page : tes devoirs, tes tests et tes outils de révision.</p>
 <nav class="doors" aria-label="Choix de l'élève">
-  <a class="door" href="livio/"><b>Livio</b><small>10e HarmoS</small><span class="go">Mes devoirs →</span></a>
-  <a class="door" href="liano/"><b>Liano</b><small>7e HarmoS</small><span class="go">Mes devoirs →</span></a>
+  <a class="door" href="livio/" data-eleve="Livio"><b>Livio</b><small>10e HarmoS</small><span class="go">Mes devoirs →</span><span class="sync" aria-live="polite"></span></a>
+  <a class="door" href="liano/" data-eleve="Liano"><b>Liano</b><small>7e HarmoS</small><span class="go">Mes devoirs →</span><span class="sync" aria-live="polite"></span></a>
 </nav>
+<section class="code" id="code" hidden aria-labelledby="code-t">
+  <h2 id="code-t">Ton code</h2>
+  <p id="code-p">Entre ton code une seule fois sur cet appareil : tes scores te suivront sur le téléphone et sur l'ordinateur.</p>
+  <input id="code-in" type="password" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Ton code">
+  <p class="err" id="code-err" hidden></p>
+  <div class="btns"><button type="button" id="code-sans">Plus tard</button><button type="button" class="ok" id="code-ok">Valider</button></div>
+</section>
+<p class="oubli" id="oubli" hidden><button type="button" id="oubli-b">Oublier les codes de cet appareil</button></p>
 <p class="maj" id="maj"></p>
 </main>
-<script id="version" type="application/json">{ "version": 1, "maj": "2026-11-01T12:52" }</script>
+<script id="version" type="application/json">{ "version": 2, "maj": "2026-11-01T17:48" }</script>
+<script>
+/* Synchronisation des scores (refonte D4) : l'accueil enregistre sur l'appareil l'adresse de l'intermédiaire
+   et le code de l'élève (clé « revisions-appareil »), que les outils de révision du site relisent.
+   Le code n'est vérifié que par l'intermédiaire Google ; il n'est écrit nulle part dans les pages.
+   Tant que INTERMEDIAIRE est vide, les portes mènent directement aux pages, sans synchronisation. */
+const INTERMEDIAIRE = "https://script.google.com/macros/s/AKfycbzUVgqKYNSQaLeKAOk4kCGdYNF0weB5xKBLmZMSWCfmoSVoVf2R9Y6WKwQqh9CON-1K/exec";
+(function(){
+  const CLE = "revisions-appareil";
+  const lire = () => { try { return JSON.parse(localStorage.getItem(CLE) || "null") || { url:INTERMEDIAIRE, eleves:{} }; } catch(e){ return { url:INTERMEDIAIRE, eleves:{} }; } };
+  const garder = c => { try { localStorage.setItem(CLE, JSON.stringify(c)); return true; } catch(e){ return false; } };
+  if (!INTERMEDIAIRE) return;
+  const box = document.getElementById("code"), inp = document.getElementById("code-in"), err = document.getElementById("code-err");
+  const btnOk = document.getElementById("code-ok"), btnSans = document.getElementById("code-sans");
+  let cible = null;
+  function maj(){
+    const c = lire();
+    document.querySelectorAll("a.door").forEach(a => { a.querySelector(".sync").textContent = c.eleves && c.eleves[a.dataset.eleve] ? "☁️ scores synchronisés sur cet appareil" : ""; });
+    document.getElementById("oubli").hidden = !(c.eleves && Object.keys(c.eleves).length);
+  }
+  maj();
+  document.querySelectorAll("a.door").forEach(a => a.addEventListener("click", ev => {
+    const c = lire();
+    if (c.eleves && c.eleves[a.dataset.eleve] && c.url === INTERMEDIAIRE) return;   /* déjà enregistré : on entre */
+    ev.preventDefault(); cible = a;
+    document.getElementById("code-t").textContent = "Ton code, " + a.dataset.eleve;
+    err.hidden = true; inp.value = ""; box.hidden = false; inp.focus();
+    box.scrollIntoView({ block:"nearest" });
+  }));
+  btnSans.addEventListener("click", () => { if (cible) location.href = cible.href; });
+  inp.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); btnOk.click(); } });
+  btnOk.addEventListener("click", async () => {
+    const code = inp.value.trim(); if (!code || !cible) return;
+    btnOk.disabled = true; btnOk.textContent = "Vérification…"; err.hidden = true;
+    let rep = null;
+    try { const r = await fetch(INTERMEDIAIRE, { method:"POST", body:JSON.stringify({ eleve:cible.dataset.eleve, code, action:"ping" }) }); rep = await r.json(); } catch(e){ rep = { ok:false, erreur:"reseau" }; }
+    btnOk.disabled = false; btnOk.textContent = "Valider";
+    if (rep && rep.ok){
+      const c = lire(); c.url = INTERMEDIAIRE; c.eleves = c.eleves || {}; c.eleves[cible.dataset.eleve] = { code };
+      garder(c); location.href = cible.href; return;
+    }
+    err.textContent = rep && rep.erreur === "code" ? "Ce code n'est pas le bon. Réessaie, ou demande à ton papa."
+      : rep && rep.erreur === "bloque" ? "Trop d'essais : attends un quart d'heure avant de réessayer."
+      : "Pas de réseau pour vérifier le code. Tu peux continuer sans : tes scores restent sur cet appareil.";
+    err.hidden = false; inp.select();
+  });
+  document.getElementById("oubli-b").addEventListener("click", () => { try { localStorage.removeItem(CLE); } catch(e){} maj(); });
+})();
+</script>
 <script>
 (function(){
   try{
