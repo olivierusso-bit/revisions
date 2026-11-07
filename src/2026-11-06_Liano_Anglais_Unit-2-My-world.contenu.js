@@ -1,6 +1,6 @@
 /* ============================================================
    CONTENU — Anglais, Unit 2 « My world » : vocabulaire 2.1 à 2.5
-   Outil de révision de Liano — 7e HarmoS. Test : vendredi 6 novembre 2026.
+   Outil de révision de Liano — 7e HarmoS. Test : vendredi 13 novembre 2026 (2.3 et 2.4 ; d'abord prévu le 6 novembre).
    Ce fichier est la seule partie propre à cet outil. Il est assemblé avec
    claude/couche-langues.js et claude/noyau-quiz.js par claude/assembler.py.
    Reconstruit le 01.11.2026 (v7) à partir de la v6, outil écrit avant le noyau : mêmes paquets, mêmes réponses
@@ -44,10 +44,11 @@ const CSS_THEME = `
 `;
 
 const QUIZ_ID = "liano-quiz-anglais-unit2nombres";   /* repris de l'outil précédent (nombres 1 à 20) : l'historique de Liano reste sous ces clés */
-const DUE = { iso:"2026-11-06", long:"vendredi 6 novembre", short:"06.11" };
+const DUE = { iso:"2026-11-13", long:"vendredi 13 novembre", short:"13.11" };
 const THEME = "Unit 2 « My world »";
-const VERSION = { n:7, date:"01.11.2026" };
-/* v7 : 01.11.2026, outil reconstruit sur le noyau commun : mêmes contenus et même suivi, scores synchronisés entre appareils sur le site
+const VERSION = { n:8, date:"07.11.2026" };
+/* v8 : 07.11.2026, numéros de groupe dans les titres des paquets des nombres (2.1, 2.2) ; test reporté au vendredi 13 novembre (2.3 et 2.4)
+   v7 : 01.11.2026, outil reconstruit sur le noyau commun : mêmes contenus et même suivi, scores synchronisés entre appareils sur le site
    v1 : 26.10.2026, première version — couche Langues (anglais), suivi à 3 anneaux et test en cours gardé.
    v2 : 26.10.2026, barre du bas resserrée au centre sur grand écran, comme les autres outils.
    v3 : 27.10.2026, pastille : chaque anneau lit son propre niveau ; une erreur en Niveau épreuve ne fait plus baisser l'Échauffement ni l'Entraînement.
@@ -64,8 +65,8 @@ const OUTIL = {
   introFiche:"Tout le vocabulaire de la Unit 2 : les nombres (2.1, 2.2), la famille (2.3), des mots et des phrases (2.4, 2.5). Coche dans « Paquets » ceux que tu veux réviser, et entraîne-toi dans les deux sens !",
   labelTout:"Toute la Unit 2",
   motPaquet:"Paquet",
-  sousNiveaux:{ easy:"Tu choisis la bonne réponse parmi plusieurs (QCM).", normal:"Un mélange : parfois tu choisis, parfois tu écris le mot en français.", hard:"Comme au contrôle : tu écris le nombre en anglais. 💪" },
-  papier:{ titre:"Anglais · Unit 2 My world — test du vendredi 6 novembre", court:"Anglais · Unit 2 My world", fichier:"Liano_Anglais_Unit-2-My-world", code:"#PDF-ANGLAIS-UNIT2" },
+  sousNiveaux:{ easy:"Tu choisis la bonne réponse parmi plusieurs (QCM).", normal:"Un mélange : parfois tu choisis, parfois tu écris le mot en français.", hard:"Comme au contrôle : tu écris le mot ou la phrase en anglais. 💪" },
+  papier:{ titre:"Anglais · Unit 2 My world — test du vendredi 13 novembre", court:"Anglais · Unit 2 My world", fichier:"Liano_Anglais_Unit-2-My-world", code:"#PDF-ANGLAIS-UNIT2" },
   copie:{ titre:"Anglais · Unit 2 My world (Liano)" },
   analyse:{
     role:"un tuteur d'anglais",
@@ -89,7 +90,7 @@ const SOURCES_NOTE = "Les groupes 2.1 à 2.5 suivent le classement validé par l
 /* ===== Données : couche Langues (anglais) ===== */
 /* item : { en, fr:[...], frShow }  — nombres : pas d'article, rien à « keep ». */
 const DECKS = [
-  { key:"n1a10", title:"Numbers 1 → 10", emoji:"🔟", src:"livre, Unit 2 « Numbers », groupe 2.1", items:[
+  { key:"n1a10", title:"Numbers 1 → 10 (2.1)", emoji:"🔟", src:"livre, Unit 2 « Numbers », groupe 2.1", items:[
     {en:"one",fr:["un"],frShow:"un"},
     {en:"two",fr:["deux"],frShow:"deux"},
     {en:"three",fr:["trois"],frShow:"trois"},
@@ -101,7 +102,7 @@ const DECKS = [
     {en:"nine",fr:["neuf"],frShow:"neuf"},
     {en:"ten",fr:["dix"],frShow:"dix"}
   ]},
-  { key:"n11a20", title:"Numbers 11 → 20", emoji:"🔢", src:"livre, Unit 2 « Numbers », groupe 2.2", items:[
+  { key:"n11a20", title:"Numbers 11 → 20 (2.2)", emoji:"🔢", src:"livre, Unit 2 « Numbers », groupe 2.2", items:[
     {en:"eleven",fr:["onze"],frShow:"onze"},
     {en:"twelve",fr:["douze"],frShow:"douze"},
     {en:"thirteen",fr:["treize"],frShow:"treize"},

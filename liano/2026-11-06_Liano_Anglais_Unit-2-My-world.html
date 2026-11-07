@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Unit 2 · My world · à savoir pour le vendredi 6 novembre</title>
+<title>Unit 2 · My world · à savoir pour le vendredi 13 novembre</title>
 
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -309,11 +309,11 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:var(--
 <nav class="tabbar" id="tabbar"></nav>
 
 <script>
-/* Outil assemblé par claude/assembler.py le 01.11.2026 : contenu (2026-11-06_Liano_Anglais_Unit-2-My-world.contenu.js) + couche-langues.js + noyau-quiz.js.
+/* Outil assemblé par claude/assembler.py le 07.11.2026 : contenu (2026-11-06_Liano_Anglais_Unit-2-My-world.contenu.js) + couche-langues.js + noyau-quiz.js.
    Pour le modifier, on change le fichier de contenu (ou le noyau / la couche sur « go fiches ») et on réassemble ; jamais ce fichier à la main. */
 /* ============================================================
    CONTENU — Anglais, Unit 2 « My world » : vocabulaire 2.1 à 2.5
-   Outil de révision de Liano — 7e HarmoS. Test : vendredi 6 novembre 2026.
+   Outil de révision de Liano — 7e HarmoS. Test : vendredi 13 novembre 2026 (2.3 et 2.4 ; d'abord prévu le 6 novembre).
    Ce fichier est la seule partie propre à cet outil. Il est assemblé avec
    claude/couche-langues.js et claude/noyau-quiz.js par claude/assembler.py.
    Reconstruit le 01.11.2026 (v7) à partir de la v6, outil écrit avant le noyau : mêmes paquets, mêmes réponses
@@ -357,10 +357,11 @@ const CSS_THEME = `
 `;
 
 const QUIZ_ID = "liano-quiz-anglais-unit2nombres";   /* repris de l'outil précédent (nombres 1 à 20) : l'historique de Liano reste sous ces clés */
-const DUE = { iso:"2026-11-06", long:"vendredi 6 novembre", short:"06.11" };
+const DUE = { iso:"2026-11-13", long:"vendredi 13 novembre", short:"13.11" };
 const THEME = "Unit 2 « My world »";
-const VERSION = { n:7, date:"01.11.2026" };
-/* v7 : 01.11.2026, outil reconstruit sur le noyau commun : mêmes contenus et même suivi, scores synchronisés entre appareils sur le site
+const VERSION = { n:8, date:"07.11.2026" };
+/* v8 : 07.11.2026, numéros de groupe dans les titres des paquets des nombres (2.1, 2.2) ; test reporté au vendredi 13 novembre (2.3 et 2.4)
+   v7 : 01.11.2026, outil reconstruit sur le noyau commun : mêmes contenus et même suivi, scores synchronisés entre appareils sur le site
    v1 : 26.10.2026, première version — couche Langues (anglais), suivi à 3 anneaux et test en cours gardé.
    v2 : 26.10.2026, barre du bas resserrée au centre sur grand écran, comme les autres outils.
    v3 : 27.10.2026, pastille : chaque anneau lit son propre niveau ; une erreur en Niveau épreuve ne fait plus baisser l'Échauffement ni l'Entraînement.
@@ -377,8 +378,8 @@ const OUTIL = {
   introFiche:"Tout le vocabulaire de la Unit 2 : les nombres (2.1, 2.2), la famille (2.3), des mots et des phrases (2.4, 2.5). Coche dans « Paquets » ceux que tu veux réviser, et entraîne-toi dans les deux sens !",
   labelTout:"Toute la Unit 2",
   motPaquet:"Paquet",
-  sousNiveaux:{ easy:"Tu choisis la bonne réponse parmi plusieurs (QCM).", normal:"Un mélange : parfois tu choisis, parfois tu écris le mot en français.", hard:"Comme au contrôle : tu écris le nombre en anglais. 💪" },
-  papier:{ titre:"Anglais · Unit 2 My world — test du vendredi 6 novembre", court:"Anglais · Unit 2 My world", fichier:"Liano_Anglais_Unit-2-My-world", code:"#PDF-ANGLAIS-UNIT2" },
+  sousNiveaux:{ easy:"Tu choisis la bonne réponse parmi plusieurs (QCM).", normal:"Un mélange : parfois tu choisis, parfois tu écris le mot en français.", hard:"Comme au contrôle : tu écris le mot ou la phrase en anglais. 💪" },
+  papier:{ titre:"Anglais · Unit 2 My world — test du vendredi 13 novembre", court:"Anglais · Unit 2 My world", fichier:"Liano_Anglais_Unit-2-My-world", code:"#PDF-ANGLAIS-UNIT2" },
   copie:{ titre:"Anglais · Unit 2 My world (Liano)" },
   analyse:{
     role:"un tuteur d'anglais",
@@ -402,7 +403,7 @@ const SOURCES_NOTE = "Les groupes 2.1 à 2.5 suivent le classement validé par l
 /* ===== Données : couche Langues (anglais) ===== */
 /* item : { en, fr:[...], frShow }  — nombres : pas d'article, rien à « keep ». */
 const DECKS = [
-  { key:"n1a10", title:"Numbers 1 → 10", emoji:"🔟", src:"livre, Unit 2 « Numbers », groupe 2.1", items:[
+  { key:"n1a10", title:"Numbers 1 → 10 (2.1)", emoji:"🔟", src:"livre, Unit 2 « Numbers », groupe 2.1", items:[
     {en:"one",fr:["un"],frShow:"un"},
     {en:"two",fr:["deux"],frShow:"deux"},
     {en:"three",fr:["trois"],frShow:"trois"},
@@ -414,7 +415,7 @@ const DECKS = [
     {en:"nine",fr:["neuf"],frShow:"neuf"},
     {en:"ten",fr:["dix"],frShow:"dix"}
   ]},
-  { key:"n11a20", title:"Numbers 11 → 20", emoji:"🔢", src:"livre, Unit 2 « Numbers », groupe 2.2", items:[
+  { key:"n11a20", title:"Numbers 11 → 20 (2.2)", emoji:"🔢", src:"livre, Unit 2 « Numbers », groupe 2.2", items:[
     {en:"eleven",fr:["onze"],frShow:"onze"},
     {en:"twelve",fr:["douze"],frShow:"douze"},
     {en:"thirteen",fr:["treize"],frShow:"treize"},
@@ -765,7 +766,9 @@ if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU)
    · 7 (01.11.2026, D6 : réglages facultatifs OUTIL.paquetsCoches (paquets cochés à l'ouverture) et OUTIL.introPaquets (html de l'intro
    de l'écran Paquets) ; « les cartes qui résistent » prennent le label de la carte (couche) si la question enregistrée n'en a pas ;
    un test en cours gardé avec liveFixed en { l, s } (ancien format) est relu ; accroche facultative de la couche
-   COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change).
+   COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change)
+   · 8 (01.11.2026, contrôle qualité : version papier réglée par la couche — COUCHE.papierGrille (cadre quadrillé de 3 mm sous chaque
+   réponse à écrire, maths) et COUCHE.papierSource (source de la question sous chaque question, Dossier) ; sans ces réglages, rien ne change).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -1857,17 +1860,17 @@ function paperHtml(qs, part){
   const P = OUTIL.papier;
   const exercises = []; qs.forEach(q => { let e = exercises[exercises.length-1]; if (!e || e.ex !== q.ex){ e = { ex:q.ex, title:q.exTitle, consigne:q.consigne, qs:[] }; exercises.push(e); } e.qs.push(q); });
   const meta = `${deckLabel(S.selected)} · ${DIFFICULTIES[S.difficulty].label} · ${qs.length} questions`;
-  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}`;
+  const line = q => `<b>${q.num}.</b> ${esc(AFF(q.word))}${q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : ""}${q.ref ? ` <span class="hint">${esc(q.ref)}</span>` : ""}${COUCHE.papierSource && (q.src || srcOf(q)) ? `<span class="qsrc">📖 Où vérifier : ${esc(q.src || srcOf(q))}</span>` : ""}`;
   const sheet = exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2><p class="cons">${esc(e.consigne)}</p>${e.qs.map(q => q.type === "mcq"
     ? `<div class="q">${line(q)}<div class="opts">${q.options.map(o => `<span>☐ ${esc(AFF(o))}</span>`).join("")}</div></div>`
-    : `<div class="q">${line(q)}<div class="qline"></div></div>`).join("")}</section>`).join("");
+    : `<div class="q">${line(q)}${COUCHE.papierGrille ? `<div class="qgrid"></div>` : `<div class="qline"></div>`}</div>`).join("")}</section>`).join("");
   const key = `<h1>Corrigé</h1><p class="meta">${esc(meta)}</p>` + exercises.map(e => `<section class="ex"><h2>Exercice ${e.ex} — ${esc(e.title)}</h2>${e.qs.map(q => `<div class="k"><b>${q.num}.</b> ${esc(AFF(q.word))} → <b>${esc(AFF(q.answer))}</b>${srcOf(q) ? ` <span class="hint">(${esc(srcOf(q))})</span>` : ""}</div>`).join("")}</section>`).join("");
   const head = `<h1>${esc(P.titre)}</h1><p class="meta">Prénom : ${esc(OUTIL.eleve)} · test du ${esc(DUE.long)} · ${esc(meta)}</p><p class="meta">Date : ____________ &nbsp; Note : ______ / 6</p>`;
   const body = part === "ex" ? head + sheet : part === "key" ? key : head + sheet + `<div class="pb"></div>` + key;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.court)} (${esc(DUE.short)})</title><style>
 @page{size:A4 portrait;margin:12mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0 auto;max-width:186mm;padding:10px}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 2px;border-bottom:1px solid #999}.meta{margin:2px 0;font-size:13px}.cons{font-style:italic;margin:2px 0 6px;font-size:13px}
-.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}
+.ex{break-inside:avoid}.q{margin:8px 0;font-size:14px;break-inside:avoid}.hint{color:#555;font-size:12px}.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 0 18px}.qline{border-bottom:1px solid #444;height:22px;margin:6px 0 0 18px}.qgrid{height:15mm;margin:6px 0 0 18px;border:1px solid #888;background-image:linear-gradient(#ccc 1px,transparent 1px),linear-gradient(90deg,#ccc 1px,transparent 1px);background-size:3mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}.qsrc{display:block;color:#555;font-size:11.5px;margin:2px 0 0 18px}
 .k{font-size:13.5px;margin:3px 0}.pb{break-before:page}.print{position:fixed;top:10px;right:10px;padding:8px 14px;font-size:14px}@media print{.print{display:none}}
 </style></head><body><button class="print" onclick="window.print()">Imprimer</button>${body}</body></html>`;
 }
