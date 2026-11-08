@@ -6,6 +6,7 @@
    Ce que le noyau attend du CONTENU : QUIZ_ID, DUE, THEME, VERSION, OUTIL, SOURCES, SOURCES_NOTE, PHOTOS, DECKS, FICHE, TAG_LABEL.
    Réglages facultatifs d'OUTIL (étape C2) : badgeHtml (remplace le maillot de l'en-tête), comptes ([10,20,30,0] = « Combien de questions »,
    0 = toutes) et compteDefaut, compte ("cartes" pour compter les cartes au lieu des éléments), umlautsStricts (ä ≠ a à la correction),
+   accentsStricts (v9 : aucun accent retiré, é ≠ e, ç ≠ c…, pour la correction, la correction en direct et « Voir mes erreurs »),
    prefixeIndice (devant l'indice, défaut « petit indice : »), sousNiveaux ({easy, normal, hard}), conseilSetup (phrase sous « Commencer »
    hors correction en direct), noteAutre (phrase quand la réponse écrite n'a rien à voir).
    Une section de FICHE peut porter html (chaîne ou fonction qui la rend, déjà échappée) et count, en plus de pairs / tips / astuce.
@@ -25,7 +26,10 @@
    un test en cours gardé avec liveFixed en { l, s } (ancien format) est relu ; accroche facultative de la couche
    COUCHE.clavier(q) = clavier du téléphone pour une réponse à écrire (« numeric », « text ») ; sans ces réglages, rien ne change)
    · 8 (01.11.2026, contrôle qualité : version papier réglée par la couche — COUCHE.papierGrille (cadre quadrillé de 3 mm sous chaque
-   réponse à écrire, maths) et COUCHE.papierSource (source de la question sous chaque question, Dossier) ; sans ces réglages, rien ne change).
+   réponse à écrire, maths) et COUCHE.papierSource (source de la question sous chaque question, Dossier) ; sans ces réglages, rien ne change)
+   · 9 (08.11.2026 : réglage facultatif OUTIL.accentsStricts — deAcc() ne retire plus aucun accent : é ≠ e, è ≠ e, ê ≠ e, â ≠ a,
+   î ≠ i, û ≠ u, ç ≠ c… à la correction (norm), dans la correction en direct (lvUnit) et dans « Voir mes erreurs » (dxN) ;
+   comme umlautsStricts pour ä ö ü, qu'il englobe ; sans ce réglage, rien ne change).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -61,6 +65,7 @@ const DIFFICULTIES = {
 /* nombre de questions par test : liste proposée par l'outil (0 = toutes) ; sans liste, toutes les questions */
 const COUNTS = Array.isArray(OUTIL.comptes) && OUTIL.comptes.length ? OUTIL.comptes : null;
 const UMLAUTS_STRICTS = !!OUTIL.umlautsStricts;
+const ACCENTS_STRICTS = !!OUTIL.accentsStricts;
 const ORDRES = OUTIL.ordres || null;
 const AFF = s => COUCHE.affiche ? COUCHE.affiche(s == null ? "" : String(s)) : (s == null ? "" : String(s));
 const MOT_PAQUETS = OUTIL.motPaquets || (OUTIL.motPaquet.toLowerCase() + "s");
@@ -76,9 +81,11 @@ const MODES = COUCHE.hasLive ? {
 
 /* ---------- utilitaires ---------- */
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-/* enlève les accents ; avec umlautsStricts, ä ö ü restent distincts de a o u (c'est ce que la leçon d'allemand fait apprendre) */
+/* enlève les accents ; avec umlautsStricts, ä ö ü restent distincts de a o u (c'est ce que la leçon d'allemand fait apprendre) ;
+   avec accentsStricts (v9), aucun accent n'est retiré (é, è, ê, â, î, û, ç… comptent, comme en conjugaison française) */
 function deAcc(s){
   s = String(s);
+  if (ACCENTS_STRICTS) return s.normalize("NFC");
   if (UMLAUTS_STRICTS) s = s.replace(/ä/g,"\u0001").replace(/ö/g,"\u0002").replace(/ü/g,"\u0003");
   s = s.normalize("NFD").replace(/[̀-ͯ]/g,"");
   return UMLAUTS_STRICTS ? s.replace(/\u0001/g,"ä").replace(/\u0002/g,"ö").replace(/\u0003/g,"ü") : s;
