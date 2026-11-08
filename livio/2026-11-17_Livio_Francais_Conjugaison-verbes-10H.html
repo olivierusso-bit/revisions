@@ -410,7 +410,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-francais-conjugaison-verbes-10h";
 const DUE = { iso:"2026-11-17", long:"mardi 17 novembre", short:"17.11" };
 const THEME = "Conjugaison — les verbes du planning 10H";
-const VERSION = { n:2, date:"08.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio */
+const VERSION = { n:3, date:"08.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -636,15 +636,56 @@ function tirage(v, t, poids){
 
 /* correction : accents, cédille et tréma comptent ; majuscules, espaces, apostrophe ’ / ' et ponctuation non */
 const cjNorm = s => String(s || "").toLowerCase().normalize("NFC").replace(/[’`]/g,"'").replace(/[.!?;,:«»"()]/g," ").replace(/\s*'\s*/g,"'").replace(/\s+/g," ").trim();
+/* nombre de questions : la couche pose une question par carte au plus (17 pour un verbe). Ici, quand on demande plus de
+   questions qu'il n'y a de cartes, chaque carte revient avec une autre personne (jamais deux fois la même question). */
+let DEJA = {};
 const COUCHE_CONTENU = {
+  /* copie de buildTest de la couche Langues v3, avec la répétition des cartes (remplacement prévu par la couche) */
+  buildTest(deckKeys, difficulty, limit){
+    DEJA = {};
+    const sel = DECKS.filter(d => deckKeys.includes(d.key));
+    const nItems = sel.reduce((n, d) => n + d.items.length, 0);
+    const tours = limit && limit > nItems ? Math.min(6, Math.ceil(limit / nItems)) : 1;
+    let parDeck = sel.map(d => { const g = GENS[d.gen];
+      return shuffle(d.items.flatMap(it => { const out = []; for (let r = 0; r < tours; r++) g.kinds(d, it, difficulty).forEach(kind => out.push({ d, g, it, kind })); return out; })); });
+    if (limit && limit > 0 && parDeck.reduce((n, l) => n + l.length, 0) > limit){
+      const kept = sel.map(() => []); let i = 0, total = 0;
+      while (total < limit && parDeck.some(l => l.length)){ const l = parDeck[i % parDeck.length]; if (l.length){ kept[i % parDeck.length].push(l.shift()); total++; } i++; }
+      parDeck = kept;
+    }
+    const qs = []; let num = 0, ex = 0;
+    parDeck.forEach((list, di) => {
+      const d = sel[di], g = GENS[d.gen];
+      const buckets = {}; KIND_ORDER.forEach(k => buckets[k] = []);
+      list.forEach(x => buckets[x.kind].push(x.it));
+      const pool = g.pool ? g.pool(d) : [];
+      KIND_ORDER.forEach(kind => {
+        const items = buckets[kind]; if (!items.length) return;
+        ex++; const K = KINDS[kind];
+        items.forEach(it => {
+          num++;
+          const q = { id:"q"+num, num, ex, exTitle:d.title, deckKey:d.key, kind, type:K.type, tag:K.tag, aspect:K.aspect, lang:"fr", consigne:K.consigne, keep:true, hint:"" };
+          g.fill(q, kind, it, d, pool);
+          if (!q.card) q.card = cardKey(d.key, itemFront(g, d, it), K.aspect);
+          if (!q.prompt) q.prompt = `${q.consigne} « ${q.word} »`;
+          qs.push(q);
+        });
+      });
+    });
+    return qs;
+  },
   isRight(q, val){ if (q.type === "mcq") return val === q.answer; const a = cjNorm(val); return !!a && (q.accept || [q.answer]).some(x => cjNorm(x) === a); },
 };
 
 /* une question, pour les deux générateurs ; subj = paquet Subjonctifs (personnes pièges plus souvent, forme de l'indicatif dans les choix, astuce) */
 const POIDS_SUBJ = { subp:[1,1,3,3,3,1], subpa:[1,3,3,1,1,1] };
 function remplir(q, kind, it, subj){
-  const t = it.t === "subj" ? (Math.random() < 0.5 ? "subp" : "subpa") : it.t;
-  const v = VERBE[it.v], T = TEMPS.find(x => x.t === t), x = tirage(v, t, subj ? POIDS_SUBJ[t] : null);
+  /* une carte qui revient dans le même test (plus de questions que de cartes) prend une question pas encore posée */
+  const deja = DEJA[it.front] = DEJA[it.front] || new Set();
+  let t, x, essai = 0;
+  do { t = it.t === "subj" ? (Math.random() < 0.5 ? "subp" : "subpa") : it.t; x = tirage(VERBE[it.v], t, subj ? POIDS_SUBJ[t] : null); } while (deja.has(t + x.word) && ++essai < 30);
+  deja.add(t + x.word);
+  const v = VERBE[it.v], T = TEMPS.find(x => x.t === t);
   q.tag = T.mode; q.word = x.word;
   q.expl = subj ? explique(v, t).replace(" — planning", " " + astuceSubj(v, t) + " — planning") : explique(v, t);
   if (kind === "mcq_conj"){ q.consigne = `« ${v.k} » : choisis.`; q.options = subj && x.piege.length ? pickOptions(x.bare, x.piege, x.pool, y => y) : pickOptions(x.bare, x.pool, x.wide || x.pool, y => y); q.answer = x.bare; }
