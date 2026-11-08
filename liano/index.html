@@ -14,7 +14,8 @@ body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 'Atkinson H
 main{max-width:620px;margin:0 auto;padding-block:max(28px,env(safe-area-inset-top,0px)) 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1{font-family:'Literata',Georgia,serif;font-weight:800;font-size:clamp(26px,8vw,32px);line-height:1.1;margin:0;border-bottom:2px solid var(--ink);padding-bottom:12px;text-wrap:balance}
 .sub{color:var(--soft);margin:8px 0 0}
-.tools{display:flex;justify-content:flex-end;margin-top:14px}
+.tools{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tools-note{flex-basis:100%;text-align:right;margin:0;font-size:13px;color:var(--soft)}
 .tools button{background:none;border:1px solid var(--rule);border-radius:20px;padding:5px 12px;font:inherit;font-size:13.5px;font-weight:700;color:var(--cobalt);cursor:pointer}
 details.week{margin-top:14px;border-top:1px solid var(--rule)}
 details.week>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 0 10px}
@@ -48,7 +49,7 @@ a.card:hover{border-color:var(--cobalt)}
 <main>
 <h1>Devoirs - Révisions (Liano)</h1>
 <p class="sub">Les devoirs et les tests, au jour où ils sont attendus. Touche le titre d'une semaine pour la replier.</p>
-<div class="tools"><button type="button" id="toggle-all">Tout replier</button></div>
+<div class="tools"><button type="button" id="this-week">Semaine en cours</button><button type="button" id="toggle-all">Tout replier</button><p class="tools-note" id="week-note" hidden></p></div>
 <div id="weeks"><p class="empty">Chargement…</p></div>
 <p class="maj" id="maj"></p>
 </main>
@@ -66,7 +67,7 @@ a.card:hover{border-color:var(--cobalt)}
   VERSION — à changer à chaque mise à jour de la page :
   version = numéro suivant (un de plus que la fois précédente), maj = date et heure de Suisse (AAAA-MM-JJTHH:MM)
 -->
-<script id="version" type="application/json">{ "version": 10, "maj": "2026-11-07T11:13" }</script>
+<script id="version" type="application/json">{ "version": 11, "maj": "2026-11-08T15:33" }</script>
 
 <script id="devoirs" type="application/json">
 [
@@ -87,7 +88,7 @@ a.card:hover{border-color:var(--cobalt)}
   { "date": "2026-11-05", "type": "Test",   "titre": "Allemand · vocabulaire 1.7",               "detail": "Test — ma journée (1.7, le 1.8 pour plus tard) : fiche, cartes, tests", "lien": "2026-11-05_Liano_Allemand_Mon-quotidien-1.7-et-1.8.html" },
   { "date": "2026-11-06", "type": "Devoir", "titre": "Anglais · vocabulaire 2.3",                "detail": "Unit 2 My world (2.1 à 2.5, coche le 2.3) : fiche, cartes, tests", "lien": "2026-11-06_Liano_Anglais_Unit-2-My-world.html" },
   { "date": "2026-11-09", "type": "Devoir", "titre": "Maths · corriger la fiche",                "detail": "Corriger la fiche" },
-  { "date": "2026-11-12", "type": "Test",   "titre": "Français · verbes (2)",                    "detail": "Évaluation — verbes, partie 2" },
+  { "date": "2026-11-12", "type": "Test",   "titre": "Français · verbes (2)",                    "detail": "Évaluation — commencer, savoir, courir, dire, vouloir à 4 temps : fiche, cartes, tests", "lien": "2026-11-12_Liano_Francais_Conjugaison-verbes-7e-2.html" },
   { "date": "2026-11-12", "type": "Test",   "titre": "Allemand · vocabulaire 1.8",               "detail": "Test — ma journée (1.7 + 1.8) : fiche, cartes, tests", "lien": "2026-11-05_Liano_Allemand_Mon-quotidien-1.7-et-1.8.html" },
   { "date": "2026-11-13", "type": "Test",   "titre": "Anglais · vocabulaire 2.3 / 2.4",          "detail": "Test — Unit 2 My world (2.1 à 2.5) : fiche, cartes, tests", "lien": "2026-11-06_Liano_Anglais_Unit-2-My-world.html" },
   { "date": "2026-11-13", "type": "Test",   "titre": "Maths · opérations (1)",                   "detail": "Évaluation — opérations, partie 1" }
@@ -133,7 +134,7 @@ function render(){
       return `<div class="day${dt < today ? " past" : ""}"><div class="date"><span>${JOURS[dt.getDay()]}</span><b>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</b></div><div class="stack">${days[d].map(card).join("")}</div></div>`;
     }).join("");
     const n = list.length;
-    return `<details class="week${past ? " past" : ""}"${past ? "" : " open"}><summary><span class="chev" aria-hidden="true">▶</span><span class="wk-title">${weekLabel(mon, lastDay)}</span><span class="wk-count">${n} ${n > 1 ? "éléments" : "élément"}</span></summary>${daysHtml}</details>`;
+    return `<details class="week${past ? " past" : ""}" data-wk="${k}"${past ? "" : " open"}><summary><span class="chev" aria-hidden="true">▶</span><span class="wk-title">${weekLabel(mon, lastDay)}</span><span class="wk-count">${n} ${n > 1 ? "éléments" : "élément"}</span></summary>${daysHtml}</details>`;
   }).join("");
   updateToggle();
 }
@@ -146,6 +147,23 @@ document.getElementById("toggle-all").addEventListener("click", () => {
   all.forEach(d => d.open = open); updateToggle();
 });
 document.addEventListener("toggle", updateToggle, true);
+/* « Semaine en cours » : tout replier, puis ouvrir la semaine en cours seulement ; le samedi et le dimanche, la semaine qui commence lundi */
+function targetMonday(){
+  const t = new Date(); t.setHours(0,0,0,0);
+  if (t.getDay() === 6 || t.getDay() === 0) t.setDate(t.getDate() + (t.getDay() === 6 ? 2 : 1));
+  return monday(t);
+}
+const weekendNow = () => [0,6].includes(new Date().getDay());
+document.getElementById("this-week").textContent = weekendNow() ? "Semaine à venir" : "Semaine en cours";
+document.getElementById("this-week").addEventListener("click", () => {
+  const mon = targetMonday(), k = iso(mon), note = document.getElementById("week-note");
+  const all = [...document.querySelectorAll("details.week")];
+  all.forEach(d => d.open = false);
+  const target = all.find(d => d.dataset.wk === k);
+  if (target){ target.open = true; note.hidden = true; target.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }
+  else { note.textContent = `Rien de noté pour la semaine du ${mon.getDate()} ${MOIS[mon.getMonth()]}.`; note.hidden = false; }
+  updateToggle();
+});
 function renderVersion(){
   try {
     const v = JSON.parse(document.getElementById("version").textContent);

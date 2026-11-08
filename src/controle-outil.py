@@ -216,6 +216,15 @@ def controle(chemin, runtime=False):
         r.test(not a_une(src, "correction_direct"), "correction_direct", "pas de « Correction en direct » (langues seulement)",
                "mode présent dans un outil qui n'est pas de langues", niveau="AVERTISSEMENT")
 
+    # 10 bis. Allemand : Umlaute contrôlés (fiche construction v32, « Couche Langues »), outils assemblés sur le noyau seulement
+    if branche_de(chemin).lower().startswith("allemand"):
+        if m_rings:
+            r.test(bool(re.search(r"\bumlautsStricts\s*:\s*true\b", src)), "umlauts",
+                   "allemand : OUTIL.umlautsStricts: true (ä ≠ a à la correction, en correction en direct et dans « Voir mes erreurs »)",
+                   "réglage absent : une réponse sans Umlaut serait acceptée")
+        else:
+            r.sans("umlauts", "allemand : umlautsStricts (outil d'avant le noyau)")
+
     # 11. Spécificités maths et Dossier
     if fam == "maths":
         r.test("mcqOnly" in src, "maths_mcqonly", "mcqOnly pour les questions de règle", "mcqOnly absent")
