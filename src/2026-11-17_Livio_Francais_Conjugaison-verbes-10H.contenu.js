@@ -16,9 +16,8 @@
    - la photo ne donne que la liste des verbes et les dates : les formes conjuguées viennent des tableaux de conjugaison
      de référence (pas d'une photo du cahier de Livio) ; à comparer avec ses propres tableaux s'il en a ;
    - les ACCENTS COMPTENT à la correction (comme les Umlaute en allemand) : « il eut » (passé simple) ≠ « qu'il eût »
-     (subjonctif imparfait). Majuscules, espaces et pronom facultatifs. Limite connue : la correction en direct et
-     « Voir mes erreurs » du noyau ne marquent pas une faute d'accent seule (proposé sur « go fiches ») ;
-     l'explication la signale.
+     (subjonctif imparfait). Majuscules, espaces et pronom facultatifs. Depuis la v4 (noyau v9, OUTIL.accentsStricts),
+     la correction en direct et « Voir mes erreurs » marquent aussi une faute d'accent seule.
    ============================================================ */
 
 /* Thème « le carnet de conjugaison » : encre verte de stylo plume, papier vert d'eau, surligneur souci.
@@ -78,7 +77,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-francais-conjugaison-verbes-10h";
 const DUE = { iso:"2026-11-17", long:"mardi 17 novembre", short:"17.11" };
 const THEME = "Conjugaison — les verbes du planning 10H";
-const VERSION = { n:3, date:"08.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) */
+const VERSION = { n:4, date:"08.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -92,6 +91,7 @@ const OUTIL = {
   labelTout:"Les 11 verbes",
   motPaquet:"Verbe", motPaquets:"verbes", cePaquet:"Ce verbe",
   comptes:[10,20,40,0], compteDefaut:20,
+  accentsStricts:true,   /* noyau v9 : é ≠ e, ê ≠ e, ç ≠ c… aussi dans la correction en direct et « Voir mes erreurs » */
   conseilSetup:"Les accents comptent, comme au TE : « il eut » (passé simple) n'est pas « qu'il eût » (subjonctif imparfait). En épreuve blanche, tu ne vois aucune réponse avant la fin.",
   papier:{ titre:"Français — Conjugaison, verbes du planning 10H", court:"Conjugaison — verbes 10H", fichier:"conjugaison-verbes-10h-livio", code:"#PDF-FR-CONJ10H" },
   copie:{ titre:"RÉSULTAT — Français, conjugaison des verbes du planning 10H" },
