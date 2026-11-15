@@ -41,7 +41,15 @@
    des réglages, sur toutes les cartes en erreur, tous paquets confondus, questions tirées à nouveau ; une carte est en erreur dès
    qu'elle est ratée au premier passage d'un test (jamais un rattrapage) et en sort quand, après sa dernière erreur, elle a été
    réussie au premier passage de tests faits deux jours différents ; le test garde revErreurs: true et la mention « Révision des
-   erreurs » ; un seul test à la fois respecté ; sans ce bouton touché, rien ne change).
+   erreurs » ; un seul test à la fois respecté ; sans ce bouton touché, rien ne change)
+   · 12 (15.11.2026 : cercles calculés sur les cartes déjà posées — chaque anneau (ou l'anneau unique) prend la note de ses cartes
+   justes au dernier passage à son niveau sur les cartes déjà posées à ce niveau (plus sur tout le paquet) ; centre « justes/posées »
+   du niveau le plus difficile déjà testé ; mêmes seuils (sous 4 rouge, 4–4,5 orange, 5 et plus vert) ; dessin inchangé (les arcs
+   gardent leur longueur sur le total du paquet) ; moins de 50 % du paquet posé → « réussi, à compléter » au lieu de « réussi » ;
+   « OK ✓ » seulement si tout le paquet est posé (au Niveau épreuve pour trois anneaux) et 75 % ou plus des cartes acquises ;
+   flèche ↗ / ↘ sur la part de justes parmi les posées ; nouvelle barre des cartes testées (« N/M <unité> testés », cases pleines
+   et vides) sous la pastille générale, sur l'écran Paquets, dans les sections de la fiche liées à un paquet et dans le sommaire
+   du Dossier, avec « Tester les X pas encore posés » (« Je m'entraîne », un seul test à la fois) ; « Réviser mes erreurs » inchangé).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -384,13 +392,21 @@ function ringSummary(cards, ringLvl, hist){
     else if (st === "bad") c.bad++;
     else { if (ringLvl === 2 && acquiredOuter(hist[card.k] || [])) c.ok++; else c.mid++; }
   });
-  const right = c.ok + c.mid, pct = total ? Math.round(right / total * 100) : 0;
-  const note = total ? noteFrom(right / total) : 0, noteAcq = total ? noteFrom(c.ok / total) : 0;
-  const state = c.new === total ? "start" : (ringLvl === 2 && noteAcq >= 5) ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
-  return { ...c, total, right, pct, note, state, ringLvl };
+  /* v12 : la note se calcule sur les cartes déjà posées à ce niveau ; total reste le paquet (longueur des arcs, barre des cartes testées) */
+  const right = c.ok + c.mid, posed = total - c.new, pct = posed ? Math.round(right / posed * 100) : 0;
+  const note = posed ? noteFrom(right / posed) : 0;
+  const okFull = ringLvl === 2 && total > 0 && posed === total && c.ok / total >= 0.75;
+  const state = !posed ? "start" : okFull ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
+  return { ...c, total, right, posed, pct, note, state, ringLvl, partiel: posed < total / 2 };
 }
 function paquetRings(dk, hist){ const cards = deckCards(dk); return [0,1,2].map(l => ringSummary(cards, l, hist)); }
 const P_LABEL = { start:"à commencer", low:"à revoir", mid:"en route", win:"réussi", ok:"OK ✓" };
+/* mot sous un cercle (v12) : « réussi, à compléter » quand moins de la moitié du paquet est posée */
+function motNiveau(sum){ return sum.state === "win" && sum.partiel ? "réussi, à compléter" : P_LABEL[sum.state]; }
+/* sous un cercle, sur deux lignes pour garder la largeur de la pastille */
+function motPastille(sum){ return sum.state === "win" && sum.partiel ? "réussi,<br>à compléter" : P_LABEL[sum.state]; }
+/* part de justes parmi les cartes posées (flèche ↗ / ↘, v12) */
+const tauxJuste = s => s && s.posed ? s.right / s.posed : 0;
 const LVL_LABEL = ["à revoir", "en route", "réussi"];
 function lvlOf(sum){ return !sum || sum.state === "start" ? -1 : sum.note >= 5 ? 2 : sum.note >= 4 ? 1 : 0; }
 function pColor(state){ return state === "ok" ? "var(--p-okdark)" : state === "win" ? "var(--p-ok)" : state === "mid" ? "var(--p-mid)" : "var(--p-low)"; }
@@ -430,10 +446,12 @@ function state1(es){
 function summary1(cards, hist){
   const c = { ok:0, mid:0, bad:0, new:0 }, total = cards.length;
   cards.forEach(card => c[state1(hist[card.k])]++);
-  const right = c.ok + c.mid, posed = total - c.new, pct = total ? Math.round(right / total * 100) : 0;
-  const note = total ? noteFrom(right / total) : 0, noteAcq = total ? noteFrom(c.ok / total) : 0;
-  const state = !posed ? "start" : noteAcq >= 5 ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
-  return { ...c, total, right, posed, pct, note, state };
+  /* v12 : note sur les cartes déjà posées ; OK ✓ seulement si tout le paquet est posé et 75 % ou plus acquises */
+  const right = c.ok + c.mid, posed = total - c.new, pct = posed ? Math.round(right / posed * 100) : 0;
+  const note = posed ? noteFrom(right / posed) : 0;
+  const okFull = total > 0 && posed === total && c.ok / total >= 0.75;
+  const state = !posed ? "start" : okFull ? "ok" : note >= 5 ? "win" : note >= 4 ? "mid" : "low";
+  return { ...c, total, right, posed, pct, note, state, partiel: posed < total / 2 };
 }
 /* résumé de référence d'un paquet : un anneau, ou l'anneau Niveau épreuve */
 function paqSum(dk, hist){ return COUCHE.rings === 1 ? summary1(deckCards(dk), hist) : paquetRings(dk, hist)[2]; }
@@ -457,22 +475,24 @@ function ringSegSvg(sum, size, centerText){
 function trend1(dk, hist){
   const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return "";
   const now = summary1(deckCards(dk), hist), prev = summary1(deckCards(dk), histByCard(tests[tests.length - 1].id));
-  return now.right > prev.right ? " ↗" : now.right < prev.right ? " ↘" : "";
+  if (!prev.posed) return "";
+  const a = tauxJuste(now), b = tauxJuste(prev);
+  return a > b + 1e-9 ? " ↗" : a < b - 1e-9 ? " ↘" : "";
 }
 function pastille1(dk){
   if (!S.loaded) return "";
   const hist = histByCard(), sum = summary1(deckCards(dk), hist), dr = dropOf(dk, hist);
-  const label = sum.state === "start" ? "Pas encore testé" : `${sum.right} sur ${sum.total}, ${P_LABEL[sum.state]}${dr ? ", avant : " + P_LABEL[dr.prev.state] : ""}`;
-  return `<div class="deck-pst" aria-label="${label}">${ringSegSvg(sum, 52, sum.state === "start" ? "" : sum.right + "/" + sum.total)}<span class="pst-l pst-${sum.state}">${P_LABEL[sum.state]}${sum.state === "start" ? "" : trend1(dk, hist)}</span>${dr ? `<span class="pst-notes">avant : ${P_LABEL[dr.prev.state]}</span>` : ""}</div>`;
+  const label = sum.state === "start" ? "Pas encore testé" : `${sum.right} justes sur ${sum.posed} posées, ${motNiveau(sum)}${dr ? ", avant : " + P_LABEL[dr.prev.state] : ""}`;
+  return `<div class="deck-pst" data-dk="${esc(dk)}" aria-label="${label}">${ringSegSvg(sum, 52, sum.state === "start" ? "" : sum.right + "/" + sum.posed)}<span class="pst-l pst-${sum.state}">${motPastille(sum)}${sum.state === "start" ? "" : trend1(dk, hist)}</span>${dr ? `<span class="pst-notes">avant : ${P_LABEL[dr.prev.state]}</span>` : ""}</div>`;
 }
 /* état d'un paquet en toutes lettres + boutons (section de la fiche liée à un paquet) */
 function paqStatus(dk){
   if (!S.loaded) return "";
   const hist = histByCard(), sum = paqSum(dk, hist), dr = dropOf(dk, hist), m = OUTIL.motPaquet.toLowerCase();
-  let h = `<p class="fine"><b>${OUTIL.cePaquet || "Cet " + m} : ${P_LABEL[sum.state]}</b>${sum.state !== "start" ? ` · ${sum.right} justes au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? " · refais un test un autre jour pour le confirmer" : ""}</p>`;
+  let h = `<p class="fine"><b>${OUTIL.cePaquet || "Cet " + m} : ${motNiveau(sum)}</b>${sum.state !== "start" ? ` · ${sum.right} justes sur ${sum.posed} posées au dernier test (note ${fmtNote(sum.note)}) · dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées` : ""}${sum.state === "win" ? (sum.new ? " · teste aussi les questions pas encore posées, puis refais un test un autre jour pour le confirmer" : " · refais un test un autre jour pour le confirmer") : ""}</p>`;
   if (dr && dr.lost.length) h += `<div class="pdrop"><p>↘ Le ${dayShort(dr.date)}, c'était « ${P_LABEL[dr.prev.state]} » (note ${fmtNote(dr.prev.note)}). ${dr.lost.length} question${dr.lost.length>1?"s":""} réussie${dr.lost.length>1?"s":""} avant ${dr.lost.length>1?"sont ratées":"est ratée"} au dernier test : ce sont elles à reprendre.</p><button class="ghost small" data-act="redoCards" data-v="lost:${dk}">Refaire ces ${dr.lost.length} questions</button></div>`;
   else { const bad = paqBad(dk, hist); if (bad.length) h += `<button class="ghost small" data-act="redoCards" data-v="${dk}">${bad.length > 1 ? `Refaire mes ${bad.length} questions à revoir` : "Refaire ma question à revoir"}</button>`; }
-  return h;
+  return h + barreTestes(dk, hist);
 }
 function dayShort(t){ const d = new Date(t); return String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0"); }
 
@@ -481,7 +501,8 @@ function trendOf(dk, hist, lvl = 2){
   const now = paquetRings(dk, hist)[lvl];
   const prev = ringSummary(deckCards(dk), lvl, histByCard(tests[tests.length - 1].id));
   if (prev.state === "start") return "";
-  return now.right > prev.right ? " ↗" : now.right < prev.right ? " ↘" : "";
+  const a = tauxJuste(now), b = tauxJuste(prev);
+  return a > b + 1e-9 ? " ↗" : a < b - 1e-9 ? " ↘" : "";
 }
 function dropOf(dk, hist, lvl = 2){
   const tests = rootTests().filter(a => a.questions.some(inChap(dk))); if (tests.length < 2) return null;
@@ -504,8 +525,8 @@ function pastille3(dk){
   const ref = top < 0 ? rings[2] : rings[top];
   const dr = top < 0 ? null : dropOf(dk, hist, top);
   const NIV = ["Échauffement", "Entraînement", "Niveau épreuve"];
-  const label = top < 0 ? "Pas encore testé" : `${NIV[top]} : ${ref.right} sur ${ref.total}, ${P_LABEL[ref.state]}${dr ? ", avant : " + LVL_LABEL[lvlOf(dr.prev)] : ""}`;
-  return `<div class="deck-pst" aria-label="${label}">${ring3Svg(rings, 84, top < 0 ? "" : ref.right + "/" + ref.total)}<span class="pst-l pst-${ref.state}">${P_LABEL[ref.state]}${top < 0 ? "" : trendOf(dk, hist, top)}</span>${dr ? `<span class="pst-notes">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</div>`;
+  const label = top < 0 ? "Pas encore testé" : `${NIV[top]} : ${ref.right} justes sur ${ref.posed} posées, ${motNiveau(ref)}${dr ? ", avant : " + LVL_LABEL[lvlOf(dr.prev)] : ""}`;
+  return `<div class="deck-pst" data-dk="${esc(dk)}" aria-label="${label}">${ring3Svg(rings, 84, top < 0 ? "" : ref.right + "/" + ref.posed)}<span class="pst-l pst-${ref.state}">${motPastille(ref)}${top < 0 ? "" : trendOf(dk, hist, top)}</span>${dr ? `<span class="pst-notes">avant : ${LVL_LABEL[lvlOf(dr.prev)]}</span>` : ""}</div>`;
 }
 /* pastille d'un paquet selon la couche (1 anneau : à écrire à l'étape C3, maths et Dossier) */
 function pastilleDeck(dk){ return COUCHE.rings === 1 ? pastille1(dk) : pastille3(dk); }
@@ -515,22 +536,88 @@ function globalPastille(){
   const hist = histByCard(), sum = ringSummary(CARDS, 2, hist);
   const nOk = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "ok").length;
   const nWin = DECKS.filter(d => paquetRings(d.key, hist)[2].state === "win").length;
-  return `<div class="pglob">${ring1Svg(sum, 66, sum.state === "start" ? "—" : sum.pct + " %")}<div class="pglob-x"><b>Avancement général (niveau épreuve) · ${P_LABEL[sum.state]}</b><span>${sum.right} cartes justes au niveau épreuve sur ${sum.total}, dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} paquet${nOk>1?"s":""} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
+  return `<div class="pglob">${ring1Svg(sum, 66, sum.state === "start" ? "—" : sum.pct + " %")}<div class="pglob-x"><b>Avancement général (niveau épreuve) · ${motNiveau(sum)}</b><span>${sum.right} cartes justes au niveau épreuve sur ${sum.posed} posées, dont ${sum.ok} acquises · ${sum.bad} à revoir · ${sum.new} pas encore posées</span><span>${nOk} paquet${nOk>1?"s":""} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
+  ${barreTestes(BT_TOUT, hist)}
   <details class="plegend"><summary>Comment se lisent les 3 anneaux ?</summary>
   <p>Chaque paquet a <b>trois anneaux</b> : à l'intérieur l'Échauffement, au milieu l'Entraînement, à l'extérieur le Niveau épreuve. Tu montes en compétence du « je choisis » vers « j'écris tout » : chaque anneau ne compte que les tests faits à son niveau : si tu n'as fait que le Niveau épreuve, les deux anneaux intérieurs restent gris en pointillé.</p>
-  <p>Dans chaque anneau, la partie en couleur pleine, ce sont tes cartes justes ; la partie claire, celles qu'il te reste. Un anneau gris en pointillé n'a pas encore été testé. Au centre : tes cartes justes sur le total, au niveau le plus difficile que tu as déjà fait.</p>
-  <p>Couleur de chaque anneau selon la note : <b>rouge</b> à revoir (moins de 4), <b>orange</b> en route (4–4,5), <b>vert</b> réussi (5 et plus), <b>vert foncé</b> OK ✓ (réussi au niveau épreuve et confirmé un autre jour).</p>
+  <p>Dans chaque anneau, la partie en couleur pleine, ce sont tes cartes justes ; la partie claire, celles qu'il te reste. Un anneau gris en pointillé n'a pas encore été testé. Au centre : tes cartes justes sur celles déjà posées, au niveau le plus difficile que tu as déjà fait.</p>
+  <p>Couleur de chaque anneau selon sa note, calculée sur les cartes déjà posées à ce niveau (les cartes pas encore posées ne comptent pas) : <b>rouge</b> à revoir (moins de 4), <b>orange</b> en route (4–4,5), <b>vert</b> réussi (5 et plus), <b>vert foncé</b> OK ✓ (tout le paquet posé au niveau épreuve et au moins 3 cartes sur 4 acquises, c'est-à-dire réussies deux jours différents). Tant que moins de la moitié du paquet est posée, « réussi » devient « réussi, à compléter ».</p>
+  <p>Sous les anneaux, la <b>barre des cartes testées</b> : une case pleine pour chaque carte déjà posée, une case vide pour chaque carte pas encore posée, au niveau le plus difficile que tu as déjà fait (avec beaucoup de cartes, une case en regroupe plusieurs ; le nombre écrit est exact). Le bouton dessous lance un test « Je m'entraîne » sur les seules cartes pas encore posées.</p>
   <p>Seul le premier passage d'un test compte ; refaire ses erreurs aide à apprendre mais ne change pas les anneaux.</p></details>`;
 }
 function paqBad(dk, hist){ const h = hist || histByCard(); return deckCards(dk).filter(c => COUCHE.rings === 1 ? state1(h[c.k]) === "bad" : ringState(h[c.k] || [], 2) === "bad"); }
 function globalPastille1(){
   const hist = histByCard(), g = summary1(CARDS, hist), sums = DECKS.map(d => summary1(deckCards(d.key), hist));
   const nOk = sums.filter(x => x.state === "ok").length, nWin = sums.filter(x => x.state === "win").length;
-  return `<div class="pglob">${ringSegSvg(g, 84, g.state === "start" ? "—" : g.pct + "%")}<div class="pglob-x"><b>Avancement général · ${P_LABEL[g.state]}</b><span>${g.right} cartes justes au dernier test sur ${g.total}, dont ${g.ok} acquises · ${g.bad} à revoir · ${g.new} pas encore posées</span><span>${nOk} ${esc(MOT_PAQUETS)} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
+  return `<div class="pglob">${ringSegSvg(g, 84, g.state === "start" ? "—" : g.pct + "%")}<div class="pglob-x"><b>Avancement général · ${motNiveau(g)}</b><span>${g.right} cartes justes au dernier test sur ${g.posed} posées, dont ${g.ok} acquises · ${g.bad} à revoir · ${g.new} pas encore posées</span><span>${nOk} ${esc(MOT_PAQUETS)} OK · ${nWin} réussi${nWin>1?"s":""}, à confirmer · sur ${DECKS.length}</span></div></div>
+  ${barreTestes(BT_TOUT, hist)}
   <details class="plegend"><summary>Comment se lit la pastille ?</summary>
-  <p>Le chiffre au centre : les questions du ${esc(OUTIL.motPaquet.toLowerCase())} réussies au dernier test où chacune est tombée, sur toutes ses questions. Seul le premier passage d'un test compte, pas les rattrapages.</p>
-  <p>Mots et couleurs suivent la note : sous 4 « à revoir » (rouge), 4 à 4,5 « en route » (orange), 5 et plus « réussi » (vert), réussi à nouveau un autre jour « OK ✓ » (vert foncé). Gris en pointillé : pas encore testé.</p>
+  <p>Le chiffre au centre : les questions du ${esc(OUTIL.motPaquet.toLowerCase())} réussies au dernier test où chacune est tombée, sur celles déjà posées (les questions pas encore posées ne comptent pas). Seul le premier passage d'un test compte, pas les rattrapages.</p>
+  <p>Mots et couleurs suivent cette note : sous 4 « à revoir » (rouge), 4 à 4,5 « en route » (orange), 5 et plus « réussi » (vert) — « réussi, à compléter » tant que moins de la moitié des questions est posée —, « OK ✓ » (vert foncé) quand toutes les questions ont été posées et qu'au moins 3 sur 4 sont acquises. Gris en pointillé : pas encore testé.</p>
+  <p>Sous la pastille, la <b>barre des questions testées</b> : une case pleine pour chaque question déjà posée, une case vide pour chaque question pas encore posée (avec beaucoup de questions, une case en regroupe plusieurs ; le nombre écrit est exact). Le bouton dessous lance un test « Je m'entraîne » sur les seules questions pas encore posées.</p>
   <p>Dans l'anneau : vert foncé = acquis (écrit juste deux jours différents), couleur du niveau = juste au dernier test, rouge pâle = raté, gris = pas encore posé. Une question n'est acquise que si elle a été écrite, pas seulement choisie.</p></details>`;
+}
+
+/* ----- barre des cartes testées (v12) -----
+   Cartes déjà posées sur le total du paquet (ou de tout l'outil), au niveau le plus difficile déjà testé : avec trois anneaux,
+   une carte compte dès qu'elle est tombée au premier passage d'un test à ce niveau ; avec un anneau, à n'importe quel niveau.
+   Cases pleines (posées) et vides (pas encore posées) + le texte « N/M <unité> testés » : lisible sans les couleurs.
+   Au-delà de 30 cartes, une case en regroupe plusieurs. Le bouton « Tester les X pas encore posés » lance un test
+   « Je m'entraîne » sur ces seules cartes, à ce niveau (un anneau : niveau des réglages), un seul test à la fois ; il n'apparaît
+   qu'une fois au moins une carte posée (un paquet jamais testé garde sa barre vide et ses boutons « Test » habituels). */
+const BT_TOUT = "__tout";
+const BT_FEM = /^(cartes|questions|phrases|notions|formes|expressions|définitions|dates|règles|opérations|fractions|puissances|racines|consignes|personnes|unités|lettres|heures)$/i;
+const NIV_KEYS = ["easy", "normal", "hard"];
+function uniteDe(dk){
+  const gen = OUTIL.compte === "questions" ? "questions" : "cartes";
+  if (dk === BT_TOUT) return gen;
+  const d = DECK[dk];
+  return d && d.unit && d.unit !== "cartes" && deckCards(dk).length === d.items.length ? d.unit : gen;
+}
+function couverture(dk, hist){
+  const cards = dk === BT_TOUT ? CARDS : deckCards(dk);
+  let lvl = -1, sub = cards;
+  if (COUCHE.rings !== 1){ lvl = topRing([0,1,2].map(l => ringSummary(cards, l, hist))); if (lvl >= 0) sub = cards.filter(c => c.levels.includes(lvl)); }
+  const non = sub.filter(c => { const es = hist[c.k] || []; return COUCHE.rings === 1 || lvl < 0 ? !es.length : !es.some(e => e.lvl === lvl); });
+  return { lvl, total:sub.length, posed:sub.length - non.length, non };
+}
+function barreTestes(dk, hist){
+  if (!S.loaded) return "";
+  const cv = couverture(dk, hist || histByCard()), n = cv.total; if (!n) return "";
+  const u = uniteDe(dk), acc = BT_FEM.test(u) ? "es" : "s";
+  const cells = n <= 30 ? n : 20;
+  let plein = n <= 30 ? cv.posed : Math.round(cv.posed / n * cells);
+  if (cv.posed > 0 && plein < 1) plein = 1; if (cv.posed < n && plein > cells - 1) plein = cells - 1;
+  const niv = COUCHE.rings === 1 || cv.lvl < 0 ? "" : ", niveau " + DIFFICULTIES[NIV_KEYS[cv.lvl]].label;
+  let cases = ""; for (let i = 0; i < cells; i++) cases += `<i class="bt-c${i < plein ? " on" : ""}"></i>`;
+  const x = cv.non.length;
+  return `<div class="btest"><div class="bt-bar" role="img" aria-label="${cv.posed} ${esc(u)} testé${acc} sur ${n}${niv}">${cases}</div><p class="bt-t">${cv.posed}/${n} ${esc(u)} testé${acc}</p>${x && cv.posed ? `<button class="ghost small" data-act="testerNonPoses" data-v="${esc(dk)}">Tester les ${x} pas encore posé${acc}</button>` : ""}</div>`;
+}
+/* la barre sous les pastilles du sommaire (Dossier) : une pastille dans un bouton de sommaire reçoit sa barre juste après le bouton */
+function barresSommaire(){
+  if (!S.loaded) return;
+  const boutons = [...app.querySelectorAll("button.toc-item")].filter(b => b.querySelector(".deck-pst[data-dk]"));
+  if (!boutons.length) return;
+  const hist = histByCard();
+  boutons.forEach(b => { const dk = b.querySelector(".deck-pst[data-dk]").dataset.dk; if (DECK[dk]) b.insertAdjacentHTML("afterend", barreTestes(dk, hist).replace('class="btest"', 'class="btest bt-toc"')); });
+}
+/* style de la barre, ajouté une fois à la page (variables du thème, clair et sombre) */
+(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:5px;margin:2px 0 8px}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-bar{display:flex;gap:2px;max-width:320px}.bt-c{flex:1 1 0;min-width:3px;height:9px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{margin:0;font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums}.btest .ghost.small{align-self:flex-start}`; document.head.appendChild(st); } catch(e){} })();
+function testerNonPoses(v){
+  if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
+  const cv = couverture(v, histByCard()), keys = new Set(cv.non.map(c => c.k)); if (!keys.size) return;
+  const diff = COUCHE.rings === 1 || cv.lvl < 0 ? S.difficulty : NIV_KEYS[cv.lvl];
+  const decks = DECKS.map(d => d.key).filter(dk => [...keys].some(k => CARD[k] && CARD[k].dk === dk));
+  const ordre = ORDRES ? Object.keys(ORDRES)[0] : "", pris = new Map(), rang = {};
+  for (let tour = 0; tour < 6 && [...keys].some(k => !pris.has(k)); tour++)
+    buildTest(decks, diff, 0, ordre).forEach(q => { if (keys.has(q.card) && !pris.has(q.card)) pris.set(q.card, q); });
+  CARDS.forEach((c, i) => { rang[c.k] = i; });
+  const qs = [...pris.values()].sort((a, b) => rang[a.card] - rang[b.card]); if (!qs.length) return;
+  /* numérotation unique du test, un exercice par paquet et par consigne (« Version papier ») */
+  let n = 0, ex = 0, prec = null;
+  qs.forEach(q => { const bloc = q.deckKey + "|" + q.consigne; if (bloc !== prec){ ex++; prec = bloc; } q.ex = ex; q.num = ++n; });
+  S.selected = decks; S.difficulty = diff; S.mode = "train"; S.frozen = null; S.rattrParent = null;
+  startQuiz(qs, false);
 }
 
 /* lancer un test sur des cartes précises (refaire à revoir / cartes qui résistent / perdues) */
@@ -828,6 +915,7 @@ function render(){
   const v = { fiche:COUCHE.vueFiche || viewFiche, home:viewHome, cards:COUCHE.vueCartes || viewCards, setup:viewSetup, quiz:viewQuiz, results:viewResults, scores:viewScores }[S.screen];
   app.innerHTML = header() + `<div class="screen">${v()}</div>`;
   renderTabs();
+  barresSommaire();
   if (S.screen === "quiz"){ const inp = document.getElementById("answer-input"); if (inp && !inp.disabled) inp.focus(); updateLive(); }
 }
 function header(){
@@ -889,7 +977,8 @@ function viewHome(){
     const on = S.selected.includes(d.key);
     const bad = hist ? paqBad(d.key, hist) : [];
     return `<div class="deckrow${on?" on":""}"><button class="deck-sel" data-act="toggle" data-v="${d.key}" aria-pressed="${on}">${d.emoji ? `<span class="deck-e">${d.emoji}</span>` : ""}<span class="deck-txt">${d.code ? `<span class="deck-c">${esc(d.code)}</span>` : ""}<span class="deck-t">${esc(d.title)}</span><span class="deck-n">${d.items.length} ${esc(d.unit)}${OUTIL.compte === "cartes" ? ` · ${deckCards(d.key).length} cartes` : ""}${d.detail ? " · " + esc(d.detail) : ""}</span></span></button>${on?`<span class="deck-tick">✓</span>`:""}${pastilleDeck(d.key)}</div>` +
-      (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">${(() => { const m = OUTIL.compte === "questions" ? "question" : "carte"; return bad.length > 1 ? `Refaire mes ${bad.length} ${m}s à revoir` : `Refaire ma ${m} à revoir`; })()}</button></div>` : "");
+      (bad.length ? `<div class="deck-redo"><button class="ghost small" data-act="redoBad" data-v="${d.key}">${(() => { const m = OUTIL.compte === "questions" ? "question" : "carte"; return bad.length > 1 ? `Refaire mes ${bad.length} ${m}s à revoir` : `Refaire ma ${m} à revoir`; })()}</button></div>` : "") +
+      (hist ? barreTestes(d.key, hist) : "");
   }).join("");
   h += `<button class="ghost" data-act="allDecks">${allOn ? "Tout décocher" : "Tout cocher"}</button>
   <p class="fine">${count} ${cs.mot}${count>1?"s":""} sélectionné${cs.mot === "carte" ? "e" : ""}${count>1?"s":""}</p>
@@ -1382,6 +1471,7 @@ document.addEventListener("click", e => {
     case "redoBad": redoCards(v); break;
     case "redoCards": redoCards(v); break;
     case "reviserErreurs": reviserErreurs(); break;
+    case "testerNonPoses": testerNonPoses(v); break;
     case "suiviF": S.suivi.f = v; S.suivi.pt = null; render(); break;
     case "suiviPt": S.suivi.pt = S.suivi.pt === v ? null : v; render(); break;
     case "openAttempt": S.scores.open = S.scores.open === v ? null : v; render(); break;
