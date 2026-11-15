@@ -450,7 +450,7 @@ const BRANCHE = "LCA";
 const HEAD = { code:"TE LCA", num:"I", titre:"Les Romains en Suisse", sous:"TE 1 · épreuve : " };
 const SUBJECT_LONG = "LCA, TE 1 : les Romains en Suisse et les voies de communication";
 const FILE_SLUG = "lca-romains-suisse-livio";
-const VERSION = { n:2, date:"15.11.2026" };   /* v1 : 14.11.2026, première version : Dossier rangé comme la feuille d'objectifs (11 objectifs), fil rouge, 11 paquets de cartes, deux cartes schématiques, la Table de Peutinger dessinée · v2 : 15.11.2026, réassemblé sur le noyau v10 (temps de révision dans l'onglet Scores) ; contenu, cartes et historique inchangés */
+const VERSION = { n:3, date:"15.11.2026" };   /* v1 : 14.11.2026, première version : Dossier rangé comme la feuille d'objectifs (11 objectifs), fil rouge, 11 paquets de cartes, deux cartes schématiques, la Table de Peutinger dessinée · v2 : 14.11.2026, temps de révision dans l'onglet Scores (noyau v10) · v3 : 15.11.2026, bouton « 🔁 Réviser mes erreurs » sur l'écran Paquets et dans l'onglet Scores (noyau v11) */
 
 /* ---------- SOURCES ----------
    Photos envoyées par le papa le 13.11.2026. Les pages du fascicule sans numéro visible sur la photo sont identifiées

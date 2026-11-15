@@ -72,7 +72,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-allemand-seite18-gefuehle";
 const DUE = { iso:"2026-11-18", long:"mercredi 18 novembre", short:"18.11" };
 const THEME = "Chapitre 3 — Wie geht's denn so? (Wortschatz Seite 18 und 19)";
-const VERSION = { n:3, date:"15.11.2026" };   /* v1 : 07.11.2026, première version (Seite 18) · v2 : 08.11.2026, page 19 ajoutée, titre « Wortschatz Seite 18 + 19 », test du 18.11 · v3 : 15.11.2026, réassemblé sur le noyau v10 (temps de révision dans l'onglet Scores) ; contenu, cartes et historique inchangés */
+const VERSION = { n:4, date:"15.11.2026" };   /* v1 : 07.11.2026, première version (Seite 18) · v2 : 08.11.2026, page 19 ajoutée, titre « Wortschatz Seite 18 + 19 », test du 18.11 · v3 : 14.11.2026, temps de révision dans l'onglet Scores (noyau v10) · v4 : 15.11.2026, bouton « 🔁 Réviser mes erreurs » sur l'écran Paquets et dans l'onglet Scores (noyau v11) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
