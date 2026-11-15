@@ -394,8 +394,9 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-anglais-unit2holiday";
 const DUE = { iso:"2026-11-19", long:"jeudi 19 novembre", short:"19.11" };
 const THEME = "Unit 2 « Holiday time » (Active wordlist pp. 20-21)";
-const VERSION = { n:1, date:"15.11.2026" };
-/* v1 : 15.11.2026, première version — couche Langues (anglais), noyau v12 : p. 20 en entier (parenthèses comprises),
+const VERSION = { n:2, date:"15.11.2026" };
+/* v2 : 15.11.2026, fiche : emoji du paquet devant chaque section de vocabulaire (« undefined » s'affichait par-dessus le titre).
+   v1 : 15.11.2026, première version — couche Langues (anglais), noyau v12 : p. 20 en entier (parenthèses comprises),
    p. 21 « Words and phrases » et ses phrases ; « Everyday English » laissé de côté (barré sur la photo). */
 
 const OUTIL = {
@@ -530,7 +531,7 @@ const FICHE = [
     <p class="tip">Orthographe : sigh<b>t</b>seeing, snorke<b>ll</b>ing (deux l), exhi<b>b</b>ition, ti<b>me</b>table, Underground avec une <b>majuscule</b> (comme dans le livre).</p>
     <p class="tip">Questions : <b>How long does it take?</b> · <b>How much does it cost?</b> · <b>Which platform does the train leave from?</b> — le petit mot <b>does</b> vient avant <b>it</b> / <b>the train</b>.</p>
     <p class="fine">— Conseil de méthode (pas une page du livre), à partir des pp. 20-21</p>` },
-  ...DECKS.map(d => ({ deck:d.key, titre:d.title, count:d.items.length, html:() => wl(d) })),
+  ...DECKS.map(d => ({ deck:d.key, icon:d.emoji, titre:d.title, count:d.items.length, html:() => wl(d) })),
 ];
 
 /* ---------- types de questions ---------- */
