@@ -21,7 +21,9 @@ reconnue par plusieurs écritures (alias). Une écriture inconnue donne « MANQU
 ajouter l'alias dans ALIAS plutôt que d'ignorer l'écart.
 
 Versions : 1 (01.11.2026, B1) · 2 (01.11.2026, C3 : pour un outil assemblé sur le noyau commun, le nombre d'anneaux et la
-correction en direct se lisent dans ce que la couche déclare, pas dans le code du noyau).
+correction en direct se lisent dans ce que la couche déclare, pas dans le code du noyau)
+· 3 (08.11.2026 : outil d'allemand assemblé sur le noyau → OUTIL.umlautsStricts: true obligatoire (fiche construction v32,
+« Couche Langues ») ; les outils d'avant le noyau ne sont pas concernés).
 """
 import json, os, re, subprocess, sys, tempfile
 

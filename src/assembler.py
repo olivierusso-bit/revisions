@@ -16,6 +16,12 @@ Après l'assemblage, sauf --sans-controles :
      qui se termine par « ? » (éventuellement suivi d'un guillemet fermant).
   5. Taille : un test sur tous les paquets, terminé, et le test en cours correspondant, mesurés en JSON (limite d'un document
      Claude : 256 Kio) ; erreur au-delà de 248 Kio (marge pour le bilan), avertissement dès 224 Kio.
+  6. « Réviser mes erreurs » (noyau v11) : historique simulé sur une carte — erreur (elle entre), une réussite (elle reste),
+     une deuxième réussite le même jour (elle reste), une réussite un autre jour (elle sort), une erreur dans un rattrapage
+     (rien ne change), une nouvelle erreur (elle revient) ; bouton présent sur l'écran Paquets (avec le bon N) et dans
+     l'onglet Scores, grisé « Aucune erreur à réviser 👍 » sans erreur ; le test lancé est en « Je m'entraîne », contient
+     la carte, tirée à nouveau (autre énoncé quand la carte en a plusieurs, p. ex. une autre personne en conjugaison), se termine
+     et garde revErreurs et la mention « Révision des erreurs » ; bloqué quand un test est en cours.
 Le code de sortie est 0 seulement si tout passe.
 
 Le contenu porte sa palette CSS et ses retouches de style dans la constante CSS_THEME (gabarit de chaîne, sans accent grave), appliquée
@@ -26,6 +32,7 @@ après base.css, et ses métadonnées (titre, polices, date) dans OUTIL et DUE, 
 # · 4 (01.11.2026, contrôle qualité : cartes du Dossier vérifiées (explication au verso, recto terminé par « ? ») ; taille d'un test
 #   complet mesurée contre la limite de 256 Kio d'un document Claude (erreur au-delà de 248 Kio, avertissement dès 224 Kio))
 # · 5 (14.11.2026, noyau v10 : le test joué vérifie que le temps de révision est enregistré — actif, morceaux, ms de chaque question)
+# · 6 (15.11.2026, noyau v11 : contrôle 6, « Réviser mes erreurs » sur un historique simulé)
 import json, os, re, subprocess, sys, tempfile, datetime
 
 ICI = os.path.dirname(os.path.abspath(__file__))
@@ -166,11 +173,93 @@ def test_navigateur(sortie):
         pg.evaluate("() => { S.screen = 'scores'; render(); }"); pg.wait_for_timeout(200)
         pastilles = pg.evaluate("() => { S.screen = 'home'; render(); return document.querySelectorAll('.deck-pst svg').length; }")
         print("pastilles affichées :", pastilles)
+        rev_ok = controle_revision(pg)
         b.close()
     erreurs = [e for e in erreurs if "Failed to load" not in e]
     print("erreurs JavaScript :", erreurs or "aucune")
     if res and not res.get("temps"): print("temps de révision : MANQUE (actif, morceaux ou ms par question absents du test terminé)")
-    return gen["nbad"] == 0 and dos_ok and taille_ok and bool(res) and res["score"] == res["total"] and res.get("temps") and not erreurs
+    return gen["nbad"] == 0 and dos_ok and taille_ok and bool(res) and res["score"] == res["total"] and res.get("temps") and rev_ok and not erreurs
+
+def repondre_juste(pg, fin="results"):
+    """Joue le test affiché jusqu'au bout, en donnant la première réponse acceptée."""
+    for _ in range(600):
+        if pg.evaluate("() => S.screen !== 'quiz'"): break
+        pg.evaluate("""() => { const Q = S.quiz, q = Q.questions[Q.i];
+          if (Q.checked){ document.querySelector('[data-act=next]').click(); return; }
+          if (q.type === "mcq"){ const k = q.options.indexOf(q.answer); document.querySelector('[data-act=pick][data-v="'+k+'"]').click(); }
+          else { const inp = document.getElementById("answer-input"); inp.value = (q.accept && q.accept.length) ? q.accept[0] : q.answer; inp.dispatchEvent(new Event("input", {bubbles:true})); document.getElementById("validate-btn").click(); } }""")
+        pg.wait_for_timeout(15)
+    pg.wait_for_timeout(300)
+
+def controle_revision(pg):
+    """Contrôle 6 : « Réviser mes erreurs » (noyau v11) sur un historique simulé, puis le bouton et le test qu'il lance."""
+    r = pg.evaluate("""() => {
+      if (typeof cartesEnErreur !== "function") return { absent:true };
+      const k = CARDS[0].k, c = CARD[k];
+      let q = null;
+      for (const diff of ["normal", "hard", "easy"]){ q = buildTest([c.dk], diff, 0, ORDRES ? Object.keys(ORDRES)[0] : "").find(x => x.card === k); if (q) break; }
+      if (!q) return { erreur:"aucune question pour la carte " + k };
+      window.__garde = S.attempts;
+      const j0 = new Date(); j0.setHours(10, 0, 0, 0); const J = n => j0.getTime() - (10 - n) * 864e5;
+      let id = 1;
+      const essai = (t, ok, ratt) => ({ id:"sim" + (id++), quiz:QUIZ_ID, date:t, branche:OUTIL.branche, theme:THEME, deck:"historique simulé",
+        difficulty:"Entraînement", mode:"Je m'entraîne", rattrapage:!!ratt, parent:null, score:ok ? 1 : 0, total:1, note:ok ? 6 : 1, actif:1000, morceaux:[[t, t + 1000]],
+        questions:[{ num:1, ex:1, ref:"", prompt:q.prompt, user:ok ? q.answer : "", answer:q.answer, correct:ok, expl:q.expl, tag:q.tag, question:q, liveFixed:false, liveSnap:"", ms:1000 }] });
+      const pas = [];
+      const etape = (nom, att, attendu) => { if (att) S.attempts = [att, ...S.attempts]; const obtenu = cartesEnErreur().includes(k); pas.push({ nom, attendu, obtenu, ok:obtenu === attendu }); };
+      S.attempts = [];
+      etape("aucun test", null, false);
+      etape("erreur (Je ne sais pas)", essai(J(1), false), true);
+      etape("1re réussite", essai(J(2), true), true);
+      etape("2e réussite le même jour", essai(J(2) + 3600e3, true), true);
+      etape("réussite un autre jour", essai(J(3), true), false);
+      etape("erreur dans un rattrapage (ne compte pas)", essai(J(3) + 7200e3, false, true), false);
+      etape("nouvelle erreur", essai(J(4), false), true);
+      const n = cartesEnErreur().length;
+      S.draft = null; S.screen = "home"; render();
+      const bt = document.querySelector("[data-act=reviserErreurs]");
+      const paquets = !!bt && bt.textContent.includes("Réviser mes erreurs (" + n + ")");
+      S.screen = "scores"; render();
+      const scores = !!document.querySelector(".suivi [data-act=reviserErreurs]");
+      S.screen = "home"; render(); document.querySelector("[data-act=reviserErreurs]").click();
+      const lance = S.screen === "quiz" && !!S.quiz && S.quiz.questions.some(x => x.card === k) && S.quiz.questions.length === n
+        && S.mode === "train" && S.quiz.label.startsWith(REV_LABEL);
+      /* sans rejouer à l'identique : quand la carte peut changer d'énoncé (conjugaison : autre personne), il change */
+      const nouveau = lance ? S.quiz.questions.find(x => x.card === k).prompt : "";
+      let possible = false;
+      for (let t = 0; t < 20 && !possible; t++) possible = buildTest([c.dk], S.difficulty, 0, ORDRES ? Object.keys(ORDRES)[0] : "").some(x => x.card === k && x.prompt !== q.prompt);
+      const autre = !possible || nouveau !== q.prompt;
+      return { k, pas, n, paquets, scores, lance, autre, possible };
+    }""")
+    if r.get("absent"):
+        print("réviser mes erreurs : MANQUE (cartesEnErreur absente du noyau)"); return False
+    if r.get("erreur"):
+        print("réviser mes erreurs :", r["erreur"]); return False
+    ok = all(x["ok"] for x in r["pas"]) and r["paquets"] and r["scores"] and r["lance"] and r["autre"]
+    if r["lance"]: repondre_juste(pg)
+    fin = pg.evaluate("""() => {
+      const a = S.lastResult, fini = !!a && a.revErreurs === true && !a.rattrapage && a.deck.startsWith(REV_LABEL) && a.score === a.total;
+      const histo = fini && S.attempts[0] && S.attempts[0].id === a.id;
+      /* un seul test à la fois : un test gardé pour plus tard bloque le bouton */
+      S.screen = "setup"; render(); document.querySelector("[data-act=start]").click();
+      document.querySelector("[data-act=quit]").click(); document.querySelector("[data-act=quitKeep]").click();
+      S.screen = "home"; render(); const b2 = document.querySelector("[data-act=reviserErreurs]");
+      if (b2) b2.click();
+      const bloque = !!S.draft && S.draftBlock === true && S.screen === "home";
+      draftClear();
+      /* sans erreur : bouton grisé */
+      S.attempts = []; S.screen = "home"; render();
+      const gris = [...document.querySelectorAll("button[disabled]")].some(x => x.textContent.includes("Aucune erreur à réviser 👍"));
+      S.attempts = window.__garde || []; S.lastResult = null; S.screen = "home"; render();
+      return { fini, histo, bloque, gris };
+    }""")
+    ok = ok and fin["fini"] and fin["histo"] and fin["bloque"] and fin["gris"]
+    print("réviser mes erreurs (historique simulé) :", " · ".join(f"{x['nom']} → {'dans la liste' if x['obtenu'] else 'hors liste'}{'' if x['ok'] else ' ✗'}" for x in r["pas"]))
+    print(f"réviser mes erreurs (bouton) : Paquets {'OK' if r['paquets'] else 'MANQUE'} (N = {r['n']}) · Scores {'OK' if r['scores'] else 'MANQUE'} · test lancé {'OK' if r['lance'] else 'MANQUE'}"
+          f" · question tirée à nouveau {('OK, autre énoncé' if r['possible'] else 'OK (la carte a un seul énoncé)') if r['autre'] else 'MANQUE (même énoncé)'}"
+          f" · terminé et marqué {'OK' if fin['fini'] and fin['histo'] else 'MANQUE'} · un seul test à la fois {'OK' if fin['bloque'] else 'MANQUE'} · grisé sans erreur {'OK' if fin['gris'] else 'MANQUE'}"
+          f" → {'OK' if ok else 'ÉCHEC'}")
+    return ok
 
 def main(argv):
     args = [a for a in argv if not a.startswith("--")]
