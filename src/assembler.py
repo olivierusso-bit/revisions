@@ -25,6 +25,7 @@ après base.css, et ses métadonnées (titre, polices, date) dans OUTIL et DUE, 
 # · 3 (01.11.2026, C3 : couche maths, buildTest reçoit aussi l'ordre)
 # · 4 (01.11.2026, contrôle qualité : cartes du Dossier vérifiées (explication au verso, recto terminé par « ? ») ; taille d'un test
 #   complet mesurée contre la limite de 256 Kio d'un document Claude (erreur au-delà de 248 Kio, avertissement dès 224 Kio))
+# · 5 (14.11.2026, noyau v10 : le test joué vérifie que le temps de révision est enregistré — actif, morceaux, ms de chaque question)
 import json, os, re, subprocess, sys, tempfile, datetime
 
 ICI = os.path.dirname(os.path.abspath(__file__))
@@ -135,10 +136,10 @@ def test_navigateur(sortie):
           ["easy","normal","hard"].forEach(diff => {
             const qs = buildTest(keys, diff, 0, ORDRES ? Object.keys(ORDRES)[0] : "");
             const detail = qs.map(q => ({ num:q.num, ex:q.ex, ref:q.ref || q.exTitle, prompt:q.prompt, user:q.answer, answer:q.answer,
-              correct:false, expl:q.expl, tag:q.tag, question:q, liveFixed:false, liveSnap:"" }));
+              correct:false, expl:q.expl, tag:q.tag, question:q, liveFixed:false, liveSnap:"", ms:120000 }));
             const att = { id:String(Date.now()), quiz:QUIZ_ID, date:Date.now(), branche:OUTIL.branche, theme:THEME, deck:OUTIL.labelTout,
-              difficulty:"Niveau épreuve", mode:"Épreuve blanche", rattrapage:false, parent:null, score:0, total:qs.length, note:1, questions:detail };
-            const draft = { v:2, questions:qs, i:qs.length - 1, answers:qs.map(q => ({ u:q.answer, c:false })), picked:null, typed:"", checked:false,
+              difficulty:"Niveau épreuve", mode:"Épreuve blanche", rattrapage:false, parent:null, score:0, total:qs.length, note:1, actif:120000*qs.length, morceaux:[[Date.now()-1e7, Date.now()],[Date.now()-1e7, Date.now()],[Date.now()-1e7, Date.now()]], questions:detail };
+            const draft = { v:2, questions:qs, i:qs.length - 1, answers:qs.map(q => ({ u:q.answer, c:false, ms:120000 })), qms:120000, mc:[[Date.now()-1e7, Date.now()],[Date.now()-1e7, Date.now()]], picked:null, typed:"", checked:false,
               ok:false, liveFixed:false, errSnap:"", label:OUTIL.labelTout, start:Date.now(), saved:Date.now(), rattrapage:false, rattrLabel:"",
               rattrParent:null, selected:keys, difficulty:diff, mode:"exam", order:"" };
             tailles.push({ diff, essai:new Blob([JSON.stringify(att)]).size, encours:new Blob([JSON.stringify(draft)]).size });
@@ -160,7 +161,7 @@ def test_navigateur(sortie):
               if (q.type === "mcq"){ const k = q.options.indexOf(q.answer); document.querySelector('[data-act=pick][data-v="'+k+'"]').click(); }
               else { const inp = document.getElementById("answer-input"); inp.value = (q.accept && q.accept.length) ? q.accept[0] : q.answer; inp.dispatchEvent(new Event("input", {bubbles:true})); document.getElementById("validate-btn").click(); } }""")
             pg.wait_for_timeout(15)
-        res = pg.evaluate("() => S.lastResult ? { score:S.lastResult.score, total:S.lastResult.total, note:S.lastResult.note } : null")
+        res = pg.evaluate("() => S.lastResult ? { score:S.lastResult.score, total:S.lastResult.total, note:S.lastResult.note, temps: typeof S.lastResult.actif === 'number' && Array.isArray(S.lastResult.morceaux) && S.lastResult.morceaux.length > 0 && S.lastResult.questions.every(x => typeof x.ms === 'number') } : null")
         print("test joué :", res)
         pg.evaluate("() => { S.screen = 'scores'; render(); }"); pg.wait_for_timeout(200)
         pastilles = pg.evaluate("() => { S.screen = 'home'; render(); return document.querySelectorAll('.deck-pst svg').length; }")
@@ -168,7 +169,8 @@ def test_navigateur(sortie):
         b.close()
     erreurs = [e for e in erreurs if "Failed to load" not in e]
     print("erreurs JavaScript :", erreurs or "aucune")
-    return gen["nbad"] == 0 and dos_ok and taille_ok and bool(res) and res["score"] == res["total"] and not erreurs
+    if res and not res.get("temps"): print("temps de révision : MANQUE (actif, morceaux ou ms par question absents du test terminé)")
+    return gen["nbad"] == 0 and dos_ok and taille_ok and bool(res) and res["score"] == res["total"] and res.get("temps") and not erreurs
 
 def main(argv):
     args = [a for a in argv if not a.startswith("--")]

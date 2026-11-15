@@ -257,3 +257,19 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:var(--
 .keys button{min-width:44px;padding:9px 10px;border:1px solid var(--rule);border-radius:var(--r-s);background:var(--sheet);font-family:var(--mono);font-weight:600;font-size:16px;cursor:pointer}
 .preview{font-family:var(--mono);font-size:15px;color:var(--soft);margin:0;min-height:1.4em}
 .chg{font-size:12px;font-weight:700;color:var(--bad);border:1px solid var(--bad);border-radius:20px;padding:0 8px}
+
+/* temps de révision (noyau v10) : chaque barre porte son chiffre, rien ne se lit à la seule couleur */
+.tps-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tps-tile{background:var(--court-wash);border-radius:var(--r-m);padding:10px 12px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.tps-tile span{font-size:13px;color:var(--soft)}.tps-tile b{font-size:24px;line-height:1.15}.tps-tile small{font-size:12px;color:var(--soft)}
+.tps-chart{display:flex;align-items:flex-end;gap:6px;height:120px;border-bottom:1px solid var(--rule);padding:0 2px}
+.tps-col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.tps-v{font-size:11.5px;font-weight:700;color:var(--soft);font-variant-numeric:tabular-nums}
+.tps-bar{width:100%;background:var(--court);border-radius:3px 3px 0 0}
+.tps-te{border:1.5px dashed var(--soft);border-bottom:0;border-radius:4px 4px 0 0;justify-content:flex-start;padding-top:4px}
+.tps-days{display:flex;gap:6px;padding:0 2px}.tps-days span{flex:1;min-width:0;text-align:center;font-size:11.5px;color:var(--soft);line-height:1.2}.tps-days small{display:block;font-size:10.5px}
+.tps-paqs{display:flex;flex-direction:column;gap:6px}
+.tps-paq{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr) 4.2em;gap:8px;align-items:center;font-size:13px}
+.tps-paq-t{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tps-paq-v{text-align:right;color:var(--soft);font-variant-numeric:tabular-nums}
+.tps-paq-b{height:12px;background:var(--court-wash);border-radius:3px;overflow:hidden}.tps-paq-b i{display:block;height:100%;background:var(--court)}
+.tps-test{margin:0;font-size:14px}

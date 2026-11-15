@@ -272,6 +272,22 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:var(--
 .preview{font-family:var(--mono);font-size:15px;color:var(--soft);margin:0;min-height:1.4em}
 .chg{font-size:12px;font-weight:700;color:var(--bad);border:1px solid var(--bad);border-radius:20px;padding:0 8px}
 
+/* temps de révision (noyau v10) : chaque barre porte son chiffre, rien ne se lit à la seule couleur */
+.tps-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tps-tile{background:var(--court-wash);border-radius:var(--r-m);padding:10px 12px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.tps-tile span{font-size:13px;color:var(--soft)}.tps-tile b{font-size:24px;line-height:1.15}.tps-tile small{font-size:12px;color:var(--soft)}
+.tps-chart{display:flex;align-items:flex-end;gap:6px;height:120px;border-bottom:1px solid var(--rule);padding:0 2px}
+.tps-col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.tps-v{font-size:11.5px;font-weight:700;color:var(--soft);font-variant-numeric:tabular-nums}
+.tps-bar{width:100%;background:var(--court);border-radius:3px 3px 0 0}
+.tps-te{border:1.5px dashed var(--soft);border-bottom:0;border-radius:4px 4px 0 0;justify-content:flex-start;padding-top:4px}
+.tps-days{display:flex;gap:6px;padding:0 2px}.tps-days span{flex:1;min-width:0;text-align:center;font-size:11.5px;color:var(--soft);line-height:1.2}.tps-days small{display:block;font-size:10.5px}
+.tps-paqs{display:flex;flex-direction:column;gap:6px}
+.tps-paq{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr) 4.2em;gap:8px;align-items:center;font-size:13px}
+.tps-paq-t{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tps-paq-v{text-align:right;color:var(--soft);font-variant-numeric:tabular-nums}
+.tps-paq-b{height:12px;background:var(--court-wash);border-radius:3px;overflow:hidden}.tps-paq-b i{display:block;height:100%;background:var(--court)}
+.tps-test{margin:0;font-size:14px}
+
 /* Voie romaine : calcaire, basalte des pavés, rouge pompéien des inscriptions, bronze des bornes ; titres en Marcellus (capitales gravées), cours en Spectral, outil en Fira Sans. */
 :root{
   --dock:#E3E1DB; --sheet:#FFFFFF; --ink:#24211D; --soft:#5F5850; --st:#8F887E; --rule:#CFC9BE;
@@ -706,7 +722,7 @@ a.aud-ext,.aud-links a.ghost{text-align:center;text-decoration:none;color:var(--
 <nav class="tabbar" id="tabbar"></nav>
 
 <script>
-/* Outil assemblé par claude/assembler.py le 14.11.2026 : contenu (2026-11-20_Livio_LCA_TE-1-Les-Romains-en-Suisse.contenu.js) + couche-dossier.js + noyau-quiz.js.
+/* Outil assemblé par claude/assembler.py le 15.11.2026 : contenu (2026-11-20_Livio_LCA_TE-1-Les-Romains-en-Suisse.contenu.js) + couche-dossier.js + noyau-quiz.js.
    Pour le modifier, on change le fichier de contenu (ou le noyau / la couche sur « go fiches ») et on réassemble ; jamais ce fichier à la main. */
 /* ============================================================
    CONTENU — LCA, TE 1 « Les Romains en Suisse »
@@ -1160,7 +1176,7 @@ const BRANCHE = "LCA";
 const HEAD = { code:"TE LCA", num:"I", titre:"Les Romains en Suisse", sous:"TE 1 · épreuve : " };
 const SUBJECT_LONG = "LCA, TE 1 : les Romains en Suisse et les voies de communication";
 const FILE_SLUG = "lca-romains-suisse-livio";
-const VERSION = { n:1, date:"14.11.2026" };   /* v1 : 14.11.2026, première version : Dossier rangé comme la feuille d'objectifs (11 objectifs), fil rouge, 11 paquets de cartes, deux cartes schématiques, la Table de Peutinger dessinée */
+const VERSION = { n:2, date:"15.11.2026" };   /* v1 : 14.11.2026, première version : Dossier rangé comme la feuille d'objectifs (11 objectifs), fil rouge, 11 paquets de cartes, deux cartes schématiques, la Table de Peutinger dessinée · v2 : 15.11.2026, réassemblé sur le noyau v10 (temps de révision dans l'onglet Scores) ; contenu, cartes et historique inchangés */
 
 /* ---------- SOURCES ----------
    Photos envoyées par le papa le 13.11.2026. Les pages du fascicule sans numéro visible sur la photo sont identifiées
@@ -2237,7 +2253,13 @@ if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU)
    réponse à écrire, maths) et COUCHE.papierSource (source de la question sous chaque question, Dossier) ; sans ces réglages, rien ne change)
    · 9 (08.11.2026 : réglage facultatif OUTIL.accentsStricts — deAcc() ne retire plus aucun accent : é ≠ e, è ≠ e, ê ≠ e, â ≠ a,
    î ≠ i, û ≠ u, ç ≠ c… à la correction (norm), dans la correction en direct (lvUnit) et dans « Voir mes erreurs » (dxN) ;
-   comme umlautsStricts pour ä ö ü, qu'il englobe ; sans ce réglage, rien ne change).
+   comme umlautsStricts pour ä ö ü, qu'il englobe ; sans ce réglage, rien ne change)
+   · 10 (14.11.2026 : temps de révision — chronomètre actif par question (arrêté quand la page passe en arrière-plan, se ferme
+   ou est gardée pour plus tard ; au plus 2 minutes comptées sans clic ni frappe), morceaux de travail entre deux pauses ;
+   enregistrés dans le test en cours (qms, mc, ms par réponse) et dans le test terminé (actif, morceaux, ms par question) ;
+   onglet Scores : bloc « ⏱ Mon temps de révision » (7 derniers jours, temps moyen par question, barres jour par jour, temps par
+   paquet, questions les plus longues et « Refaire ces questions ») et temps actif sous chaque test de l'historique ;
+   les tests d'avant la v10 restent tels quels, « temps non mesuré »).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -2734,6 +2756,7 @@ function redoCards(v){
   let keys;
   const hist = histByCard();
   if (v === "resist") keys = new Set(resistant().map(x => x.k));
+  else if (v === "lent") keys = new Set(lentes().map(x => x.k));
   else if (v.startsWith("lost:")){ const dk = v.slice(5), dr = dropOf(dk, hist); keys = new Set(dr ? dr.lost.map(c => c.k) : []); }
   else keys = new Set(paqBad(v, hist).map(c => c.k));
   if (!keys.size) return;
@@ -2823,12 +2846,84 @@ function suiviBlock(){
   ${res.length ? `<h3>Les ${OUTIL.compte === "questions" ? "questions" : "cartes"} qui résistent</h3><div class="resist">${res.map(x => `<p><span class="code">${esc(DECK[x.ch].code || DECK[x.ch].title)}</span> ${esc(AFF(x.word))} <small>ratée ${x.miss} fois sur ${x.n}</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="resist">Refaire ces ${res.length} ${OUTIL.compte === "questions" ? "questions" : "cartes"}</button>` : ""}
   </section>`;
 }
+/* ----- onglet Scores : temps de révision (v10) ----- */
+const avecTemps = () => S.attempts.filter(a => a.actif != null);
+function tempsTest(a){
+  if (a.actif == null) return `<p class="fine tps-test">⏱ Temps non mesuré pour ce test (fait avant la mesure du temps).</p>`;
+  const mc = a.morceaux || [];
+  return `<p class="tps-test">⏱ <b>${fmtDuree(a.actif)} actives</b>${mc.length > 1 ? `, en ${mc.length} fois : ` + mc.map(m => heureCourte(m[0]) + " → " + heureCourte(m[1])).join(", puis ") : mc.length ? ` : ${heureCourte(mc[0][0])} → ${heureCourte(mc[0][1])}` : ""}</p>`;
+}
+/* temps d'un test réparti sur les jours de ses morceaux, au prorata de leur durée */
+function tempsParJour(){
+  const m = {};
+  avecTemps().forEach(a => {
+    const mc = (a.morceaux || []).filter(x => x[1] > x[0]), tot = mc.reduce((s, x) => s + x[1] - x[0], 0);
+    if (!mc.length || !tot){ const k = dayOf(a.date); m[k] = (m[k] || 0) + a.actif; return; }
+    mc.forEach(x => { const k = dayOf(x[0]); m[k] = (m[k] || 0) + a.actif * (x[1] - x[0]) / tot; });
+  });
+  return m;
+}
+/* les questions les plus longues en moyenne (tous les passages mesurés) */
+function lentes(){
+  const m = {};
+  avecTemps().forEach(a => a.questions.forEach(x => { if (!x.question || x.ms == null) return; const k = qCardKey(x), lab = x.question.label || (CARD[k] && CARD[k].label);
+    const e = m[k] = m[k] || { k, word:lab || x.question.word, ch:x.question.deckKey, n:0, ms:0, last:0, ok:false };
+    e.n++; e.ms += x.ms; if (a.date >= e.last){ e.last = a.date; e.ok = !!x.correct; } }));
+  return Object.values(m).filter(x => CARD[x.k] && DECK[x.ch]).map(x => ({ ...x, moy:x.ms / x.n })).sort((a, b) => b.moy - a.moy).slice(0, 5);
+}
+const JOURS_COURTS = ["di","lu","ma","me","je","ve","sa"];
+function tempsBlock(){
+  const L = avecTemps(); if (!L.length) return "";
+  const parJour = tempsParJour(), now = new Date(), j0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const jours = []; for (let i = 6; i >= 0; i--){ const d = new Date(j0); d.setDate(d.getDate() - i); jours.push({ d, k:dayOf(d.getTime()), ms:parJour[dayOf(d.getTime())] || 0 }); }
+  const sem = jours.reduce((s, x) => s + x.ms, 0), nSem = L.filter(a => a.date >= jours[0].d.getTime()).length;
+  const qs = L.flatMap(a => a.questions.filter(x => x.ms != null)), moyQ = qs.length ? qs.reduce((s, x) => s + x.ms, 0) / qs.length : 0;
+  const max = Math.max(60000, ...jours.map(x => x.ms));
+  const due = DUE && DUE.iso ? new Date(DUE.iso + "T00:00:00") : null, dansSemaine = due && due > j0 && (due - j0) / 864e5 <= 7;
+  const barres = jours.map(x => { const min = Math.round(x.ms / 60000);
+    return `<div class="tps-col"><span class="tps-v">${x.ms ? (min ? min : "<1") : "0"}</span><div class="tps-bar" style="height:${x.ms ? Math.max(3, Math.round(x.ms / max * 100)) : 0}%"></div></div>`; }).join("")
+    + (dansSemaine ? `<div class="tps-col tps-te"><span class="tps-v">TE</span></div>` : "");
+  const noms = jours.map(x => `<span>${JOURS_COURTS[x.d.getDay()]}<small>${x.d.getDate()}</small></span>`).join("") + (dansSemaine ? `<span>${JOURS_COURTS[due.getDay()]}<small>${due.getDate()}</small></span>` : "");
+  const pq = {}; qs.forEach(x => { const k = x.question && x.question.deckKey; if (k && DECK[k]) pq[k] = (pq[k] || 0) + x.ms; });
+  const paqs = Object.entries(pq).sort((a, b) => b[1] - a[1]), pmax = paqs.length ? paqs[0][1] : 1;
+  const lent = lentes();
+  return `<section class="suivi tps"><h3>⏱ Mon temps de révision</h3>
+  <div class="tps-tiles"><div class="tps-tile"><span>7 derniers jours</span><b>${fmtDuree(sem)}</b><small>${nSem} test${nSem > 1 ? "s" : ""}</small></div><div class="tps-tile"><span>Par question</span><b>${fmtDuree(moyQ)}</b><small>en moyenne</small></div></div>
+  <p class="fine">Jour par jour, en minutes actives</p>
+  <div class="tps-chart" role="img" aria-label="Minutes de révision des 7 derniers jours : ${jours.map(x => JOURS_COURTS[x.d.getDay()] + " " + x.d.getDate() + " " + Math.round(x.ms / 60000) + " min").join(", ")}">${barres}</div>
+  <div class="tps-days">${noms}</div>
+  ${paqs.length ? `<p class="fine">Par ${esc(OUTIL.motPaquet.toLowerCase())}, depuis le début</p><div class="tps-paqs">${paqs.map(([k, ms]) => `<div class="tps-paq"><span class="tps-paq-t">${esc(DECK[k].code || DECK[k].title)}</span><div class="tps-paq-b"><i style="width:${Math.max(4, Math.round(ms / pmax * 100))}%"></i></div><span class="tps-paq-v">${fmtDuree(ms)}</span></div>`).join("")}</div>` : ""}
+  ${lent.length ? `<p class="fine">Les questions qui te prennent le plus de temps</p><div class="resist">${lent.map(x => `<p><span class="code">${esc(DECK[x.ch].code || DECK[x.ch].title)}</span> ${esc(AFF(x.word))} <small>${fmtDuree(x.moy)} en moyenne · ${x.ok ? "✓ juste" : "✗ fausse"} la dernière fois</small></p>`).join("")}</div><button class="ghost" data-act="redoCards" data-v="lent">Refaire ces ${lent.length} questions</button>` : ""}
+  <p class="fine">Le temps ne compte que quand la page est ouverte devant toi : il s'arrête si tu changes d'application, fermes la page ou gardes le test pour plus tard, et au bout de 2 minutes sans toucher l'écran.</p></section>`;
+}
 function chainTxt(a){
   if (a.rattrapage) return "";
   const sc = testScore(a, "all"); if (!sc || !sc.steps.length) return "";
   const last = sc.steps[sc.steps.length-1];
   return ` · ${fmtNote(sc.note)} → ${fmtNote(last.note)} après ${sc.steps.length} rattrapage${sc.steps.length>1?"s":""}`;
 }
+
+/* ============================================================
+   TEMPS DE RÉVISION (v10) : chronomètre actif par question
+   Q.qms = temps déjà compté sur la question affichée ; Q.qt0 = début du comptage en cours (null = en pause) ;
+   Q.act = dernière action (clic, frappe) ; Q.mc = morceaux [début, fin] ; Q.seg0 = début du morceau ouvert.
+   Au plus INACTIF ms sont comptées entre deux actions : au-delà, le temps s'arrête et le morceau se ferme.
+   ============================================================ */
+const INACTIF = 120000;
+function chronoQ(){ const Q = S.quiz; return Q && !Q.done && S.screen === "quiz" ? Q : null; }
+function chronoCompte(Q, now){
+  if (Q.qt0 == null) return;
+  const fin = Math.min(now, (Q.act || Q.qt0) + INACTIF);
+  if (fin > Q.qt0) Q.qms = (Q.qms || 0) + (fin - Q.qt0);
+  if (now - (Q.act || Q.qt0) > INACTIF){ chronoFerme(Q, fin); Q.qt0 = null; return; }
+  Q.qt0 = now;
+}
+function chronoFerme(Q, fin){ if (Q.seg0 != null){ Q.mc = Q.mc || []; if (fin > Q.seg0) Q.mc.push([Q.seg0, fin]); Q.seg0 = null; } }
+function chronoMarche(){ const Q = chronoQ(); if (!Q || document.hidden) return; const now = Date.now(); chronoCompte(Q, now); if (Q.qt0 == null) Q.qt0 = now; if (Q.seg0 == null) Q.seg0 = now; Q.act = now; }
+function chronoPause(){ const Q = S.quiz; if (!Q || Q.qt0 == null) return; const now = Date.now(); chronoCompte(Q, now); if (Q.qt0 != null){ chronoFerme(Q, Math.min(now, (Q.act || now) + INACTIF)); Q.qt0 = null; } }
+function chronoPrend(Q){ chronoCompte(Q, Date.now()); const ms = Math.round(Q.qms || 0); Q.qms = 0; return ms; }
+function fmtDuree(ms){ const s = Math.round(ms / 1000); if (s < 60) return s + " s"; const m = Math.round(s / 60); if (m < 60) return m + " min"; return Math.floor(m / 60) + " h " + String(m % 60).padStart(2, "0"); }
+function heureCourte(t){ const d = new Date(t); return d.getHours() + " h " + String(d.getMinutes()).padStart(2, "0"); }
 
 /* ============================================================
    TEST EN COURS GARDÉ (§ 2)
@@ -2846,17 +2941,17 @@ function draftWrite(obj){
 function draftErrShow(){ const m = document.getElementById("draft-err"); if (m) m.hidden = !S.draftErr; }
 function draftSave(){
   const Q = S.quiz; if (!Q || Q.done) return;
-  const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => { const o = { u:x.user, c:x.correct }; if (x.typo) o.t = 1; if (x.liveFixed){ o.lf = 1; o.ls = x.liveSnap; } return o; }),
+  const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => { const o = { u:x.user, c:x.correct }; if (x.ms != null) o.ms = x.ms; if (x.typo) o.t = 1; if (x.liveFixed){ o.lf = 1; o.ls = x.liveSnap; } return o; }),
     picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok, liveFixed:!!Q.liveFixed, errSnap:Q.errSnap || "",
     label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "", rattrParent:S.rattrParent || null,
-    selected:S.selected, difficulty:S.difficulty, mode:S.mode, order:S.order };
+    selected:S.selected, difficulty:S.difficulty, mode:S.mode, order:S.order, qms:Math.round(Q.qms || 0), mc:(Q.mc || []).concat(Q.seg0 != null ? [[Q.seg0, Math.min(Date.now(), (Q.act || Date.now()) + INACTIF)]] : []) };
   const sig = JSON.stringify({ ...d, saved:0 }); if (sig === draftSig) return; draftSig = sig;
   S.draft = d; draftWrite(d);
 }
 function draftDetail(d){
   if (d.detail) return d.detail;
   return (d.answers || []).map((x, k) => { const q = d.questions[k];
-    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.t ? { typo:true } : {}), liveFixed:!!(x.lf || x.l), liveSnap:x.ls || x.s || "", expl:q.expl, tag:q.tag, question:q }; });
+    return { num:q.num, ex:q.ex, ref:q.exTitle, prompt:q.prompt, user:x.u, answer:q.answer, correct:x.c, ...(x.ms != null ? { ms:x.ms } : {}), ...(x.t ? { typo:true } : {}), liveFixed:!!(x.lf || x.l), liveSnap:x.ls || x.s || "", expl:q.expl, tag:q.tag, question:q }; });
 }
 const draftN = d => (d.answers || d.detail || []).length;
 const draftOk = d => !!(d && d.questions && d.questions.length && (d.answers || d.detail));
@@ -2867,9 +2962,9 @@ function draftResume(){
   S.selected = (d.selected || d.keys || DECKS.map(x => x.key)).filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
   if (ORDRES && d.order && ORDRES[d.order]) S.order = d.order;
   S.rattrapage = !!d.rattrapage; S.rattrLabel = d.rattrLabel || d.label || ""; S.rattrParent = d.rattrParent || d.parent || null;
-  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, liveFixed:!!d.liveFixed, hadErr:!!d.liveFixed, errSnap:d.errSnap || "", detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label };
+  S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, liveFixed:!!d.liveFixed, hadErr:!!d.liveFixed, errSnap:d.errSnap || "", detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label, qms:d.qms || 0, mc:d.mc || [], qt0:null, seg0:null };
   S.lastResult = null; S.storeMsg = ""; S.quitAsk = false; S.draftAsk = false; S.draftBlock = false; S.screen = "quiz";
-  render(); window.scrollTo(0,0);
+  chronoMarche(); render(); window.scrollTo(0,0);
 }
 function draftWhat(d){ return d.rattrapage ? "Rattrapage" : DIFFICULTIES[d.difficulty].label + " · " + (MODES[d.mode] || MODES.train).label; }
 function draftBanner(){
@@ -3066,9 +3161,9 @@ function updateLive(){
 /* ---------- quiz ---------- */
 function startQuiz(questions, rattrapage){
   if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
-  S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, start:Date.now(), label: rattrapage ? S.rattrLabel : deckLabel(S.selected) };
+  S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, start:Date.now(), label: rattrapage ? S.rattrLabel : deckLabel(S.selected), qms:0, mc:[], qt0:null, seg0:null };
   S.rattrapage = rattrapage; S.lastResult = null; S.storeMsg = ""; S.results.all = false; S.quitAsk = false; S.screen = "quiz";
-  draftSave(); render(); window.scrollTo(0,0);
+  chronoMarche(); draftSave(); render(); window.scrollTo(0,0);
 }
 function viewQuiz(){
   if (S.quitAsk) return quitView();
@@ -3117,16 +3212,17 @@ function record(val, correct, typo){
   const Q = S.quiz; if (Q.done) return;
   const q = Q.questions[Q.i];
   const liveFixed = !!(S.mode === "live" && Q.liveFixed);
-  const e = { num:q.num, ex:q.ex, ref:q.ref || q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "" };
+  const e = { num:q.num, ex:q.ex, ref:q.ref || q.exTitle, prompt:q.prompt, user:val || "", answer:q.answer, correct, expl:q.expl, tag:q.tag, question:q, liveFixed, liveSnap: liveFixed ? (Q.errSnap || "") : "", ms:chronoPrend(Q) };
   if (typo) e.typo = true;
   Q.detail.push(e);
   if (Q.i + 1 >= Q.questions.length){ Q.done = true; Q.finishing = true; render(); finishQuiz(); }
   else { Q.i++; Q.picked = null; Q.typed = ""; Q.checked = false; Q.ok = false; Q.hadErr = false; Q.errSnap = ""; Q.liveFixed = false; draftSave(); render(); }
 }
 async function finishQuiz(){
+  { const Q0 = S.quiz, now = Date.now(); chronoFerme(Q0, Math.min(now, (Q0.act || now) + INACTIF)); Q0.qt0 = null; }
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
   const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:OUTIL.branche, theme:THEME, deck:Q.label,
-    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, ...(ORDRES && ORDRES[S.order] ? { order:ORDRES[S.order].label } : {}), rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), questions:Q.detail };
+    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, ...(ORDRES && ORDRES[S.order] ? { order:ORDRES[S.order].label } : {}), rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, score, total, note:noteFrom(score/total), actif:Q.detail.reduce((s, x) => s + (x.ms || 0), 0), morceaux:(Q.mc || []).map(m => [Math.round(m[0]), Math.round(m[1])]), questions:Q.detail };
   S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
   try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Pense à noter ta note ou à l'exporter." : ""; }
   catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
@@ -3311,12 +3407,13 @@ function viewScores(){
   ${syncBloc()}
   <div class="stats"><div class="stat"><b>${roots.length}</b><span>tests</span></div><div class="stat"><b>${roots.length?fmtNote(best):"—"}</b><span>meilleure</span></div><div class="stat"><b>${roots.length?fmtNote(avg):"—"}</b><span>moyenne</span></div></div>
   ${suiviBlock()}
+  ${tempsBlock()}
   <p class="lab">Historique</p>
   <div class="rev">`;
   sorted.forEach(a => {
     const open = S.scores.open === a.id;
-    h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}${esc(chainTxt(a))}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
-    if (open) h += `<div class="attempt-body">${bilanBlock(a)}${questionList(a)}</div>`;
+    h += `<div class="attempt"><button class="attempt-head" data-act="openAttempt" data-v="${a.id}" aria-expanded="${open}"><span class="attempt-left"><b>${a.rattrapage ? `<span class="rattr-tag">Rattrapage</span>` : ""}${esc(a.deck)}</b><span>${esc(a.difficulty)} · ${esc(a.mode)} · ${dateLabel(a.date)} · ${a.score}/${a.total}${esc(chainTxt(a))}${a.actif != null ? " · ⏱ " + fmtDuree(a.actif) : ""}</span></span><span class="attempt-note ${a.note >= 4 ? "good" : "low"}">${fmtNote(a.note)}</span></button>`;
+    if (open) h += `<div class="attempt-body">${tempsTest(a)}${bilanBlock(a)}${questionList(a)}</div>`;
     h += `</div>`;
   });
   h += `</div><button class="ghost" data-act="exportToggle">${S.scores.exportOpen ? "Cacher la sauvegarde" : "💾 Exporter mes scores"}</button>`;
@@ -3433,7 +3530,7 @@ document.addEventListener("click", e => {
     case "start": S.rattrParent = null; startQuiz(S.frozen || buildTest(S.selected, S.difficulty, S.count, S.order), false); break;
     case "uml": case "key": { const inp = document.getElementById("answer-input"); if (!inp || inp.disabled) return; const s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s; inp.value = inp.value.slice(0, s) + v + inp.value.slice(en); Q.typed = inp.value; inp.focus(); inp.setSelectionRange(s + v.length, s + v.length); const b = document.getElementById("validate-btn"); if (b) b.disabled = !Q.typed.trim(); updateLive(); if (COUCHE.onSaisie) COUCHE.onSaisie(Q); break; }
     case "quit": S.quitAsk = true; render(); break;
-    case "quitKeep": draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
+    case "quitKeep": chronoPause(); draftSave(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
     case "quitDrop": draftClear(); S.quiz = null; S.quitAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); break;
     case "quitNo": S.quitAsk = false; render(); break;
     case "draftResume": draftResume(); break;
@@ -3483,8 +3580,10 @@ document.addEventListener("focusin", e => { if (e.target.classList && e.target.c
 /* le test en cours est aussi gardé quand la page passe en arrière-plan */
 /* … et ce qui attend d'être synchronisé part tout de suite (les envois répétés ne créent pas de doublon) */
 function syncAuDepart(){ if (!SYNC.on || !SYNC.file.length || !navigator.sendBeacon) return; try { navigator.sendBeacon(SYNC.url, JSON.stringify({ eleve:OUTIL.eleve, code:SYNC.code, action:"batch", ops:SYNC.file.slice(0, 20) })); } catch(e){} }
-document.addEventListener("visibilitychange", () => { if (document.hidden){ draftSave(); syncAuDepart(); } });
-window.addEventListener("pagehide", () => { draftSave(); syncAuDepart(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden){ chronoPause(); draftSave(); syncAuDepart(); } else chronoMarche(); });
+window.addEventListener("pagehide", () => { chronoPause(); draftSave(); syncAuDepart(); });
+/* chaque clic ou frappe pendant un test relance le chronomètre (et compte au plus 2 minutes depuis l'action précédente) */
+["pointerdown", "keydown", "input"].forEach(t => document.addEventListener(t, () => { if (chronoQ()) chronoMarche(); }, true));
 
 render();
 loadHistory();

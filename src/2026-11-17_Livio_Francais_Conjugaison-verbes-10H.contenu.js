@@ -77,7 +77,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-francais-conjugaison-verbes-10h";
 const DUE = { iso:"2026-11-17", long:"mardi 17 novembre", short:"17.11" };
 const THEME = "Conjugaison — les verbes du planning 10H";
-const VERSION = { n:4, date:"08.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule */
+const VERSION = { n:5, date:"15.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule · v5 : 15.11.2026, réassemblé sur le noyau v10 (temps de révision dans l'onglet Scores) ; contenu, cartes et historique inchangés */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
