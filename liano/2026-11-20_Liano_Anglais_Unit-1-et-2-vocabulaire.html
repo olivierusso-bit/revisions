@@ -396,7 +396,7 @@ const CSS_THEME = `
 const QUIZ_ID = "liano-quiz-anglais-unit1et2";
 const DUE = { iso:"2026-11-20", long:"vendredi 20 novembre", short:"20.11" };
 const THEME = "Unit 1 et Unit 2 (vocabulaire 1.1 à 2.5)";
-const VERSION = { n:3, date:"16.11.2026" };   /* v3 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) */
+const VERSION = { n:4, date:"16.11.2026" };   /* v3 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) · v4 : 16.11.2026, symboles des niveaux ○ □ ◆ ★ dessinés comme les points de la courbe (légende, jour après jour, notes par niveau, boutons de « Réviser mes erreurs » ; noyau v15) */
 /* v2 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13).
 /* v1 : 16.11.2026, première version — couche Langues (anglais), noyau v12 : tout le vocabulaire des Units 1 et 2,
    neuf paquets rangés comme les groupes surlignés du livre (1.1 à 1.4, 2.1 à 2.5). */
@@ -827,6 +827,13 @@ if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU)
    (○ □ ◆ ★, comme la courbe), « + » quand d'autres niveaux ont été joués ce jour-là, détail au survol et en touchant la case ;
    en haut de l'onglet Scores, les tuiles « meilleure » et « moyenne » sont remplacées par le tableau « notes par niveau » :
    ○ □ ◆ (tests faits à ce niveau, hors épreuves blanches) et ★ (épreuves blanches), avec tests, moyenne et meilleure note).
+   · 15 (16.11.2026 : symboles des niveaux dessinés — ○ Échauffement (rond), □ Entraînement (carré), ◆ Niveau épreuve (losange plein),
+   ★ Épreuve blanche (étoile) ne sont plus des caractères de texte : ils sont dessinés en SVG avec exactement les formes des points
+   de la courbe (formeNiv(), commune à la courbe et aux symboles), réduits à la taille du texte et alignés sur la ligne, dans la couleur
+   du texte (currentColor) ; partout où ils apparaissent : légende sous la courbe, cases, détail et légende de « … jour après jour »,
+   tableau des notes par niveau et sa phrase, trois boutons de niveau de « Réviser mes erreurs » ; dessin décoratif (aria-hidden),
+   le nom du niveau reste écrit ou lu ; les libellés des cases pour les lecteurs d'écran et au survol donnent le nom sans le caractère ;
+   NIV_SYMB reste défini (équivalent texte, repère du noyau v14 pour assembler.py) ; rien d'autre ne change).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -1392,7 +1399,7 @@ function barresSommaire(){
 }
 /* style des lignes, ajouté une fois à la page (variables du thème, clair et sombre) : nom | barre | N/M | bouton ;
    quand la ligne est trop étroite (téléphone), le bouton passe sous la barre */
-(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:3px;margin:2px 0 8px;container-type:inline-size;min-width:0}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-row{display:grid;grid-template-columns:7.6em minmax(40px,1fr) 3.6em max-content;align-items:center;column-gap:6px;row-gap:3px;min-height:26px;font-size:12px}.bt-niv{color:var(--soft);white-space:nowrap}.bt-bar{display:flex;gap:1px;min-width:0}.bt-c{flex:1 1 0;min-width:2px;height:8px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{color:var(--soft);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}.bt-go{width:auto;justify-self:start;padding:3px 9px;border:1px solid var(--rule);border-radius:var(--r-s,8px);background:var(--sheet);color:inherit;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}.bt-ok{font-weight:700;color:var(--soft);white-space:nowrap}@container (max-width:320px){.bt-row{grid-template-columns:7.6em minmax(0,1fr) 3.6em}.bt-go,.bt-ok{grid-column:2 / 4;grid-row:2}}.rev-niv{display:flex;gap:6px}.rev-niv .ghost{flex:1 1 0;min-width:0;width:auto;margin:0;padding:7px 4px;font-size:12.5px;line-height:1.2;white-space:normal}.rev-niv .ghost.on{background:var(--box);color:var(--sheet);border-color:var(--box)}.heat td[data-act]{cursor:pointer;white-space:nowrap}.heat td.hc-on{outline:2px solid var(--box);outline-offset:-2px}.hc-s{font-weight:700}.hc-plus{font-size:.75em;margin-left:1px}.heat-det{font-size:13px;margin:6px 0 0}.stats.un{grid-template-columns:1fr}.notesniv{margin:10px 0 4px}.notesniv td.k{white-space:nowrap}`; document.head.appendChild(st); } catch(e){} })();
+(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:3px;margin:2px 0 8px;container-type:inline-size;min-width:0}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-row{display:grid;grid-template-columns:7.6em minmax(40px,1fr) 3.6em max-content;align-items:center;column-gap:6px;row-gap:3px;min-height:26px;font-size:12px}.bt-niv{color:var(--soft);white-space:nowrap}.bt-bar{display:flex;gap:1px;min-width:0}.bt-c{flex:1 1 0;min-width:2px;height:8px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{color:var(--soft);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}.bt-go{width:auto;justify-self:start;padding:3px 9px;border:1px solid var(--rule);border-radius:var(--r-s,8px);background:var(--sheet);color:inherit;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}.bt-ok{font-weight:700;color:var(--soft);white-space:nowrap}@container (max-width:320px){.bt-row{grid-template-columns:7.6em minmax(0,1fr) 3.6em}.bt-go,.bt-ok{grid-column:2 / 4;grid-row:2}}.rev-niv{display:flex;gap:6px}.rev-niv .ghost{flex:1 1 0;min-width:0;width:auto;margin:0;padding:7px 4px;font-size:12.5px;line-height:1.2;white-space:normal}.rev-niv .ghost.on{background:var(--box);color:var(--sheet);border-color:var(--box)}.heat td[data-act]{cursor:pointer;white-space:nowrap}.heat td.hc-on{outline:2px solid var(--box);outline-offset:-2px}.hc-s{font-weight:700}.hc-plus{font-size:.75em;margin-left:1px}.heat-det{font-size:13px;margin:6px 0 0}.stats.un{grid-template-columns:1fr}.notesniv{margin:10px 0 4px}.notesniv td.k{white-space:nowrap}.nv{display:inline-block;width:1.05em;height:1.05em;vertical-align:-.17em;margin-right:.3em;overflow:visible;flex:none}.nvw{white-space:nowrap}.hc-s .nv{margin-right:.22em}.ch-legend .nv-leg{display:block}.ch-legend .nv-leg .nvw{display:inline}`; document.head.appendChild(st); } catch(e){} })();
 /* « Tester les X » : v = "<paquet>|<niveau>" (niveau -1 : un anneau, niveau des réglages) */
 function testerNonPoses(v){
   if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
@@ -1438,6 +1445,7 @@ function redoCards(v){
    Le test lancé par le bouton est un vrai test (pastilles, courbe, historique), marqué revErreurs: true, au niveau choisi sous le
    bouton (S.revNiv, Niveau épreuve par défaut), sans toucher au niveau des réglages du test. */
 const REV_LABEL = "Révision des erreurs";
+/* équivalent texte des symboles (v14) ; depuis la v15 l'écran les dessine (symbNiv) ; gardé comme repère du noyau v14 pour assembler.py */
 const NIV_SYMB = { easy:"○", normal:"□", hard:"◆" };
 /* une carte est-elle en erreur ? es = ses passages, du plus ancien au plus récent : { ok, day, lvl } */
 function enErreur(es){
@@ -1461,7 +1469,7 @@ function reviserBloc(){
   if (!n) return `<button class="ghost" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Aucune erreur à réviser 👍</button>`;
   const u = OUTIL.compte === "questions" ? "question" : "carte", niv = DIFFICULTIES[S.revNiv] ? S.revNiv : "hard";
   return `<div class="revbloc" style="display:flex;flex-direction:column;gap:6px"><button class="ghost on" data-act="reviserErreurs">🔁 Réviser mes erreurs (${n})</button>
-  <div class="rev-niv" role="group" aria-label="Niveau de la révision des erreurs">${NIV_KEYS.map(k => `<button class="ghost small${niv === k ? " on" : ""}" data-act="revNiv" data-v="${k}" aria-pressed="${niv === k}">${NIV_SYMB[k]} ${esc(DIFFICULTIES[k].label)}</button>`).join("")}</div>
+  <div class="rev-niv" role="group" aria-label="Niveau de la révision des erreurs">${NIV_KEYS.map(k => `<button class="ghost small${niv === k ? " on" : ""}" data-act="revNiv" data-v="${k}" aria-pressed="${niv === k}">${nomNiv(k, DIFFICULTIES[k].label)}</button>`).join("")}</div>
   <p class="fine">${motCartes(n)} ratée${n > 1 ? "s" : ""} au premier passage d'un test, tous ${esc(MOT_PAQUETS)} confondus · « Je m'entraîne », au niveau choisi juste au-dessus (${esc(DIFFICULTIES[niv].label)}). Une ${u} sort de la liste quand tu l'as réussie deux jours différents, au niveau où tu l'as ratée ou à un niveau plus difficile. Tu peux t'arrêter en cours de route : ✕, puis « Garder pour plus tard ».</p></div>`;
 }
 function reviserErreurs(){
@@ -1501,13 +1509,21 @@ function resistant(){
     if (twins.some(y => y.tag !== x.tag)) x.word += " · " + (TAG_LABEL[x.tag] || x.tag); else if (x.hint) x.word += " (" + x.hint + ")"; });
   return out;
 }
-function shapeSvg(a, x, y){
-  const f = `fill="var(--box)" stroke="var(--sheet)" stroke-width="2"`;
-  if (isExam(a)){ const p = []; for (let i = 0; i < 10; i++){ const r = i % 2 ? 3.6 : 8.5, t = Math.PI/5*i - Math.PI/2; p.push((x + r*Math.cos(t)).toFixed(1) + "," + (y + r*Math.sin(t)).toFixed(1)); } return `<polygon points="${p.join(" ")}" ${f}/>`; }
-  if (a.difficulty === DIFFICULTIES.easy.label) return `<circle cx="${x}" cy="${y}" r="6" ${f}/>`;
-  if (a.difficulty === DIFFICULTIES.normal.label) return `<rect x="${x-6}" y="${y-6}" width="12" height="12" ${f}/>`;
+/* v15 : forme d'un niveau, la même pour les points de la courbe et pour les symboles dessinés dans le texte (symbNiv) :
+   easy = rond ○, normal = carré □, hard = losange plein ◆ (le carré tourné de 45°), exam = étoile ★ (épreuve blanche) */
+function formeNiv(k, x, y, f){
+  if (k === "exam"){ const p = []; for (let i = 0; i < 10; i++){ const r = i % 2 ? 3.6 : 8.5, t = Math.PI/5*i - Math.PI/2; p.push((x + r*Math.cos(t)).toFixed(1) + "," + (y + r*Math.sin(t)).toFixed(1)); } return `<polygon points="${p.join(" ")}" ${f}/>`; }
+  if (k === "easy") return `<circle cx="${x}" cy="${y}" r="6" ${f}/>`;
+  if (k === "normal") return `<rect x="${x-6}" y="${y-6}" width="12" height="12" ${f}/>`;
   return `<polygon points="${x},${y-8} ${x+8},${y} ${x},${y+8} ${x-8},${y}" ${f}/>`;
 }
+function formeDe(a){ return isExam(a) ? "exam" : a.difficulty === DIFFICULTIES.easy.label ? "easy" : a.difficulty === DIFFICULTIES.normal.label ? "normal" : "hard"; }
+function shapeSvg(a, x, y){ return formeNiv(formeDe(a), x, y, `fill="var(--box)" stroke="var(--sheet)" stroke-width="2"`); }
+/* symbole dessiné d'un niveau, à la taille du texte et dans sa couleur ; décoratif : le nom du niveau est toujours écrit à côté */
+const symbNiv = k => `<svg class="nv" viewBox="-9 -9 18 18" aria-hidden="true" focusable="false">${formeNiv(k, 0, 0, 'fill="currentColor"')}</svg>`;
+/* symbole + nom ; le symbole reste collé au premier mot quand le libellé passe à la ligne */
+function nomNiv(k, nom){ const t = esc(nom), i = t.indexOf(" "); return `<span class="nvw">${symbNiv(k)}${i < 0 ? t : t.slice(0, i)}</span>${i < 0 ? "" : t.slice(i)}`; }
+const LEGENDE_NIV = () => `${nomNiv("easy", "Échauffement")} · ${nomNiv("normal", "Entraînement")} · ${nomNiv("hard", "Niveau épreuve")} · ${nomNiv("exam", "Épreuve blanche")}`;
 function suiviChart(){
   const s = S.suivi;
   let tests = rootTests(); if (s.f === "exam") tests = tests.filter(a => a.difficulty === DIFFICULTIES.hard.label || isExam(a));
@@ -1535,7 +1551,7 @@ function suiviChart(){
     <span>Sans aide : ${sc.score} juste${sc.score>1?"s":""} sur ${sc.total} → note ${fmtNote(sc.note)}${sc.typos?` (dont ${sc.typos} faute${sc.typos>1?"s":""} de frappe acceptée${sc.typos>1?"s":""})`:""}</span>
     ${sc.steps.map((st, k) => `<span>${k+1}${k?"e":"er"} rattrapage : ${st.ok} sur ${st.asked} → note ${fmtNote(st.note)}</span>`).join("")}
     <button class="ghost small" data-act="openAttempt" data-v="${a.id}">Voir les questions de ce test</button></div>`; }
-  return `<div class="ch-legend"><span><i class="lg-line"></i>Note du test, sans aide</span><span><i class="lg-ring"></i>Après « Refaire mes erreurs »</span><span>○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche</span></div>
+  return `<div class="ch-legend"><span><i class="lg-line"></i>Note du test, sans aide</span><span><i class="lg-ring"></i>Après « Refaire mes erreurs »</span><span class="nv-leg">${LEGENDE_NIV()}</span></div>
   <div class="ch-wrap"><svg class="ch-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des notes sans aide, avec la remontée après les rattrapages">${g}</svg></div>
   <p class="fine">Touche un point pour voir le détail du test.</p>${detail}`;
 }
@@ -1547,7 +1563,7 @@ function heatGroupes(tests, dk, day){
   tests.filter(a => dayOf(a.date) === day).forEach(a => {
     const qs = a.questions.filter(inChap(dk)); if (!qs.length) return;
     const lvl = LVL_OF_LABEL[a.difficulty] != null ? LVL_OF_LABEL[a.difficulty] : 1, ex = isExam(a), cle = lvl + (ex ? "x" : "");
-    const e = g[cle] = g[cle] || { rang:lvl * 2 + (ex ? 1 : 0), symb:ex ? "★" : NIV_SYMB[NIV_KEYS[lvl]], nom:ex ? "Épreuve blanche (" + DIFFICULTIES[NIV_KEYS[lvl]].label + ")" : DIFFICULTIES[NIV_KEYS[lvl]].label, n:0, ok:0 };
+    const e = g[cle] = g[cle] || { rang:lvl * 2 + (ex ? 1 : 0), forme:ex ? "exam" : NIV_KEYS[lvl], nom:ex ? "Épreuve blanche (" + DIFFICULTIES[NIV_KEYS[lvl]].label + ")" : DIFFICULTIES[NIV_KEYS[lvl]].label, n:0, ok:0 };
     e.n += qs.length; e.ok += qs.filter(x => x.correct).length;
   });
   return Object.values(g).map(e => ({ ...e, pc:Math.round(e.ok / e.n * 100) })).sort((a, b) => b.rang - a.rang);
@@ -1558,19 +1574,21 @@ function suiviHeat(){
   const tested = new Set(tests.flatMap(a => a.questions.map(chapOfQ)));
   const chs = DECKS.filter(d => tested.has(d.key)), rest = DECKS.filter(d => !tested.has(d.key));
   const lab = d => { const [y, m, j] = d.split("-"); return j.padStart(2,"0") + "." + m.padStart(2,"0"); };
-  const txt = gs => gs.map(e => `${e.symb} ${e.nom} : ${e.pc} % (${e.ok} juste${e.ok > 1 ? "s" : ""} sur ${e.n})`).join(" · ");
+  const ligne = e => ` : ${e.pc} % (${e.ok} juste${e.ok > 1 ? "s" : ""} sur ${e.n})`;
+  const txt = gs => gs.map(e => e.nom + ligne(e)).join(" · ");
+  const txtHtml = gs => gs.map(e => nomNiv(e.forme, e.nom) + esc(ligne(e))).join(" · ");
   let h = `<div class="tbl heat"><table><thead><tr><th>${esc(OUTIL.motPaquet)}</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`, detail = "";
   chs.forEach(d => {
     h += `<tr><td class="k">${esc(d.emoji)} ${esc(d.title)}</td>` + days.map(day => {
       const gs = heatGroupes(tests, d.key, day);
       if (!gs.length) return `<td class="hc-0">·</td>`;
       const top = gs[0], n = noteFrom(top.pc / 100), cle = d.key + "|" + day, on = S.suivi.cell === cle, plus = gs.length > 1;
-      if (on) detail = `<p class="heat-det" aria-live="polite"><b>${esc(d.title)} · ${lab(day)}</b> — ${esc(txt(gs))}</p>`;
+      if (on) detail = `<p class="heat-det" aria-live="polite"><b>${esc(d.title)} · ${lab(day)}</b> — ${txtHtml(gs)}</p>`;
       const lib = `${d.title}, ${lab(day)} : ${txt(gs)}`;
-      return `<td class="${n>=5?"hc-ok":n>=4?"hc-mid":"hc-low"}${on ? " hc-on" : ""}" data-act="heatCell" data-v="${esc(cle)}" role="button" tabindex="0" title="${esc(lib)}" aria-label="${esc(lib)}"><span class="hc-s" aria-hidden="true">${top.symb}</span> ${top.pc}${n>=5?" ✓":""}${plus ? `<sup class="hc-plus" aria-hidden="true">+</sup>` : ""}</td>`;
+      return `<td class="${n>=5?"hc-ok":n>=4?"hc-mid":"hc-low"}${on ? " hc-on" : ""}" data-act="heatCell" data-v="${esc(cle)}" role="button" tabindex="0" title="${esc(lib)}" aria-label="${esc(lib)}"><span class="hc-s" aria-hidden="true">${symbNiv(top.forme)}</span>${top.pc}${n>=5?" ✓":""}${plus ? `<sup class="hc-plus" aria-hidden="true">+</sup>` : ""}</td>`;
     }).join("") + `</tr>`;
   });
-  return h + `</tbody></table></div>${detail}${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par ${esc(OUTIL.motPaquet.toLowerCase())} et par jour (6 derniers jours), au test le plus exigeant du jour : ○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche. « + » : d'autres niveaux ce jour-là, touche la case pour les voir. Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
+  return h + `</tbody></table></div>${detail}${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par ${esc(OUTIL.motPaquet.toLowerCase())} et par jour (6 derniers jours), au test le plus exigeant du jour : ${LEGENDE_NIV()}. « + » : d'autres niveaux ce jour-là, touche la case pour les voir. Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
 }
 function suiviBlock(){
   const s = S.suivi;
@@ -2141,14 +2159,14 @@ function viewResults(){
    faits à ce niveau, ★ pour les épreuves blanches, quel que soit leur niveau ; « — » pour un niveau jamais testé */
 function notesParNiveau(roots){
   if (!roots.length) return "";
-  const lignes = [...NIV_KEYS.map(k => ({ symb:NIV_SYMB[k], nom:DIFFICULTIES[k].label, as:roots.filter(a => !isExam(a) && a.difficulty === DIFFICULTIES[k].label) })),
-    { symb:"★", nom:"Épreuve blanche", as:roots.filter(isExam) }];
+  const lignes = [...NIV_KEYS.map(k => ({ forme:k, nom:DIFFICULTIES[k].label, as:roots.filter(a => !isExam(a) && a.difficulty === DIFFICULTIES[k].label) })),
+    { forme:"exam", nom:"Épreuve blanche", as:roots.filter(isExam) }];
   const cl = n => n >= 5 ? "hc-ok" : n >= 4 ? "hc-mid" : "hc-low";
   return `<div class="tbl heat notesniv"><table><thead><tr><th>Niveau</th><th>Tests</th><th>Moyenne</th><th>Meilleure</th></tr></thead><tbody>${lignes.map(l => {
-    if (!l.as.length) return `<tr><td class="k">${l.symb} ${esc(l.nom)}</td><td class="hc-0">0</td><td class="hc-0">—</td><td class="hc-0">—</td></tr>`;
+    if (!l.as.length) return `<tr><td class="k">${nomNiv(l.forme, l.nom)}</td><td class="hc-0">0</td><td class="hc-0">—</td><td class="hc-0">—</td></tr>`;
     const moy = l.as.reduce((s, a) => s + a.note, 0) / l.as.length, best = Math.max(...l.as.map(a => a.note));
-    return `<tr><td class="k">${l.symb} ${esc(l.nom)}</td><td>${l.as.length}</td><td class="${cl(moy)}">${fmtNote(moy)}</td><td>${fmtNote(best)}</td></tr>`; }).join("")}</tbody></table></div>
-  <p class="fine">Notes sans aide (premier passage), rattrapages exclus ; moyenne arrondie au dixième. ★ : épreuves blanches, quel que soit leur niveau. La ligne ◆ et la ligne ★ sont celles qui ressemblent le plus à l'épreuve.</p>`;
+    return `<tr><td class="k">${nomNiv(l.forme, l.nom)}</td><td>${l.as.length}</td><td class="${cl(moy)}">${fmtNote(moy)}</td><td>${fmtNote(best)}</td></tr>`; }).join("")}</tbody></table></div>
+  <p class="fine">Notes sans aide (premier passage), rattrapages exclus ; moyenne arrondie au dixième. ${nomNiv("exam", "Épreuve blanche")} : quel que soit le niveau. La ligne ${nomNiv("hard", "Niveau épreuve")} et la ligne ${nomNiv("exam", "Épreuve blanche")} sont celles qui ressemblent le plus à l'épreuve.</p>`;
 }
 function viewScores(){
   if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
