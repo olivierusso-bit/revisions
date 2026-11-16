@@ -33,6 +33,9 @@ après base.css, et ses métadonnées (titre, polices, date) dans OUTIL et DUE, 
 #   complet mesurée contre la limite de 256 Kio d'un document Claude (erreur au-delà de 248 Kio, avertissement dès 224 Kio))
 # · 5 (14.11.2026, noyau v10 : le test joué vérifie que le temps de révision est enregistré — actif, morceaux, ms de chaque question)
 # · 6 (15.11.2026, noyau v11 : contrôle 6, « Réviser mes erreurs » sur un historique simulé)
+# · 7 (16.11.2026, noyau v14 : contrôle 6 complété — sortie de la liste au niveau de l'erreur ou plus haut (une réussite plus facile
+#   ne compte pas), test lancé au niveau choisi sous le bouton (Niveau épreuve) sans toucher au niveau des réglages, « Refaire ces
+#   cartes » ne change plus les réglages)
 import json, os, re, subprocess, sys, tempfile, datetime
 
 ICI = os.path.dirname(os.path.abspath(__file__))
@@ -202,8 +205,8 @@ def controle_revision(pg):
       window.__garde = S.attempts;
       const j0 = new Date(); j0.setHours(10, 0, 0, 0); const J = n => j0.getTime() - (10 - n) * 864e5;
       let id = 1;
-      const essai = (t, ok, ratt) => ({ id:"sim" + (id++), quiz:QUIZ_ID, date:t, branche:OUTIL.branche, theme:THEME, deck:"historique simulé",
-        difficulty:"Entraînement", mode:"Je m'entraîne", rattrapage:!!ratt, parent:null, score:ok ? 1 : 0, total:1, note:ok ? 6 : 1, actif:1000, morceaux:[[t, t + 1000]],
+      const essai = (t, ok, ratt, niv) => ({ id:"sim" + (id++), quiz:QUIZ_ID, date:t, branche:OUTIL.branche, theme:THEME, deck:"historique simulé",
+        difficulty:niv || "Entraînement", mode:"Je m'entraîne", rattrapage:!!ratt, parent:null, score:ok ? 1 : 0, total:1, note:ok ? 6 : 1, actif:1000, morceaux:[[t, t + 1000]],
         questions:[{ num:1, ex:1, ref:"", prompt:q.prompt, user:ok ? q.answer : "", answer:q.answer, correct:ok, expl:q.expl, tag:q.tag, question:q, liveFixed:false, liveSnap:"", ms:1000 }] });
       const pas = [];
       const etape = (nom, att, attendu) => { if (att) S.attempts = [att, ...S.attempts]; const obtenu = cartesEnErreur().includes(k); pas.push({ nom, attendu, obtenu, ok:obtenu === attendu }); };
@@ -215,7 +218,18 @@ def controle_revision(pg):
       etape("réussite un autre jour", essai(J(3), true), false);
       etape("erreur dans un rattrapage (ne compte pas)", essai(J(3) + 7200e3, false, true), false);
       etape("nouvelle erreur", essai(J(4), false), true);
+      const v14 = typeof NIV_SYMB !== "undefined";
+      if (v14){
+        etape("réussite en Échauffement un autre jour (plus facile : ne compte pas)", essai(J(5), true, false, "Échauffement"), true);
+        etape("réussite en Échauffement encore un autre jour (ne compte pas)", essai(J(6), true, false, "Échauffement"), true);
+        etape("réussite au Niveau épreuve (plus difficile : compte)", essai(J(7), true, false, "Niveau épreuve"), true);
+        etape("réussite à l'Entraînement un autre jour (même niveau : sort)", essai(J(8), true), false);
+        etape("erreur au Niveau épreuve", essai(J(8) + 3600e3, false, false, "Niveau épreuve"), true);
+        etape("réussite à l'Entraînement un autre jour (plus facile : reste)", essai(J(9), true), true);
+        etape("réussite à l'Entraînement encore un autre jour (plus facile : reste)", essai(J(10) - 3600e3, true), true);
+      }
       const n = cartesEnErreur().length;
+      S.difficulty = "easy"; S.revNiv = "hard";
       S.draft = null; S.screen = "home"; render();
       const bt = document.querySelector("[data-act=reviserErreurs]");
       const paquets = !!bt && bt.textContent.includes("Réviser mes erreurs (" + n + ")");
@@ -223,13 +237,13 @@ def controle_revision(pg):
       const scores = !!document.querySelector(".suivi [data-act=reviserErreurs]");
       S.screen = "home"; render(); document.querySelector("[data-act=reviserErreurs]").click();
       const lance = S.screen === "quiz" && !!S.quiz && S.quiz.questions.some(x => x.card === k) && S.quiz.questions.length === n
-        && S.mode === "train" && S.quiz.label.startsWith(REV_LABEL);
+        && S.mode === "train" && S.quiz.label.startsWith(REV_LABEL) && (!v14 || (S.qDiff === "hard" && S.difficulty === "easy"));
       /* sans rejouer à l'identique : quand la carte peut changer d'énoncé (conjugaison : autre personne), il change */
       const nouveau = lance ? S.quiz.questions.find(x => x.card === k).prompt : "";
       let possible = false;
-      for (let t = 0; t < 20 && !possible; t++) possible = buildTest([c.dk], S.difficulty, 0, ORDRES ? Object.keys(ORDRES)[0] : "").some(x => x.card === k && x.prompt !== q.prompt);
+      for (let t = 0; t < 20 && !possible; t++) possible = buildTest([c.dk], v14 ? S.revNiv : S.difficulty, 0, ORDRES ? Object.keys(ORDRES)[0] : "").some(x => x.card === k && x.prompt !== q.prompt);
       const autre = !possible || nouveau !== q.prompt;
-      return { k, pas, n, paquets, scores, lance, autre, possible };
+      return { k, pas, n, paquets, scores, lance, autre, possible, v14 };
     }""")
     if r.get("absent"):
         print("réviser mes erreurs : MANQUE (cartesEnErreur absente du noyau)"); return False
@@ -240,6 +254,14 @@ def controle_revision(pg):
     fin = pg.evaluate("""() => {
       const a = S.lastResult, fini = !!a && a.revErreurs === true && !a.rattrapage && a.deck.startsWith(REV_LABEL) && a.score === a.total;
       const histo = fini && S.attempts[0] && S.attempts[0].id === a.id;
+      /* v14 : la révision est enregistrée au niveau choisi, les réglages n'ont pas bougé ; « Refaire ces cartes » non plus */
+      let niveaux = true;
+      if (typeof NIV_SYMB !== "undefined"){
+        niveaux = !!a && a.difficulty === "Niveau épreuve" && S.difficulty === "easy";
+        S.screen = "scores"; render(); const rc = document.querySelector("[data-act=redoCards][data-v=resist]");
+        if (rc){ rc.click(); niveaux = niveaux && S.screen === "quiz" && S.qDiff === "hard" && S.difficulty === "easy"; draftClear(); S.quiz = null; }
+        S.difficulty = "normal";
+      }
       /* un seul test à la fois : un test gardé pour plus tard bloque le bouton */
       S.screen = "setup"; render(); document.querySelector("[data-act=start]").click();
       document.querySelector("[data-act=quit]").click(); document.querySelector("[data-act=quitKeep]").click();
@@ -251,12 +273,13 @@ def controle_revision(pg):
       S.attempts = []; S.screen = "home"; render();
       const gris = [...document.querySelectorAll("button[disabled]")].some(x => x.textContent.includes("Aucune erreur à réviser 👍"));
       S.attempts = window.__garde || []; S.lastResult = null; S.screen = "home"; render();
-      return { fini, histo, bloque, gris };
+      return { fini, histo, bloque, gris, niveaux };
     }""")
-    ok = ok and fin["fini"] and fin["histo"] and fin["bloque"] and fin["gris"]
+    ok = ok and fin["fini"] and fin["histo"] and fin["bloque"] and fin["gris"] and fin["niveaux"]
     print("réviser mes erreurs (historique simulé) :", " · ".join(f"{x['nom']} → {'dans la liste' if x['obtenu'] else 'hors liste'}{'' if x['ok'] else ' ✗'}" for x in r["pas"]))
     print(f"réviser mes erreurs (bouton) : Paquets {'OK' if r['paquets'] else 'MANQUE'} (N = {r['n']}) · Scores {'OK' if r['scores'] else 'MANQUE'} · test lancé {'OK' if r['lance'] else 'MANQUE'}"
           f" · question tirée à nouveau {('OK, autre énoncé' if r['possible'] else 'OK (la carte a un seul énoncé)') if r['autre'] else 'MANQUE (même énoncé)'}"
+          f"{(' · niveau choisi sous le bouton, réglages intacts ' + ('OK' if fin['niveaux'] else 'MANQUE')) if r.get('v14') else ''}"
           f" · terminé et marqué {'OK' if fin['fini'] and fin['histo'] else 'MANQUE'} · un seul test à la fois {'OK' if fin['bloque'] else 'MANQUE'} · grisé sans erreur {'OK' if fin['gris'] else 'MANQUE'}"
           f" → {'OK' if ok else 'ÉCHEC'}")
     return ok

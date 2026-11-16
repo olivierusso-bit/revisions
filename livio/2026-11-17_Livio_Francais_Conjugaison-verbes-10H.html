@@ -425,7 +425,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-francais-conjugaison-verbes-10h";
 const DUE = { iso:"2026-11-17", long:"mardi 17 novembre", short:"17.11" };
 const THEME = "Conjugaison — les verbes du planning 10H";
-const VERSION = { n:8, date:"16.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule · v5 : 14.11.2026, temps de révision dans l'onglet Scores (noyau v10) · v6 : 15.11.2026, bouton « 🔁 Réviser mes erreurs » sur l'écran Paquets et dans l'onglet Scores (noyau v11) · v7 : 15.11.2026, cercles calculés sur les cartes déjà posées, barre des cartes testées et « Tester les X pas encore posés » (noyau v12) · v8 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13) */
+const VERSION = { n:9, date:"16.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule · v5 : 14.11.2026, temps de révision dans l'onglet Scores (noyau v10) · v6 : 15.11.2026, bouton « 🔁 Réviser mes erreurs » sur l'écran Paquets et dans l'onglet Scores (noyau v11) · v7 : 15.11.2026, cercles calculés sur les cartes déjà posées, barre des cartes testées et « Tester les X pas encore posés » (noyau v12) · v8 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13) · v9 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -963,6 +963,15 @@ if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU)
    réglages ; à 390 px, le bouton passe sous la barre quand la place manque ; l'ancien bouton « Tester les X pas encore posés »
    est retiré ; même chose sous la pastille générale, sous chaque paquet, dans la Fiche et dans le sommaire du Dossier ;
    cercles et « Réviser mes erreurs » inchangés).
+   · 14 (16.11.2026 : « Réviser mes erreurs » avec son propre choix de niveau — trois boutons ○ Échauffement, □ Entraînement,
+   ◆ Niveau épreuve sous le bouton (Niveau épreuve par défaut, indépendant des réglages du test) ; une carte ne sort de la liste
+   que réussie deux jours différents au niveau de son erreur ou plus haut (le plus haut niveau raté depuis son entrée dans la liste) ;
+   aucune limite de cartes ; le niveau du test en cours (S.qDiff) est séparé du niveau des réglages (S.difficulty) : « Refaire ces
+   cartes », « Tester les X », « Réviser mes erreurs », un rattrapage ou un test repris ne changent plus les réglages ;
+   « Mes … jour après jour » : chaque case montre le pourcentage du test le plus exigeant du jour, précédé de son symbole
+   (○ □ ◆ ★, comme la courbe), « + » quand d'autres niveaux ont été joués ce jour-là, détail au survol et en touchant la case ;
+   en haut de l'onglet Scores, les tuiles « meilleure » et « moyenne » sont remplacées par le tableau « notes par niveau » :
+   ○ □ ◆ (tests faits à ce niveau, hors épreuves blanches) et ★ (épreuves blanches), avec tests, moyenne et meilleure note).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -1234,7 +1243,7 @@ const S = {
   cards:{ order:[], pos:0, flip:false },
   results:{ all:false },
   scores:{ open:null, exportOpen:false, confirm:false },
-  suivi:{ ch:"all", f:"all", pt:null },
+  suivi:{ ch:"all", f:"all", pt:null, cell:null }, revNiv:"hard", qDiff:"normal",
   bilan:{},
   draft:null, draftAsk:false, draftBlock:false, draftErr:false, quitAsk:false,
 };
@@ -1528,7 +1537,7 @@ function barresSommaire(){
 }
 /* style des lignes, ajouté une fois à la page (variables du thème, clair et sombre) : nom | barre | N/M | bouton ;
    quand la ligne est trop étroite (téléphone), le bouton passe sous la barre */
-(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:3px;margin:2px 0 8px;container-type:inline-size;min-width:0}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-row{display:grid;grid-template-columns:7.6em minmax(40px,1fr) 3.6em max-content;align-items:center;column-gap:6px;row-gap:3px;min-height:26px;font-size:12px}.bt-niv{color:var(--soft);white-space:nowrap}.bt-bar{display:flex;gap:1px;min-width:0}.bt-c{flex:1 1 0;min-width:2px;height:8px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{color:var(--soft);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}.bt-go{width:auto;justify-self:start;padding:3px 9px;border:1px solid var(--rule);border-radius:var(--r-s,8px);background:var(--sheet);color:inherit;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}.bt-ok{font-weight:700;color:var(--soft);white-space:nowrap}@container (max-width:320px){.bt-row{grid-template-columns:7.6em minmax(0,1fr) 3.6em}.bt-go,.bt-ok{grid-column:2 / 4;grid-row:2}}`; document.head.appendChild(st); } catch(e){} })();
+(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:3px;margin:2px 0 8px;container-type:inline-size;min-width:0}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-row{display:grid;grid-template-columns:7.6em minmax(40px,1fr) 3.6em max-content;align-items:center;column-gap:6px;row-gap:3px;min-height:26px;font-size:12px}.bt-niv{color:var(--soft);white-space:nowrap}.bt-bar{display:flex;gap:1px;min-width:0}.bt-c{flex:1 1 0;min-width:2px;height:8px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{color:var(--soft);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}.bt-go{width:auto;justify-self:start;padding:3px 9px;border:1px solid var(--rule);border-radius:var(--r-s,8px);background:var(--sheet);color:inherit;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}.bt-ok{font-weight:700;color:var(--soft);white-space:nowrap}@container (max-width:320px){.bt-row{grid-template-columns:7.6em minmax(0,1fr) 3.6em}.bt-go,.bt-ok{grid-column:2 / 4;grid-row:2}}.rev-niv{display:flex;gap:6px}.rev-niv .ghost{flex:1 1 0;min-width:0;width:auto;margin:0;padding:7px 4px;font-size:12.5px;line-height:1.2;white-space:normal}.rev-niv .ghost.on{background:var(--box);color:var(--sheet);border-color:var(--box)}.heat td[data-act]{cursor:pointer;white-space:nowrap}.heat td.hc-on{outline:2px solid var(--box);outline-offset:-2px}.hc-s{font-weight:700}.hc-plus{font-size:.75em;margin-left:1px}.heat-det{font-size:13px;margin:6px 0 0}.stats.un{grid-template-columns:1fr}.notesniv{margin:10px 0 4px}.notesniv td.k{white-space:nowrap}`; document.head.appendChild(st); } catch(e){} })();
 /* « Tester les X » : v = "<paquet>|<niveau>" (niveau -1 : un anneau, niveau des réglages) */
 function testerNonPoses(v){
   if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
@@ -1544,8 +1553,8 @@ function testerNonPoses(v){
   /* numérotation unique du test, un exercice par paquet et par consigne (« Version papier ») */
   let n = 0, ex = 0, prec = null;
   qs.forEach(q => { const bloc = q.deckKey + "|" + q.consigne; if (bloc !== prec){ ex++; prec = bloc; } q.ex = ex; q.num = ++n; });
-  S.selected = decks; S.difficulty = diff; S.mode = "train"; S.frozen = null; S.rattrParent = null;
-  startQuiz(qs, false);
+  S.selected = decks; S.mode = "train"; S.frozen = null; S.rattrParent = null;
+  startQuiz(qs, false, { diff });
 }
 
 /* lancer un test sur des cartes précises (refaire à revoir / cartes qui résistent / perdues) */
@@ -1561,25 +1570,33 @@ function redoCards(v){
   const qs = buildTest(decks, "hard", 0, ORDRES ? Object.keys(ORDRES)[0] : "").filter(q => keys.has(q.card));
   if (!qs.length) return;
   let n = 0; qs.forEach(q => { q.num = ++n; });
-  S.selected = decks; S.difficulty = "hard"; S.mode = "train"; S.frozen = null;
-  startQuiz(qs, false);
+  S.selected = decks; S.mode = "train"; S.frozen = null;
+  startQuiz(qs, false, { diff:"hard" });
 }
 
-/* ----- « Réviser mes erreurs » (v11) : toutes les cartes en erreur, tous paquets confondus -----
+/* ----- « Réviser mes erreurs » (v11, niveaux v14) : toutes les cartes en erreur, tous paquets confondus -----
    Une carte entre dans la liste dès qu'elle est ratée au premier passage d'un test (« Je ne sais pas » et mot corrigé en direct
-   comptent comme ratés ; les rattrapages ne comptent jamais). Elle en sort quand, après sa dernière erreur, elle a été réussie
-   au premier passage de tests faits deux jours différents. Une nouvelle erreur la remet dans la liste.
-   Le test lancé par le bouton est un vrai test (pastilles, courbe, historique), marqué revErreurs: true. */
+   comptent comme ratés ; les rattrapages ne comptent jamais). Elle en sort quand, après être entrée, elle a été réussie au premier
+   passage de tests faits deux jours différents, À SON NIVEAU OU PLUS HAUT (v14) : le niveau exigé est le plus haut niveau où elle a
+   été ratée depuis son entrée dans la liste (0 Échauffement, 1 Entraînement, 2 Niveau épreuve) ; une réussite à un niveau plus facile
+   ne compte pas. Une nouvelle erreur remet le compte des jours à zéro.
+   Le test lancé par le bouton est un vrai test (pastilles, courbe, historique), marqué revErreurs: true, au niveau choisi sous le
+   bouton (S.revNiv, Niveau épreuve par défaut), sans toucher au niveau des réglages du test. */
 const REV_LABEL = "Révision des erreurs";
-/* une carte est-elle en erreur ? es = ses passages, du plus ancien au plus récent : { ok, day } */
+const NIV_SYMB = { easy:"○", normal:"□", hard:"◆" };
+/* une carte est-elle en erreur ? es = ses passages, du plus ancien au plus récent : { ok, day, lvl } */
 function enErreur(es){
-  let last = -1; es.forEach((e, i) => { if (!e.ok) last = i; });
-  if (last < 0) return false;
-  return new Set(es.slice(last + 1).filter(e => e.ok).map(e => e.day)).size < 2;
+  let dans = false, exige = -1, jours = new Set();
+  es.forEach(e => {
+    const l = e.lvl == null ? 0 : e.lvl;
+    if (!e.ok){ exige = dans ? Math.max(exige, l) : l; dans = true; jours = new Set(); return; }
+    if (dans && l >= exige){ jours.add(e.day); if (jours.size >= 2){ dans = false; exige = -1; } }
+  });
+  return dans;
 }
 function cartesEnErreur(){
   const h = {};
-  rootTests().forEach(a => (a.questions || []).forEach(x => { const k = qCardKey(x); if (!CARD[k]) return; (h[k] = h[k] || []).push({ ok:!!x.correct, day:dayOf(a.date) }); }));
+  rootTests().forEach(a => { const lvl = LVL_OF_LABEL[a.difficulty]; (a.questions || []).forEach(x => { const k = qCardKey(x); if (!CARD[k]) return; (h[k] = h[k] || []).push({ ok:!!x.correct, day:dayOf(a.date), lvl }); }); });
   return CARDS.map(c => c.k).filter(k => h[k] && enErreur(h[k]));
 }
 function motCartes(n){ const m = OUTIL.compte === "questions" ? "question" : "carte"; return n + " " + m + (n > 1 ? "s" : ""); }
@@ -1587,19 +1604,22 @@ function reviserBloc(){
   if (!S.loaded) return "";
   const n = cartesEnErreur().length;
   if (!n) return `<button class="ghost" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Aucune erreur à réviser 👍</button>`;
+  const u = OUTIL.compte === "questions" ? "question" : "carte", niv = DIFFICULTIES[S.revNiv] ? S.revNiv : "hard";
   return `<div class="revbloc" style="display:flex;flex-direction:column;gap:6px"><button class="ghost on" data-act="reviserErreurs">🔁 Réviser mes erreurs (${n})</button>
-  <p class="fine">${motCartes(n)} ratée${n > 1 ? "s" : ""} au premier passage d'un test, tous ${esc(MOT_PAQUETS)} confondus · « Je m'entraîne », ${esc(DIFFICULTIES[S.difficulty].label)}. Une ${OUTIL.compte === "questions" ? "question" : "carte"} sort de la liste quand tu l'as réussie deux jours différents.</p></div>`;
+  <div class="rev-niv" role="group" aria-label="Niveau de la révision des erreurs">${NIV_KEYS.map(k => `<button class="ghost small${niv === k ? " on" : ""}" data-act="revNiv" data-v="${k}" aria-pressed="${niv === k}">${NIV_SYMB[k]} ${esc(DIFFICULTIES[k].label)}</button>`).join("")}</div>
+  <p class="fine">${motCartes(n)} ratée${n > 1 ? "s" : ""} au premier passage d'un test, tous ${esc(MOT_PAQUETS)} confondus · « Je m'entraîne », au niveau choisi juste au-dessus (${esc(DIFFICULTIES[niv].label)}). Une ${u} sort de la liste quand tu l'as réussie deux jours différents, au niveau où tu l'as ratée ou à un niveau plus difficile. Tu peux t'arrêter en cours de route : ✕, puis « Garder pour plus tard ».</p></div>`;
 }
 function reviserErreurs(){
   if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
   const keys = new Set(cartesEnErreur()); if (!keys.size) return;
+  const niv = DIFFICULTIES[S.revNiv] ? S.revNiv : "hard";
   const decks = DECKS.map(d => d.key).filter(dk => [...keys].some(k => CARD[k].dk === dk));
   const ordre = ORDRES ? Object.keys(ORDRES)[0] : "", pris = new Map(), avant = {}, rang = {};
   /* l'énoncé de la dernière erreur de chaque carte : la question est tirée à nouveau et, quand la carte le permet
      (conjugaison : une autre personne), elle ne revient pas à l'identique */
   rootTests().forEach(a => (a.questions || []).forEach(x => { if (!x.correct){ const k = qCardKey(x); if (keys.has(k)) avant[k] = x.prompt; } }));
   /* au niveau choisi d'abord ; une carte que ce niveau ne pose pas est prise au niveau le plus proche */
-  [S.difficulty, ...["normal", "hard", "easy"].filter(d => d !== S.difficulty)].forEach(diff => {
+  [niv, ...["normal", "hard", "easy"].filter(d => d !== niv)].forEach(diff => {
     const secours = new Map();
     for (let tour = 0; tour < 6 && [...keys].some(k => !pris.has(k)); tour++)
       buildTest(decks, diff, 0, ordre).forEach(q => { if (!keys.has(q.card) || pris.has(q.card)) return;
@@ -1612,7 +1632,7 @@ function reviserErreurs(){
   let n = 0, ex = 0, prec = null;
   qs.forEach(q => { const bloc = q.deckKey + "|" + q.consigne; if (bloc !== prec){ ex++; prec = bloc; } q.ex = ex; q.num = ++n; });
   S.mode = "train"; S.frozen = null; S.rattrParent = null;
-  startQuiz(qs, false, { revErr:true, label:`${REV_LABEL} (${motCartes(qs.length)})` });
+  startQuiz(qs, false, { revErr:true, diff:niv, label:`${REV_LABEL} (${motCartes(qs.length)})` });
 }
 
 /* ----- onglet Scores : courbe, jour par jour, cartes qui résistent ----- */
@@ -1664,22 +1684,38 @@ function suiviChart(){
   <div class="ch-wrap"><svg class="ch-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des notes sans aide, avec la remontée après les rattrapages">${g}</svg></div>
   <p class="fine">Touche un point pour voir le détail du test.</p>${detail}`;
 }
+/* v14 : dans chaque case, le test le plus exigeant du jour (○ Échauffement < □ Entraînement < ◆ Niveau épreuve ; ★ épreuve blanche
+   juste au-dessus du niveau où elle est faite), son pourcentage et sa couleur ; « + » quand d'autres niveaux ont été joués ce
+   jour-là ; leur détail au survol (title), pour les lecteurs d'écran (aria-label) et en touchant la case (ligne sous le tableau) */
+function heatGroupes(tests, dk, day){
+  const g = {};
+  tests.filter(a => dayOf(a.date) === day).forEach(a => {
+    const qs = a.questions.filter(inChap(dk)); if (!qs.length) return;
+    const lvl = LVL_OF_LABEL[a.difficulty] != null ? LVL_OF_LABEL[a.difficulty] : 1, ex = isExam(a), cle = lvl + (ex ? "x" : "");
+    const e = g[cle] = g[cle] || { rang:lvl * 2 + (ex ? 1 : 0), symb:ex ? "★" : NIV_SYMB[NIV_KEYS[lvl]], nom:ex ? "Épreuve blanche (" + DIFFICULTIES[NIV_KEYS[lvl]].label + ")" : DIFFICULTIES[NIV_KEYS[lvl]].label, n:0, ok:0 };
+    e.n += qs.length; e.ok += qs.filter(x => x.correct).length;
+  });
+  return Object.values(g).map(e => ({ ...e, pc:Math.round(e.ok / e.n * 100) })).sort((a, b) => b.rang - a.rang);
+}
 function suiviHeat(){
   const tests = rootTests(); if (!tests.length) return "";
   const days = [...new Set(tests.map(a => dayOf(a.date)))].slice(-6);
   const tested = new Set(tests.flatMap(a => a.questions.map(chapOfQ)));
   const chs = DECKS.filter(d => tested.has(d.key)), rest = DECKS.filter(d => !tested.has(d.key));
   const lab = d => { const [y, m, j] = d.split("-"); return j.padStart(2,"0") + "." + m.padStart(2,"0"); };
-  let h = `<div class="tbl heat"><table><thead><tr><th>${esc(OUTIL.motPaquet)}</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`;
+  const txt = gs => gs.map(e => `${e.symb} ${e.nom} : ${e.pc} % (${e.ok} juste${e.ok > 1 ? "s" : ""} sur ${e.n})`).join(" · ");
+  let h = `<div class="tbl heat"><table><thead><tr><th>${esc(OUTIL.motPaquet)}</th>${days.map(d => `<th>${lab(d)}</th>`).join("")}</tr></thead><tbody>`, detail = "";
   chs.forEach(d => {
     h += `<tr><td class="k">${esc(d.emoji)} ${esc(d.title)}</td>` + days.map(day => {
-      const qs = tests.filter(a => dayOf(a.date) === day).flatMap(a => a.questions.filter(inChap(d.key)));
-      if (!qs.length) return `<td class="hc-0">·</td>`;
-      const pc = Math.round(qs.filter(x => x.correct).length / qs.length * 100), n = noteFrom(pc/100);
-      return `<td class="${n>=5?"hc-ok":n>=4?"hc-mid":"hc-low"}">${pc}${n>=5?" ✓":""}</td>`;
+      const gs = heatGroupes(tests, d.key, day);
+      if (!gs.length) return `<td class="hc-0">·</td>`;
+      const top = gs[0], n = noteFrom(top.pc / 100), cle = d.key + "|" + day, on = S.suivi.cell === cle, plus = gs.length > 1;
+      if (on) detail = `<p class="heat-det" aria-live="polite"><b>${esc(d.title)} · ${lab(day)}</b> — ${esc(txt(gs))}</p>`;
+      const lib = `${d.title}, ${lab(day)} : ${txt(gs)}`;
+      return `<td class="${n>=5?"hc-ok":n>=4?"hc-mid":"hc-low"}${on ? " hc-on" : ""}" data-act="heatCell" data-v="${esc(cle)}" role="button" tabindex="0" title="${esc(lib)}" aria-label="${esc(lib)}"><span class="hc-s" aria-hidden="true">${top.symb}</span> ${top.pc}${n>=5?" ✓":""}${plus ? `<sup class="hc-plus" aria-hidden="true">+</sup>` : ""}</td>`;
     }).join("") + `</tr>`;
   });
-  return h + `</tbody></table></div>${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par ${esc(OUTIL.motPaquet.toLowerCase())} et par jour (6 derniers jours). Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
+  return h + `</tbody></table></div>${detail}${rest.length ? `<p class="fine">Pas encore testés : ${rest.map(d => d.title).join(", ")}.</p>` : ""}<p class="fine">Pourcentage de réponses justes au premier passage des tests, par ${esc(OUTIL.motPaquet.toLowerCase())} et par jour (6 derniers jours), au test le plus exigeant du jour : ○ Échauffement · □ Entraînement · ◆ Niveau épreuve · ★ Épreuve blanche. « + » : d'autres niveaux ce jour-là, touche la case pour les voir. Vert et ✓ : note de 5 ou plus ; orange : 4 à 4,5 ; rouge : sous 4.</p>`;
 }
 function suiviBlock(){
   const s = S.suivi;
@@ -1792,7 +1828,7 @@ function draftSave(){
   const d = { v:2, questions:Q.questions, i:Q.i, answers:Q.detail.map(x => { const o = { u:x.user, c:x.correct }; if (x.ms != null) o.ms = x.ms; if (x.typo) o.t = 1; if (x.liveFixed){ o.lf = 1; o.ls = x.liveSnap; } return o; }),
     picked:Q.checked ? Q.picked : null, typed:Q.checked ? Q.typed : "", checked:Q.checked, ok:Q.ok, liveFixed:!!Q.liveFixed, errSnap:Q.errSnap || "",
     label:Q.label, start:Q.start || Date.now(), saved:Date.now(), rattrapage:!!S.rattrapage, rattrLabel:S.rattrLabel || "", rattrParent:S.rattrParent || null, revErr:!!S.revErr,
-    selected:S.selected, difficulty:S.difficulty, mode:S.mode, order:S.order, qms:Math.round(Q.qms || 0), mc:(Q.mc || []).concat(Q.seg0 != null ? [[Q.seg0, Math.min(Date.now(), (Q.act || Date.now()) + INACTIF)]] : []) };
+    selected:S.selected, difficulty:S.qDiff, mode:S.mode, order:S.order, qms:Math.round(Q.qms || 0), mc:(Q.mc || []).concat(Q.seg0 != null ? [[Q.seg0, Math.min(Date.now(), (Q.act || Date.now()) + INACTIF)]] : []) };
   const sig = JSON.stringify({ ...d, saved:0 }); if (sig === draftSig) return; draftSig = sig;
   S.draft = d; draftWrite(d);
 }
@@ -1807,7 +1843,7 @@ function draftPick(a, b){ const ta = a ? a.saved || 0 : -1, tb = b ? b.saved || 
 function draftClear(){ draftSig = ""; S.draft = null; S.draftAsk = false; S.draftBlock = false; draftWrite({ vide:true, saved:Date.now() }); }
 function draftResume(){
   const d = S.draft; if (!d) return;
-  S.selected = (d.selected || d.keys || DECKS.map(x => x.key)).filter(k => DECK[k]); S.difficulty = d.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
+  S.selected = (d.selected || d.keys || DECKS.map(x => x.key)).filter(k => DECK[k]); S.qDiff = DIFFICULTIES[d.difficulty] ? d.difficulty : S.difficulty; S.mode = MODES[d.mode] ? d.mode : "train"; S.frozen = null;
   if (ORDRES && d.order && ORDRES[d.order]) S.order = d.order;
   S.rattrapage = !!d.rattrapage; S.rattrLabel = d.rattrLabel || d.label || ""; S.rattrParent = d.rattrParent || d.parent || null; S.revErr = !!d.revErr;
   S.quiz = { questions:d.questions, i:d.i, picked:d.picked, typed:d.typed || "", checked:!!d.checked, ok:!!d.ok, liveFixed:!!d.liveFixed, hadErr:!!d.liveFixed, errSnap:d.errSnap || "", detail:draftDetail(d), finishing:false, done:false, start:d.start, label:d.label, qms:d.qms || 0, mc:d.mc || [], qt0:null, seg0:null };
@@ -2012,6 +2048,7 @@ function updateLive(){
 function startQuiz(questions, rattrapage, opts){
   if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
   S.quiz = { questions, i:0, picked:null, typed:"", checked:false, ok:false, detail:[], finishing:false, done:false, start:Date.now(), label: opts && opts.label ? opts.label : rattrapage ? S.rattrLabel : deckLabel(S.selected), qms:0, mc:[], qt0:null, seg0:null };
+  S.qDiff = opts && opts.diff && DIFFICULTIES[opts.diff] ? opts.diff : S.difficulty;
   S.rattrapage = rattrapage; S.revErr = !!(opts && opts.revErr); S.lastResult = null; S.storeMsg = ""; S.results.all = false; S.quitAsk = false; S.screen = "quiz";
   chronoMarche(); draftSave(); render(); window.scrollTo(0,0);
 }
@@ -2072,7 +2109,7 @@ async function finishQuiz(){
   { const Q0 = S.quiz, now = Date.now(); chronoFerme(Q0, Math.min(now, (Q0.act || now) + INACTIF)); Q0.qt0 = null; }
   const Q = S.quiz, score = Q.detail.filter(x => x.correct).length, total = Q.detail.length, id = String(Date.now());
   const att = { id, quiz:QUIZ_ID, date:Date.now(), branche:OUTIL.branche, theme:THEME, deck:Q.label,
-    difficulty:DIFFICULTIES[S.difficulty].label, mode:MODES[S.mode].label, ...(ORDRES && ORDRES[S.order] ? { order:ORDRES[S.order].label } : {}), rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, ...(S.revErr && !S.rattrapage ? { revErreurs:true } : {}), score, total, note:noteFrom(score/total), actif:Q.detail.reduce((s, x) => s + (x.ms || 0), 0), morceaux:(Q.mc || []).map(m => [Math.round(m[0]), Math.round(m[1])]), questions:Q.detail };
+    difficulty:DIFFICULTIES[S.qDiff].label, mode:MODES[S.mode].label, ...(ORDRES && ORDRES[S.order] ? { order:ORDRES[S.order].label } : {}), rattrapage:S.rattrapage, parent: S.rattrapage ? (S.rattrParent || null) : null, ...(S.revErr && !S.rattrapage ? { revErreurs:true } : {}), score, total, note:noteFrom(score/total), actif:Q.detail.reduce((s, x) => s + (x.ms || 0), 0), morceaux:(Q.mc || []).map(m => [Math.round(m[0]), Math.round(m[1])]), questions:Q.detail };
   S.attempts = [att, ...S.attempts.filter(a => a.id !== id)];
   try { await store.save(att); S.storeMsg = store.mode === "memory" ? "Ce résultat est affiché ici, mais il ne sera pas gardé si tu fermes la page. Pense à noter ta note ou à l'exporter." : ""; }
   catch(e){ S.storeMsg = "Je n'ai pas pu enregistrer ce résultat : il disparaîtra si tu fermes la page. Note ta note ou copie-la pour le chat."; }
@@ -2163,7 +2200,7 @@ function retryWrong(id){
   const qs = att.questions.filter(x => !x.correct && x.question).map(x => x.question);
   if (!qs.length) return;
   S.rattrLabel = att.deck; S.rattrParent = att.rattrapage ? (att.parent || att.id) : att.id;
-  startQuiz(shuffle(qs), true);
+  startQuiz(shuffle(qs), true, { diff:NIV_KEYS[LVL_OF_LABEL[att.difficulty]] });
 }
 
 /* ---------- voir mes erreurs (publication-github.md § 8) ---------- */
@@ -2245,17 +2282,30 @@ function viewResults(){
   ${att.revErreurs ? reviserBloc() + `<button class="ghost" data-act="nav" data-v="home">Paquets</button>` : `<div class="row"><button class="ghost" data-act="start">Refaire le test</button><button class="ghost" data-act="nav" data-v="home">Paquets</button></div>`}`;
 }
 
+/* v14 : notes sans aide par niveau (rattrapages exclus) — ○ □ ◆ pour les tests « Je m'entraîne » et « Correction en direct »
+   faits à ce niveau, ★ pour les épreuves blanches, quel que soit leur niveau ; « — » pour un niveau jamais testé */
+function notesParNiveau(roots){
+  if (!roots.length) return "";
+  const lignes = [...NIV_KEYS.map(k => ({ symb:NIV_SYMB[k], nom:DIFFICULTIES[k].label, as:roots.filter(a => !isExam(a) && a.difficulty === DIFFICULTIES[k].label) })),
+    { symb:"★", nom:"Épreuve blanche", as:roots.filter(isExam) }];
+  const cl = n => n >= 5 ? "hc-ok" : n >= 4 ? "hc-mid" : "hc-low";
+  return `<div class="tbl heat notesniv"><table><thead><tr><th>Niveau</th><th>Tests</th><th>Moyenne</th><th>Meilleure</th></tr></thead><tbody>${lignes.map(l => {
+    if (!l.as.length) return `<tr><td class="k">${l.symb} ${esc(l.nom)}</td><td class="hc-0">0</td><td class="hc-0">—</td><td class="hc-0">—</td></tr>`;
+    const moy = l.as.reduce((s, a) => s + a.note, 0) / l.as.length, best = Math.max(...l.as.map(a => a.note));
+    return `<tr><td class="k">${l.symb} ${esc(l.nom)}</td><td>${l.as.length}</td><td class="${cl(moy)}">${fmtNote(moy)}</td><td>${fmtNote(best)}</td></tr>`; }).join("")}</tbody></table></div>
+  <p class="fine">Notes sans aide (premier passage), rattrapages exclus ; moyenne arrondie au dixième. ★ : épreuves blanches, quel que soit leur niveau. La ligne ◆ et la ligne ★ sont celles qui ressemblent le plus à l'épreuve.</p>`;
+}
 function viewScores(){
   if (!S.loaded) return `<p class="lab">Mes scores</p><p class="fine">Je récupère tes résultats…</p>`;
   const list = S.attempts;
   if (!list.length) return `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}${syncBloc()}<p class="intro">Rien pour l'instant. Fais un premier test : la date, la note et le détail de chaque question s'enregistreront ici.</p><button class="cta" data-act="nav" data-v="setup">Faire un test</button>`;
   const roots = rootTests();
-  const best = roots.length ? Math.max(...roots.map(a => a.note)) : 0, avg = roots.length ? roots.reduce((s,a) => s + a.note, 0)/roots.length : 0;
   const sorted = [...list].sort((a,b) => b.date - a.date);
   const exportText = sorted.map(a => `${dateLabel(a.date)} — ${a.deck} (${a.difficulty}, ${a.mode}${a.rattrapage ? ", rattrapage" : ""}) : ${a.score}/${a.total} → note ${fmtNote(a.note)}`).join("\n");
   let h = `<p class="lab">Mes scores</p>${S.loadErr ? `<p class="warn">${esc(S.loadErr)}</p>` : ""}
   ${syncBloc()}
-  <div class="stats"><div class="stat"><b>${roots.length}</b><span>tests</span></div><div class="stat"><b>${roots.length?fmtNote(best):"—"}</b><span>meilleure</span></div><div class="stat"><b>${roots.length?fmtNote(avg):"—"}</b><span>moyenne</span></div></div>
+  <div class="stats un"><div class="stat"><b>${roots.length}</b><span>test${roots.length > 1 ? "s" : ""}</span></div></div>
+  ${notesParNiveau(roots)}
   ${suiviBlock()}
   ${tempsBlock()}
   <p class="lab">Historique</p>
@@ -2399,6 +2449,8 @@ document.addEventListener("click", e => {
     case "redoBad": redoCards(v); break;
     case "redoCards": redoCards(v); break;
     case "reviserErreurs": reviserErreurs(); break;
+    case "revNiv": if (DIFFICULTIES[v]) S.revNiv = v; render(); break;
+    case "heatCell": S.suivi.cell = S.suivi.cell === v ? null : v; render(); break;
     case "testerNonPoses": testerNonPoses(v); break;
     case "suiviF": S.suivi.f = v; S.suivi.pt = null; render(); break;
     case "suiviPt": S.suivi.pt = S.suivi.pt === v ? null : v; render(); break;
@@ -2425,6 +2477,7 @@ document.addEventListener("input", e => {
 document.addEventListener("keydown", e => {
   if (e.target.id === "sync-code-in" && e.key === "Enter"){ e.preventDefault(); syncValider(); return; }
   if (e.target.id === "answer-input" && e.key === "Enter" && S.quiz && !S.quiz.checked && !S.quiz.done && S.quiz.typed.trim()){ e.preventDefault(); validate(S.quiz.typed); }
+  if ((e.key === "Enter" || e.key === " ") && e.target && e.target.dataset && e.target.dataset.act === "heatCell"){ e.preventDefault(); const v = e.target.dataset.v; S.suivi.cell = S.suivi.cell === v ? null : v; render(); return; }
   if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("ch-pt")){ e.preventDefault(); const v = e.target.dataset.v; S.suivi.pt = S.suivi.pt === v ? null : v; render(); }
 });
 document.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("exportarea")) e.target.select(); });
