@@ -56,7 +56,7 @@ const CSS_THEME = `
 const QUIZ_ID = "liano-quiz-anglais-unit1et2";
 const DUE = { iso:"2026-11-20", long:"vendredi 20 novembre", short:"20.11" };
 const THEME = "Unit 1 et Unit 2 (vocabulaire 1.1 à 2.5)";
-const VERSION = { n:4, date:"16.11.2026" };   /* v3 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) · v4 : 16.11.2026, symboles des niveaux ○ □ ◆ ★ dessinés comme les points de la courbe (légende, jour après jour, notes par niveau, boutons de « Réviser mes erreurs » ; noyau v15) */
+const VERSION = { n:5, date:"16.11.2026" };   /* v3 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) · v4 : 16.11.2026, symboles des niveaux ○ □ ◆ ★ dessinés comme les points de la courbe (légende, jour après jour, notes par niveau, boutons de « Réviser mes erreurs » ; noyau v15) · v5 : 16.11.2026, avancement dans l'onglet Scores : barre des cartes testées sous chaque niveau du tableau des notes, cadre « N tests » retiré, total des tests sous le tableau (noyau v16) */
 /* v2 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13).
 /* v1 : 16.11.2026, première version — couche Langues (anglais), noyau v12 : tout le vocabulaire des Units 1 et 2,
    neuf paquets rangés comme les groupes surlignés du livre (1.1 à 1.4, 2.1 à 2.5). */

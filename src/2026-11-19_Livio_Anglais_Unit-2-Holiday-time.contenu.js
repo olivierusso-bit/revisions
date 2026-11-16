@@ -54,7 +54,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-anglais-unit2holiday";
 const DUE = { iso:"2026-11-19", long:"jeudi 19 novembre", short:"19.11" };
 const THEME = "Unit 2 « Holiday time » (Active wordlist pp. 20-21)";
-const VERSION = { n:5, date:"16.11.2026" };   /* v4 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) · v5 : 16.11.2026, symboles des niveaux ○ □ ◆ ★ dessinés comme les points de la courbe (légende, jour après jour, notes par niveau, boutons de « Réviser mes erreurs » ; noyau v15) */
+const VERSION = { n:6, date:"16.11.2026" };   /* v4 : 16.11.2026, noyau v14 (« Réviser mes erreurs » avec choix du niveau, sortie au niveau de l'erreur ou plus haut ; tableau jour par jour avec ○ □ ◆ ★ ; notes par niveau dans l'onglet Scores) · v5 : 16.11.2026, symboles des niveaux ○ □ ◆ ★ dessinés comme les points de la courbe (légende, jour après jour, notes par niveau, boutons de « Réviser mes erreurs » ; noyau v15) · v6 : 16.11.2026, avancement dans l'onglet Scores : barre des cartes testées sous chaque niveau du tableau des notes, cadre « N tests » retiré, total des tests sous le tableau (noyau v16) */
 /* v3 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13).
 /* v2 : 15.11.2026, fiche : emoji du paquet devant chaque section de vocabulaire (« undefined » s'affichait par-dessus le titre).
    v1 : 15.11.2026, première version — couche Langues (anglais), noyau v12 : p. 20 en entier (parenthèses comprises),
