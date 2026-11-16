@@ -22,6 +22,8 @@ Après l'assemblage, sauf --sans-controles :
      l'onglet Scores, grisé « Aucune erreur à réviser 👍 » sans erreur ; le test lancé est en « Je m'entraîne », contient
      la carte, tirée à nouveau (autre énoncé quand la carte en a plusieurs, p. ex. une autre personne en conjugaison), se termine
      et garde revErreurs et la mention « Révision des erreurs » ; bloqué quand un test est en cours.
+     Noyau v14 : sortie de la liste au niveau de l'erreur ou plus haut (des réussites plus faciles ne la font pas sortir), test lancé
+     au niveau choisi sous le bouton (Niveau épreuve), sans changer le niveau des réglages, ni par « Refaire ces cartes ».
 Le code de sortie est 0 seulement si tout passe.
 
 Le contenu porte sa palette CSS et ses retouches de style dans la constante CSS_THEME (gabarit de chaîne, sans accent grave), appliquée
