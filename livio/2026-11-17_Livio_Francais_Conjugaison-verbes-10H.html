@@ -344,7 +344,7 @@ textarea.exportarea{width:100%;border:1px solid var(--rule);border-radius:var(--
 <nav class="tabbar" id="tabbar"></nav>
 
 <script>
-/* Outil assemblé par claude/assembler.py le 15.11.2026 : contenu (2026-11-17_Livio_Francais_Conjugaison-verbes-10H.contenu.js) + couche-langues.js + noyau-quiz.js.
+/* Outil assemblé par claude/assembler.py le 16.11.2026 : contenu (2026-11-17_Livio_Francais_Conjugaison-verbes-10H.contenu.js) + couche-langues.js + noyau-quiz.js.
    Pour le modifier, on change le fichier de contenu (ou le noyau / la couche sur « go fiches ») et on réassemble ; jamais ce fichier à la main. */
 /* ============================================================
    CONTENU — Français : conjugaison, les verbes du « Planning verbes 10H » (FRA10J2)
@@ -425,7 +425,7 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-francais-conjugaison-verbes-10h";
 const DUE = { iso:"2026-11-17", long:"mardi 17 novembre", short:"17.11" };
 const THEME = "Conjugaison — les verbes du planning 10H";
-const VERSION = { n:7, date:"15.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule · v5 : 14.11.2026, temps de révision dans l'onglet Scores (noyau v10) · v6 : 15.11.2026, bouton « 🔁 Réviser mes erreurs » sur l'écran Paquets et dans l'onglet Scores (noyau v11) · v7 : 15.11.2026, cercles calculés sur les cartes déjà posées, barre des cartes testées et « Tester les X pas encore posés » (noyau v12) */
+const VERSION = { n:8, date:"16.11.2026" };   /* v1 : 08.11.2026, première version (11 verbes, 16 temps) · v2 : 08.11.2026, impératif passé, participe passé en deux formes (ri, ayant ri), paquet et fiche « Subjonctifs présent et passé », photos des fiches de Livio · v3 : 08.11.2026, « Combien de questions » respecté même avec un seul verbe (chaque temps revient avec une autre personne) · v4 : 08.11.2026, accents stricts partout (OUTIL.accentsStricts, noyau v9) : la correction en direct et « Voir mes erreurs » marquent une faute d'accent seule · v5 : 14.11.2026, temps de révision dans l'onglet Scores (noyau v10) · v6 : 15.11.2026, bouton « 🔁 Réviser mes erreurs » sur l'écran Paquets et dans l'onglet Scores (noyau v11) · v7 : 15.11.2026, cercles calculés sur les cartes déjà posées, barre des cartes testées et « Tester les X pas encore posés » (noyau v12) · v8 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13) */
 
 /* Tout ce que le noyau affiche ou écrit et qui dépend de l'outil. Jamais d'âge en dur : le noyau le déduit de la classe. */
 const OUTIL = {
@@ -954,7 +954,15 @@ if (typeof COUCHE_CONTENU !== "undefined") Object.assign(COUCHE, COUCHE_CONTENU)
    « OK ✓ » seulement si tout le paquet est posé (au Niveau épreuve pour trois anneaux) et 75 % ou plus des cartes acquises ;
    flèche ↗ / ↘ sur la part de justes parmi les posées ; nouvelle barre des cartes testées (« N/M <unité> testés », cases pleines
    et vides) sous la pastille générale, sur l'écran Paquets, dans les sections de la fiche liées à un paquet et dans le sommaire
-   du Dossier, avec « Tester les X pas encore posés » (« Je m'entraîne », un seul test à la fois) ; « Réviser mes erreurs » inchangé).
+   du Dossier, avec « Tester les X pas encore posés » (« Je m'entraîne », un seul test à la fois) ; « Réviser mes erreurs » inchangé)
+   · 13 (16.11.2026 : barre des cartes testées par niveau — avec trois anneaux, trois lignes compactes dans l'ordre des cercles
+   (Échauffement, Entraînement, Niveau épreuve) : nom du niveau, barre fine de cases pleines et vides, « N/M » (cartes posées au
+   moins une fois au premier passage d'un test à ce niveau, sur le total du paquet ; rattrapages exclus ; « 0/M » si jamais testé),
+   et au bout « Tester les X » (test « Je m'entraîne » sur ces cartes, à ce niveau, un seul test à la fois ; libellé complet pour les
+   lecteurs d'écran) ou « ✓ complet » ; avec un anneau, une seule ligne tous niveaux, dont le bouton lance le test au niveau des
+   réglages ; à 390 px, le bouton passe sous la barre quand la place manque ; l'ancien bouton « Tester les X pas encore posés »
+   est retiré ; même chose sous la pastille générale, sous chaque paquet, dans la Fiche et dans le sommaire du Dossier ;
+   cercles et « Réviser mes erreurs » inchangés).
    Accroches ajoutées à C4 (toutes facultatives) : COUCHE.vueFiche() remplace l'écran Fiche et OUTIL.ongletFiche [emoji, nom] son onglet ;
    COUCHE.vueCartes() remplace l'écran Cartes ; COUCHE.etat (champs ajoutés à S) ; COUCHE.charger() (au chargement, après le stockage) ;
    COUCHE.action(act, v, el) (boutons data-act que le noyau ne connaît pas) ; COUCHE.surNav() (changement d'onglet) ; COUCHE.onChange(e),
@@ -1447,7 +1455,8 @@ function globalPastille(){
   <p>Chaque paquet a <b>trois anneaux</b> : à l'intérieur l'Échauffement, au milieu l'Entraînement, à l'extérieur le Niveau épreuve. Tu montes en compétence du « je choisis » vers « j'écris tout » : chaque anneau ne compte que les tests faits à son niveau : si tu n'as fait que le Niveau épreuve, les deux anneaux intérieurs restent gris en pointillé.</p>
   <p>Dans chaque anneau, la partie en couleur pleine, ce sont tes cartes justes ; la partie claire, celles qu'il te reste. Un anneau gris en pointillé n'a pas encore été testé. Au centre : tes cartes justes sur celles déjà posées, au niveau le plus difficile que tu as déjà fait.</p>
   <p>Couleur de chaque anneau selon sa note, calculée sur les cartes déjà posées à ce niveau (les cartes pas encore posées ne comptent pas) : <b>rouge</b> à revoir (moins de 4), <b>orange</b> en route (4–4,5), <b>vert</b> réussi (5 et plus), <b>vert foncé</b> OK ✓ (tout le paquet posé au niveau épreuve et au moins 3 cartes sur 4 acquises, c'est-à-dire réussies deux jours différents). Tant que moins de la moitié du paquet est posée, « réussi » devient « réussi, à compléter ».</p>
-  <p>Sous les anneaux, la <b>barre des cartes testées</b> : une case pleine pour chaque carte déjà posée, une case vide pour chaque carte pas encore posée, au niveau le plus difficile que tu as déjà fait (avec beaucoup de cartes, une case en regroupe plusieurs ; le nombre écrit est exact). Le bouton dessous lance un test « Je m'entraîne » sur les seules cartes pas encore posées.</p>
+  <p>Sous les anneaux, <b>trois lignes</b>, dans le même ordre que les anneaux : Échauffement, Entraînement, Niveau épreuve. Chaque ligne montre une case pleine pour chaque carte déjà posée à ce niveau (au premier passage d'un test, pas dans un rattrapage) et une case vide pour chaque carte pas encore posée, puis le nombre : « 9/17 », c'est 9 cartes posées sur les 17 du paquet. Avec beaucoup de cartes, une case en regroupe plusieurs ; le nombre écrit est exact. Un niveau jamais testé montre une ligne vide, « 0/17 ».</p>
+  <p>Au bout de chaque ligne, le bouton <b>« Tester les X »</b> lance un test « Je m'entraîne » sur les seules cartes pas encore posées à ce niveau, à ce niveau-là. Quand toutes les cartes ont été posées, la ligne affiche « ✓ complet ». Tu ne peux pas lancer ce test pendant qu'un autre test est en cours.</p>
   <p>Seul le premier passage d'un test compte ; refaire ses erreurs aide à apprendre mais ne change pas les anneaux.</p></details>`;
 }
 function paqBad(dk, hist){ const h = hist || histByCard(); return deckCards(dk).filter(c => COUCHE.rings === 1 ? state1(h[c.k]) === "bad" : ringState(h[c.k] || [], 2) === "bad"); }
@@ -1459,17 +1468,20 @@ function globalPastille1(){
   <details class="plegend"><summary>Comment se lit la pastille ?</summary>
   <p>Le chiffre au centre : les questions du ${esc(OUTIL.motPaquet.toLowerCase())} réussies au dernier test où chacune est tombée, sur celles déjà posées (les questions pas encore posées ne comptent pas). Seul le premier passage d'un test compte, pas les rattrapages.</p>
   <p>Mots et couleurs suivent cette note : sous 4 « à revoir » (rouge), 4 à 4,5 « en route » (orange), 5 et plus « réussi » (vert) — « réussi, à compléter » tant que moins de la moitié des questions est posée —, « OK ✓ » (vert foncé) quand toutes les questions ont été posées et qu'au moins 3 sur 4 sont acquises. Gris en pointillé : pas encore testé.</p>
-  <p>Sous la pastille, la <b>barre des questions testées</b> : une case pleine pour chaque question déjà posée, une case vide pour chaque question pas encore posée (avec beaucoup de questions, une case en regroupe plusieurs ; le nombre écrit est exact). Le bouton dessous lance un test « Je m'entraîne » sur les seules questions pas encore posées.</p>
+  <p>Sous la pastille, une <b>ligne des questions testées</b>, tous niveaux confondus : une case pleine pour chaque question déjà posée (au premier passage d'un test, pas dans un rattrapage), une case vide pour chaque question pas encore posée, puis le nombre (« 9/17 » : 9 questions posées sur 17). Avec beaucoup de questions, une case en regroupe plusieurs ; le nombre écrit est exact. Au bout de la ligne, le bouton <b>« Tester les X »</b> lance un test « Je m'entraîne » sur les seules questions pas encore posées, au niveau choisi dans les réglages ; quand toutes ont été posées, la ligne affiche « ✓ complet ».</p>
   <p>Dans l'anneau : vert foncé = acquis (écrit juste deux jours différents), couleur du niveau = juste au dernier test, rouge pâle = raté, gris = pas encore posé. Une question n'est acquise que si elle a été écrite, pas seulement choisie.</p></details>`;
 }
 
-/* ----- barre des cartes testées (v12) -----
-   Cartes déjà posées sur le total du paquet (ou de tout l'outil), au niveau le plus difficile déjà testé : avec trois anneaux,
-   une carte compte dès qu'elle est tombée au premier passage d'un test à ce niveau ; avec un anneau, à n'importe quel niveau.
-   Cases pleines (posées) et vides (pas encore posées) + le texte « N/M <unité> testés » : lisible sans les couleurs.
-   Au-delà de 30 cartes, une case en regroupe plusieurs. Le bouton « Tester les X pas encore posés » lance un test
-   « Je m'entraîne » sur ces seules cartes, à ce niveau (un anneau : niveau des réglages), un seul test à la fois ; il n'apparaît
-   qu'une fois au moins une carte posée (un paquet jamais testé garde sa barre vide et ses boutons « Test » habituels). */
+/* ----- barre des cartes testées, une ligne par niveau (v13) -----
+   Trois anneaux (langues et français) : trois lignes compactes, dans l'ordre des cercles (Échauffement, Entraînement,
+   Niveau épreuve). Chaque ligne : le nom du niveau en toutes lettres, une barre fine de cases pleines (cartes posées au moins
+   une fois au premier passage d'un test à ce niveau) et vides, et « N/M » sur le total du paquet ; les rattrapages ne comptent
+   pas ; un niveau jamais testé montre une barre vide « 0/M ». Au bout de la ligne, « Tester les X » (X = cartes pas encore posées
+   à ce niveau ; libellé complet pour les lecteurs d'écran) lance un test « Je m'entraîne » sur ces seules cartes, à ce niveau,
+   un seul test à la fois ; une ligne complète affiche « ✓ complet » à la place du bouton. Un anneau (maths, Dossier) : une
+   seule ligne, comptée à n'importe quel niveau, dont le bouton lance le test au niveau des réglages.
+   Lisible sans les couleurs : cases pleines et vides, nombres écrits, « ✓ complet ». Au-delà de 30 cartes, une case en
+   regroupe plusieurs (le nombre écrit reste exact). À 390 px, quand la place manque, le bouton passe sous la barre. */
 const BT_TOUT = "__tout";
 const BT_FEM = /^(cartes|questions|phrases|notions|formes|expressions|définitions|dates|règles|opérations|fractions|puissances|racines|consignes|personnes|unités|lettres|heures)$/i;
 const NIV_KEYS = ["easy", "normal", "hard"];
@@ -1479,24 +1491,32 @@ function uniteDe(dk){
   const d = DECK[dk];
   return d && d.unit && d.unit !== "cartes" && deckCards(dk).length === d.items.length ? d.unit : gen;
 }
-function couverture(dk, hist){
+/* couverture d'un paquet (ou de tout l'outil) à un niveau : lvl 0, 1, 2 ; lvl -1 = n'importe quel niveau (un anneau) */
+function couverture(dk, hist, lvl){
   const cards = dk === BT_TOUT ? CARDS : deckCards(dk);
-  let lvl = -1, sub = cards;
-  if (COUCHE.rings !== 1){ lvl = topRing([0,1,2].map(l => ringSummary(cards, l, hist))); if (lvl >= 0) sub = cards.filter(c => c.levels.includes(lvl)); }
-  const non = sub.filter(c => { const es = hist[c.k] || []; return COUCHE.rings === 1 || lvl < 0 ? !es.length : !es.some(e => e.lvl === lvl); });
+  const sub = lvl >= 0 ? cards.filter(c => c.levels.includes(lvl)) : cards;
+  const non = sub.filter(c => { const es = hist[c.k] || []; return lvl < 0 ? !es.length : !es.some(e => e.lvl === lvl); });
   return { lvl, total:sub.length, posed:sub.length - non.length, non };
 }
-function barreTestes(dk, hist){
-  if (!S.loaded) return "";
-  const cv = couverture(dk, hist || histByCard()), n = cv.total; if (!n) return "";
-  const u = uniteDe(dk), acc = BT_FEM.test(u) ? "es" : "s";
+const NIV_LIGNES = () => COUCHE.rings === 1 ? [-1] : [0, 1, 2];
+function ligneTestes(dk, cv){
+  const n = cv.total, u = uniteDe(dk), acc = BT_FEM.test(u) ? "es" : "s", x = cv.non.length;
   const cells = n <= 30 ? n : 20;
   let plein = n <= 30 ? cv.posed : Math.round(cv.posed / n * cells);
   if (cv.posed > 0 && plein < 1) plein = 1; if (cv.posed < n && plein > cells - 1) plein = cells - 1;
-  const niv = COUCHE.rings === 1 || cv.lvl < 0 ? "" : ", niveau " + DIFFICULTIES[NIV_KEYS[cv.lvl]].label;
+  const nom = cv.lvl < 0 ? "Tous niveaux" : DIFFICULTIES[NIV_KEYS[cv.lvl]].label;
+  const ou = cv.lvl < 0 ? ", au niveau choisi dans les réglages" : cv.lvl === 2 ? " au " + nom : " au niveau " + nom;
   let cases = ""; for (let i = 0; i < cells; i++) cases += `<i class="bt-c${i < plein ? " on" : ""}"></i>`;
-  const x = cv.non.length;
-  return `<div class="btest"><div class="bt-bar" role="img" aria-label="${cv.posed} ${esc(u)} testé${acc} sur ${n}${niv}">${cases}</div><p class="bt-t">${cv.posed}/${n} ${esc(u)} testé${acc}</p>${x && cv.posed ? `<button class="ghost small" data-act="testerNonPoses" data-v="${esc(dk)}">Tester les ${x} pas encore posé${acc}</button>` : ""}</div>`;
+  const fin = !x ? `<span class="bt-ok">✓ complet</span>`
+    : `<button class="bt-go" data-act="testerNonPoses" data-v="${esc(dk)}|${cv.lvl}" aria-label="Tester les ${x} ${esc(u)} pas encore posé${acc}${esc(ou)}">Tester les ${x}</button>`;
+  return `<div class="bt-row"><span class="bt-niv">${esc(nom)}</span><div class="bt-bar" role="img" aria-label="${esc(nom)} : ${cv.posed} ${esc(u)} testé${acc} sur ${n}">${cases}</div><span class="bt-t">${cv.posed}/${n}</span>${fin}</div>`;
+}
+function barreTestes(dk, hist){
+  if (!S.loaded) return "";
+  const h = hist || histByCard();
+  const lignes = NIV_LIGNES().map(l => couverture(dk, h, l)).filter(cv => cv.total);
+  if (!lignes.length) return "";
+  return `<div class="btest">${lignes.map(cv => ligneTestes(dk, cv)).join("")}</div>`;
 }
 /* la barre sous les pastilles du sommaire (Dossier) : une pastille dans un bouton de sommaire reçoit sa barre juste après le bouton */
 function barresSommaire(){
@@ -1506,12 +1526,15 @@ function barresSommaire(){
   const hist = histByCard();
   boutons.forEach(b => { const dk = b.querySelector(".deck-pst[data-dk]").dataset.dk; if (DECK[dk]) b.insertAdjacentHTML("afterend", barreTestes(dk, hist).replace('class="btest"', 'class="btest bt-toc"')); });
 }
-/* style de la barre, ajouté une fois à la page (variables du thème, clair et sombre) */
-(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:5px;margin:2px 0 8px}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-bar{display:flex;gap:2px;max-width:320px}.bt-c{flex:1 1 0;min-width:3px;height:9px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{margin:0;font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums}.btest .ghost.small{align-self:flex-start}`; document.head.appendChild(st); } catch(e){} })();
+/* style des lignes, ajouté une fois à la page (variables du thème, clair et sombre) : nom | barre | N/M | bouton ;
+   quand la ligne est trop étroite (téléphone), le bouton passe sous la barre */
+(function(){ try { const st = document.createElement("style"); st.textContent = `.btest{display:flex;flex-direction:column;gap:3px;margin:2px 0 8px;container-type:inline-size;min-width:0}.deck-redo + .btest,.deckrow + .btest{padding:0 12px;margin-top:-4px}.bt-toc{padding:0 12px;margin:-2px 0 10px}.bt-row{display:grid;grid-template-columns:7.6em minmax(40px,1fr) 3.6em max-content;align-items:center;column-gap:6px;row-gap:3px;min-height:26px;font-size:12px}.bt-niv{color:var(--soft);white-space:nowrap}.bt-bar{display:flex;gap:1px;min-width:0}.bt-c{flex:1 1 0;min-width:2px;height:8px;border:1.5px solid var(--soft);border-radius:2px;box-sizing:border-box;background:transparent}.bt-c.on{background:var(--box);border-color:var(--box)}.bt-t{color:var(--soft);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}.bt-go{width:auto;justify-self:start;padding:3px 9px;border:1px solid var(--rule);border-radius:var(--r-s,8px);background:var(--sheet);color:inherit;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}.bt-ok{font-weight:700;color:var(--soft);white-space:nowrap}@container (max-width:320px){.bt-row{grid-template-columns:7.6em minmax(0,1fr) 3.6em}.bt-go,.bt-ok{grid-column:2 / 4;grid-row:2}}`; document.head.appendChild(st); } catch(e){} })();
+/* « Tester les X » : v = "<paquet>|<niveau>" (niveau -1 : un anneau, niveau des réglages) */
 function testerNonPoses(v){
   if (S.draft){ S.draftBlock = true; S.draftAsk = false; S.screen = "home"; render(); window.scrollTo(0,0); return; }
-  const cv = couverture(v, histByCard()), keys = new Set(cv.non.map(c => c.k)); if (!keys.size) return;
-  const diff = COUCHE.rings === 1 || cv.lvl < 0 ? S.difficulty : NIV_KEYS[cv.lvl];
+  const i = String(v).lastIndexOf("|"), dk = i < 0 ? v : v.slice(0, i), lvl = i < 0 ? -1 : +v.slice(i + 1);
+  const cv = couverture(dk, histByCard(), COUCHE.rings === 1 ? -1 : lvl), keys = new Set(cv.non.map(c => c.k)); if (!keys.size) return;
+  const diff = cv.lvl < 0 ? S.difficulty : NIV_KEYS[cv.lvl];
   const decks = DECKS.map(d => d.key).filter(dk => [...keys].some(k => CARD[k] && CARD[k].dk === dk));
   const ordre = ORDRES ? Object.keys(ORDRES)[0] : "", pris = new Map(), rang = {};
   for (let tour = 0; tour < 6 && [...keys].some(k => !pris.has(k)); tour++)

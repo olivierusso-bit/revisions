@@ -54,7 +54,8 @@ const CSS_THEME = `
 const QUIZ_ID = "livio-quiz-anglais-unit2holiday";
 const DUE = { iso:"2026-11-19", long:"jeudi 19 novembre", short:"19.11" };
 const THEME = "Unit 2 « Holiday time » (Active wordlist pp. 20-21)";
-const VERSION = { n:2, date:"15.11.2026" };
+const VERSION = { n:3, date:"16.11.2026" };
+/* v3 : 16.11.2026, barre des cartes testées par niveau : trois lignes Échauffement, Entraînement, Niveau épreuve, avec « Tester les X » ou « ✓ complet » au bout de chaque ligne (noyau v13).
 /* v2 : 15.11.2026, fiche : emoji du paquet devant chaque section de vocabulaire (« undefined » s'affichait par-dessus le titre).
    v1 : 15.11.2026, première version — couche Langues (anglais), noyau v12 : p. 20 en entier (parenthèses comprises),
    p. 21 « Words and phrases » et ses phrases ; « Everyday English » laissé de côté (barré sur la photo). */
